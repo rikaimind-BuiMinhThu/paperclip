@@ -29,6 +29,7 @@ import { ProfileActionDialog, type ProfileActionDialogKind } from "./ProfileActi
 import { TEMPLATES, type TemplateKey } from "./profile-model";
 import { useProfilesData } from "./useProfilesData";
 import { allowsLabel, assignedLabel, isDraft, STATUS_LABEL } from "./profile-summary";
+import { useTranslation } from "@/i18n";
 
 /** The wizard route for a fresh profile, optionally seeded with a template. */
 function newProfileHref(template?: TemplateKey): string {
@@ -52,6 +53,7 @@ export function ProfilesIndex({
   initialStatusFilter?: "active" | "archived";
   initialResolverOpen?: boolean;
 }) {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const { pushToast } = useToast();
@@ -121,7 +123,7 @@ export function ProfilesIndex({
 
   const header = (
     <ToolsPageHeader
-      title="Access profiles"
+      title={t("apps.profiles")}
       description="Decide which tools your agents can use. Build a profile once, then assign it to the agents that need it."
       actions={
         <>

@@ -49,6 +49,7 @@ import {
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/context/ToastContext";
+import { useTranslation } from "@/i18n";
 import { EmptyState } from "@/components/EmptyState";
 import {
   CapabilityBadges,
@@ -637,6 +638,7 @@ function AllowList({ rows, catalogLoading }: { rows: AllowListRow[]; catalogLoad
 }
 
 export function ProfilesTab({ companyId }: { companyId: string }) {
+  const { t } = useTranslation();
   const qc = useQueryClient();
   const { pushToast } = useToast();
   const [createOpen, setCreateOpen] = useState(false);
@@ -910,8 +912,8 @@ export function ProfilesTab({ companyId }: { companyId: string }) {
   return (
     <div className="space-y-4">
       <ToolsPageHeader
-        title="Access profiles"
-        description="Reusable bundles of allowed applications, connections, and tools, assignable to agents, projects, routines, or issues."
+        title={t("pages.toolsAccess.profilesTab.title")}
+        description={t("pages.toolsAccess.profilesTab.description")}
         actions={
           <Button size="sm" onClick={() => setCreateOpen(true)}>
             <Plus className="mr-1 h-4 w-4" />
@@ -925,9 +927,9 @@ export function ProfilesTab({ companyId }: { companyId: string }) {
       {list.length === 0 ? (
         <EmptyState
           icon={Layers}
-          message="No access profiles yet"
-          description="Create a profile to group tool selectors, then bind it to the organization or a specific agent."
-          action="New profile"
+          message={t("pages.toolsAccess.profilesTab.emptyTitle")}
+          description={t("pages.toolsAccess.profilesTab.emptyDescription")}
+          action={t("pages.toolsAccess.profilesTab.newProfile")}
           onAction={() => setCreateOpen(true)}
         />
       ) : (

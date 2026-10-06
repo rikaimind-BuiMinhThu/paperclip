@@ -55,13 +55,29 @@ import { formatDateTime } from "@/lib/utils";
 import { queryKeys } from "@/lib/queryKeys";
 import { copyTextToClipboard } from "@/lib/clipboard";
 import { Link, Navigate, useNavigate, useParams } from "@/lib/router";
+import { useTranslation } from "@/i18n";
 
 const tabs = ["settings", "access", "reviews", "conversations", "activity"] as const;
 type ChatTab = (typeof tabs)[number];
-const tabItems = tabs.map((value) => ({
-  value,
-  label: value[0].toUpperCase() + value.slice(1),
-}));
+
+function chatTabLabel(t: (key: string) => string, value: ChatTab): string {
+  switch (value) {
+    case "settings":
+      return t("pages.chatEndpoint.tabSettings");
+    case "access":
+      return t("pages.chatEndpoint.tabAccess");
+    case "reviews":
+      return t("pages.chatEndpoint.tabReviews");
+    case "conversations":
+      return t("pages.chatEndpoint.tabConversations");
+    case "activity":
+      return t("pages.chatEndpoint.tabActivity");
+    default: {
+      const _exhaustive: never = value;
+      return _exhaustive;
+    }
+  }
+}
 const providerNames: Record<ChatProvider, string> = {
   agentmail: "AgentMail",
   slack: "Slack",
@@ -225,6 +241,7 @@ export function connectionHealthPresentation(
 }
 
 export function ChatEndpointDetail() {
+  const { t } = useTranslation();
   const { endpointId = "", tab = "settings" } = useParams<{
     endpointId: string;
     tab?: string;
@@ -248,19 +265,17 @@ export function ChatEndpointDetail() {
   useEffect(() => {
     if (!endpoint || !activeTab) return;
     setBreadcrumbs([
-      { label: "Connectors", href: "/apps" },
+      { label: t("apps.title"), href: "/apps" },
       {
         label: `${endpoint.assignedAgentName} · ${providerNames[endpoint.provider]}`,
         href: `/apps/chat/${endpoint.id}/settings`,
       },
       {
-        label:
-          tabItems.find((item) => item.value === activeTab)?.label ??
-          "Settings",
+        label: activeTab ? chatTabLabel(t, activeTab) : t("pages.chatEndpoint.tabSettings"),
       },
     ]);
     return () => setBreadcrumbs([]);
-  }, [activeTab, endpoint, setBreadcrumbs]);
+  }, [activeTab, endpoint, setBreadcrumbs, t]);
 
   if (!activeTab)
     return <Navigate replace to={`/apps/chat/${endpointId}/settings`} />;
@@ -268,17 +283,17 @@ export function ChatEndpointDetail() {
     return (
       <div className="flex items-center gap-2 text-sm text-muted-foreground">
         <Loader2 className="h-4 w-4 animate-spin" />
-        Loading connection…
+        {t("pages.chatEndpoint.loadingConnection")}
       </div>
     );
   if (endpointQuery.isError || !endpoint)
     return (
       <div className="space-y-3">
         <p className="text-sm text-destructive">
-          This chat connection could not be loaded.
+          {t("pages.chatEndpoint.loadFailed")}
         </p>
         <Button variant="outline" onClick={() => endpointQuery.refetch()}>
-          Try again
+          {t("common.retry")}
         </Button>
       </div>
     );
@@ -293,18 +308,21 @@ export function ChatEndpointDetail() {
       <header className="flex flex-wrap items-start justify-between gap-4">
         <div>
           <h1 className="text-xl font-bold">
-            {endpoint.assignedAgentName} in {providerNames[endpoint.provider]}
+            {t("pages.chatEndpoint.agentInProvider", {
+              agent: endpoint.assignedAgentName,
+              provider: providerNames[endpoint.provider],
+            })}
           </h1>
           <p className="mt-1 text-sm text-muted-foreground">
-            {endpoint.providerAccountLabel ?? (endpoint.provider === "agentmail" ? endpoint.botExternalId ?? "Email connection" : "Chat connection")}
+            {endpoint.providerAccountLabel ?? (endpoint.provider === "agentmail" ? endpoint.botExternalId ?? t("pages.chatEndpoint.emailConnection") : t("pages.chatEndpoint.chatConnection"))}
           </p>
           {endpoint.provider === "imessage-photon" && endpoint.botExternalId && endpoint.photonAllocation !== "shared" && (
             <div className="mt-2 flex flex-wrap items-center gap-2 text-sm">
               <span>{endpoint.botExternalId}</span>
-              <Button variant="ghost" size="sm" aria-label="Copy dedicated number" onClick={async () => {
-                try { await copyTextToClipboard(endpoint.botExternalId!); setCopyStatus("Number copied"); }
-                catch { setCopyStatus("Could not copy the number. Select and copy it manually."); }
-              }}><Copy className="size-4" />Copy number</Button>
+              <Button variant="ghost" size="sm" aria-label={t("pages.chatEndpoint.copyDedicatedNumber")} onClick={async () => {
+                try { await copyTextToClipboard(endpoint.botExternalId!); setCopyStatus(t("pages.chatEndpoint.numberCopied")); }
+                catch { setCopyStatus(t("pages.chatEndpoint.copyNumberFailed")); }
+              }}><Copy className="size-4" />{t("pages.chatEndpoint.copyNumber")}</Button>
               <span role="status" className="text-muted-foreground">{copyStatus}</span>
             </div>
           )}
@@ -319,7 +337,7 @@ export function ChatEndpointDetail() {
                 )
               }
             >
-              Continue setup
+              {t("apps.continueSetup")}
             </Button>
           ) : null}
           {endpoint.status !== "active" && <StatusBadge status={endpoint.status} />}
@@ -352,6 +370,7 @@ export function ChatEndpointDetail() {
 }
 
 function EmailAccess({ endpoint }: { endpoint: ChatEndpoint }) {
+  const { t } = useTranslation();
   const connection = useQuery({
     queryKey: queryKeys.tools.connection(endpoint.connectionId ?? ""),
     queryFn: () => toolsApi.getConnection(endpoint.connectionId!),
@@ -371,7 +390,7 @@ function EmailAccess({ endpoint }: { endpoint: ChatEndpoint }) {
   const sourceId = connection.data.config?.credentialConnectionId;
   const credentialId = typeof sourceId === "string" ? sourceId : endpoint.connectionId;
   return <section className="max-w-3xl space-y-4">
-    <h2 className="text-lg font-semibold">Access</h2>
+    <h2 className="text-lg font-semibold">{t("pages.chatEndpoint.accessHeading")}</h2>
     {credentialId !== endpoint.connectionId && <p className="text-sm text-muted-foreground">These settings apply to the saved AgentMail account and all inboxes using it.</p>}
     <EmailConnectionAccess key={credentialId} companyId={endpoint.companyId} connectionId={credentialId} agents={agents.data} />
   </section>;

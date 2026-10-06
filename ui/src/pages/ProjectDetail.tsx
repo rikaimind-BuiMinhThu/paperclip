@@ -39,6 +39,7 @@ import { cn } from "@/lib/utils";
 import { Tabs } from "@/components/ui/tabs";
 import { PluginLauncherOutlet } from "@/plugins/launchers";
 import { PluginSlotMount, PluginSlotOutlet, usePluginSlots } from "@/plugins/slots";
+import { useTranslation } from "@/i18n";
 import {
   isStarred,
   resourceMembershipState,
@@ -322,6 +323,7 @@ function ProjectPluginOperationsList({
 /* ── Main project page ── */
 
 export function ProjectDetail() {
+  const { t } = useTranslation();
   const { companyPrefix, projectId, filter } = useParams<{
     companyPrefix?: string;
     projectId: string;
@@ -494,10 +496,10 @@ export function ProjectDetail() {
 
   useEffect(() => {
     setBreadcrumbs([
-      { label: "Projects", href: "/projects" },
-      { label: project?.name ?? routeProjectRef ?? "Project" },
+      { label: t("nav.projects"), href: "/projects" },
+      { label: project?.name ?? routeProjectRef ?? t("pages.projectDetail.defaultProjectLabel") },
     ]);
-  }, [setBreadcrumbs, project, routeProjectRef]);
+  }, [setBreadcrumbs, project, routeProjectRef, t]);
 
   useEffect(() => {
     if (!project) return;
@@ -799,8 +801,8 @@ export function ProjectDetail() {
         companyId={resolvedCompanyId}
         scopeKind="project"
         scopeId={project.id}
-        title="Project summary"
-        description="Summarizer keeps the latest project status, next step, and operator-needed items here."
+        title={t("pages.projectDetail.summaryTitle")}
+        description={t("pages.projectDetail.summaryDescription")}
       />
 
       <PluginSlotOutlet
@@ -837,12 +839,12 @@ export function ProjectDetail() {
       <Tabs value={activeTab ?? "list"} onValueChange={(value) => handleTabChange(value as ProjectTab)}>
         <PageTabBar
           items={[
-            { value: "list", label: "Tasks" },
+            { value: "list", label: t("nav.tasks") },
 
-            ...(project.managedByPlugin ? [{ value: "plugin-operations", label: "Plugin operations" }] : []),
-            ...(showWorkspacesTab ? [{ value: "workspaces", label: "Workspaces" }] : []),
-            { value: "configuration", label: "Configuration" },
-            { value: "budget", label: "Budget" },
+            ...(project.managedByPlugin ? [{ value: "plugin-operations", label: t("pages.projectDetail.tabPluginOperations") }] : []),
+            ...(showWorkspacesTab ? [{ value: "workspaces", label: t("nav.workspaces") }] : []),
+            { value: "configuration", label: t("pages.projectDetail.tabConfiguration") },
+            { value: "budget", label: t("nav.budgets") },
             ...pluginTabItems.map((item) => ({
               value: item.value,
               label: item.label,
@@ -881,7 +883,7 @@ export function ProjectDetail() {
             />
           )
         ) : (
-          <p className="text-sm text-muted-foreground">Loading workspaces...</p>
+          <p className="text-sm text-muted-foreground">{t("pages.projectDetail.loadingWorkspaces")}</p>
         )
       ) : null}
 

@@ -25,6 +25,7 @@ import {
 import { cn } from "../lib/utils";
 import { brandChipBadge } from "../lib/status-colors";
 import { installPayload, installStateFrom, isAgentInstalled, INSTALLED_HINT } from "../lib/tool-installs";
+import { useTranslation } from "@/i18n";
 
 function isGitHubConnection(connection: ToolConnection): boolean {
   return (connection.config?.sourceTemplateKey ?? connection.transportConfig?.sourceTemplateKey) === "github";
@@ -52,6 +53,7 @@ function GitHubIdentitySection({
   loadError: boolean;
   onRetry: () => void;
 }) {
+  const { t } = useTranslation();
   const dedicatedLogin = dedicatedIdentity?.grant.providerTenant?.github?.login;
   const personalLogin = personalIdentity?.grant.providerTenant?.github?.login;
 
@@ -63,34 +65,36 @@ function GitHubIdentitySection({
             <GithubIcon className="h-4 w-4" />
           </div>
           <div className="min-w-0">
-            <h3 className="text-sm font-semibold text-foreground">GitHub identity</h3>
+            <h3 className="text-sm font-semibold text-foreground">{t("pages.agentTools.githubIdentity")}</h3>
             {loading ? (
-              <p className="mt-0.5 text-xs text-muted-foreground">Checking GitHub identity…</p>
+              <p className="mt-0.5 text-xs text-muted-foreground">{t("pages.agentTools.checkingGitHubIdentity")}</p>
             ) : loadError ? (
               <>
-                <p className="mt-0.5 text-sm font-medium text-foreground">Could not load GitHub identity</p>
+                <p className="mt-0.5 text-sm font-medium text-foreground">{t("pages.agentTools.githubIdentityLoadFailed")}</p>
                 <p className="mt-0.5 text-xs text-muted-foreground">
-                  Paperclip could not verify this agent&apos;s current connection. Your existing setup was not changed.
+                  {t("pages.agentTools.githubIdentityLoadFailedBody")}
                 </p>
               </>
             ) : dedicatedIdentity ? (
               <>
                 <p className="mt-0.5 text-sm font-medium text-foreground">
-                  {dedicatedLogin ? `@${dedicatedLogin}` : "Dedicated GitHub account"}
+                  {dedicatedLogin ? `@${dedicatedLogin}` : t("pages.agentTools.dedicatedGitHubAccount")}
                 </p>
                 <p className="mt-0.5 text-xs text-muted-foreground">
-                  Used only by {agentName}. This dedicated connection takes precedence over the responsible person&apos;s GitHub.
+                  {t("pages.agentTools.dedicatedGitHubBody", { agentName })}
                 </p>
               </>
             ) : (
               <>
-                <p className="mt-0.5 text-sm font-medium text-foreground">Use responsible person&apos;s GitHub</p>
+                <p className="mt-0.5 text-sm font-medium text-foreground">{t("pages.agentTools.useResponsibleGitHub")}</p>
                 <p className="mt-0.5 text-xs text-muted-foreground">
-                  At run start, Paperclip uses the personal GitHub connection of the person responsible for the task.
+                  {t("pages.agentTools.useResponsibleGitHubBody")}
                 </p>
                 {personalIdentity ? (
                   <p className="mt-1 text-xs text-muted-foreground">
-                    Your account is connected{personalLogin ? ` as @${personalLogin}` : ""}.
+                    {t("pages.agentTools.yourAccountConnected", {
+                      login: personalLogin ? ` as @${personalLogin}` : "",
+                    })}
                   </p>
                 ) : null}
               </>
@@ -101,24 +105,24 @@ function GitHubIdentitySection({
         {!loading ? (
           <div className="flex flex-wrap items-center gap-2">
             {loadError ? (
-              <Button variant="outline" size="sm" onClick={onRetry}>Retry</Button>
+              <Button variant="outline" size="sm" onClick={onRetry}>{t("common.retry")}</Button>
             ) : dedicatedIdentity ? (
               <Button variant="outline" size="sm" asChild>
-                <Link to={`/apps/${dedicatedIdentity.connection.id}/permissions`}>Manage GitHub identity</Link>
+                <Link to={`/apps/${dedicatedIdentity.connection.id}/permissions`}>{t("pages.agentTools.manageGitHubIdentity")}</Link>
               </Button>
             ) : (
               <>
                 {personalIdentity ? (
                   <Button variant="outline" size="sm" asChild>
-                    <Link to={`/apps/${personalIdentity.connection.id}/permissions`}>Manage my GitHub</Link>
+                    <Link to={`/apps/${personalIdentity.connection.id}/permissions`}>{t("pages.agentTools.manageMyGitHub")}</Link>
                   </Button>
                 ) : (
                   <Button size="sm" asChild>
-                    <Link to="/apps/connect?source=github">Connect my GitHub</Link>
+                    <Link to="/apps/connect?source=github">{t("pages.agentTools.connectMyGitHub")}</Link>
                   </Button>
                 )}
                 <Button variant="outline" size="sm" asChild>
-                  <Link to="/apps/connect?source=github">Use a dedicated account</Link>
+                  <Link to="/apps/connect?source=github">{t("pages.agentTools.useDedicatedAccount")}</Link>
                 </Button>
               </>
             )}
@@ -196,13 +200,14 @@ function InstalledAppsSection({
   error: boolean;
   onChange: (connectionId: string, installed: boolean) => void;
 }) {
+  const { t } = useTranslation();
   return (
     <section className="rounded-lg border border-border bg-card">
       <div className="flex flex-wrap items-start justify-between gap-3 border-b border-border px-3 py-2.5">
         <div>
-          <h3 className="text-sm font-semibold text-foreground">Installed apps</h3>
+          <h3 className="text-sm font-semibold text-foreground">{t("pages.agentTools.installedApps")}</h3>
           <p className="mt-0.5 text-xs text-muted-foreground">
-            Installed apps load tools into {agentName}'s context on every run. Permitted-only apps do not add context cost.
+            {t("pages.agentTools.installedAppsBody", { agentName })}
           </p>
         </div>
         <InstallSaveStatusChip pending={saving} unsaved={unsaved} error={error} />
@@ -210,12 +215,12 @@ function InstalledAppsSection({
 
       <div className="space-y-3 p-3">
         <InlineBanner tone="info" compact>
-          Has access means the app is permitted. Installed means its tools are added to this agent's runtime context.
+          {t("pages.agentTools.installedAppsBanner")}
         </InlineBanner>
 
         {connections.length === 0 ? (
           <p className="rounded-md border border-border bg-muted/30 px-3 py-4 text-sm text-muted-foreground">
-            No permitted apps yet. Bind an access profile to make apps available here.
+            {t("pages.agentTools.noPermittedApps")}
           </p>
         ) : (
           <div className="divide-y divide-border rounded-md border border-border">
@@ -238,13 +243,13 @@ function InstalledAppsSection({
                       <span className="flex flex-wrap items-center gap-2">
                         <span className="truncate text-sm font-medium text-foreground">{connection.name}</span>
                         <InstallBadge installed={checked} installedForAll={installedForAll} permitted={permitted} />
-                        {rowPending ? <span className="text-xs text-muted-foreground">Saving...</span> : null}
+                        {rowPending ? <span className="text-xs text-muted-foreground">{t("common.saving")}</span> : null}
                       </span>
                       <span className="mt-0.5 block text-xs text-muted-foreground">
                         {installedForAll
-                          ? "Installed from the app page for every agent. Remove the all-agents install there."
+                          ? t("pages.agentTools.installedForAllHint")
                           : checked
-                            ? "Loaded into this agent's runtime context."
+                            ? t("pages.agentTools.loadedIntoRuntime")
                             : INSTALLED_HINT}
                       </span>
                     </span>
@@ -259,11 +264,11 @@ function InstalledAppsSection({
                           to={`/apps/${connection.id}/permissions`}
                           className="text-xs font-medium text-primary hover:underline"
                         >
-                          Open permissions
+                          {t("pages.agentTools.openPermissions")}
                         </Link>
                       )}
                     >
-                      Permitted but not installed — tools will not appear in runs.
+                      {t("pages.agentTools.permittedNotInstalled")}
                     </InlineBanner>
                   ) : null}
                 </div>
@@ -285,7 +290,12 @@ function InstallBadge({
   installedForAll: boolean;
   permitted: boolean;
 }) {
-  const label = installed ? (installedForAll ? "Installed for all" : "Installed") : permitted ? "Permitted only" : "Not permitted";
+  const { t } = useTranslation();
+  const label = installed
+    ? (installedForAll ? t("pages.agentTools.installedForAll") : t("pages.agentTools.installed"))
+    : permitted
+      ? t("pages.agentTools.permittedOnly")
+      : t("pages.agentTools.notPermitted");
   return (
     <span
       className={cn(
@@ -308,10 +318,11 @@ function InstallSaveStatusChip({
   unsaved: boolean;
   error: boolean;
 }) {
-  if (pending) return <span className="text-xs text-muted-foreground">Saving...</span>;
-  if (error) return <span className="text-xs text-destructive">Could not save</span>;
-  if (unsaved) return <span className="text-xs text-muted-foreground">Unsaved changes</span>;
-  return <span className="text-xs text-muted-foreground">Saved</span>;
+  const { t } = useTranslation();
+  if (pending) return <span className="text-xs text-muted-foreground">{t("common.saving")}</span>;
+  if (error) return <span className="text-xs text-destructive">{t("pages.agentTools.couldNotSave")}</span>;
+  if (unsaved) return <span className="text-xs text-muted-foreground">{t("common.unsavedChanges")}</span>;
+  return <span className="text-xs text-muted-foreground">{t("pages.agentTools.saved")}</span>;
 }
 
 const POLICY_EFFECT_LABEL: Record<string, string> = {
@@ -333,6 +344,7 @@ const DENIED_TOOLS_DISPLAY_LIMIT = 30;
  * which access profiles and rules shape the final list.
  */
 export function AgentToolsTab({ agent, companyId }: { agent: AgentDetailRecord; companyId: string }) {
+  const { t } = useTranslation();
   const queryClient = useQueryClient();
   const [installDraft, setInstallDraft] = useState<Record<string, boolean>>({});
   const lastSavedInstallRef = useRef<Record<string, boolean>>({});
@@ -552,7 +564,7 @@ export function AgentToolsTab({ agent, companyId }: { agent: AgentDetailRecord; 
   const profiles = effective.data?.profiles ?? [];
   const catalogLoading = catalogQueries.some((q) => q.isLoading);
 
-  if (effective.isLoading) return <ToolsLoadingState label="Resolving effective access…" />;
+  if (effective.isLoading) return <ToolsLoadingState label={t("pages.agentTools.resolvingAccess")} />;
   if (effective.error) {
     return <ToolsErrorState error={effective.error} onRetry={() => effective.refetch()} />;
   }
@@ -563,16 +575,8 @@ export function AgentToolsTab({ agent, companyId }: { agent: AgentDetailRecord; 
     <div className="space-y-4">
       <EnforcementBanner
         tone="info"
-        title="Effective access"
-        body={
-          <>
-            This is exactly the tool set Paperclip will accept for{" "}
-            <span className="font-medium">{agent.name}</span>. Profile and policy edits are
-            reflected within ~5 seconds. The agent's prompt can narrow this list but{" "}
-            <span className="font-medium">cannot expand it</span> — everything else is blocked by
-            default.
-          </>
-        }
+        title={t("pages.agentTools.effectiveAccessTitle")}
+        body={t("pages.agentTools.effectiveAccessBody", { agentName: agent.name })}
       />
 
       <GitHubIdentitySection
@@ -610,23 +614,24 @@ export function AgentToolsTab({ agent, companyId }: { agent: AgentDetailRecord; 
         <div className="lg:col-span-2">
           <div className="rounded-lg border border-border">
             <div className="flex items-center justify-between gap-2 border-b border-border px-3 py-2.5">
-              <h3 className="text-sm font-semibold text-foreground">Allowed tools</h3>
+              <h3 className="text-sm font-semibold text-foreground">{t("pages.agentTools.allowedTools")}</h3>
               <span className="text-xs text-muted-foreground tabular-nums">
-                {allowedTools.length} {allowedTools.length === 1 ? "tool" : "tools"}
+                {allowedTools.length}{" "}
+                {t(allowedTools.length === 1 ? "pages.agentTools.toolOne" : "pages.agentTools.toolOther")}
               </span>
             </div>
             {allowedTools.length === 0 ? (
               <p className="px-3 py-6 text-sm text-muted-foreground">
-                No tools are allowed for this agent. Bind a tool profile to grant access.
+                {t("pages.agentTools.noAllowedTools")}
               </p>
             ) : (
               <table className="w-full text-sm">
                 <thead>
                   <tr className="border-b border-border text-left text-xs text-muted-foreground">
-                    <th className="px-3 py-2 font-medium">Tool</th>
-                    <th className="px-3 py-2 font-medium">Capability</th>
-                    <th className="px-3 py-2 font-medium">Risk</th>
-                    <th className="px-3 py-2 font-medium">Source</th>
+                    <th className="px-3 py-2 font-medium">{t("pages.agentTools.columnTool")}</th>
+                    <th className="px-3 py-2 font-medium">{t("pages.agentTools.columnCapability")}</th>
+                    <th className="px-3 py-2 font-medium">{t("pages.agentTools.columnRisk")}</th>
+                    <th className="px-3 py-2 font-medium">{t("pages.agentTools.columnSource")}</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-border">
@@ -671,7 +676,7 @@ export function AgentToolsTab({ agent, companyId }: { agent: AgentDetailRecord; 
             <div className="mt-3 space-y-1.5">
               <div className="flex items-center justify-between gap-2">
                 <div className="text-(length:--text-micro) font-medium uppercase tracking-wide text-muted-foreground">
-                  Access profiles
+                  {t("pages.agentTools.accessProfiles")}
                 </div>
                 <Link
                   to={`${profilesHref}?check=1`}

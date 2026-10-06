@@ -45,13 +45,21 @@ describe("formatReleaseDate", () => {
   });
 });
 
+const mockT = (key: string, options?: Record<string, unknown>) => {
+  if (key === "pages.agentSkills.releasePicker.releaseFallback") return "Release";
+  if (key === "pages.agentSkills.releasePicker.releasedDate") {
+    return `${options?.name} · released ${options?.date}`;
+  }
+  return key;
+};
+
 describe("releaseOptionLabel", () => {
   it("renders name and released date", () => {
-    expect(releaseOptionLabel(makeRelease())).toBe("V7 — Roster champion · released 2026-07-21");
+    expect(releaseOptionLabel(makeRelease(), mockT)).toBe("V7 — Roster champion · released 2026-07-21");
   });
 
   it("falls back gracefully without a date", () => {
-    expect(releaseOptionLabel(makeRelease({ releasedAt: null }))).toBe("V7 — Roster champion");
+    expect(releaseOptionLabel(makeRelease({ releasedAt: null }), mockT)).toBe("V7 — Roster champion");
   });
 });
 

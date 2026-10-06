@@ -1,4 +1,5 @@
 import type { StatusCard, StatusCardRefreshPolicy } from "@paperclipai/shared";
+import { t as translate } from "@/i18n";
 
 /**
  * The lifecycle states a status card renders as on the board (plan §7,
@@ -128,16 +129,16 @@ export function formatUsdFromCents(cents: number): string {
 export function describeRefreshPolicy(policy: StatusCardRefreshPolicy): string {
   switch (policy.mode) {
     case "manual":
-      return "manual";
+      return translate("pages.statusCards.policy.manual");
     case "interval":
       return policy.intervalMinutes
-        ? `every ${policy.intervalMinutes}m if changed`
-        : "on a schedule if changed";
+        ? translate("pages.statusCards.policy.everyMinutesIfChanged", { minutes: policy.intervalMinutes })
+        : translate("pages.statusCards.policy.onScheduleIfChanged");
     case "reactive": {
       const debounce = policy.debounceSeconds ?? 60;
-      return `on change (${debounce}s)`;
+      return translate("pages.statusCards.policy.onChangeDebounced", { seconds: debounce });
     }
     default:
-      return "manual";
+      return translate("pages.statusCards.policy.manual");
   }
 }

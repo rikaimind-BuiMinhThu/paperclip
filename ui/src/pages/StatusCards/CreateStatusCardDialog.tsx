@@ -17,6 +17,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { InlineBanner } from "@/components/InlineBanner";
 import { queryKeys } from "@/lib/queryKeys";
 import { SummarizerAgentSelect } from "./SummarizerAgentSelect";
+import { useTranslation } from "@/i18n";
 
 const EXAMPLES = [
   "issues about evals",
@@ -33,6 +34,7 @@ export function CreateStatusCardDialog({
   open: boolean;
   onOpenChange: (open: boolean) => void;
 }) {
+  const { t } = useTranslation();
   const queryClient = useQueryClient();
   const [prompt, setPrompt] = useState("");
   // "" → the built-in Summarizer; otherwise the id of the override agent.
@@ -74,14 +76,14 @@ export function CreateStatusCardDialog({
     <Dialog open={open} onOpenChange={(next) => (next ? onOpenChange(true) : close())}>
       <DialogContent className="sm:max-w-2xl">
         <DialogHeader>
-          <DialogTitle>New card</DialogTitle>
+          <DialogTitle>{t("pages.statusCards.createDialogTitle")}</DialogTitle>
           <DialogDescription>
             One message sets up the whole card: say what you want to watch and what each update
             should tell you. The agent builds the query from it and writes every update against it.
           </DialogDescription>
         </DialogHeader>
 
-        {error ? <InlineBanner tone="danger" title="Create failed">{error}</InlineBanner> : null}
+        {error ? <InlineBanner tone="danger" title={t("pages.statusCards.createFailed")}>{error}</InlineBanner> : null}
 
         <div className="space-y-3">
           <label htmlFor="status-card-prompt" className="block pb-1 text-sm font-semibold">
@@ -122,14 +124,14 @@ export function CreateStatusCardDialog({
         <DialogFooter>
           <div className="flex gap-2">
             <Button variant="outline" onClick={close} disabled={createMutation.isPending}>
-              Cancel
+              {t("common.cancel")}
             </Button>
             <Button
               onClick={() => createMutation.mutate()}
               disabled={prompt.trim().length === 0 || createMutation.isPending}
             >
               {createMutation.isPending ? <Loader2 className="animate-spin" /> : null}
-              Create card
+              {t("pages.statusCards.createCard")}
             </Button>
           </div>
         </DialogFooter>

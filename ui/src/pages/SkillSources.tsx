@@ -20,9 +20,11 @@ import { SkillSourceTree, type SkillTreeCandidate } from './skills/SkillSourceTr
 import { timeAgo } from '@/lib/timeAgo';
 import { skillRoute } from '@/lib/company-skill-routes';
 import { consumeSkillSourceReturn, rememberSkillSourceReturn } from '@/lib/skill-source-connect-return';
+import { useTranslation } from '@/i18n';
 
 const sourceKey = (companyId: string) => queryKeys.skillSources.all(companyId);
 export function SkillSources() {
+  const { t } = useTranslation();
   const { selectedCompanyId, selectedCompany } = useCompany();
   const { sourceId } = useParams<{ sourceId: string }>();
   const navigate = useNavigate();
@@ -30,7 +32,9 @@ export function SkillSources() {
   const { setBreadcrumbs } = useBreadcrumbs();
   const [results, setResults] = useState<Record<string, string>>({});
   const companyId = selectedCompanyId ?? '';
-  useEffect(() => { setBreadcrumbs([{ label: 'Skills', href: '/skills' }, { label: 'Sources' }]); }, [setBreadcrumbs]);
+  useEffect(() => {
+    setBreadcrumbs([{ label: t('nav.skills'), href: '/skills' }, { label: t('pages.skills.sources') }]);
+  }, [setBreadcrumbs, t]);
   const query = useQuery({ queryKey: sourceKey(companyId), queryFn: () => skillSourcesApi.list(companyId), enabled: Boolean(companyId) });
   async function invalidate() {
     await Promise.all([client.invalidateQueries({ queryKey: sourceKey(companyId) }), client.invalidateQueries({ queryKey: queryKeys.companySkills.list(companyId) })]);
@@ -40,17 +44,19 @@ export function SkillSources() {
   }, onError: (error, id) => { setResults(prev => ({ ...prev, [id]: error.message })); void invalidate(); } });
   const disconnect = useMutation({ mutationFn: (id: string) => skillSourcesApi.disconnect(companyId, id), onSuccess: invalidate });
   const activeSource = query.data?.find(source => source.id === sourceId);
-  if (!companyId) return <p className="p-6 text-sm text-muted-foreground">Select a company to manage skill sources.</p>;
+  if (!companyId) {
+    return <p className="p-6 text-sm text-muted-foreground">{t('inbox.selectOrganization', { surface: t('pages.skills.sourcesTitle') })}</p>;
+  }
   return <div className="mx-auto flex w-full max-w-5xl flex-col gap-6 p-4 md:p-6">
     <header className="flex flex-wrap items-start justify-between gap-4">
-      <div><h1 className="text-xl font-semibold">Skill sources</h1><p className="mt-1 text-sm text-muted-foreground">Import skills from GitHub and refresh them when you’re ready.</p></div>
-      <Button onClick={() => navigate('/skills/sources/new')}><Plus className="size-4" />Import from GitHub</Button>
+      <div><h1 className="text-xl font-semibold">{t('pages.skills.sourcesTitle')}</h1><p className="mt-1 text-sm text-muted-foreground">{t('pages.skills.sourcesDescription')}</p></div>
+      <Button onClick={() => navigate('/skills/sources/new')}><Plus className="size-4" />{t('pages.skills.importFromGitHub')}</Button>
     </header>
-    <Link to="/skills" className="text-sm text-muted-foreground hover:text-foreground">Installed skills</Link>
-    {query.isPending && <p role="status" className="text-sm text-muted-foreground">Loading sources…</p>}
-    {query.error && <p role="alert" className="text-sm text-destructive">{query.error.message} <Button variant="ghost" size="sm" onClick={() => void query.refetch()}>Try again</Button></p>}
+    <Link to="/skills" className="text-sm text-muted-foreground hover:text-foreground">{t('pages.skills.installedSkills')}</Link>
+    {query.isPending && <p role="status" className="text-sm text-muted-foreground">{t('pages.skills.loadingSources')}</p>}
+    {query.error && <p role="alert" className="text-sm text-destructive">{query.error.message} <Button variant="ghost" size="sm" onClick={() => void query.refetch()}>{t('common.tryAgain')}</Button></p>}
     {disconnect.error && <p role="alert" className="text-sm text-destructive">{disconnect.error.message}</p>}
-    {query.data?.length === 0 && <div className="flex flex-col items-start gap-3 py-8"><p className="text-sm text-muted-foreground">No repositories added yet. Import your skills to make them available in {selectedCompany?.name ?? 'this company'}.</p><Button variant="outline" onClick={() => navigate('/skills/sources/new')}>Import from GitHub</Button></div>}
+    {query.data?.length === 0 && <div className="flex flex-col items-start gap-3 py-8"><p className="text-sm text-muted-foreground">{t('pages.skills.sourcesEmpty')}</p><Button variant="outline" onClick={() => navigate('/skills/sources/new')}>{t('pages.skills.importFromGitHub')}</Button></div>}
     <div className="divide-y divide-border">
       {query.data?.map(source => {
         const installed = source.entries.filter(entry => entry.skillId);
@@ -59,8 +65,8 @@ export function SkillSources() {
           <div className="flex items-center gap-3">
             <div className="flex min-w-0 flex-1 items-center gap-3"><GithubIcon className="size-5 shrink-0 text-muted-foreground" /><div className="min-w-0">
               <a href={source.repositoryUrl} target="_blank" rel="noreferrer" title={source.fullName} className="block truncate rounded-sm text-sm font-medium hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">{source.fullName}</a>
-              {!source.enabled && <p className="text-xs text-muted-foreground">Disconnected</p>}
-              {refresh.isPending && refresh.variables === source.id && <p role="status" className="text-xs text-muted-foreground">Refreshing…</p>}
+              {!source.enabled && <p className="text-xs text-muted-foreground">{t('pages.skills.disconnected')}</p>}
+              {refresh.isPending && refresh.variables === source.id && <p role="status" className="text-xs text-muted-foreground">{t('pages.skills.refreshing')}</p>}
               {newCount > 0 && <Link to={`/skills/sources/${source.id}`} className="text-xs underline">{newCount} new {newCount === 1 ? 'skill' : 'skills'} available</Link>}
             </div></div>
             <DropdownMenu>
@@ -68,9 +74,9 @@ export function SkillSources() {
                 <Button size="icon-sm" variant="ghost" className="shrink-0" aria-label={`More actions for ${source.fullName}`}><MoreVertical className="size-4" /></Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
-                <DropdownMenuItem disabled={!source.enabled || refresh.isPending} onSelect={() => refresh.mutate(source.id)}>{refresh.isPending && refresh.variables === source.id ? 'Refreshing…' : 'Refresh'}</DropdownMenuItem>
-                <DropdownMenuItem onSelect={() => navigate(`/skills/sources/${source.id}`)}>Select skills</DropdownMenuItem>
-                <DropdownMenuItem variant="destructive" disabled={!source.enabled || disconnect.isPending} onSelect={() => disconnect.mutate(source.id)}>Disconnect source</DropdownMenuItem>
+                <DropdownMenuItem disabled={!source.enabled || refresh.isPending} onSelect={() => refresh.mutate(source.id)}>{refresh.isPending && refresh.variables === source.id ? t('pages.skills.refreshing') : t('pages.skills.refresh')}</DropdownMenuItem>
+                <DropdownMenuItem onSelect={() => navigate(`/skills/sources/${source.id}`)}>{t('pages.skills.selectSkills')}</DropdownMenuItem>
+                <DropdownMenuItem variant="destructive" disabled={!source.enabled || disconnect.isPending} onSelect={() => disconnect.mutate(source.id)}>{t('pages.skills.disconnectSource')}</DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
           </div>
@@ -93,7 +99,7 @@ export function SkillSources() {
     {sourceId && (sourceId === 'new' || activeSource) && <SourceDialog key={`${companyId}:${sourceId}`} companyId={companyId} source={activeSource} onClose={() => navigate('/skills/sources')} onSaved={async result => {
       setResults(prev => ({ ...prev, [result.source.id]: result.warnings.join(' · ') })); await invalidate(); navigate('/skills/sources');
     }} />}
-    {sourceId && sourceId !== 'new' && query.isSuccess && !activeSource && <p role="alert" className="text-sm text-destructive">Source not found.</p>}
+    {sourceId && sourceId !== 'new' && query.isSuccess && !activeSource && <p role="alert" className="text-sm text-destructive">{t('pages.skills.sourceNotFound')}</p>}
   </div>;
 }
 

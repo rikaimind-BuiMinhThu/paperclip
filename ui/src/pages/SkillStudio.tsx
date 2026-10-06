@@ -57,6 +57,7 @@ import { agentsApi } from "@/api/agents";
 import { companySkillsApi } from "@/api/companySkills";
 import { issuesApi } from "@/api/issues";
 import { queryKeys } from "@/lib/queryKeys";
+import { useTranslation } from "@/i18n";
 import { copyTextToClipboard } from "@/lib/clipboard";
 import { useCopyToast } from "@/lib/use-copy-action";
 import { skillStudioNewRoute, skillStudioRoute } from "@/lib/company-skill-routes";
@@ -273,6 +274,7 @@ function useIsMobile() {
 // ---------------------------------------------------------------------------
 
 export function SkillStudio() {
+  const { t } = useTranslation();
   const { skillId = "" } = useParams<{ skillId: string }>();
   const location = useLocation();
   const [searchParams] = useSearchParams();
@@ -309,22 +311,22 @@ export function SkillStudio() {
     setBreadcrumbs(
       isCreateMode
         ? [
-            { label: "Skills", href: "/skills" },
-            { label: "Studio", href: "/skills/studio" },
-            { label: "New skill" },
+            { label: t("nav.skills"), href: "/skills" },
+            { label: t("pages.skills.studio"), href: "/skills/studio" },
+            { label: t("pages.skills.newSkill") },
           ]
         : skill
         ? [
-            { label: "Skills", href: "/skills" },
-            { label: "Studio", href: "/skills/studio" },
+            { label: t("nav.skills"), href: "/skills" },
+            { label: t("pages.skills.studio"), href: "/skills/studio" },
             { label: skill.name },
           ]
         : [
-            { label: "Skills", href: "/skills" },
-            { label: "Studio" },
+            { label: t("nav.skills"), href: "/skills" },
+            { label: t("pages.skills.studio") },
           ],
     );
-  }, [isCreateMode, setBreadcrumbs, skill]);
+  }, [isCreateMode, setBreadcrumbs, skill, t]);
 
   // Record a per-browser visit whenever a skill successfully opens, powering the
   // landing's "Recently visited" section (PAP-13150).
@@ -333,7 +335,7 @@ export function SkillStudio() {
   }, [skill?.id]);
 
   if (!companyId) {
-    return <StudioMessage message="Select an organization to open Skill Studio." />;
+    return <StudioMessage message={t("pages.skills.selectOrganizationStudio")} />;
   }
   if (isCreateMode) {
     return (
@@ -362,10 +364,10 @@ export function SkillStudio() {
     );
   }
   if (detailQuery.isLoading) {
-    return <StudioMessage message="Loading skill…" />;
+    return <StudioMessage message={t("pages.skills.loadingSkill")} />;
   }
   if (detailQuery.isError || !detailQuery.data) {
-    return <StudioMessage message="Skill not found." />;
+    return <StudioMessage message={t("pages.skills.skillNotFound")} />;
   }
 
   return (

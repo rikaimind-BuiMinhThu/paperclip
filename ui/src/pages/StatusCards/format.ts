@@ -1,4 +1,5 @@
 import type { StatusCardRefreshPolicy, StatusCardUpdate } from "@paperclipai/shared";
+import { t as translate } from "@/i18n";
 
 /** "1.1k tok" / "940 tok" — compact token count for footers and chips. */
 export function formatTokens(tokens: number | null | undefined): string | null {
@@ -98,22 +99,19 @@ export function estimateStatusCardCost(policy: StatusCardRefreshPolicy): StatusC
     const cost = `${formatCents(EST_FULL_CENTS)} · ${formatTokens(EST_FULL_TOKENS)}`;
     return {
       cost,
-      primary: `~1 rebuild per refresh ≈ ${cost}`,
-      note: "Manual cards only cost tokens when you press Refresh.",
+      primary: translate("pages.statusCards.settingsForm.costManualPrimary", { cost }),
+      note: translate("pages.statusCards.settingsForm.costManualNote"),
     };
   }
 
   const windowMinutes = activeWindowMinutes(policy);
   let maxPerDay: number;
-  let cadence: string;
   if (policy.mode === "interval") {
     const interval = policy.intervalMinutes ?? 15;
     maxPerDay = Math.floor(windowMinutes / interval);
-    cadence = `every ${interval} min`;
   } else {
     const perHour = policy.maxUpdatesPerHour ?? 6;
     maxPerDay = Math.round((windowMinutes / 60) * perHour);
-    cadence = `up to ${perHour}/hour`;
   }
 
   const cap = policy.dailyTokenCap ?? null;
@@ -123,15 +121,26 @@ export function estimateStatusCardCost(policy: StatusCardRefreshPolicy): StatusC
 
   const tokens = effective * EST_INCREMENTAL_TOKENS;
   const cents = effective * EST_INCREMENTAL_CENTS;
-  const withinHours = policy.activeHours ? " during active hours" : "";
+  const withinHours = policy.activeHours
+    ? translate("pages.statusCards.settingsForm.costWithinActiveHours")
+    : "";
   const cost = `${formatCents(cents)} · ${formatTokens(tokens)}`;
+  const cadenceKey =
+    policy.mode === "interval"
+      ? translate("pages.statusCards.settingsForm.costCadenceEveryMin", { interval: policy.intervalMinutes ?? 15 })
+      : translate("pages.statusCards.settingsForm.costCadencePerHour", { count: policy.maxUpdatesPerHour ?? 6 });
 
   return {
     cost,
-    primary: `Up to ~${effective} updates/day (${cadence}${withinHours}) ≈ ${cost}`,
+    primary: translate("pages.statusCards.settingsForm.costAutoPrimary", {
+      count: effective,
+      cadence: cadenceKey,
+      withinHours,
+      cost,
+    }),
     note: cappedByTokenCap
-      ? `Capped by your ${formatTokens(cap!)} daily token cap — the card pauses when it's hit.`
-      : "Only runs when something changed; a cheap no-op check otherwise.",
+      ? translate("pages.statusCards.settingsForm.costCappedNote", { cap: formatTokens(cap!) })
+      : translate("pages.statusCards.settingsForm.costNoOpNote"),
   };
 }
 

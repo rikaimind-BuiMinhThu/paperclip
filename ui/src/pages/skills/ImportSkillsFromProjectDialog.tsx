@@ -47,6 +47,10 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Badge } from "@/components/ui/badge";
 import { EmptyState } from "../../components/EmptyState";
 import { cn } from "../../lib/utils";
+import type { TFunction } from "i18next";
+import { useTranslation } from "@/i18n";
+
+const PROJECT_I18N = "pages.skills.importFromProject";
 
 type Step = "pick" | "scanning" | "select" | "result";
 export type SkillSelection = { workspaceId: string; path: string; slug?: string };
@@ -87,23 +91,23 @@ export function scannableWorkspaces(project: Project): ProjectWorkspace[] {
   return project.workspaces.filter(isScannableWorkspace);
 }
 
-function workspaceKindLabel(sourceType: ProjectWorkspace["sourceType"]): string {
+function workspaceKindLabel(sourceType: ProjectWorkspace["sourceType"], t: TFunction): string {
   switch (sourceType) {
     case "git_repo":
-      return "git";
+      return t(`${PROJECT_I18N}.workspaceKindGit`);
     case "local_path":
-      return "local";
+      return t(`${PROJECT_I18N}.workspaceKindLocal`);
     case "non_git_path":
-      return "folder";
+      return t(`${PROJECT_I18N}.workspaceKindFolder`);
     case "remote_managed":
-      return "remote";
+      return t(`${PROJECT_I18N}.workspaceKindRemote`);
     default:
       return sourceType;
   }
 }
 
-function summarizeWorkspaceKinds(workspaces: ProjectWorkspace[]): string {
-  const kinds = Array.from(new Set(workspaces.map((ws) => workspaceKindLabel(ws.sourceType))));
+function summarizeWorkspaceKinds(workspaces: ProjectWorkspace[], t: TFunction): string {
+  const kinds = Array.from(new Set(workspaces.map((ws) => workspaceKindLabel(ws.sourceType, t))));
   return kinds.join(", ");
 }
 
@@ -216,12 +220,12 @@ export function isValidSelectionSlug(selection: SkillSelection): boolean {
   return Boolean(trimmed) && normalizeAgentUrlKey(trimmed) === trimmed;
 }
 
-function readableErrorMessage(error: unknown): string {
+function readableErrorMessage(error: unknown, t: TFunction): string {
   if (error instanceof ApiError) {
-    return error.message || `Request failed: ${error.status}`;
+    return error.message || t(`${PROJECT_I18N}.requestFailedStatus`, { status: error.status });
   }
   if (error instanceof Error) return error.message;
-  return "Unexpected error";
+  return t(`${PROJECT_I18N}.unexpectedError`);
 }
 
 export function isGrantError(error: unknown): boolean {
@@ -234,6 +238,7 @@ function CandidateStatusBadge({
 }: {
   status: CompanySkillProjectScanCandidate["status"];
 }) {
+  const { t } = useTranslation();
   switch (status) {
     case "already_imported":
       return (
@@ -241,7 +246,7 @@ function CandidateStatusBadge({
           variant="outline"
           className="gap-1 px-1.5 py-0 font-normal text-muted-foreground border-border/60"
         >
-          <Link2 className="h-3 w-3" /> Imported
+          <Link2 className="h-3 w-3" /> {t(`${PROJECT_I18N}.statusImported`)}
         </Badge>
       );
     case "conflict":
@@ -250,7 +255,7 @@ function CandidateStatusBadge({
           variant="outline"
           className="gap-1 px-1.5 py-0 font-normal text-amber-600 border-amber-500/40 dark:text-amber-400"
         >
-          <AlertTriangle className="h-3 w-3" /> Conflict
+          <AlertTriangle className="h-3 w-3" /> {t(`${PROJECT_I18N}.statusConflict`)}
         </Badge>
       );
     case "skipped":
@@ -259,7 +264,7 @@ function CandidateStatusBadge({
           variant="outline"
           className="gap-1 px-1.5 py-0 font-normal text-muted-foreground border-border/60"
         >
-          <FileWarning className="h-3 w-3" /> Skipped
+          <FileWarning className="h-3 w-3" /> {t(`${PROJECT_I18N}.statusSkipped`)}
         </Badge>
       );
     case "new":
@@ -269,7 +274,7 @@ function CandidateStatusBadge({
           variant="outline"
           className="gap-1 px-1.5 py-0 font-normal text-emerald-600 border-emerald-500/40 dark:text-emerald-400"
         >
-          <CheckCircle2 className="h-3 w-3" /> New
+          <CheckCircle2 className="h-3 w-3" /> {t(`${PROJECT_I18N}.statusNew`)}
         </Badge>
       );
   }
@@ -281,6 +286,7 @@ export function ImportSkillsFromProjectDialog({
   companyId,
   onImportFromPath,
 }: ImportSkillsFromProjectDialogProps) {
+  const { t } = useTranslation();
   const queryClient = useQueryClient();
   const toast = useToastActions();
 
@@ -350,7 +356,7 @@ export function ImportSkillsFromProjectDialog({
 
   const importMutation = useMutation({
     mutationFn: () => {
-      if (!selectedProject) throw new Error("No project selected.");
+      if (!selectedProject) throw new Error(t(`${PROJECT_I18N}.noProjectSelectedError`));
       const selectionInput = Array.from(selection.values());
       return companySkillsApi.scanProjects(companyId, {
         projectIds: [selectedProject.id],
@@ -367,18 +373,24 @@ export function ImportSkillsFromProjectDialog({
       const importedCount = result.imported.length;
       toast.pushToast({
         tone: importedCount > 0 ? "success" : "warn",
-        title: importedCount > 0 ? "Skills imported" : "Nothing imported",
+        title:
+          importedCount > 0
+            ? t(`${PROJECT_I18N}.toastImportedTitle`)
+            : t(`${PROJECT_I18N}.toastNothingTitle`),
         body:
           importedCount > 0
-            ? `${importedCount} skill${importedCount === 1 ? "" : "s"} imported as references from ${selectedProject?.name ?? "the project"}.`
-            : "No skills were imported.",
+            ? t(`${PROJECT_I18N}.toastImportedBody`, {
+                count: importedCount,
+                projectName: selectedProject?.name ?? t(`${PROJECT_I18N}.projectFallbackName`),
+              })
+            : t(`${PROJECT_I18N}.toastNothingBody`),
       });
     },
     onError: (error) => {
       toast.pushToast({
         tone: "error",
-        title: "Import failed",
-        body: readableErrorMessage(error),
+        title: t(`${PROJECT_I18N}.toastFailedTitle`),
+        body: readableErrorMessage(error, t),
       });
     },
   });
@@ -463,12 +475,19 @@ export function ImportSkillsFromProjectDialog({
       } else {
         toast.pushToast({
           tone: "warn",
-          title: candidate?.status === "already_imported" ? "Skill already imported" : "Skill could not be added",
-          body: candidate?.reason ?? "The selected folder does not contain a valid SKILL.md file.",
+          title:
+            candidate?.status === "already_imported"
+              ? t(`${PROJECT_I18N}.toastAlreadyImportedTitle`)
+              : t(`${PROJECT_I18N}.toastCouldNotAddTitle`),
+          body: candidate?.reason ?? t(`${PROJECT_I18N}.toastInvalidSkillBody`),
         });
       }
     } catch (error) {
-      toast.pushToast({ tone: "error", title: "Could not inspect skill", body: readableErrorMessage(error) });
+      toast.pushToast({
+        tone: "error",
+        title: t(`${PROJECT_I18N}.toastInspectFailedTitle`),
+        body: readableErrorMessage(error, t),
+      });
     } finally {
       setBrowseAddingKey(null);
     }
@@ -513,17 +532,17 @@ export function ImportSkillsFromProjectDialog({
         <header className="flex shrink-0 items-start justify-between gap-3 border-b border-border/60 px-5 py-4">
           <div className="flex flex-col gap-1">
             <DialogTitle className="text-base font-semibold">
-              Import skills from project
+              {t("pages.skills.importFromProject.title")}
             </DialogTitle>
             <DialogDescription className="text-xs text-muted-foreground">
-              Pick a project, scan its workspaces for skills, and import them as references.
+              {t("pages.skills.importFromProject.description")}
             </DialogDescription>
           </div>
           <button
             type="button"
             className="rounded-sm text-muted-foreground opacity-70 transition-opacity hover:opacity-100"
             onClick={handleClose}
-            aria-label="Close import dialog"
+aria-label={t("pages.skills.importFromProject.closeAria")}
           >
             <X className="h-4 w-4" />
           </button>
@@ -570,7 +589,7 @@ export function ImportSkillsFromProjectDialog({
             <div className="min-w-0 flex-1 text-xs text-muted-foreground">
               <span className="flex items-center gap-1.5">
                 <Link2 className="h-3.5 w-3.5 shrink-0" />
-                Files stay in the project — Studio edits save directly to them.
+                {t(`${PROJECT_I18N}.referenceHint`)}
               </span>
             </div>
           ) : (
@@ -588,7 +607,7 @@ export function ImportSkillsFromProjectDialog({
                       disabled={selectableCandidates.length === 0}
                       data-testid="select-all"
                     >
-                      Select all
+                      {t(`${PROJECT_I18N}.selectAll`)}
                     </Button>
                     <Button
                       variant="ghost"
@@ -597,12 +616,12 @@ export function ImportSkillsFromProjectDialog({
                       disabled={selectedCount === 0}
                       data-testid="deselect-all"
                     >
-                      Deselect all
+                      {t(`${PROJECT_I18N}.deselectAll`)}
                     </Button>
                   </div>
                 )}
                 <Button variant="outline" size="sm" onClick={backToPick}>
-                  <ArrowLeft className="mr-1 h-3.5 w-3.5" /> Back
+                  <ArrowLeft className="mr-1 h-3.5 w-3.5" /> {t("pages.skills.importFromProject.back")}
                 </Button>
                 {!scanError && candidates.length > 0 && (
                   <Button
@@ -613,10 +632,10 @@ export function ImportSkillsFromProjectDialog({
                   >
                     {importMutation.isPending ? (
                       <>
-                        <Loader2 className="mr-1.5 h-3.5 w-3.5 animate-spin" /> Importing…
+                        <Loader2 className="mr-1.5 h-3.5 w-3.5 animate-spin" /> {t("pages.skills.importFromProject.importing")}
                       </>
                     ) : (
-                      `Import ${selectedCount} skill${selectedCount === 1 ? "" : "s"}`
+                      selectedCount === 1 ? t("pages.skills.importFromProject.importCountOne", { count: selectedCount }) : t("pages.skills.importFromProject.importCountOther", { count: selectedCount })
                     )}
                   </Button>
                 )}
@@ -624,12 +643,12 @@ export function ImportSkillsFromProjectDialog({
             )}
             {step === "pick" && (
               <Button variant="ghost" size="sm" onClick={handleClose}>
-                Cancel
+                {t("pages.skills.importFromProject.cancel")}
               </Button>
             )}
             {step === "result" && (
               <Button size="sm" onClick={handleClose}>
-                Done
+                {t("pages.skills.importFromProject.done")}
               </Button>
             )}
           </div>
@@ -658,6 +677,7 @@ function PickProjectStep({
   onFilterChange,
   onPick,
 }: PickProjectStepProps) {
+  const { t } = useTranslation();
   return (
     <div className="flex min-h-0 flex-1 flex-col">
       <div className="border-b border-border/60 px-5 py-3">
@@ -666,34 +686,40 @@ function PickProjectStep({
           <Input
             value={filter}
             onChange={(event) => onFilterChange(event.target.value)}
-            placeholder="Filter projects"
+            placeholder={t(`${PROJECT_I18N}.filterProjectsPlaceholder`)}
             className="pl-7 text-xs"
-            aria-label="Filter projects"
+            aria-label={t(`${PROJECT_I18N}.filterProjectsAria`)}
             data-testid="project-filter"
           />
         </div>
       </div>
       <div className="min-h-0 flex-1 overflow-y-auto">
         {loading ? (
-          <div className="p-6 text-center text-sm text-muted-foreground">Loading projects…</div>
+          <div className="p-6 text-center text-sm text-muted-foreground">
+            {t(`${PROJECT_I18N}.loadingProjects`)}
+          </div>
         ) : error ? (
           <div
             className="m-5 flex items-start gap-3 rounded-md border border-destructive/40 bg-destructive/10 p-4 text-sm text-destructive"
             role="alert"
           >
             <AlertCircle className="mt-0.5 h-4 w-4 shrink-0" />
-            <div>{readableErrorMessage(error)}</div>
+            <div>{readableErrorMessage(error, t)}</div>
           </div>
         ) : totalProjects === 0 ? (
-          <EmptyState icon={Layers} message="This organization has no projects yet." />
+          <EmptyState icon={Layers} message={t(`${PROJECT_I18N}.noProjects`)} />
         ) : projects.length === 0 ? (
-          <EmptyState icon={Search} message={`No projects match "${filter}".`} />
+          <EmptyState icon={Search} message={t(`${PROJECT_I18N}.noProjectsMatch`, { filter })} />
         ) : (
           <ul className="divide-y divide-border/60" data-testid="project-list">
             {projects.map((project) => {
               const scannable = scannableWorkspaces(project);
               const disabled = scannable.length === 0;
-              const kinds = summarizeWorkspaceKinds(project.workspaces);
+              const kinds = summarizeWorkspaceKinds(project.workspaces, t);
+              const workspaceLabel =
+                project.workspaces.length === 1
+                  ? t(`${PROJECT_I18N}.workspaceCountOne`, { count: project.workspaces.length })
+                  : t(`${PROJECT_I18N}.workspaceCountOther`, { count: project.workspaces.length });
               return (
                 <li key={project.id}>
                   <button
@@ -713,19 +739,18 @@ function PickProjectStep({
                     <div className="min-w-0 flex-1">
                       <div className="truncate text-sm font-medium">{project.name}</div>
                       <div className="mt-0.5 text-xs text-muted-foreground">
-                        {project.workspaces.length} workspace
-                        {project.workspaces.length === 1 ? "" : "s"}
+                        {workspaceLabel}
                         {kinds ? ` · ${kinds}` : ""}
                       </div>
                       {disabled && (
                         <div className="mt-1 text-(length:--text-micro) text-muted-foreground">
-                          Remote-only project — no locally scannable workspaces to import from.
+                          {t(`${PROJECT_I18N}.remoteOnlyHint`)}
                         </div>
                       )}
                     </div>
                     {!disabled && (
                       <Badge variant="outline" className="shrink-0 px-1.5 py-0 font-normal">
-                        {scannable.length} scannable
+                        {t(`${PROJECT_I18N}.scannableBadge`, { count: scannable.length })}
                       </Badge>
                     )}
                   </button>
@@ -740,6 +765,7 @@ function PickProjectStep({
 }
 
 function ScanningStep({ projectName }: { projectName: string }) {
+  const { t } = useTranslation();
   return (
     <div
       className="flex min-h-0 flex-1 flex-col items-center justify-center gap-4 p-8 text-center"
@@ -750,10 +776,12 @@ function ScanningStep({ projectName }: { projectName: string }) {
         <Loader2 className="h-5 w-5 animate-spin text-muted-foreground" />
       </div>
       <div>
-        <p className="text-sm font-medium">Scanning {projectName || "project"} for skills…</p>
-        <p className="mt-1 text-xs text-muted-foreground">
-          Looking in well-known skill folders across each workspace.
+        <p className="text-sm font-medium">
+          {t(`${PROJECT_I18N}.scanningTitle`, {
+            projectName: projectName || t(`${PROJECT_I18N}.scanningProjectFallback`),
+          })}
         </p>
+        <p className="mt-1 text-xs text-muted-foreground">{t(`${PROJECT_I18N}.scanningHint`)}</p>
       </div>
       <div className="flex max-w-md flex-wrap justify-center gap-1.5">
         {HIGHLIGHTED_SCAN_FOLDERS.map((folder) => (
@@ -769,7 +797,9 @@ function ScanningStep({ projectName }: { projectName: string }) {
           variant="outline"
           className="px-1.5 py-0 text-(length:--text-micro) font-normal text-muted-foreground"
         >
-          +{APPROX_TOTAL_SCAN_FOLDERS - HIGHLIGHTED_SCAN_FOLDERS.length} more
+          {t(`${PROJECT_I18N}.scanFoldersMore`, {
+            count: APPROX_TOTAL_SCAN_FOLDERS - HIGHLIGHTED_SCAN_FOLDERS.length,
+          })}
         </Badge>
       </div>
     </div>
@@ -790,6 +820,7 @@ function ProjectSkillBrowser({
   onAddSkill: (workspaceId: string, path: string) => void;
   addingKey: string | null;
 }) {
+  const { t } = useTranslation();
   const workspaces = scannableWorkspaces(project);
   const initialWorkspace = workspaces.find((workspace) => workspace.isPrimary) ?? workspaces[0] ?? null;
   const [workspaceId, setWorkspaceId] = useState(initialWorkspace?.id ?? "");
@@ -815,15 +846,15 @@ function ProjectSkillBrowser({
       <div className="shrink-0 border-b border-border/60 px-5 py-3">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div>
-            <p className="text-sm font-medium">Browse project folders</p>
-            <p className="mt-0.5 text-xs text-muted-foreground">Open any folder and add directories or individual SKILL.md files.</p>
+            <p className="text-sm font-medium">{t(`${PROJECT_I18N}.browseTitle`)}</p>
+            <p className="mt-0.5 text-xs text-muted-foreground">{t(`${PROJECT_I18N}.browseDescription`)}</p>
           </div>
           <Button variant="outline" size="sm" onClick={onBack}>
-            <ArrowLeft className="mr-1 h-3.5 w-3.5" /> Discovered skills
+            <ArrowLeft className="mr-1 h-3.5 w-3.5" /> {t(`${PROJECT_I18N}.discoveredSkills`)}
           </Button>
         </div>
         {workspaces.length > 1 && (
-          <div className="mt-3 flex flex-wrap gap-1.5" aria-label="Project workspace">
+          <div className="mt-3 flex flex-wrap gap-1.5" aria-label={t(`${PROJECT_I18N}.workspacePickerAria`)}>
             {workspaces.map((workspace) => (
               <Button
                 key={workspace.id}
@@ -844,7 +875,7 @@ function ProjectSkillBrowser({
           size="sm"
           onClick={() => result?.parentPath && setFolderPath(result.parentPath)}
           disabled={!result?.parentPath}
-          aria-label="Open parent folder"
+          aria-label={t(`${PROJECT_I18N}.parentFolderAria`)}
         >
           <ArrowLeft className="h-3.5 w-3.5" />
         </Button>
@@ -853,10 +884,12 @@ function ProjectSkillBrowser({
       <div className="min-h-0 flex-1 overflow-y-auto">
         {browseQuery.isLoading ? (
           <div className="flex items-center justify-center gap-2 p-8 text-sm text-muted-foreground">
-            <Loader2 className="h-4 w-4 animate-spin" /> Loading folder…
+            <Loader2 className="h-4 w-4 animate-spin" /> {t(`${PROJECT_I18N}.loadingFolder`)}
           </div>
         ) : browseQuery.error ? (
-          <div className="p-6 text-sm text-destructive">{readableErrorMessage(browseQuery.error)}</div>
+          <div className="p-6 text-sm text-destructive">
+            {readableErrorMessage(browseQuery.error, t)}
+          </div>
         ) : result?.entries.length ? (
           <ul className="divide-y divide-border/60">
             {result.entries.map((entry: CompanySkillProjectBrowseEntry) => {
@@ -881,7 +914,11 @@ function ProjectSkillBrowser({
                   </button>
                   {entry.isSkill ? (
                     <Button size="sm" onClick={() => onAddSkill(workspaceId, entry.path)} disabled={addingKey === key}>
-                      {addingKey === key ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : "Add skill"}
+                      {addingKey === key ? (
+                        <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                      ) : (
+                        t(`${PROJECT_I18N}.addSkill`)
+                      )}
                     </Button>
                   ) : entry.kind === "directory" ? (
                     <ChevronRight className="h-4 w-4 text-muted-foreground" />
@@ -891,10 +928,14 @@ function ProjectSkillBrowser({
             })}
           </ul>
         ) : (
-          <div className="p-8 text-center text-sm text-muted-foreground">This folder is empty.</div>
+          <div className="p-8 text-center text-sm text-muted-foreground">
+            {t(`${PROJECT_I18N}.folderEmpty`)}
+          </div>
         )}
         {result?.truncated && (
-          <p className="border-t border-border/60 px-5 py-2 text-xs text-muted-foreground">Showing the first 250 entries.</p>
+          <p className="border-t border-border/60 px-5 py-2 text-xs text-muted-foreground">
+            {t(`${PROJECT_I18N}.truncatedEntries`)}
+          </p>
         )}
       </div>
     </div>
@@ -938,6 +979,7 @@ function SelectStep({
   onAddBrowsedSkill,
   browseAddingKey,
 }: SelectStepProps) {
+  const { t } = useTranslation();
   if (scanError) {
     const grant = isGrantError(scanError);
     return (
@@ -951,16 +993,16 @@ function SelectStep({
             )}
           </div>
           <p className="text-base font-semibold">
-            {grant ? "You can't import skills here" : "Scan failed"}
+            {grant ? t(`${PROJECT_I18N}.scanErrorGrantTitle`) : t(`${PROJECT_I18N}.scanErrorGenericTitle`)}
           </p>
           <p className="mt-1.5 text-sm text-muted-foreground">
             {grant
-              ? "Your account doesn't have permission to add skills to this organization. Ask an owner to grant the skills permission, then try again."
-              : readableErrorMessage(scanError)}
+              ? t(`${PROJECT_I18N}.scanErrorGrantBody`)
+              : readableErrorMessage(scanError, t)}
           </p>
           {!grant && (
             <Button variant="outline" size="sm" className="mt-4" onClick={onRetry}>
-              Try again
+              {t("common.tryAgain")}
             </Button>
           )}
         </div>
@@ -990,13 +1032,14 @@ function SelectStep({
           <div className="mx-auto mb-4 w-fit bg-muted/50 p-4">
             <FolderSearch className="h-10 w-10 text-muted-foreground/50" />
           </div>
-          <p className="text-base font-semibold">No skills found</p>
+          <p className="text-base font-semibold">{t(`${PROJECT_I18N}.emptyTitle`)}</p>
           <p className="mt-1.5 text-sm text-muted-foreground">
-            None of the well-known skill folders in this project's workspaces contain a{" "}
-            <code className="rounded bg-muted px-1 py-0.5 text-xs">SKILL.md</code>. We searched{" "}
-            {HIGHLIGHTED_SCAN_FOLDERS.join(", ")} and {APPROX_TOTAL_SCAN_FOLDERS -
-              HIGHLIGHTED_SCAN_FOLDERS.length}{" "}
-            other agent-harness folders.
+            {t(`${PROJECT_I18N}.emptyBodyPrefix`)}{" "}
+            <code className="rounded bg-muted px-1 py-0.5 text-xs">SKILL.md</code>.{" "}
+            {t(`${PROJECT_I18N}.emptyBodySearch`, {
+              folders: HIGHLIGHTED_SCAN_FOLDERS.join(", "),
+              extraCount: APPROX_TOTAL_SCAN_FOLDERS - HIGHLIGHTED_SCAN_FOLDERS.length,
+            })}
           </p>
           <Button
             variant="outline"
@@ -1005,17 +1048,17 @@ function SelectStep({
             onClick={() => onBrowseOpenChange(true)}
             data-testid="browse-project-folders-empty"
           >
-            <FolderOpen className="mr-1.5 h-3.5 w-3.5" /> Browse project folders
+            <FolderOpen className="mr-1.5 h-3.5 w-3.5" /> {t(`${PROJECT_I18N}.browseProjectFolders`)}
           </Button>
           {onImportFromPath && (
             <p className="mt-3 text-sm text-muted-foreground">
-              For skills in non-standard folders, use{" "}
+              {t(`${PROJECT_I18N}.nonStandardHintPrefix`)}{" "}
               <button
                 type="button"
                 className="font-medium text-foreground underline underline-offset-2"
                 onClick={onImportFromPath}
               >
-                Import from path or URL
+                {t(`${PROJECT_I18N}.importFromPathLink`)}
               </button>
               .
             </p>
@@ -1028,9 +1071,9 @@ function SelectStep({
   return (
     <div className="flex min-h-0 flex-1 flex-col" data-testid="candidate-list">
       <div className="flex shrink-0 items-center justify-between gap-3 border-b border-border/60 px-5 py-2.5">
-        <p className="text-xs text-muted-foreground">Choose discovered skills, or browse any workspace folder.</p>
+        <p className="text-xs text-muted-foreground">{t(`${PROJECT_I18N}.selectHint`)}</p>
         <Button variant="outline" size="sm" onClick={() => onBrowseOpenChange(true)} data-testid="browse-project-folders">
-          <FolderOpen className="mr-1.5 h-3.5 w-3.5" /> Browse folders
+          <FolderOpen className="mr-1.5 h-3.5 w-3.5" /> {t(`${PROJECT_I18N}.browseFolders`)}
         </Button>
       </div>
       <div className="shrink-0 border-b border-border/60 px-5 py-2.5">
@@ -1039,23 +1082,23 @@ function SelectStep({
           <Input
             value={filter}
             onChange={(event) => onFilterChange(event.target.value)}
-            placeholder="Search discovered skills…"
+            placeholder={t(`${PROJECT_I18N}.searchCandidatesPlaceholder`)}
             className="h-8 pl-8 text-xs"
-            aria-label="Search discovered skills"
+            aria-label={t(`${PROJECT_I18N}.searchCandidatesAria`)}
           />
         </div>
       </div>
       <div className="min-h-0 flex-1 overflow-y-auto">
         {groups.length === 0 ? (
           <div className="flex h-full items-center justify-center p-6 text-sm text-muted-foreground">
-            No skills match “{filter.trim()}”.
+            {t(`${PROJECT_I18N}.noCandidatesMatch`, { filter: filter.trim() })}
           </div>
         ) : (
           groups.map((group, groupIndex) => (
             <section key={group.key}>
               {groupIndex > 0 && !group.isPrimary && groups[groupIndex - 1]?.isPrimary && (
                 <header className="border-y border-border/60 bg-muted/30 px-5 py-2 text-xs uppercase tracking-wide text-muted-foreground">
-                  Other Workspaces
+                  {t(`${PROJECT_I18N}.otherWorkspaces`)}
                 </header>
               )}
               <header className="sticky top-0 z-10 border-b border-border/60 bg-background px-5 py-2 text-sm font-medium text-foreground">
@@ -1090,7 +1133,7 @@ function SelectStep({
                               checked={isSelected}
                               onCheckedChange={() => toggleCandidate(candidate)}
                               disabled={!selectable}
-                              aria-label={`Select ${candidate.name}`}
+                              aria-label={t(`${PROJECT_I18N}.selectCandidateAria`, { name: candidate.name })}
                             />
                           </div>
                           <div className="min-w-0 flex-1">
@@ -1129,7 +1172,7 @@ function SelectStep({
                                   htmlFor={`rename-${candidate.workspaceId}-${candidate.slug}`}
                                   className="shrink-0 text-xs text-muted-foreground"
                                 >
-                                  Import as
+                                  {t(`${PROJECT_I18N}.importAs`)}
                                 </label>
                                 <Input
                                   id={`rename-${candidate.workspaceId}-${candidate.slug}`}
@@ -1138,7 +1181,9 @@ function SelectStep({
                                     renameCandidate(candidate, event.target.value)
                                   }
                                   className="h-7 max-w-xs font-mono text-xs"
-                                  aria-label={`Rename ${candidate.name}`}
+                                  aria-label={t(`${PROJECT_I18N}.renameCandidateAria`, {
+                                    name: candidate.name,
+                                  })}
                                   aria-invalid={
                                     selectedValue
                                       ? !isValidSelectionSlug(selectedValue)
@@ -1147,7 +1192,7 @@ function SelectStep({
                                 />
                                 {selectedValue && !isValidSelectionSlug(selectedValue) && (
                                   <span className="text-xs text-destructive">
-                                    Use a lowercase URL-safe slug.
+                                    {t(`${PROJECT_I18N}.invalidSlug`)}
                                   </span>
                                 )}
                               </div>
@@ -1172,6 +1217,7 @@ interface ResultStepProps {
 }
 
 function ResultStep({ result }: ResultStepProps) {
+  const { t } = useTranslation();
   const importedSkills: CompanySkill[] = useMemo(
     () => [...result.imported, ...result.updated],
     [result],
@@ -1183,24 +1229,27 @@ function ResultStep({ result }: ResultStepProps) {
         <div className="flex items-start gap-3 rounded-md border border-emerald-500/30 bg-emerald-500/5 p-3">
           <Link2 className="mt-0.5 h-4 w-4 shrink-0 text-emerald-600 dark:text-emerald-400" />
           <div className="text-xs leading-relaxed text-muted-foreground">
-            <span className="font-medium text-foreground">No files were copied.</span> These skills
-            reference the files in the project workspace — editing them in Skill Studio saves
-            directly back to those files.
+            <span className="font-medium text-foreground">{t(`${PROJECT_I18N}.resultNoCopyTitle`)}</span>{" "}
+            {t(`${PROJECT_I18N}.resultNoCopyBody`)}
           </div>
         </div>
         <div className="mt-3 flex flex-wrap items-center gap-3 text-xs text-muted-foreground">
           <span className="text-emerald-600 dark:text-emerald-400">
-            ✓ {result.imported.length} imported
+            {t(`${PROJECT_I18N}.resultImported`, { count: result.imported.length })}
           </span>
-          {result.updated.length > 0 && <span>↻ {result.updated.length} updated</span>}
-          {result.skipped.length > 0 && <span>⊘ {result.skipped.length} skipped</span>}
+          {result.updated.length > 0 && (
+            <span>{t(`${PROJECT_I18N}.resultUpdated`, { count: result.updated.length })}</span>
+          )}
+          {result.skipped.length > 0 && (
+            <span>{t(`${PROJECT_I18N}.resultSkipped`, { count: result.skipped.length })}</span>
+          )}
         </div>
       </div>
       <div className="min-h-0 flex-1 overflow-y-auto">
         {importedSkills.length > 0 && (
           <section>
             <header className="bg-muted/30 px-5 py-1.5 text-xs uppercase tracking-wide text-muted-foreground">
-              Imported · {importedSkills.length}
+              {t(`${PROJECT_I18N}.sectionImported`)} · {importedSkills.length}
             </header>
             <ul className="divide-y divide-border/60" data-testid="result-imported">
               {importedSkills.map((skill) => (
@@ -1220,7 +1269,7 @@ function ResultStep({ result }: ResultStepProps) {
                     to={skillStudioRoute(skill.id)}
                     className="inline-flex shrink-0 items-center gap-1 text-xs font-medium text-foreground no-underline hover:underline"
                   >
-                    Open <ExternalLink className="h-3 w-3" />
+                    {t(`${PROJECT_I18N}.openSkill`)} <ExternalLink className="h-3 w-3" />
                   </Link>
                 </li>
               ))}
@@ -1230,7 +1279,7 @@ function ResultStep({ result }: ResultStepProps) {
         {result.skipped.length > 0 && (
           <section>
             <header className="bg-muted/30 px-5 py-1.5 text-xs uppercase tracking-wide text-muted-foreground">
-              Skipped · {result.skipped.length}
+              {t(`${PROJECT_I18N}.sectionSkipped`)} · {result.skipped.length}
             </header>
             <ul className="divide-y divide-border/60" data-testid="result-skipped">
               {result.skipped.map((row, index) => (
@@ -1240,7 +1289,9 @@ function ResultStep({ result }: ResultStepProps) {
                 >
                   <FileWarning className="mt-0.5 h-3.5 w-3.5 shrink-0 text-muted-foreground" />
                   <div className="min-w-0">
-                    <span className="font-mono text-muted-foreground">{row.path ?? "—"}</span>
+                    <span className="font-mono text-muted-foreground">
+                      {row.path ?? t(`${PROJECT_I18N}.emDash`)}
+                    </span>
                     {row.reason && (
                       <span className="ml-2 text-muted-foreground">{row.reason}</span>
                     )}
@@ -1253,7 +1304,7 @@ function ResultStep({ result }: ResultStepProps) {
         {result.warnings.length > 0 && (
           <section>
             <header className="bg-muted/30 px-5 py-1.5 text-xs uppercase tracking-wide text-muted-foreground">
-              Warnings · {result.warnings.length}
+              {t(`${PROJECT_I18N}.sectionWarnings`)} · {result.warnings.length}
             </header>
             <ul className="divide-y divide-border/60" data-testid="result-warnings">
               {result.warnings.map((warning, index) => (

@@ -35,6 +35,8 @@ vi.mock("../../context/ToastContext", () => ({
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 (globalThis as any).IS_REACT_ACT_ENVIRONMENT = true;
 
+import { i18n } from "@/i18n";
+import { DEFAULT_LOCALE } from "@/i18n/locales";
 import { ImportFromVaultDialog } from "./ImportFromVaultDialog";
 
 const awsVault: CompanySecretProviderConfig = {
@@ -108,15 +110,17 @@ function makeWrapper() {
 describe("ImportFromVaultDialog", () => {
   let container: HTMLDivElement;
 
-  beforeEach(() => {
+  beforeEach(async () => {
+    await i18n.changeLanguage("en");
     container = document.createElement("div");
     document.body.appendChild(container);
   });
 
-  afterEach(() => {
+  afterEach(async () => {
     container.remove();
     document.body.innerHTML = "";
     vi.clearAllMocks();
+    await i18n.changeLanguage(DEFAULT_LOCALE);
   });
 
   it("loads candidates and selects rows, persisting through pagination", async () => {

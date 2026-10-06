@@ -38,6 +38,7 @@ import {
   updateKindLabel,
 } from "./format";
 import type { StatusCardView } from "./types";
+import { useTranslation } from "@/i18n";
 
 export function StatusCardDetailDrawer({
   card,
@@ -52,6 +53,7 @@ export function StatusCardDetailDrawer({
   onOpenChange: (open: boolean) => void;
   initialTab?: string;
 }) {
+  const { t } = useTranslation();
   const queryClient = useQueryClient();
   const [tab, setTab] = useState("summary");
   const [settings, setSettings] = useState<StatusCardSettingsValue>(defaultSettingsValue());
@@ -210,7 +212,7 @@ export function StatusCardDetailDrawer({
         <SheetHeader className="border-b border-border p-4">
           <div className="flex items-center gap-2 pr-8">
             <span className={cn("inline-block h-2.5 w-2.5 shrink-0 rounded-full", presentation.dotClassName)} aria-hidden="true" />
-            <SheetTitle className="min-w-0 flex-1 truncate text-lg">{card.title ?? "Untitled card"}</SheetTitle>
+            <SheetTitle className="min-w-0 flex-1 truncate text-lg">{card.title ?? t("pages.statusCards.untitledCard")}</SheetTitle>
             <Badge variant="outline">{presentation.label}</Badge>
             {lifecycle === "compiling" ? (
               <Button
@@ -248,19 +250,19 @@ export function StatusCardDetailDrawer({
 
         <Tabs value={tab} onValueChange={setTab} className="flex min-h-0 flex-1 flex-col gap-0">
           <TabsList variant="line" className="w-full justify-start gap-4 border-b border-border px-4">
-            <TabsTrigger value="summary">Summary</TabsTrigger>
-            <TabsTrigger value="settings">Settings</TabsTrigger>
-            <TabsTrigger value="watched">Watched issues</TabsTrigger>
-            <TabsTrigger value="history">History</TabsTrigger>
+            <TabsTrigger value="summary">{t("pages.statusCards.tabSummary")}</TabsTrigger>
+            <TabsTrigger value="settings">{t("common.settings")}</TabsTrigger>
+            <TabsTrigger value="watched">{t("pages.statusCards.tabWatchedIssues")}</TabsTrigger>
+            <TabsTrigger value="history">{t("pages.statusCards.tabHistory")}</TabsTrigger>
           </TabsList>
 
           {actionError ? (
             <div className="px-4 pt-3">
-              <InlineBanner tone="warning" title="Heads up">{actionError}</InlineBanner>
+              <InlineBanner tone="warning" title={t("pages.statusCards.headsUp")}>{actionError}</InlineBanner>
             </div>
           ) : actionNote ? (
             <div className="px-4 pt-3">
-              <InlineBanner tone="info" title="Working on it">{actionNote}</InlineBanner>
+              <InlineBanner tone="info" title={t("pages.statusCards.workingOnIt")}>{actionNote}</InlineBanner>
             </div>
           ) : null}
 
@@ -426,7 +428,7 @@ export function StatusCardDetailDrawer({
                   <Loader2 className="h-4 w-4 animate-spin" /> Matching issues…
                 </div>
               ) : dryRunQuery.isError ? (
-                <InlineBanner tone="danger" title="Could not load matched issues">
+                <InlineBanner tone="danger" title={t("pages.statusCards.couldNotLoadMatched")}>
                   {dryRunQuery.error instanceof Error ? dryRunQuery.error.message : "Try again."}
                 </InlineBanner>
               ) : (
@@ -481,7 +483,7 @@ export function StatusCardDetailDrawer({
               <div className="flex justify-end border-t border-border pt-4">
                 <Button onClick={() => saveSettingsMutation.mutate()} disabled={saveSettingsMutation.isPending}>
                   {saveSettingsMutation.isPending ? <Loader2 className="animate-spin" /> : null}
-                  Save
+                  {t("common.save")}
                 </Button>
               </div>
             </TabsContent>
