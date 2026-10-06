@@ -3,6 +3,8 @@ import { characterStateForAgent } from "@paperclipai/shared";
 import { mergeRunLogChunks, readChunkSeq } from "../lib/run-log-chunks";
 import { getPageVisibility, usePageVisibility } from "../lib/page-visibility";
 import { useCallback, useEffect, useMemo, useState, useRef } from "react";
+import { useTranslation } from "@/i18n";
+import { agentLegacyTabLabel } from "./agent-detail-navigation";
 import { useParams, useNavigate, Link, Navigate, useBeforeUnload, type NavigateFunction } from "@/lib/router";
 import { useQuery, useMutation, useQueryClient, type QueryClient } from "@tanstack/react-query";
 import {
@@ -756,6 +758,7 @@ function WorkspaceOperationsSection({
 }
 
 export function AgentDetail() {
+  const { t } = useTranslation();
   const { companyPrefix, agentId, tab: urlTab, runId: urlRunId } = useParams<{
     companyPrefix?: string;
     agentId: string;
@@ -1068,36 +1071,36 @@ export function AgentDetail() {
 
   useEffect(() => {
     const crumbs: { label: string; href?: string }[] = [
-      { label: "Agents", href: "/agents" },
+      { label: t("agents.title"), href: "/agents" },
     ];
-    const agentName = agent?.name ?? routeAgentRef ?? "Agent";
+    const agentName = agent?.name ?? routeAgentRef ?? t("agents.agent");
     if (activeView === "dashboard" && !urlRunId) {
       crumbs.push({ label: agentName });
     } else {
       crumbs.push({ label: agentName, href: `/agents/${canonicalAgentRef}/dashboard` });
       if (urlRunId) {
-        crumbs.push({ label: "Runs", href: `/agents/${canonicalAgentRef}/runs` });
-        crumbs.push({ label: `Run ${urlRunId.slice(0, 8)}` });
+        crumbs.push({ label: t("nav.runs"), href: `/agents/${canonicalAgentRef}/runs` });
+        crumbs.push({ label: t("agents.runLabel", { id: urlRunId.slice(0, 8) }) });
       } else if (activeView === "instructions") {
-        crumbs.push({ label: "Instructions" });
+        crumbs.push({ label: agentLegacyTabLabel("instructions") });
       } else if (activeView === "configuration") {
-        crumbs.push({ label: "Configuration" });
+        crumbs.push({ label: agentLegacyTabLabel("configuration") });
       } else if (activeView === "secrets") {
-        crumbs.push({ label: "Secrets" });
+        crumbs.push({ label: agentLegacyTabLabel("secrets") });
       // } else if (activeView === "skills") { // TODO: bring back later
       //   crumbs.push({ label: "Skills" });
       } else if (activeView === "tools") {
-        crumbs.push({ label: "Tools" });
+        crumbs.push({ label: agentLegacyTabLabel("tools") });
       } else if (activeView === "runs") {
-        crumbs.push({ label: "Runs" });
+        crumbs.push({ label: agentLegacyTabLabel("runs") });
       } else if (activeView === "budget") {
-        crumbs.push({ label: "Budget" });
+        crumbs.push({ label: agentLegacyTabLabel("budget") });
       } else {
-        crumbs.push({ label: "Dashboard" });
+        crumbs.push({ label: agentLegacyTabLabel("dashboard") });
       }
     }
     setBreadcrumbs(crumbs);
-  }, [setBreadcrumbs, agent, routeAgentRef, canonicalAgentRef, activeView, urlRunId]);
+  }, [setBreadcrumbs, agent, routeAgentRef, canonicalAgentRef, activeView, urlRunId, t]);
 
   useEffect(() => {
     closePanel();
@@ -1407,7 +1410,9 @@ export function AgentDetail() {
           onValueChange={handleAgentTabChange}
         >
           <PageTabBar
-            items={AGENT_DETAIL_TABS.filter((item) => item.value !== "channels" || chatConnectorsEnabled)}
+            items={AGENT_DETAIL_TABS
+              .filter((item) => item.value !== "channels" || chatConnectorsEnabled)
+              .map((item) => ({ ...item, label: agentLegacyTabLabel(item.value) }))}
             value={activeView}
             onValueChange={handleAgentTabChange}
           />
@@ -1417,7 +1422,7 @@ export function AgentDetail() {
       {actionError && <p className="text-sm text-destructive">{actionError}</p>}
       {isPendingApproval && (
         <div className="flex flex-wrap items-center gap-3 rounded-md border border-amber-300/60 bg-amber-50 px-3 py-2 text-sm text-amber-900 dark:border-amber-400/40 dark:bg-amber-950/30 dark:text-amber-200">
-          <span>This agent is pending board approval and cannot be invoked yet.</span>
+          <span>{t("agents.pendingApprovalNotice")}</span>
           <Button
             variant="outline"
             size="sm"
@@ -1425,7 +1430,7 @@ export function AgentDetail() {
             disabled={agentAction.isPending}
           >
             <CheckCircle2 className="h-3.5 w-3.5 sm:mr-1" />
-            <span>Approve agent</span>
+            <span>{t("agents.approveAgent")}</span>
           </Button>
         </div>
       )}

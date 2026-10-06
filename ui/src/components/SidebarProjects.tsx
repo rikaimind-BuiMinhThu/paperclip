@@ -12,6 +12,7 @@ import {
 } from "@dnd-kit/core";
 import { SortableContext, arrayMove, useSortable, verticalListSortingStrategy } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
+import { useTranslation } from "@/i18n";
 import { useCompany } from "../context/CompanyContext";
 import { useDialogActions } from "../context/DialogContext";
 import { useSidebar } from "../context/SidebarContext";
@@ -253,6 +254,7 @@ function SortableProjectItem(props: ProjectItemProps) {
 }
 
 export function SidebarProjects() {
+  const { t } = useTranslation();
   const [open, setOpen] = useState(true);
   const { selectedCompany, selectedCompanyId } = useCompany();
   const { openNewProject } = useDialogActions();
@@ -409,7 +411,7 @@ export function SidebarProjects() {
 
   return (
     <SidebarSection
-      label="Projects"
+      label={t("nav.projects")}
       collapsible={{ open, onOpenChange: setOpen }}
       headerAction={{
         ariaLabel: "New project",

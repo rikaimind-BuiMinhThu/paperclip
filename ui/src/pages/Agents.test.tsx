@@ -6,6 +6,7 @@ import { createRoot } from "react-dom/client";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import type { Agent, Environment, EnvironmentCapabilities } from "@paperclipai/shared";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { t } from "@/i18n";
 import { ToastProvider } from "../context/ToastContext";
 import type { BuiltInAgentState } from "../api/builtInAgents";
 import { Agents } from "./Agents";
@@ -378,7 +379,7 @@ describe("Agents", () => {
     });
     await flushReact();
     await flushReact();
-    const listToggle = container.querySelector<HTMLButtonElement>('button[aria-label="List view"]');
+    const listToggle = container.querySelector<HTMLButtonElement>(`button[aria-label="${t("agents.listView")}"]`);
     await act(async () => { listToggle?.click(); });
     await flushReact();
 
@@ -429,8 +430,8 @@ describe("Agents", () => {
     });
     await flushReact();
 
-    const listToggle = container.querySelector<HTMLButtonElement>('button[aria-label="List view"]');
-    const orgToggle = container.querySelector<HTMLButtonElement>('button[aria-label="Org chart view"]');
+    const listToggle = container.querySelector<HTMLButtonElement>(`button[aria-label="${t("agents.listView")}"]`);
+    const orgToggle = container.querySelector<HTMLButtonElement>(`button[aria-label="${t("agents.orgChartView")}"]`);
     expect(listToggle?.getAttribute("aria-pressed")).toBe("true");
     expect(orgToggle?.getAttribute("aria-pressed")).toBe("false");
     expect(orgToggle?.querySelector(".lucide-network")).not.toBeNull();
@@ -568,7 +569,7 @@ describe("Agents", () => {
     await flushReact();
     await flushReact();
 
-    expect(container.textContent).toContain("1 agent");
+    expect(container.textContent).toContain(t("agents.countOne", { count: 1 }));
     expect(container.textContent).toContain("Briefs Agent");
     expect(container.textContent).not.toContain("Regular Agent");
   });
@@ -961,7 +962,7 @@ describe("Agents", () => {
     await flushReact();
 
     expect(mockBuiltInAgentsApi.list).toHaveBeenCalledWith("company-1");
-    expect(container.textContent).toContain("Built-in");
+    expect(container.textContent).toContain(t("agents.builtIn"));
     expect(container.textContent).toContain("Briefs Agent");
     expect(container.textContent).not.toContain("Regular Agent");
     expect(container.querySelector('[title="Ships with Paperclip"]')).toBeNull();
@@ -1096,6 +1097,6 @@ describe("Agents", () => {
     await flushReact();
 
     expect(container.textContent).toContain("Alpha");
-    expect(container.querySelector('[aria-label="Invalid reporting chain"]')).not.toBeNull();
+    expect(container.querySelector(`[aria-label="${t("agents.invalidReportingChain")}"]`)).not.toBeNull();
   });
 });

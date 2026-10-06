@@ -23,6 +23,8 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { cn, SIDEBAR_RAIL_HIDDEN_LABEL } from "../lib/utils";
+import { useTranslation } from "@/i18n";
+import { LocaleToggle } from "./LocaleToggle";
 import { ThemeToggle } from "./ThemeToggle";
 import { SidebarServerInfo } from "./SidebarServerInfo";
 
@@ -120,6 +122,7 @@ export function SidebarAccountMenu({
   open: controlledOpen,
   onOpenChange,
 }: SidebarAccountMenuProps) {
+  const { t } = useTranslation();
   const cloud = useCloudInstance();
   const isCloud = Boolean(cloud);
   // Invites live on the Members page (or in Cloud's People settings). Hide the
@@ -180,7 +183,7 @@ export function SidebarAccountMenu({
               "flex min-w-0 items-center gap-2.5 rounded-lg text-left text-(length:--text-compact) font-medium text-foreground/80 transition-colors hover:bg-accent/50 hover:text-foreground",
               rail ? "w-full px-3 py-2" : "flex-1 px-2 py-1.5",
             )}
-            aria-label="Open account menu"
+            aria-label={t("account.openMenu")}
           >
             <Avatar size="sm">
               {session?.user.image ? <AvatarImage src={session.user.image} alt={displayName} /> : null}
@@ -201,7 +204,7 @@ export function SidebarAccountMenu({
             <div className="relative flex items-start gap-3">
               <Link
                 to={profileHref}
-                aria-label="View profile"
+                aria-label={t("account.viewProfile")}
                 onClick={closeNavigationChrome}
                 className="absolute inset-0 rounded-xl transition-colors hover:bg-accent/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
               />
@@ -232,7 +235,7 @@ export function SidebarAccountMenu({
             <div className="mt-4 space-y-1">
               {showInvite && inviteHref ? (
                 <MenuAction
-                  label="Invite"
+                  label={t("account.invite")}
                   description="Invite people to your organization."
                   icon={UserPlus}
                   href={inviteHref}
@@ -241,13 +244,14 @@ export function SidebarAccountMenu({
                 />
               ) : null}
               <MenuAction
-                label="Documentation"
+                label={t("account.documentation")}
                 description="Open Paperclip docs in a new tab."
                 icon={BookOpen}
                 href={DOCS_URL}
                 external
                 onClick={() => setOpen(false)}
               />
+              <LocaleToggle variant="compact-menu-action" onAfterToggle={() => setOpen(false)} />
               <ThemeToggle variant="menu-action" onAfterToggle={() => setOpen(false)} />
               {deploymentMode === "authenticated" ? (
                 <button
@@ -264,7 +268,7 @@ export function SidebarAccountMenu({
                   </span>
                   <span className="min-w-0 flex-1">
                     <span className="block text-sm font-medium text-foreground">
-                      {signOutMutation.isPending ? "Signing out..." : "Sign out"}
+                      {signOutMutation.isPending ? t("account.signingOut") : t("account.signOut")}
                     </span>
                     <span className="block text-xs text-muted-foreground">
                       End this browser session.
@@ -284,13 +288,13 @@ export function SidebarAccountMenu({
                 href={FEEDBACK_URL}
                 target="_blank"
                 rel="noreferrer"
-                aria-label="Share feedback"
+                aria-label={t("account.shareFeedback")}
                 className="flex size-8 shrink-0 items-center justify-center rounded-lg text-muted-foreground/50 transition-colors hover:bg-accent/50 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
               >
                 <Flag className="h-4 w-4" aria-hidden="true" />
               </a>
             </TooltipTrigger>
-            <TooltipContent side="top">Share feedback</TooltipContent>
+            <TooltipContent side="top">{t("account.shareFeedback")}</TooltipContent>
           </Tooltip>
         ) : null}
       </div>

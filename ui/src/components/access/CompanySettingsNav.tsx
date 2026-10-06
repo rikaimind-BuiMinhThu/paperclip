@@ -1,5 +1,6 @@
 import { PageTabBar } from "@/components/PageTabBar";
 import { Tabs } from "@/components/ui/tabs";
+import { useTranslation } from "@/i18n";
 import { useCloudInstance } from "@/hooks/useCloudInstance";
 import { useHiddenSettings } from "@/hooks/useHiddenSettings";
 import { INSTANCE_SETTINGS_PATH_PREFIX } from "@/lib/instance-settings";
@@ -20,6 +21,20 @@ const items = [
 ] as const;
 
 type CompanySettingsTab = (typeof items)[number]["value"];
+
+const settingsLabelKeyByTab: Record<CompanySettingsTab, string> = {
+  general: "settings.general",
+  export: "settings.export",
+  import: "settings.import",
+  members: "settings.members",
+  secrets: "settings.secrets",
+  "instance-profile": "settings.profile",
+  "instance-environments": "settings.environments",
+  "instance-access": "settings.access",
+  "instance-experimental": "settings.experimental",
+  "instance-plugins": "settings.plugins",
+  "instance-adapters": "settings.adapters",
+};
 
 /** Tab values suppressed when their page is operator-hidden. */
 const hiddenSettingKeyByTab: Partial<Record<CompanySettingsTab, string>> = {
@@ -93,6 +108,7 @@ export function getCompanySettingsTab(pathname: string): CompanySettingsTab {
 }
 
 export function CompanySettingsNav() {
+  const { t } = useTranslation();
   const location = useLocation();
   const navigate = useNavigate();
   const { hidden: hiddenSettings } = useHiddenSettings();
@@ -115,7 +131,7 @@ export function CompanySettingsNav() {
   return (
     <Tabs value={activeTab} onValueChange={handleTabChange}>
       <PageTabBar
-        items={visibleItems.map(({ value, label }) => ({ value, label }))}
+        items={visibleItems.map(({ value }) => ({ value, label: t(settingsLabelKeyByTab[value]) }))}
         value={activeTab}
         onValueChange={handleTabChange}
         align="start"

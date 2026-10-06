@@ -5,6 +5,7 @@ import { agentsApi } from "@/api/agents";
 import { authApi } from "@/api/auth";
 import { issuesApi } from "@/api/issues";
 import { queryKeys } from "@/lib/queryKeys";
+import { useTranslation } from "@/i18n";
 import { useRecentTasks } from "@/hooks/useRecentTasks";
 import { useSidebar } from "@/context/SidebarContext";
 import { useOptionalToastActions } from "@/context/ToastContext";
@@ -107,6 +108,7 @@ function RecentTasksList({
   liveIssueIds: ReadonlySet<string>;
   rail: boolean;
 }) {
+  const { t } = useTranslation();
   const { entries, storageKey } = useRecentTasks({ companyId, userId });
   const queryClient = useQueryClient();
   const toastActions = useOptionalToastActions();
@@ -249,7 +251,7 @@ function RecentTasksList({
 
   return (
     <>
-      <SidebarSection label="Recent Tasks">
+      <SidebarSection label={t("nav.recentTasks")}>
         {entries.map((entry) => (
           <div key={entry.id} className="sidebar-action-row group/recent-task relative">
             <SidebarNavItem

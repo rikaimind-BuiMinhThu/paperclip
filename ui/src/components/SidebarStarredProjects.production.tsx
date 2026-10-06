@@ -2,6 +2,7 @@ import { useCallback, useMemo } from "react";
 import { NavLink, useLocation } from "@/lib/router";
 import { useQuery } from "@tanstack/react-query";
 import { Loader2, LogOut, MoreHorizontal, Star } from "lucide-react";
+import { useTranslation } from "@/i18n";
 import { useCompany } from "../context/CompanyContext";
 import { useSidebar } from "../context/SidebarContext";
 import { projectsApi } from "../api/projects";
@@ -40,6 +41,7 @@ const STAR_ROW_REVEAL =
  * server-side, so a stale star never resurrects a hidden project.
  */
 export function SidebarStarredProjects() {
+  const { t } = useTranslation();
   const { selectedCompanyId } = useCompany();
   const { isMobile, setSidebarOpen, collapsed, peeking } = useSidebar();
   const rail = collapsed && !peeking;
@@ -104,7 +106,7 @@ export function SidebarStarredProjects() {
   }
 
   return (
-    <div className="flex flex-col gap-0.5" aria-label="Starred projects">
+    <div className="flex flex-col gap-0.5" aria-label={t("nav.starredProjects")}>
       {starredProjects.map((project) => {
         const routeRef = projectRouteRef(project);
         const isActive = activeProjectRef === routeRef || activeProjectRef === project.id;

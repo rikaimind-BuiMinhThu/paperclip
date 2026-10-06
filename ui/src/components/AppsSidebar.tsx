@@ -5,8 +5,28 @@ import { Store, ShieldQuestion } from "lucide-react";
 import { DEVELOPER_TABS, advancedTabHref, isExperimentalToolTab } from "@/pages/tools/tool-tabs";
 import { useSmokeLabEnabled } from "@/hooks/useSmokeLabEnabled";
 import { useReviewCount } from "@/pages/apps/useReviewCount";
+import { useTranslation } from "@/i18n";
 import { SidebarNavItem } from "./SidebarNavItem";
 import { contextualSidebarStyles } from "./contextual-sidebar-styles";
+
+function developerTabLabel(
+  tabKey: (typeof DEVELOPER_TABS)[number]["key"],
+  fallback: string,
+  translate: (key: string) => string,
+) {
+  switch (tabKey) {
+    case "gateways":
+      return translate("apps.gateways");
+    case "smoke-lab":
+      return translate("apps.smokeLab");
+    case "profiles":
+      return fallback;
+    default: {
+      const unreachable: never = tabKey;
+      return unreachable;
+    }
+  }
+}
 
 /**
  * Secondary sidebar for the Apps area.
@@ -16,6 +36,7 @@ import { contextualSidebarStyles } from "./contextual-sidebar-styles";
  * developer surfaces remain hidden unless one is explicitly enabled.
  */
 export function AppsSidebar() {
+  const { t } = useTranslation();
   const { pathname } = useLocation();
   const reviewCount = useReviewCount();
   const { enabled: smokeLabEnabled } = useSmokeLabEnabled();
@@ -33,19 +54,19 @@ export function AppsSidebar() {
   return (
     <aside className="w-full h-full min-h-0 border-r border-border bg-background flex flex-col">
       <nav
-        aria-label="Connectors"
+        aria-label={t("apps.connectors")}
         data-slot="contextual-sidebar-nav"
         className={contextualSidebarStyles.nav}
       >
         <div data-slot="contextual-sidebar-group" className={contextualSidebarStyles.group}>
-          <SidebarNavItem to="/apps" label="Browse" icon={Store} end />
+          <SidebarNavItem to="/apps" label={t("apps.browse")} icon={Store} end />
           <SidebarNavItem
             to="/apps/review"
-            label="Review"
+            label={t("common.review")}
             icon={ShieldQuestion}
             badge={reviewCount > 0 ? reviewCount : undefined}
             badgeTone="warning"
-            badgeLabel="waiting for your OK"
+            badgeLabel={t("apps.waitingForOk")}
           />
         </div>
         {developerTabs.length > 0 ? (
@@ -54,20 +75,20 @@ export function AppsSidebar() {
               data-slot="contextual-sidebar-section-label"
               className={contextualSidebarStyles.sectionLabel}
             >
-              Developer
+              {t("apps.developer")}
             </div>
             <p
               data-slot="contextual-sidebar-section-description"
               className={contextualSidebarStyles.sectionDescription}
             >
-              Advanced setup for developers.
+              {t("apps.developerDescription")}
             </p>
             <div data-slot="contextual-sidebar-group" className={contextualSidebarStyles.group}>
               {developerTabs.map((tab) => (
                 <SidebarNavItem
                   key={tab.key}
                   to={advancedTabHref(tab.key)}
-                  label={tab.label}
+                  label={developerTabLabel(tab.key, tab.label, t)}
                   icon={tab.icon}
                   end
                 />

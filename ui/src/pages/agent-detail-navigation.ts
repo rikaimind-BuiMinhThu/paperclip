@@ -1,3 +1,4 @@
+import { t } from "@/i18n";
 import { auditSectionHref, type AuditSection } from "./audit/audit-navigation";
 
 export type AgentDetailView =
@@ -69,6 +70,75 @@ export function agentLegacyAuditSection(value: string | null): AuditSection | nu
   if (value === "cost" || value === "costs") return "costs";
   if (value === "budget" || value === "budgets") return "budgets";
   return null;
+}
+
+export function agentLocalNavLabel(value: AgentLocalDetailView): string {
+  switch (value) {
+    case "overview":
+      return t("common.overview");
+    case "instructions":
+      return t("agents.instructions");
+    case "skills":
+      return t("nav.skills");
+    case "runtime":
+      return t("agents.harnessRuntime");
+    case "secrets":
+      return t("agents.secretsAndVariables");
+    case "tools":
+      return t("apps.tools");
+    case "channels":
+      return t("apps.channels");
+    case "permissions":
+      return t("agents.permissionsTrust");
+    case "api-keys":
+      return t("settings.apiKeys");
+    case "revisions":
+      return t("agents.revisions");
+    default: {
+      const exhaustive: never = value;
+      return exhaustive;
+    }
+  }
+}
+
+export function agentNavSectionLabel(label: string): string {
+  switch (label) {
+    case "Agent":
+      return t("agents.sectionAgent");
+    case "Runtime":
+      return t("agents.sectionRuntime");
+    case "Governance":
+      return t("agents.sectionGovernance");
+    default:
+      return label;
+  }
+}
+
+export function agentLegacyTabLabel(value: string): string {
+  switch (value) {
+    case "dashboard":
+      return t("nav.dashboard");
+    case "instructions":
+      return t("agents.instructions");
+    case "skills":
+      return t("nav.skills");
+    case "configuration":
+      return t("apps.configuration");
+    case "secrets":
+      return t("settings.secrets");
+    case "tools":
+      return t("apps.tools");
+    case "channels":
+      return t("apps.channels");
+    case "runs":
+      return t("nav.runs");
+    case "audit":
+      return t("apps.audit");
+    case "budget":
+      return t("agents.budget");
+    default:
+      return value;
+  }
 }
 
 export function agentScopedAuditHref(agentId: string, section: AuditSection) {

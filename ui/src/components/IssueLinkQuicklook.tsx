@@ -12,6 +12,8 @@ import {
 } from "@/lib/issueDetailCache";
 import { queryKeys } from "@/lib/queryKeys";
 import { cn } from "@/lib/utils";
+import { useTranslation } from "@/i18n";
+import { translateStatus } from "@/lib/status-label";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { StatusGlyph } from "@/components/StatusGlyph";
 import { ProjectTile } from "@/components/ProjectTile";
@@ -127,11 +129,7 @@ function QuicklookSeparator({ className }: { className?: string }) {
   );
 }
 
-/** "in_review" -> "In review". The card states the status as a word, not a chip. */
-function statusLabel(status: string): string {
-  const words = status.replace(/_/g, " ");
-  return words.charAt(0).toUpperCase() + words.slice(1);
-}
+/** "in_review" -> localized "In review". The card states the status as a word, not a chip. */
 
 /**
  * The standard task preview card. Every hover preview of a task in the app
@@ -169,6 +167,7 @@ export function IssueQuicklookCard({
   linkState?: unknown;
   compact?: boolean;
 }) {
+  const { t } = useTranslation();
   const description = useMemo(() => summarizeIssueDescription(issue.description), [issue.description]);
   const projectName = issue.project?.name;
 
@@ -176,7 +175,7 @@ export function IssueQuicklookCard({
     <div className={cn("space-y-2", compact && "space-y-1.5")}>
       <div className="flex items-center gap-1">
         <div className="flex min-w-0 flex-1 items-center gap-1">
-          <StatusGlyph status={issue.status} size="md" title={statusLabel(issue.status)} />
+          <StatusGlyph status={issue.status} size="md" title={translateStatus(issue.status, t)} />
           <span className="shrink-0 font-mono text-(length:--text-micro) text-muted-foreground">
             {issue.identifier ?? issue.id.slice(0, 8)}
           </span>

@@ -1,6 +1,7 @@
 // @vitest-environment jsdom
 
 import type { ComponentProps } from "react";
+import { t } from "@/i18n";
 import { flushSync } from "react-dom";
 import { createRoot } from "react-dom/client";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
@@ -532,8 +533,8 @@ describe("Inbox toolbar", () => {
     for (const text of ["Hire Agent: New teammate", "Failed run", "Jordan Example"]) {
       const row = rowFor(text);
       expect(row, `missing inbox row for ${text}`).toBeDefined();
-      expect(row?.querySelector('button[aria-label="Mark as read"]')).not.toBeNull();
-      const archiveButton = row?.querySelector<HTMLButtonElement>('button[aria-label="Archive"]');
+      expect(row?.querySelector(`button[aria-label="${t("inbox.markRead")}"]`)).not.toBeNull();
+      const archiveButton = row?.querySelector<HTMLButtonElement>(`button[aria-label="${t("common.archive")}"]`);
       expect(archiveButton).not.toBeNull();
       expect(archiveButton?.className).toContain("opacity-0");
       expect(archiveButton?.className).toContain("group-hover:opacity-100");
@@ -542,7 +543,7 @@ describe("Inbox toolbar", () => {
 
     const approvalRow = rowFor("Hire Agent: New teammate");
     const approvalActions = [...(approvalRow?.querySelectorAll("button") ?? [])]
-      .filter((button) => button.textContent === "Approve" || button.textContent === "Reject");
+      .filter((button) => button.textContent === t("inbox.approve") || button.textContent === t("inbox.reject"));
     expect(approvalActions.length).toBeGreaterThanOrEqual(2);
     approvalActions.forEach((button) => {
       expect(button.className).toContain("h-8");
@@ -610,7 +611,7 @@ describe("Inbox toolbar", () => {
       const childTaskRow = taskRowFor(child.title);
       const grandchildTaskRow = taskRowFor(grandchild.title);
       expect(childTaskRow?.querySelectorAll('[data-slot="task-row-tree-guide"]')).toHaveLength(1);
-      expect(childTaskRow?.querySelector('button[aria-label="Collapse sub-tasks"]')).not.toBeNull();
+      expect(childTaskRow?.querySelector(`button[aria-label="${t("inbox.collapseSubtasks")}"]`)).not.toBeNull();
       expect(grandchildTaskRow?.querySelectorAll('[data-slot="task-row-tree-guide"]')).toHaveLength(2);
       expect(grandchildTaskRow?.querySelector('[data-slot="task-row-disclosure-spacer"]')).not.toBeNull();
 
@@ -661,12 +662,12 @@ describe("Inbox toolbar", () => {
       );
     });
 
-    expect(container.querySelector('input[placeholder="Search inbox…"]')).not.toBeNull();
+    expect(container.querySelector(`input[placeholder="${t("inbox.searchPlaceholder")}…"]`)).not.toBeNull();
     expect(container.querySelector('[data-testid="inbox-blocked-tab-badge"]')).toBeNull();
     expect(container.querySelector('button[title="Filter"]')).not.toBeNull();
-    expect(container.querySelector('button[title="Group"]')).not.toBeNull();
+    expect(container.querySelector(`button[title="${t("inbox.group")}"]`)).not.toBeNull();
     expect(container.querySelector('button[title="Columns"]')).not.toBeNull();
-    expect(container.querySelector('button[title="Sort"]')).not.toBeNull();
+    expect(container.querySelector(`button[title="${t("common.sort")}"]`)).not.toBeNull();
     expect(container.querySelector('button[title="Enable parent-child nesting"]')).toBeNull();
     expect(container.textContent).not.toContain("Mark all as read");
 
@@ -692,11 +693,11 @@ describe("Inbox toolbar", () => {
       });
 
       const toolbar = container.querySelector('[data-slot="collection-toolbar"]');
-      expect(toolbar?.getAttribute("aria-label")).toBe("Inbox controls");
+      expect(toolbar?.getAttribute("aria-label")).toBe(t("inbox.controls", { surface: t("inbox.title") }));
       expect(toolbar?.querySelector('[data-slot="collection-toolbar-context"]')).not.toBeNull();
-      expect(toolbar?.querySelector('[data-slot="collection-toolbar-search"] input[placeholder="Search inbox…"]')).not.toBeNull();
+      expect(toolbar?.querySelector(`[data-slot="collection-toolbar-search"] input[placeholder="${t("inbox.searchPlaceholder")}…"]`)).not.toBeNull();
       expect(toolbar?.querySelector('[data-slot="collection-toolbar-controls"]')).not.toBeNull();
-      expect(container.querySelectorAll('input[placeholder="Search inbox…"]')).toHaveLength(1);
+      expect(container.querySelectorAll(`input[placeholder="${t("inbox.searchPlaceholder")}…"]`)).toHaveLength(1);
 
       act(() => root.unmount());
       container.replaceChildren();
@@ -724,7 +725,7 @@ describe("Inbox toolbar", () => {
     });
 
     expect(container.querySelector('[data-testid="inbox-filter-scope-feedback"]')?.textContent)
-      .toBe("Live runs only — tasks currently connected to an agent run.");
+      .toBe(t("inbox.liveRunsOnly"));
     const migrated = JSON.parse(
       localStorage.getItem("paperclip:task-collection:v1:company-1:inbox") ?? "null",
     ) as { companyId?: string; collectionKey?: string } | null;
@@ -880,7 +881,7 @@ describe("Inbox toolbar", () => {
       );
     });
 
-    const groupButton = container.querySelector<HTMLButtonElement>('button[title="Group"]');
+    const groupButton = container.querySelector<HTMLButtonElement>(`button[title="${t("inbox.group")}"]`);
     expect(groupButton).not.toBeNull();
 
     await act(async () => {
@@ -888,7 +889,7 @@ describe("Inbox toolbar", () => {
     });
 
     const groupOptions = Array.from(document.body.querySelectorAll("button")).map((button) => button.textContent);
-    expect(groupOptions).not.toContain("Workspace");
+    expect(groupOptions).not.toContain(t("projects.workspace"));
 
     act(() => {
       root.unmount();
@@ -1019,7 +1020,7 @@ describe("Inbox toolbar", () => {
 
     const rows = Array.from(container.querySelectorAll("[data-inbox-item]"));
     const rowFor = (text: string) => rows.find((row) => row.textContent?.includes(text));
-    const markReadButton = (row: Element) => row.querySelector('button[aria-label="Mark as read"]');
+    const markReadButton = (row: Element) => row.querySelector(`button[aria-label="${t("inbox.markRead")}"]`);
     // The canonical spacer reserves the disclosure column on every leaf row.
     const hasLeadingSpacer = (row: Element) =>
       !!row.querySelector('[data-slot="task-row-disclosure-spacer"]');
@@ -1041,7 +1042,7 @@ describe("Inbox toolbar", () => {
     expect(unreadSlot?.className).toContain("absolute");
     // Only the unread row carries the dot button; the read slot is empty.
     expect(markReadButton(unreadSlot!)).not.toBeNull();
-    expect(readSlot?.querySelector('button[aria-label="Mark as read"]')).toBeNull();
+    expect(readSlot?.querySelector(`button[aria-label="${t("inbox.markRead")}"]`)).toBeNull();
     expect(hasLeadingSpacer(unreadRow)).toBe(true);
 
     // Read rows keep the same spacer, so both rows line up.
@@ -1246,7 +1247,7 @@ describe("Inbox toolbar", () => {
     });
 
     const initialArchiveButtons = Array.from(
-      container.querySelectorAll<HTMLButtonElement>('button[aria-label="Archive"]'),
+      container.querySelectorAll<HTMLButtonElement>(`button[aria-label="${t("common.archive")}"]`),
     );
     expect(initialArchiveButtons.length).toBeGreaterThanOrEqual(2);
 
@@ -1261,7 +1262,7 @@ describe("Inbox toolbar", () => {
     });
 
     const remainingArchiveButton = container.querySelector<HTMLButtonElement>(
-      'button[aria-label="Archive"]',
+      `button[aria-label="${t("common.archive")}"]`,
     );
     expect(remainingArchiveButton).not.toBeNull();
     expect(remainingArchiveButton?.disabled).toBe(false);
@@ -1308,7 +1309,7 @@ describe("Inbox toolbar", () => {
       expect(container.textContent).toContain("Archived inbox row");
     });
 
-    const archiveButton = container.querySelector<HTMLButtonElement>('button[aria-label="Archive"]');
+    const archiveButton = container.querySelector<HTMLButtonElement>(`button[aria-label="${t("common.archive")}"]`);
     expect(archiveButton).not.toBeNull();
 
     await act(async () => {
@@ -1359,7 +1360,7 @@ describe("Inbox toolbar", () => {
         expect(container.textContent).toContain("Undoable inbox row");
       });
 
-      const archiveButton = container.querySelector<HTMLButtonElement>('button[aria-label="Archive"]');
+      const archiveButton = container.querySelector<HTMLButtonElement>(`button[aria-label="${t("common.archive")}"]`);
       expect(archiveButton).not.toBeNull();
       await act(async () => {
         archiveButton!.dispatchEvent(new MouseEvent("click", { bubbles: true, cancelable: true }));

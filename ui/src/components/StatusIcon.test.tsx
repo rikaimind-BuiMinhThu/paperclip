@@ -2,6 +2,7 @@
 
 import { renderToStaticMarkup } from "react-dom/server";
 import { describe, expect, it } from "vitest";
+import { t } from "@/i18n";
 import { StatusIcon } from "./StatusIcon";
 import { IssueStatusBadge } from "./StatusBadge";
 
@@ -91,7 +92,7 @@ describe("StatusIcon", () => {
     const html = renderToStaticMarkup(<StatusIcon status="todo" onChange={() => {}} />);
     expect(html).toContain('viewBox="0 0 24 24"');
     expect(html).toContain('<button type="button"');
-    expect(html).toContain('aria-label="Change status (current: Todo)"');
+    expect(html).toContain(`aria-label="${t("status.changeCurrent", { status: t("status.todo") })}"`);
   });
 
 });
@@ -124,9 +125,9 @@ describe("StatusIcon — glyph size (PAP-243a)", () => {
 describe("Slack idle status presentation", () => {
   it("labels verified waiting conversations Idle in icons, labels, badges and picker triggers", () => {
     const props = { status: "in_review", externalConversationState: "waiting" as const };
-    expect(renderToStaticMarkup(<StatusIcon {...props} showLabel />)).toContain(">Idle<");
-    expect(renderToStaticMarkup(<StatusIcon {...props} onChange={() => {}} />)).toContain('current: Idle');
-    expect(renderToStaticMarkup(<IssueStatusBadge {...props} />)).toContain(">Idle<");
+    expect(renderToStaticMarkup(<StatusIcon {...props} showLabel />)).toContain(`>${t("status.idle")}<`);
+    expect(renderToStaticMarkup(<StatusIcon {...props} onChange={() => {}} />)).toContain(t("status.changeCurrent", { status: t("status.idle") }));
+    expect(renderToStaticMarkup(<IssueStatusBadge {...props} />)).toContain(`>${t("status.idle")}<`);
   });
 
   it.each(["in_review", "blocked", "done", "cancelled"])("preserves %s without verified waiting", (status) => {
@@ -135,6 +136,6 @@ describe("Slack idle status presentation", () => {
   });
 
   it("preserves an explicit terminal outcome even with stale waiting data", () => {
-    expect(renderToStaticMarkup(<IssueStatusBadge status="done" externalConversationState="waiting" />)).toContain(">Done<");
+    expect(renderToStaticMarkup(<IssueStatusBadge status="done" externalConversationState="waiting" />)).toContain(`>${t("status.done")}<`);
   });
 });

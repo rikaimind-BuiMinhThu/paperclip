@@ -1,5 +1,7 @@
 import { AgentIdentity } from "@/components/AgentIdentity";
 import { useMemo, useState } from "react";
+import { useTranslation } from "@/i18n";
+import { translateStatus } from "../lib/status-label";
 import { Link } from "@/lib/router";
 import {
   DndContext,
@@ -131,10 +133,6 @@ export function getKanbanColumnTone(status: IssueStatus) {
   return kanbanColumnTones[status] ?? defaultKanbanColumnTone;
 }
 
-function statusLabel(status: string): string {
-  return status.replace(/_/g, " ").replace(/\b\w/g, (c) => c.toUpperCase());
-}
-
 export function resolveKanbanTargetStatus(overId: string, issues: Issue[]): IssueStatus | null {
   if ((boardStatuses as readonly string[]).includes(overId)) {
     return overId as IssueStatus;
@@ -183,7 +181,9 @@ function KanbanColumn({
   revealIncrement: number;
   onShowMore: () => void;
 }) {
+  const { t } = useTranslation();
   const { setNodeRef, isOver } = useDroppable({ id: status });
+  const columnLabel = translateStatus(status, t);
 
   const isEmpty = issues.length === 0;
   const visibleIssues = collapsed ? [] : issues.slice(0, visibleCount);
@@ -200,11 +200,11 @@ function KanbanColumn({
           tone.rail,
           isOver && tone.railOver,
         )}
-        title={`${statusLabel(status)}: ${issues.length}`}
+        title={`${columnLabel}: ${issues.length}`}
       >
         <StatusIcon status={status} />
         <span className={cn("mt-2 [writing-mode:vertical-rl] rotate-180 text-(length:--text-nano) font-semibold uppercase tracking-wide", tone.header)}>
-          {statusLabel(status)}
+          {columnLabel}
         </span>
         <Badge variant="ghost" className={cn("mt-auto bg-background px-1.5 text-(length:--text-nano) tabular-nums", tone.header)}>
           {issues.length}
@@ -218,7 +218,7 @@ function KanbanColumn({
       <div className="flex items-center gap-2 px-3 py-2 mb-1">
         <StatusIcon status={status} />
         <span className={cn("text-xs font-semibold uppercase tracking-wide", tone.header)}>
-          {statusLabel(status)}
+          {columnLabel}
         </span>
         <span className={cn("ml-auto text-xs tabular-nums", tone.count)}>
           {issues.length}

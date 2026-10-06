@@ -1,3 +1,4 @@
+import { useTranslation } from "@/i18n";
 import { AgentAvatar, type AvatarAgent } from "@/components/AgentAvatar";
 import { useEffect, useMemo, useState, type ComponentProps, type ReactNode } from "react";
 import { ChevronRight } from "lucide-react";
@@ -20,7 +21,7 @@ export function AgentSelect({
   value,
   onChange,
   placeholder = "Select agent…",
-  emptyMessage = "No agents yet.",
+  emptyMessage,
   disabled = false,
   triggerClassName,
   id,
@@ -34,6 +35,8 @@ export function AgentSelect({
   triggerClassName?: string;
   id?: string;
 }) {
+  const { t } = useTranslation();
+  const resolvedEmptyMessage = emptyMessage ?? t("empty.noAgents");
   const [open, setOpen] = useState(false);
   const [filter, setFilter] = useState("");
   const selectedAgent = agents.find((agent) => agent.id === value);
@@ -81,7 +84,7 @@ export function AgentSelect({
           />
         </div>
         {agents.length === 0 ? (
-          <div className="px-3 py-4 text-sm text-muted-foreground">{emptyMessage}</div>
+          <div className="px-3 py-4 text-sm text-muted-foreground">{resolvedEmptyMessage}</div>
         ) : (
           <div className="max-h-60 overflow-y-auto py-1">
             {filteredAgents.map((agent) => (
@@ -131,7 +134,7 @@ export function AgentMultiSelect({
   triggerClassName,
   contentAlign = "start",
   headerContent,
-  emptyMessage = "No agents yet.",
+  emptyMessage,
   showSelectionPreview = true,
   onOpenChange,
 }: {
@@ -157,6 +160,8 @@ export function AgentMultiSelect({
   showSelectionPreview?: boolean;
   onOpenChange?: (open: boolean) => void;
 }) {
+  const { t } = useTranslation();
+  const resolvedEmptyMessage = emptyMessage ?? t("empty.noAgents");
   const [open, setOpen] = useState(false);
   const [filter, setFilter] = useState("");
   const [draftAgentIds, setDraftAgentIds] = useState<Set<string>>(new Set(selectedAgentIds));
@@ -237,7 +242,7 @@ export function AgentMultiSelect({
             <Skeleton className="h-6 w-full" />
           </div>
         ) : agents.length === 0 ? (
-          <div className="px-3 py-4 text-sm text-muted-foreground">{emptyMessage}</div>
+          <div className="px-3 py-4 text-sm text-muted-foreground">{resolvedEmptyMessage}</div>
         ) : (
           <div className="max-h-60 overflow-y-auto py-1">
             {filteredAgents.map((agent) => {

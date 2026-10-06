@@ -1,4 +1,5 @@
 import { TextAttachmentContext } from "../context/TextAttachmentContext";
+import { useTranslation } from "@/i18n";
 import { useTaskBrowsers, useBrowserArrivals } from "@/hooks/useTaskBrowsers";
 import { WorkspaceExportRecovery } from "../components/WorkspaceExportRecovery";
 import { DispositionRecoveryProvider } from "../components/DispositionRecoveryNotice";
@@ -2637,6 +2638,7 @@ function IssueDetailActivityTab({
   handoffFocusSignal = 0,
   externalReferences,
 }: IssueDetailActivityTabProps) {
+  const { t } = useTranslation();
   const { data: activity, isLoading: activityLoading } = useQuery({
     queryKey: queryKeys.issues.activity(issueId),
     queryFn: () => activityApi.forIssue(issueId),
@@ -2779,7 +2781,7 @@ function IssueDetailActivityTab({
           ) : (
             <div className="space-y-1 text-xs text-muted-foreground tabular-nums">
               <div className="flex flex-wrap gap-3">
-                <span className="font-medium text-foreground">This task</span>
+                <span className="font-medium text-foreground">{t("issues.thisTask")}</span>
                 {issueCostSummary.hasCost ? (
                   <span className="font-medium text-foreground">
                     ${issueCostSummary.cost.toFixed(4)}
@@ -2969,6 +2971,7 @@ export function IssueDetail({ tasksTab }: { tasksTab?: TaskSidePanelProps["tasks
 export function TaskDetailSurface({ conversation, tasksTab }: { tasksTab?: TaskSidePanelProps["tasksTab"]; conversation?: {
   agent: Agent; issue: Issue | null; ensureIssue: () => Promise<Issue>;
 } }) {
+  const { t } = useTranslation();
   const { issueId: routeIssueId, companyPrefix } = useParams<{ issueId: string; companyPrefix: string }>();
   const issueId = conversation ? conversation.issue?.id : routeIssueId;
   const [draftWorkMode, setDraftWorkMode] = useState<IssueWorkMode>("standard");
@@ -3344,10 +3347,10 @@ export function TaskDetailSurface({ conversation, tasksTab }: { tasksTab?: TaskS
   const sourceBreadcrumb = useMemo(
     () =>
       readIssueDetailBreadcrumb(issueId, location.state, location.search) ?? {
-        label: "Tasks",
+        label: t("nav.tasks"),
         href: "/issues",
       },
-    [issueId, location.state, location.search],
+    [issueId, location.search, location.state, t],
   );
 
   const {
@@ -6981,11 +6984,11 @@ export function TaskDetailSurface({ conversation, tasksTab }: { tasksTab?: TaskS
       >
         <Paperclip className="h-3.5 w-3.5 mr-1.5" />
         {uploadAttachment.isPending || importMarkdownDocument.isPending ? (
-          "Uploading..."
+          t("issues.uploading")
         ) : (
           <>
-            <span className="hidden sm:inline">Upload attachment</span>
-            <span className="sm:hidden">Upload</span>
+            <span className="hidden sm:inline">{t("issues.uploadAttachment")}</span>
+            <span className="sm:hidden">{t("common.upload")}</span>
           </>
         )}
       </Button>
@@ -8290,7 +8293,7 @@ export function TaskDetailSurface({ conversation, tasksTab }: { tasksTab?: TaskS
               {taskChatShellEnabled ? (
                 <>
                   <SheetHeader className="sr-only">
-                    <SheetTitle>Task side panel</SheetTitle>
+                    <SheetTitle>{t("issues.sidePanel")}</SheetTitle>
                   </SheetHeader>
                   <TaskSidePanel
                     openBrowserId={openBrowserId}

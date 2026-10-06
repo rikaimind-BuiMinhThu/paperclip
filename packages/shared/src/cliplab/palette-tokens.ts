@@ -68,6 +68,10 @@ export const CAP_V1_COLORS = {
     "a": "#7516cf",
     "b": "#00e8d1"
   },
+  "rikai-blue": {
+    "a": "#87d3ff",
+    "b": "#008fd5"
+  },
   "muted-dream": {
     "a": "#a6aaad",
     "b": "#44464a"

@@ -1,12 +1,15 @@
 import { describe, expect, it } from "vitest";
 import { t } from ".";
 import en from "./locales/en.json";
-import { localeMessages } from "./locales";
+import ja from "./locales/ja.json";
+import { DEFAULT_LOCALE, localeMessages } from "./locales";
 import { validateLocaleMessages } from "./locale-validation";
 
 describe("locale validation", () => {
-  it("resolves English messages with key and default fallbacks", () => {
-    expect(t("app.noCompanies.title")).toBe(en.app.noCompanies.title);
+  it("resolves the default locale with key and default fallbacks", () => {
+    expect(DEFAULT_LOCALE).toBe("ja");
+    expect(t("app.noCompanies.title")).toBe(ja.app.noCompanies.title);
+    expect(t("app.noCompanies.title", { lng: "en" })).toBe(en.app.noCompanies.title);
     expect(t("app.missing", { defaultValue: "Fallback" })).toBe("Fallback");
     expect(t("app.missing")).toBe("app.missing");
   });

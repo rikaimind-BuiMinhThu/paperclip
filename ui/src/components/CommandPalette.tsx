@@ -6,6 +6,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useCompany } from "../context/CompanyContext";
 import { useDialogActions } from "../context/DialogContext";
 import { useSidebar } from "../context/SidebarContext";
+import { useTranslation } from "@/i18n";
 import { issuesApi } from "../api/issues";
 import { authApi } from "../api/auth";
 import { agentsApi } from "../api/agents";
@@ -90,6 +91,7 @@ function scoreProjectMatch(name: string, description: string, q: string): number
 }
 
 export function CommandPalette() {
+  const { t } = useTranslation();
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState("");
   const navigate = useNavigate();
@@ -249,12 +251,12 @@ export function CommandPalette() {
               to <span className="font-medium">search all</span> or keep typing to refine.
             </span>
           ) : (
-            "No results found."
+            t("empty.noResults")
           )}
         </CommandEmpty>
 
         {showSearchAll ? (
-          <CommandGroup heading="Search">
+          <CommandGroup heading={t("common.search")}>
             <CommandItem
               value={`${SEARCH_ALL_VALUE} ${searchQuery}`}
               onSelect={goFullSearch}

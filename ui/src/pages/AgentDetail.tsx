@@ -5,6 +5,7 @@ import { characterStateForAgent } from "@paperclipai/shared";
 import { mergeRunLogChunks, readChunkSeq } from "../lib/run-log-chunks";
 import { getPageVisibility, usePageVisibility } from "../lib/page-visibility";
 import { useCallback, useEffect, useMemo, useState, useRef } from "react";
+import { useTranslation } from "@/i18n";
 import { useParams, useNavigate, Link, Navigate, useBeforeUnload, type NavigateFunction } from "@/lib/router";
 import { useQuery, useMutation, useQueryClient, type QueryClient } from "@tanstack/react-query";
 import {
@@ -137,6 +138,7 @@ import {
   AGENT_DETAIL_NAVIGATION,
   agentDetailHref,
   agentLegacyAuditSection,
+  agentLocalNavLabel,
   agentScopedAuditHref,
   parseAgentDetailView,
   type AgentDetailView,
@@ -757,6 +759,7 @@ function WorkspaceOperationsSection({
 }
 
 export function AgentDetail() {
+  const { t } = useTranslation();
   const { companyPrefix, agentId, tab: urlTab, runId: urlRunId } = useParams<{
     companyPrefix?: string;
     agentId: string;
@@ -1037,25 +1040,24 @@ export function AgentDetail() {
 
   useEffect(() => {
     const crumbs: { label: string; href?: string }[] = [
-      { label: "Agents", href: "/agents" },
+      { label: t("agents.title"), href: "/agents" },
     ];
-    const agentName = agent?.name ?? routeAgentRef ?? "Agent";
+    const agentName = agent?.name ?? routeAgentRef ?? t("agents.agent");
     if (activeView === "overview" && !urlRunId) {
       crumbs.push({ label: agentName });
     } else {
       crumbs.push({ label: agentName, href: agentDetailHref(canonicalAgentRef) });
       if (urlRunId) {
-        crumbs.push({ label: "Runs", href: agent?.id ? agentScopedAuditHref(agent.id, "runs") : undefined });
-        crumbs.push({ label: `Run ${urlRunId.slice(0, 8)}` });
+        crumbs.push({ label: t("nav.runs"), href: agent?.id ? agentScopedAuditHref(agent.id, "runs") : undefined });
+        crumbs.push({ label: t("agents.runLabel", { id: urlRunId.slice(0, 8) }) });
+      } else if (activeView !== "run-detail") {
+        crumbs.push({ label: agentLocalNavLabel(activeView) });
       } else {
-        const item = AGENT_DETAIL_NAVIGATION
-          .flatMap((section) => section.items)
-          .find((candidate) => candidate.value === activeView);
-        crumbs.push({ label: item?.label ?? "Overview" });
+        crumbs.push({ label: t("common.overview") });
       }
     }
     setBreadcrumbs(crumbs);
-  }, [setBreadcrumbs, agent, routeAgentRef, canonicalAgentRef, activeView, urlRunId]);
+  }, [setBreadcrumbs, agent, routeAgentRef, canonicalAgentRef, activeView, urlRunId, t]);
 
   useEffect(() => {
     closePanel();
@@ -1365,7 +1367,7 @@ export function AgentDetail() {
       {actionError && <p className="text-sm text-destructive">{actionError}</p>}
       {isPendingApproval && (
         <div className="flex flex-wrap items-center gap-3 rounded-md border border-amber-300/60 bg-amber-50 px-3 py-2 text-sm text-amber-900 dark:border-amber-400/40 dark:bg-amber-950/30 dark:text-amber-200">
-          <span>This agent is pending board approval and cannot be invoked yet.</span>
+          <span>{t("agents.pendingApprovalNotice")}</span>
           <Button
             variant="outline"
             size="sm"
@@ -1373,12 +1375,12 @@ export function AgentDetail() {
             disabled={agentAction.isPending}
           >
             <CheckCircle2 className="h-3.5 w-3.5 sm:mr-1" />
-            <span>Approve agent</span>
+            <span>{t("agents.approveAgent")}</span>
           </Button>
         </div>
       )}
 
-      {activeView !== "run-detail" && activeView !== "channels" && <h2 className="text-xl font-semibold">{activeView === "secrets" ? "Secrets & variables" : AGENT_DETAIL_NAVIGATION.flatMap(section => section.items).find(item => item.value === activeView)?.label}</h2>}
+      {activeView !== "run-detail" && activeView !== "channels" && <h2 className="text-xl font-semibold">{agentLocalNavLabel(activeView)}</h2>}
 
       {/* View content */}
       {activeView === "overview" && (

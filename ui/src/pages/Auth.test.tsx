@@ -6,6 +6,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { MemoryRouter, Route, Routes } from "react-router-dom";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { queryKeys } from "../lib/queryKeys";
+import { t } from "@/i18n";
 import { AuthPage } from "./Auth";
 
 const getSessionMock = vi.hoisted(() => vi.fn());
@@ -147,7 +148,7 @@ describe("AuthPage", () => {
   it("fails closed when deployment metadata cannot be loaded", async () => {
     healthMock.mockRejectedValue(new Error("offline"));
     const { root } = await mount();
-    await vi.waitFor(() => expect(container.textContent).toContain("Unable to check sign-in"));
+    await vi.waitFor(() => expect(container.textContent).toContain(t("auth.unableToCheck")));
     expect(container.querySelector("form")).toBeNull();
     await act(() => root.unmount());
   });
@@ -207,7 +208,7 @@ describe("AuthPage", () => {
     const { root } = await mount();
 
     const createOne = Array.from(container.querySelectorAll("button")).find(
-      (button) => button.textContent === "Create one",
+      (button) => button.textContent === t("auth.createOne"),
     );
     expect(createOne).not.toBeNull();
 

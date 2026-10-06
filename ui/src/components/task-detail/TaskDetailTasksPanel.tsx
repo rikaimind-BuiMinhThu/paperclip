@@ -4,6 +4,7 @@ import { ArrowUpRight, ChevronRight } from "lucide-react";
 import { Link } from "@/lib/router";
 import { projectRouteRef } from "@/lib/utils";
 import { issueStatusOrder } from "@/lib/issue-filters";
+import { useTranslation } from "@/i18n";
 import { Button } from "@/components/ui/button";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { RelationNavigationList, TaskDetailSubtasksPanel, TaskDetailTaskList } from "./TaskDetailRelationsPanel";
@@ -46,6 +47,7 @@ export interface TaskDetailTasksPanelProps {
 }
 
 export function TaskDetailTasksPanel({ ancestors = [], subtasks, createdTasks, projects, isLoading, hasError, onRetry, issueLinkState }: TaskDetailTasksPanelProps) {
+  const { t } = useTranslation();
   const sortedSubtasks = sortTasks(subtasks);
   const groups = new Map<string, { name: string; path?: string; tasks: Issue[] }>();
   for (const item of sortTasks(createdTasks)) {
@@ -91,7 +93,7 @@ export function TaskDetailTasksPanel({ ancestors = [], subtasks, createdTasks, p
         </div>
       )}
       {!isLoading && !hasError && ancestors.length === 0 && subtasks.length === 0 && createdTasks.length === 0 && (
-        <p className="py-6 text-center text-sm text-muted-foreground">No tasks yet.</p>
+        <p className="py-6 text-center text-sm text-muted-foreground">{t("empty.noTasks")}</p>
       )}
     </section>
   );

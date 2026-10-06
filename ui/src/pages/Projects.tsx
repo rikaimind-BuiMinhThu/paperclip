@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import type { Project } from "@paperclipai/shared";
+import { useTranslation } from "@/i18n";
 import { projectsApi } from "../api/projects";
 import { useCompany } from "../context/CompanyContext";
 import { useDialogActions } from "../context/DialogContext";
@@ -77,6 +78,7 @@ function sortProjects(projects: Project[], sortField: ProjectSortField, sortDir:
 }
 
 export function Projects() {
+  const { t } = useTranslation();
   const { selectedCompanyId } = useCompany();
   const { openNewProject } = useDialogActions();
   const { setBreadcrumbs } = useBreadcrumbs();
@@ -84,8 +86,8 @@ export function Projects() {
   const [sortDir, setSortDir] = useState<ProjectSortDir>("asc");
 
   useEffect(() => {
-    setBreadcrumbs([{ label: "Projects" }]);
-  }, [setBreadcrumbs]);
+    setBreadcrumbs([{ label: t("nav.projects") }]);
+  }, [setBreadcrumbs, t]);
 
   const { data: allProjects, isLoading, error } = useQuery({
     queryKey: queryKeys.projects.list(selectedCompanyId!),
@@ -179,7 +181,7 @@ export function Projects() {
       {!isLoading && projects.length === 0 && (
         <EmptyState
           icon={Hexagon}
-          message="No projects yet."
+          message={t("empty.noProjects")}
           action="Add Project"
           onAction={openNewProject}
         />

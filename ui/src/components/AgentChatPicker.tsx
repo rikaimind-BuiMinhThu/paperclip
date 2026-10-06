@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import type { Agent } from "@paperclipai/shared";
+import { useTranslation } from "@/i18n";
 import { AgentIcon } from "@/components/AgentIconPicker";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
@@ -33,6 +34,7 @@ export function AgentChatPicker({ open, onOpenChange, ...props }: AgentChatPicke
 }
 
 function AgentChatPickerResults({ agents, onSelect, onComplete, loading, error, onRetry, existingChatAgentIds, renderAgentIcon }: Omit<AgentChatPickerProps, "open" | "onOpenChange"> & { onComplete: () => void }) {
+  const { t } = useTranslation();
   const mounted = useRef(false);
   const selection = useRef<AbortController | null>(null);
   useEffect(() => {
@@ -78,7 +80,7 @@ function AgentChatPickerResults({ agents, onSelect, onComplete, loading, error, 
         <CommandList>
           <CommandEmpty>
             <div className="flex flex-col items-center gap-2 px-4">
-              <span>{agents.length ? `No agents match “${search}”` : "No agents yet."}</span>
+              <span>{agents.length ? `No agents match “${search}”` : t("empty.noAgents")}</span>
               {agents.length ? <>
                 <span className="text-xs text-muted-foreground">Try another name or role.</span>
                 <Button variant="ghost" size="sm" onClick={() => setSearch("")}>Clear search</Button>

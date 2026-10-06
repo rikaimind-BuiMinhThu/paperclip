@@ -46,6 +46,7 @@ import {
 } from "../lib/agent-order";
 import { BudgetSidebarMarker } from "./BudgetSidebarMarker";
 import { SidebarNavItem } from "./SidebarNavItem.production";
+import { useTranslation } from "@/i18n";
 import { SidebarSection, type SidebarSectionRadioChoice } from "./SidebarSection";
 import { StarToggle } from "./StarToggle";
 import { Button } from "@/components/ui/button";
@@ -294,6 +295,7 @@ function SidebarAgentItem({
 }
 
 export function SidebarAgents({ streamlined = false }: { streamlined?: boolean } = {}) {
+  const { t } = useTranslation();
   const [open, setOpen] = useState(true);
   const [pendingAgentIds, setPendingAgentIds] = useState<Set<string>>(() => new Set());
   const [liveLingerVersion, setLiveLingerVersion] = useState(0);
@@ -631,7 +633,7 @@ export function SidebarAgents({ streamlined = false }: { streamlined?: boolean }
 
   return (
     <SidebarSection
-      label="Agents"
+      label={t("nav.agents")}
       collapsible={{ open, onOpenChange: setOpen }}
       headerAction={{
         ariaLabel: "New agent",

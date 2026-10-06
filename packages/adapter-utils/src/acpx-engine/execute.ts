@@ -875,6 +875,26 @@ async function resolveBuiltInAgentCommand(input: {
   return { command: resolved, shellCommand: shellQuote(resolved) };
 }
 
+/**
+ * ACPX parses agent commands with splitCommandLine (shell-style tokenization).
+ * Absolute paths that contain whitespace must be one argv entry or spawn only
+ * sees the path prefix (e.g. `/Users/.../RIKAI` from `.../RIKAI MIND/...`).
+ */
+export function toAcpxRegistryCommand(command: string): string {
+  const trimmed = command.trim();
+  if (!trimmed) return trimmed;
+  if (
+    (trimmed.startsWith('"') && trimmed.endsWith('"')) ||
+    (trimmed.startsWith("'") && trimmed.endsWith("'"))
+  ) {
+    return trimmed;
+  }
+  if (/\s/.test(trimmed) && (path.isAbsolute(trimmed) || /^[A-Za-z]:[\\/]/.test(trimmed))) {
+    return JSON.stringify(trimmed.replaceAll("\\", "/"));
+  }
+  return trimmed;
+}
+
 const execFileAsync = promisify(execFile);
 // Gemini CLI renamed --experimental-acp to --acp in 0.33.0. acpx normally
 // rewrites the flag itself, but the agent wrapper script hides the gemini
@@ -2544,10 +2564,16 @@ async function buildRuntime(input: {
   }
   // The relay runs on the host with the sanitized remote launch environment.
   // Its /usr/bin/env node shebang cannot rely on that environment's PATH.
+  // Local built-ins already expose a shell-quoted form for paths with spaces;
+  // configured absolute paths still need quoting before ACPX tokenizes them.
   const overrideCommand = processSessionBridge?.agentCommand
     ? [process.execPath, processSessionBridge.agentCommand]
       .map((part) => JSON.stringify(part.replaceAll("\\", "/"))).join(" ")
-    : agentCommand;
+    : agentCommand
+      ? configuredCommand
+        ? toAcpxRegistryCommand(configuredCommand)
+        : builtInCommand?.shellCommand ?? toAcpxRegistryCommand(agentCommand)
+      : undefined;
   const overrides = overrideCommand ? { [acpxAgent]: overrideCommand } : undefined;
   const agentRegistry = createAgentRegistry({ overrides });
   const loggedEnv = buildInvocationEnvForLogs(env, {

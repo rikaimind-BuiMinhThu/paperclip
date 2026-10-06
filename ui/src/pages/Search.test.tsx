@@ -6,6 +6,7 @@ import { createRoot } from "react-dom/client";
 import { MemoryRouter, Route, Routes } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { t } from "@/i18n";
 import { Search, buildSearchUrl } from "./Search";
 
 const companyState = vi.hoisted(() => ({
@@ -255,7 +256,7 @@ describe("Search page", () => {
     await waitForAssertion(() => {
       expect(container.textContent).toContain("PAP-3142");
       expect(container.textContent).toContain("Auth middleware flakes");
-      expect(container.textContent).toContain("1 result");
+      expect(container.textContent).toContain(t("search.oneResult"));
     });
 
     flushSync(() => {
@@ -484,10 +485,10 @@ describe("Search page", () => {
     const { root } = renderSearch("/search?q=broken", container);
 
     await waitForAssertion(() => {
-      expect(container.textContent).toContain("Couldn’t run that search");
-      expect(container.textContent).toContain("The server returned 500.");
-      expect(container.textContent).toContain("Retry");
-      expect(container.textContent).toContain("Open Tasks filter view");
+      expect(container.textContent).toContain(t("search.couldNotRun"));
+      expect(container.textContent).toContain(t("search.serverReturned", { status: 500 }));
+      expect(container.textContent).toContain(t("common.retry"));
+      expect(container.textContent).toContain(t("search.openTasksFilter"));
     });
 
     flushSync(() => {
@@ -520,7 +521,7 @@ describe("Search page", () => {
 
     const { root } = renderSearch("/search", container);
 
-    const input = container.querySelector('input[aria-label="Search query"]') as HTMLInputElement;
+    const input = container.querySelector(`input[aria-label="${t("search.queryLabel")}"]`) as HTMLInputElement;
     expect(input).not.toBeNull();
 
     flushSync(() => {
@@ -641,9 +642,9 @@ describe("Search page", () => {
     const { root } = renderSearch("/search?q=ghost&scope=comments", container);
 
     await waitForAssertion(() => {
-      expect(container.textContent).toContain("No results for");
+      expect(container.textContent).toContain(t("search.noResults", { query: "ghost" }));
       expect(container.textContent).toContain("ghost");
-      expect(container.textContent).toContain("Search all scopes");
+      expect(container.textContent).toContain(t("search.searchAllScopes"));
     });
 
     flushSync(() => {
@@ -720,7 +721,7 @@ describe("Search page", () => {
     });
 
     const { root } = renderSearch("/search", container);
-    const input = container.querySelector('input[aria-label="Search query"]') as HTMLInputElement;
+    const input = container.querySelector(`input[aria-label="${t("search.queryLabel")}"]`) as HTMLInputElement;
 
     flushSync(() => {
       const nativeSetter = Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, "value")!.set!;
@@ -752,7 +753,7 @@ describe("Search page", () => {
     searchApiMock.search.mockResolvedValue(emptyResponse());
 
     const { root } = renderSearch("/search", container);
-    const input = container.querySelector('input[aria-label="Search query"]') as HTMLInputElement;
+    const input = container.querySelector(`input[aria-label="${t("search.queryLabel")}"]`) as HTMLInputElement;
     const nativeSetter = Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, "value")!.set!;
 
     flushSync(() => {
@@ -791,7 +792,7 @@ describe("Search page", () => {
     searchApiMock.search.mockResolvedValue(emptyResponse());
 
     const { root } = renderSearch("/search", container);
-    const input = container.querySelector('input[aria-label="Search query"]') as HTMLInputElement;
+    const input = container.querySelector(`input[aria-label="${t("search.queryLabel")}"]`) as HTMLInputElement;
     const nativeSetter = Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, "value")!.set!;
 
     flushSync(() => {
@@ -859,7 +860,7 @@ describe("Search page", () => {
     });
 
     const { root } = renderSearch("/search", container);
-    const input = container.querySelector('input[aria-label="Search query"]') as HTMLInputElement;
+    const input = container.querySelector(`input[aria-label="${t("search.queryLabel")}"]`) as HTMLInputElement;
     expect(input).not.toBeNull();
 
     flushSync(() => {
@@ -999,11 +1000,11 @@ describe("Search page", () => {
 
     await waitForAssertion(() => {
       expect(container.querySelector('[data-testid="search-zero-results-recovery"]')).not.toBeNull();
-      expect(container.textContent).toContain("No results with these filters");
-      expect(container.textContent).toContain("12 results match");
-      expect(container.textContent).toContain("Loosen a filter");
-      expect(container.textContent).toContain("+12 results");
-      expect(container.textContent).toContain("Clear all filters");
+      expect(container.textContent).toContain(t("search.noResultsWithFilters"));
+      expect(container.textContent).toContain(t("search.resultsMatch", { count: 12 }));
+      expect(container.textContent).toContain(t("search.loosenFilter"));
+      expect(container.textContent).toContain(`+12 ${t("search.additionalResults")}`);
+      expect(container.textContent).toContain(t("search.clearAllFilters"));
     });
 
     flushSync(() => {

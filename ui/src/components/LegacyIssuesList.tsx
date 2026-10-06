@@ -1,4 +1,6 @@
 import { AgentIdentity } from "@/components/AgentIdentity";
+import { useTranslation } from "@/i18n";
+import { translateStatus } from "../lib/status-label";
 import { startTransition, useDeferredValue, useEffect, useMemo, useState, useCallback, useRef } from "react";
 import type { ReactNode } from "react";
 import { useQueries, useQuery, useQueryClient } from "@tanstack/react-query";
@@ -122,15 +124,6 @@ function findIssuesScrollContainer(element: HTMLElement | null): HTMLElement | n
   return null;
 }
 const boardIssueStatuses = ISSUE_STATUSES;
-const issueStatusLabels: Record<IssueStatus, string> = {
-  backlog: "Backlog",
-  todo: "Todo",
-  in_progress: "In progress",
-  in_review: "In review",
-  done: "Done",
-  blocked: "Blocked",
-  cancelled: "Cancelled",
-};
 const progressSegmentClasses: Record<IssueStatus, string> = {
   backlog: "bg-muted-foreground/40",
   todo: "bg-blue-500",
@@ -569,6 +562,7 @@ function SubIssueProgressSummaryStrip({
   issueLinkState?: unknown;
   parentIssueIdForCostSummary?: string;
 }) {
+  const { t } = useTranslation();
   const target = summary.target;
   const targetIssue = target?.issue ?? null;
   const targetPathId = targetIssue?.identifier ?? targetIssue?.id ?? "";
@@ -638,7 +632,7 @@ function SubIssueProgressSummaryStrip({
                 key={status}
                 className={cn("h-full", progressSegmentClasses[status])}
                 style={{ width: `${(count / summary.totalCount) * 100}%` }}
-                title={`${issueStatusLabels[status]}: ${count}`}
+                title={`${translateStatus(status, t)}: ${count}`}
                 aria-hidden="true"
               />
             ))}

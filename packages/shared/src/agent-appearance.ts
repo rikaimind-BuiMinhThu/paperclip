@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-export const AGENT_PALETTE_IDS = ["bubblegum-sky", "pink-lemonade", "orchid-peach", "coral-mint", "lime-lagoon", "arctic-blue", "solar-flare", "violet-ember", "deep-tide", "coral-current", "golden-hour", "tangerine-cobalt", "electric-grove", "flamingo-jade", "cherry-pop", "turquoise-cherry", "ultraviolet-tide"] as const;
+export const AGENT_PALETTE_IDS = ["bubblegum-sky", "pink-lemonade", "orchid-peach", "coral-mint", "lime-lagoon", "arctic-blue", "solar-flare", "violet-ember", "deep-tide", "coral-current", "golden-hour", "tangerine-cobalt", "electric-grove", "flamingo-jade", "cherry-pop", "turquoise-cherry", "ultraviolet-tide", "rikai-blue"] as const;
 export type AgentPaletteId = typeof AGENT_PALETTE_IDS[number];
 export type CharacterPaletteId = AgentPaletteId | "muted-dream";
 export const AGENT_AVATAR_SIZES = [16, 20, 24, 32, 40, 48, 64, 96, 128, 256, 512] as const;
@@ -25,7 +25,7 @@ export function randomAgentAppearance(): AgentAppearance {
   do { globalThis.crypto.getRandomValues(bytes); } while (bytes[0] >= limit);
   return appearanceForPalette(AGENT_PALETTE_IDS[bytes[0] % AGENT_PALETTE_IDS.length]);
 }
-/** Must match the migration: rolling base-31 hash, modulo 17 at every step. */
+/** Must match the migration: rolling base-31 hash, modulo palette count at every step. */
 export function legacyAgentAppearance(id: string): AgentAppearance {
   let hash = 0;
   for (const char of id) hash = (hash * 31 + char.charCodeAt(0)) % AGENT_PALETTE_IDS.length;
