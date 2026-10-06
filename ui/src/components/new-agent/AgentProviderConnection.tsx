@@ -11,6 +11,7 @@ import {
 } from "../onboarding/SavedProviderKeySelect";
 import { agentsApi } from "@/api/agents";
 import { queryKeys } from "@/lib/queryKeys";
+import { useTranslation } from "@/i18n";
 import { AdapterLoginPanel } from "../AgentConfigForm";
 import { AdapterMark } from "./AgentBasicsDialog";
 import {
@@ -64,6 +65,7 @@ export function AgentProviderConnection({
     onComplete: (result: { connectionId: string; grantId: string; method: "subscription" | "api_key" }) => void;
   };
 }) {
+  const { t } = useTranslation();
   const health = useQuery({ queryKey: queryKeys.health, queryFn: healthApi.get, enabled: localEnvironment });
   const canUseLocalLogin = localEnvironment && (health.data?.localAiLoginSupported ?? health.data?.deploymentMode === "local_trusted");
   const epoch = useRef(0);
@@ -263,8 +265,13 @@ export function AgentProviderConnection({
       )}
       {!opened && savedKeys.options.length > 0 && (
         <p className="mt-2 text-sm text-muted-foreground">
-          {savedKeys.options.length} saved API{" "}
-          {savedKeys.options.length === 1 ? "key available" : "keys available"}.
+          {savedKeys.options.length === 1
+            ? t("onboarding.wizard.steps.connect.savedApiKeysOne", {
+                count: savedKeys.options.length,
+              })
+            : t("onboarding.wizard.steps.connect.savedApiKeysOther", {
+                count: savedKeys.options.length,
+              })}
         </p>
       )}
       {method === "subscription" &&
@@ -291,8 +298,10 @@ export function AgentProviderConnection({
               <OnboardingLoginCard
                 instruction={
                   savedKeys.options.length
-                    ? "Choose a saved API key or enter a new one"
-                    : `Provide your ${provider} API key to connect`
+                    ? t("onboarding.wizard.connect.apiCard.instructionSaved")
+                    : t("onboarding.wizard.connect.apiCard.instructionNew", {
+                        providerName: provider,
+                      })
                 }
               >
                 <SavedProviderKeySelect
@@ -400,17 +409,19 @@ export function AgentProviderConnection({
         }}
         primaryLabel={
           opened && needsLogin
-            ? loginPhase === "waiting" ? "Waiting for code"
-              : loginPhase === "connecting" ? "Connecting"
-              : `Sign in to ${provider}`
+            ? loginPhase === "waiting"
+              ? t("onboarding.wizard.connect.cta.waitingForCode")
+              : loginPhase === "connecting"
+                ? t("onboarding.wizard.footer.connecting")
+                : t("onboarding.wizard.connect.cta.signInTo", { providerName: provider })
             : busy
-            ? "Connecting"
-            : method === "subscription" &&
-                (storedLogin.data || savedSubscription)
-              ? "Use saved subscription"
-              : method === "api" && selectedKey
-                ? "Use saved API key"
-                : "Connect"
+              ? t("onboarding.wizard.footer.connecting")
+              : method === "subscription" &&
+                  (storedLogin.data || savedSubscription)
+                ? t("onboarding.wizard.connect.cta.useSavedSubscription")
+                : method === "api" && selectedKey
+                  ? t("onboarding.wizard.connect.cta.useSavedApiKey")
+                  : t("common.connect")
         }
         primaryDisabled={
           managedAccount?.disabled ||

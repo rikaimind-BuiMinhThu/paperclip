@@ -2,10 +2,19 @@
 import { flushSync } from "react-dom";
 import { createRoot, type Root } from "react-dom/client";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { afterEach, describe, expect, it, vi } from "vitest";
+import { afterAll, afterEach, beforeAll, describe, expect, it, vi } from "vitest";
+import { i18n } from "@/i18n";
+import { DEFAULT_LOCALE } from "@/i18n/locales";
 import { AgentProviderConnection } from "./AgentProviderConnection";
 import { defaultAiConnectionName } from "../ai-connections/model";
 import { ApiError } from "@/api/client";
+
+beforeAll(async () => {
+  await i18n.changeLanguage("en");
+});
+afterAll(async () => {
+  await i18n.changeLanguage(DEFAULT_LOCALE);
+});
 const mocks = vi.hoisted(() => ({
   auth: vi.fn(),
   login: vi.fn(),

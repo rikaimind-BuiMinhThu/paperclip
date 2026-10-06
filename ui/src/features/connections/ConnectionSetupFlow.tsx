@@ -49,6 +49,7 @@ import {
   getRecommendedConnectionMethod,
   isGoogleWorkspaceConnectorProfileId,
 } from "@paperclipai/shared";
+import { t, useTranslation } from "@/i18n";
 import { useNavigate, useParams, useSearchParams } from "@/lib/router";
 import { useCompany } from "@/context/CompanyContext";
 import { useBreadcrumbs } from "@/context/BreadcrumbContext";
@@ -176,12 +177,12 @@ function githubRecoveryUrl(value: string | null): string | null {
 
 function oauthCallbackErrorMessage(outcome: string | null, code: string | null): string {
   if (outcome === "denied") {
-    return "Authorization was cancelled or declined. Your saved connection was not changed.";
+    return t("apps.connect.oauthCancelled");
   }
   if (code === "github_installation_required") {
     return "GitHub access is required. Install Paperclip and grant at least one repository, then try again.";
   }
-  return "Authorization did not complete. Your saved connection is still here, so you can try again.";
+  return t("apps.connect.oauthFailed");
 }
 
 const ROUTE_STAGE_BY_STEP: Partial<Record<Step, string>> = {
@@ -546,10 +547,10 @@ export function ConnectionSetupFlow(props: ConnectionSetupFlowProps = {}) {
   const existing = useQuery({ queryKey: ["tools", "connection", existingId], queryFn: () => toolsApi.getConnection(existingId!), enabled: lookup });
   const provider = source || existing.data?.config?.sourceTemplateKey;
   const method = searchParams.get("method") || existing.data?.config?.connectionMethodKey;
-  if (lookup && existing.isPending) return <p className="p-6 text-sm text-muted-foreground">Loading connection…</p>;
+  if (lookup && existing.isPending) return <p className="p-6 text-sm text-muted-foreground">{t("apps.connect.loadingConnection")}</p>;
   if (lookup && existing.isError) return <div role="alert" className="space-y-3 p-6"><p>Could not load this connection. Your saved access and credentials have not changed.</p><Button variant="outline" onClick={() => void existing.refetch()}>Try again</Button></div>;
   if (isMemoryConnectorId(provider) && !(existing.data && existing.data.status !== "draft" && existing.data.config?.sourceTemplateKey === provider)) {
-    if (!memory.loaded) return <p className="p-6 text-sm text-muted-foreground">Loading connection settings…</p>;
+    if (!memory.loaded) return <p className="p-6 text-sm text-muted-foreground">{t("apps.connect.loadingConnection")}</p>;
     if (!memory.enabled) return <p role="status" className="p-6 text-sm text-muted-foreground">Enable memory connectors in Settings → Experimental to set up this connection.</p>;
   }
   if (!props.byoOnly && (props.credentialSource ?? "paperclip_vault") === "paperclip_vault"
@@ -577,6 +578,11 @@ function StandardConnectionSetupFlow({
   onCancel,
   renderCredentialStep,
 }: ConnectionSetupFlowProps = {}) {
+  const { t } = useTranslation();
+  const catalogStepLabels = useMemo(
+    () => [t("apps.connect.pickApp"), t("apps.connect.addYourKey")],
+    [t],
+  );
   const queryClient = useQueryClient();
   const routeNavigate = useNavigate();
   const navigate = useCallback((to: string, options?: { replace?: boolean }) => {
@@ -951,11 +957,11 @@ function StandardConnectionSetupFlow({
   useEffect(() => {
     if (host !== "page") return;
     setBreadcrumbs([
-      { label: "Connectors", href: "/apps" },
-      { label: vercelConnectMode ? "Vercel Connect" : byoOnly ? "Connect your own tool" : "Connect an app" },
+      { label: t("apps.connect.breadcrumbsConnectors"), href: "/apps" },
+      { label: vercelConnectMode ? "Vercel Connect" : byoOnly ? "Connect your own tool" : t("apps.connect.pickApp") },
     ]);
     return () => setBreadcrumbs([]);
-  }, [byoOnly, host, setBreadcrumbs, vercelConnectMode]);
+  }, [byoOnly, host, setBreadcrumbs, t, vercelConnectMode]);
 
   const galleryQuery = useQuery({
     queryKey: queryKeys.apps.gallery(selectedCompanyId ?? "__none__"),
@@ -2155,7 +2161,7 @@ function StandardConnectionSetupFlow({
         }}
         // A pasted endpoint walks the generic three-step wizard, so keep that
         // model rather than dropping to the curated two-step one.
-        steps={{ labels: STEP_LABELS, activeIndex: STEP_INDEX.key }}
+        steps={{ labels: catalogStepLabels, activeIndex: STEP_INDEX.key }}
         phase={oauthPhase}
         error={oauthError}
         authorizationHost={authorizationHost}
@@ -2229,7 +2235,7 @@ function StandardConnectionSetupFlow({
       ? ["Share sheet"]
       : entry
         ? ["Add your key"]
-      : STEP_LABELS;
+      : catalogStepLabels;
   const stepIndex = reconnectConnection?.connectionPurpose === "ai" ? 0 : (zapierSource || entry) && step !== "gallery" && step !== "success"
     ? SELECTED_APP_STEP_INDEX[step]
     : step === "success"

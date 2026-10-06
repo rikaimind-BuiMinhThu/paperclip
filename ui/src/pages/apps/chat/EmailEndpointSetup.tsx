@@ -49,6 +49,7 @@ import type {
   AgentPermissions,
   EmailEndpointSummary,
 } from "@paperclipai/shared";
+import { useTranslation } from "@/i18n";
 const selectClass =
   "w-full rounded-md border border-input bg-background px-3 py-2 text-sm";
 
@@ -90,6 +91,7 @@ export function EmailEndpointSetup() {
 }
 
 function EmailEndpointSetupForm({ companyId }: { companyId: string }) {
+  const { t } = useTranslation();
   const [params] = useSearchParams();
   const navigate = useNavigate();
   const cache = useQueryClient();
@@ -324,7 +326,7 @@ function EmailEndpointSetupForm({ companyId }: { companyId: string }) {
   };
   return <div className="mx-auto max-w-xl space-y-6 p-6">
     <header className="space-y-2">
-      <h1 className="text-xl font-bold">{step === 2 ? "Your agent’s email is ready" : "Give an agent an email address"}</h1>
+      <h1 className="text-xl font-bold">{step === 2 ? "Your agent’s email is ready" : t("apps.connect.emailSetupTitle")}</h1>
     </header>
     {step < 2 && inboxes.isError && <div role="alert" className="space-y-2 text-sm">
       <p className="text-destructive">Could not load email setup progress. {inboxes.error.message}</p>
@@ -356,8 +358,8 @@ function EmailEndpointSetupForm({ companyId }: { companyId: string }) {
       </div>}
       {error && <p role="alert" className="text-sm text-destructive">{error.message}</p>}
       <div className="flex items-center justify-between gap-3 border-t border-border pt-5">
-        <Button type="button" variant="ghost" disabled={busy} onClick={cancel}>Cancel</Button>
-        <Button disabled={!canContinue}>{connect.isPending ? "Connecting…" : "Continue"}<ArrowRight className="size-4" /></Button>
+        <Button type="button" variant="ghost" disabled={busy} onClick={cancel}>{t("common.cancel")}</Button>
+        <Button disabled={!canContinue}>{connect.isPending ? "Connecting…" : t("common.continue")}<ArrowRight className="size-4" /></Button>
       </div>
     </form>}
     {step === 1 && <form className="space-y-6" onSubmit={event => { event.preventDefault(); if (canCreate) setup.mutate(); }}>
@@ -432,7 +434,7 @@ function EmailEndpointSetupForm({ companyId }: { companyId: string }) {
       {error && <p role="alert" className="text-sm text-destructive">{error.message}</p>}
       {inspected.isPending && <p role="status" className="text-sm text-muted-foreground">Loading email options…</p>}
       <div className="flex items-center justify-between gap-3 border-t border-border pt-5">
-        <Button type="button" variant="ghost" disabled={busy} onClick={() => { setup.reset(); setStep(0); }}><ArrowLeft className="size-4" />Back</Button>
+        <Button type="button" variant="ghost" disabled={busy} onClick={() => { setup.reset(); setStep(0); }}><ArrowLeft className="size-4" />{t("common.back")}</Button>
         <Button disabled={!canCreate}>
           {setup.isPending ? "Connecting…" : pendingAddress ? "Finish connecting" : addressMode === "new" ? "Create email address" : "Connect email address"}<ArrowRight className="size-4" />
         </Button>
@@ -480,7 +482,7 @@ function EmailEndpointSetupForm({ companyId }: { companyId: string }) {
           )}
           <DialogFooter>
             <Button variant="ghost" onClick={() => setTrustOpen(false)}>
-              Cancel
+              {t("common.cancel")}
             </Button>
             <Button
               disabled={

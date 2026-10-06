@@ -2,15 +2,24 @@
 
 import { createRoot, type Root } from "react-dom/client";
 import { flushSync } from "react-dom";
-import { afterEach, describe, expect, it, vi } from "vitest";
+import { afterAll, afterEach, beforeAll, describe, expect, it, vi } from "vitest";
 
 import type React from "react";
+import { i18n } from "@/i18n";
+import { DEFAULT_LOCALE } from "@/i18n/locales";
 import {
   OnboardingLoginCard,
   OnboardingCardField,
   OnboardingLoginCodeRow,
   onboardingCardInputClass,
 } from "./AdapterLoginChrome";
+
+beforeAll(async () => {
+  await i18n.changeLanguage("en");
+});
+afterAll(async () => {
+  await i18n.changeLanguage(DEFAULT_LOCALE);
+});
 
 /**
  * The connect step's canvas holds one of two cards, and the credential switch

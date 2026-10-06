@@ -4,6 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import { agentsApi } from "@/api/agents";
 import { ApiError } from "@/api/client";
 import { secretsApi } from "@/api/secrets";
+import { useTranslation } from "@/i18n";
 import { queryKeys } from "@/lib/queryKeys";
 import {
   savedProviderKeys,
@@ -87,13 +88,22 @@ export function SavedProviderKeySelect({
   disabled?: boolean;
   kind?: "api" | "subscription";
 }) {
+  const { t } = useTranslation();
   return (
     <div className="space-y-2">
       {options.length > 0 && (
         <label className="block space-y-2 text-sm">
-          <span>{kind === "api" ? "API key" : "Subscription"}</span>
+          <span>
+            {kind === "api"
+              ? t("onboarding.wizard.connect.saved.apiKey")
+              : t("onboarding.wizard.connect.saved.subscription")}
+          </span>
           <select
-            aria-label={kind === "api" ? "Saved API key" : "Saved subscription"}
+            aria-label={
+              kind === "api"
+                ? t("onboarding.wizard.connect.saved.savedApiKey")
+                : t("onboarding.wizard.connect.saved.savedSubscription")
+            }
             className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
             value={value}
             onChange={(event) => onChange(event.target.value)}
@@ -106,26 +116,27 @@ export function SavedProviderKeySelect({
             ))}
             <option value="">
               {kind === "api"
-                ? "Enter a new API key"
-                : "Sign in to another account"}
+                ? t("onboarding.wizard.connect.saved.enterNewApiKey")
+                : t("onboarding.wizard.connect.saved.signInAnother")}
             </option>
           </select>
         </label>
       )}
       {loading && (
         <p role="status" className="text-sm text-muted-foreground">
-          Checking saved API keys…
+          {t("onboarding.wizard.connect.saved.checking")}
         </p>
       )}
       {error && (
         <p role="alert" className="text-sm text-destructive">
-          Some saved keys could not be loaded. You can still enter a new key.
+          {t("onboarding.wizard.connect.saved.loadError")}
         </p>
       )}
       {value && (
         <p className="text-sm text-muted-foreground">
-          Reuse this saved {kind === "api" ? "key" : "subscription"} for this
-          agent.
+          {kind === "api"
+            ? t("onboarding.wizard.connect.saved.reuseKey")
+            : t("onboarding.wizard.connect.saved.reuseSubscription")}
         </p>
       )}
     </div>

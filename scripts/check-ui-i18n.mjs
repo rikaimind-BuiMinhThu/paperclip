@@ -19,12 +19,20 @@ const REQUIRED_I18N_FILES = [
   "components/MobileBottomNav.tsx",
   "components/ThemeToggle.tsx",
   "components/LocaleToggle.tsx",
+  "components/OnboardingWizard.tsx",
+  "components/AdapterLoginChrome.tsx",
+  "components/onboarding/FooterNav.tsx",
+  "components/AgentActionButtons.tsx",
+  "components/SidebarAgents.tsx",
+  "components/task-chat/TaskChatComposer.tsx",
   "pages/Inbox.tsx",
   "pages/Auth.tsx",
   "pages/Search.tsx",
   "pages/Agents.tsx",
   "pages/CompanySettings.tsx",
   "pages/Dashboard.tsx",
+  "pages/apps/Connections.tsx",
+  "pages/apps/chat/ChatEndpointSetup.tsx",
 ];
 
 const FORBIDDEN_LITERALS = [
@@ -35,6 +43,9 @@ const FORBIDDEN_LITERALS = [
   ">Settings<",
   '"Sign out"',
   '"Documentation"',
+  '? "Get started"',
+  'label: "Waiting for code"',
+  '>Save & exit<',
 ];
 
 const errors = [];

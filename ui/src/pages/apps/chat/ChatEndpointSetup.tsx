@@ -4,7 +4,8 @@ import { GitHubChatSetup } from "./GitHubChatSetup";
 import { SlackSetupPrompt } from "./SlackSetupPrompt";
 import { GitHubAgentTrustWarning } from "@/components/GitHubAgentTrustWarning";
 import { SetupWizardFooter } from "@/components/SetupWizard";
-import { ChatSetupNavigation } from "@/components/chat/ChatSetupNavigation";
+import { ChatSetupNavigation, useSlackChatSetupStepLabels } from "@/components/chat/ChatSetupNavigation";
+import { useTranslation } from "@/i18n";
 import { SlackAvatarStep } from "./SlackAvatarStep";
 import { useSlackAvatarProgress } from "./slack-avatar-progress";
 import { agentAvatarUrl } from "@/lib/agent-avatar-url";
@@ -110,16 +111,21 @@ function ChatConnectionPurpose({ provider, onChat, onTools }: {
   onChat: () => void;
   onTools: () => void;
 }) {
+  const { t } = useTranslation();
+  const slackStepLabels = useSlackChatSetupStepLabels();
   const { setBreadcrumbs } = useBreadcrumbs();
   useEffect(() => {
-    setBreadcrumbs([{ label: "Connectors", href: "/apps" }, { label: "Choose connection" }]);
+    setBreadcrumbs([
+      { label: t("apps.connect.breadcrumbsConnectors"), href: "/apps" },
+      { label: t("apps.connect.chooseConnection") },
+    ]);
     return () => setBreadcrumbs([]);
-  }, [setBreadcrumbs]);
+  }, [setBreadcrumbs, t]);
   return (
       <div className="max-w-2xl space-y-6">
-        <ChatSetupNavigation labels={provider === "slack" ? ["Choose agent", "Create Slack app", "Add credentials", "Verify Slack connection", "Add avatar", "Connect your Slack account", "Try it"] : undefined} step={0} availableStep={0} onSelect={onChat} />
+        <ChatSetupNavigation labels={provider === "slack" ? slackStepLabels : undefined} step={0} availableStep={0} onSelect={onChat} />
         <div>
-          <h1 className="text-xl font-bold">Choose how to connect</h1>
+          <h1 className="text-xl font-bold">{t("apps.connect.chooseHowToConnect")}</h1>
           <p className="mt-1 text-sm text-muted-foreground">
             What should this {providerNames[provider]} connection do?
           </p>
@@ -163,6 +169,8 @@ export function ChatEndpointSetup() {
 }
 
 function ChatSdkEndpointSetup() {
+  const { t } = useTranslation();
+  const slackStepLabels = useSlackChatSetupStepLabels();
   const [params, setParams] = useSearchParams();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
@@ -190,11 +198,11 @@ function ChatSdkEndpointSetup() {
 
   useEffect(() => {
     setBreadcrumbs([
-      { label: "Connectors", href: "/apps" },
-      { label: "Connect chat" },
+      { label: t("apps.connect.breadcrumbsConnectors"), href: "/apps" },
+      { label: t("apps.connect.chooseConnection") },
     ]);
     return () => setBreadcrumbs([]);
-  }, [setBreadcrumbs]);
+  }, [setBreadcrumbs, t]);
 
   const agentsQuery = useQuery({
     queryKey: ["chat-endpoint-setup-agents", selectedCompanyId],
@@ -472,7 +480,7 @@ function ChatSdkEndpointSetup() {
   return (
     <div className="max-w-2xl space-y-6">
       <ChatSetupNavigation
-        labels={isSlack ? ["Choose agent", "Create Slack app", "Add credentials", "Verify Slack connection", "Add avatar", "Connect your Slack account", "Try it"] : undefined}
+        labels={isSlack ? slackStepLabels : undefined}
         step={step}
         availableStep={availableStep}
         disabled={createEndpoint.isPending || setupAction.isPending || generateSetupSecret.isPending || testConnection.isPending}
@@ -509,7 +517,7 @@ function ChatSdkEndpointSetup() {
                 {createEndpoint.isPending && (
                   <Loader2 className="h-4 w-4 animate-spin" />
                 )}
-                Continue
+                {t("common.continue")}
               </Button>
             </SetupWizardFooter>
           </>
@@ -569,7 +577,7 @@ function ChatSdkEndpointSetup() {
                   onSkip={() => { if (!avatarProgress.progress) avatarProgress.save("skipped"); setViewedStep(5); }}
                   onSaveExit={() => navigate("/apps")}
                 />}
-            {(avatarAgent.isPending || avatarAgent.isError) && <SetupWizardFooter onSaveExit={() => navigate("/apps")}><Button onClick={() => { avatarProgress.save("skipped"); setViewedStep(5); }}>Skip for now</Button></SetupWizardFooter>}
+            {(avatarAgent.isPending || avatarAgent.isError) && <SetupWizardFooter onSaveExit={() => navigate("/apps")}><Button onClick={() => { avatarProgress.save("skipped"); setViewedStep(5); }}>{t("apps.connect.skipForNow")}</Button></SetupWizardFooter>}
           </div>
         )}
         {endpoint && isSlack && step === 5 && (
@@ -611,7 +619,7 @@ function ChatSdkEndpointSetup() {
         )}
         {step !== 0 && !(isSlack && (step === 1 || step === 2 || step === 3 || step === 4 || step === 5 || step === 6)) && <div className="flex justify-start">
           <Button className="text-muted-foreground" variant="ghost" onClick={() => navigate("/apps")}>
-            Save &amp; exit
+            {t("common.saveAndExit")}
           </Button>
         </div>}
       </div>
@@ -659,6 +667,7 @@ function ProviderConnectStep({
     values?: Record<string, string>,
   ) => void;
 }) {
+  const { t } = useTranslation();
   const { pushToast } = useToast();
   const navigate = useNavigate();
   const slackBotToken = (credentials.botToken ?? "").trim();
@@ -1557,12 +1566,12 @@ settings:
           </div>
         </details>
         <div className="flex items-center justify-between gap-3">
-          <Button variant="ghost" className="text-muted-foreground" onClick={() => navigate("/apps")}>Save &amp; exit</Button>
+          <Button variant="ghost" className="text-muted-foreground" onClick={() => navigate("/apps")}>{t("common.saveAndExit")}</Button>
           <Button disabled={pending || !endpoint.setup?.webhookVerifiedAt} onClick={() =>
             endpoint.setup?.step === "provider_setup" ? onAction("verify") : onSlackVerificationContinue()
           }>
             {pending && <Loader2 className="size-4 animate-spin" />}
-            Continue
+            {t("common.continue")}
           </Button>
         </div>
       </div>
@@ -1682,7 +1691,7 @@ settings:
         </div>
         <div className="flex flex-wrap items-center justify-between gap-3 pt-3">
           <Button variant="ghost" className="text-muted-foreground" onClick={() => navigate("/apps")}>
-            Save &amp; exit
+            {t("common.saveAndExit")}
           </Button>
           <div className="ml-auto flex flex-wrap items-center justify-end gap-2">
             <Button variant="outline" disabled={openingSlackApp || !endpoint.setup?.webhookUrl || !slackValidation.success || saveSlackApp.isPending || saveSlackApp.isError} onClick={onSlackAppCreated}>
@@ -1769,7 +1778,7 @@ settings:
         </section>
         <div className="flex flex-wrap items-center justify-between gap-3">
           <Button variant="ghost" className="text-muted-foreground" onClick={() => navigate("/apps")}>
-            Save &amp; exit
+            {t("common.saveAndExit")}
           </Button>
           <Button
             className="ml-auto"
@@ -1783,7 +1792,7 @@ settings:
               : onAction(repairing || slackCredentialsSaved ? "reconnect" : "configure", credentials)}
           >
             {pending && <Loader2 className="h-4 w-4 animate-spin" />}
-            {continueWithSavedSlackCredentials ? "Continue" : repairing || slackCredentialsSaved ? "Reconnect Slack app" : "Connect Slack app"}
+            {continueWithSavedSlackCredentials ? t("common.continue") : repairing || slackCredentialsSaved ? "Reconnect Slack app" : "Connect Slack app"}
           </Button>
         </div>
       </div>
@@ -1818,6 +1827,7 @@ function TryStep({
   onTest: () => void;
   onSaveExit: () => void;
 }) {
+  const { t } = useTranslation();
   const messageStatus = useQuery({
     queryKey: ["chat-endpoint-setup-test-status", endpointId],
     queryFn: () => chatEndpointsApi.setupTestStatus(endpointId),
@@ -1986,9 +1996,9 @@ function TryStep({
           {messageStatus.data?.messageReceivedAt ? <p role="status" className="flex items-center gap-2 text-sm"><CheckCircle2 className="size-4 text-(--status-task-done)" />Received your Slack message.</p>
             : <p role={messageStatus.isError ? "alert" : "status"} className="text-sm text-muted-foreground">{messageStatus.isError ? "Couldn’t check for your message. You can still finish setup." : "We’ll check for your message automatically. This test is optional."}</p>}
           <div className="flex items-center justify-between gap-3">
-            <Button variant="ghost" className="text-muted-foreground" onClick={onSaveExit}>Save &amp; exit</Button>
+            <Button variant="ghost" className="text-muted-foreground" onClick={onSaveExit}>{t("common.saveAndExit")}</Button>
             <div className="flex flex-wrap items-center justify-end gap-2">
-              <Button variant="ghost" disabled={pending} onClick={onTest}>Skip test and finish</Button>
+              <Button variant="ghost" disabled={pending} onClick={onTest}>{t("apps.connect.skipTestAndFinish")}</Button>
               <Button disabled={pending} onClick={onTest}>{pending && <Loader2 className="size-4 animate-spin" />}I&apos;ve sent the test message</Button>
             </div>
           </div>

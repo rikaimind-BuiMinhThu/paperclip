@@ -6,6 +6,7 @@ import { createRoot } from "react-dom/client";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import type { Agent, ResourceMemberships } from "@paperclipai/shared";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { t } from "@/i18n";
 import { SidebarAgents } from "./SidebarAgents";
 import { queryKeys } from "../lib/queryKeys";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -215,7 +216,7 @@ function agentLinkLabels(container: HTMLElement) {
 function seeAllAgentsLink(container: HTMLElement) {
   return (
     Array.from(container.querySelectorAll('a[href="/agents/all"]')).find((anchor) =>
-      anchor.textContent?.includes("See all agents"),
+      anchor.textContent?.includes(t("agents.detail.seeAllAgents")),
     ) ?? null
   );
 }
@@ -436,7 +437,7 @@ describe("SidebarAgents", () => {
 
     // The starred row offers an explicit "Remove from starred" menu action.
     await openAgentMenu("Open actions for Bravo");
-    expect(document.body.textContent).toContain("Remove from starred");
+    expect(document.body.textContent).toContain(t("agents.detail.unstarAgent"));
   });
 
   it("offers star agent from an unstarred sidebar agent menu", async () => {
@@ -444,7 +445,7 @@ describe("SidebarAgents", () => {
     await openAgentMenu();
 
     const starItem = Array.from(document.body.querySelectorAll('[data-slot="dropdown-menu-item"]'))
-      .find((element) => element.textContent?.includes("Star agent"));
+      .find((element) => element.textContent?.includes(t("agents.detail.starAgent")));
     expect(starItem).toBeTruthy();
 
     await act(async () => {
@@ -509,10 +510,10 @@ describe("SidebarAgents", () => {
     await renderSidebarAgents();
 
     const sectionMenuTrigger = container.querySelector('button[aria-label="Agents section actions"]');
-    expect(sectionMenuTrigger?.textContent).toContain("Agents");
+    expect(sectionMenuTrigger?.textContent).toContain(t("nav.agents"));
     expect(sectionMenuTrigger?.querySelector("svg")).toBeNull();
 
-    const newAgentButton = container.querySelector('button[aria-label="New agent"]');
+    const newAgentButton = container.querySelector(`button[aria-label="${t("agents.newAgent")}"]`);
     expect(newAgentButton).toBeTruthy();
     await act(async () => {
       newAgentButton?.dispatchEvent(new MouseEvent("click", { bubbles: true }));
@@ -525,7 +526,7 @@ describe("SidebarAgents", () => {
       .find((element) => element.textContent?.includes("New agent"));
     expect(newAgentItem).toBeFalsy();
     const browseLink = Array.from(document.body.querySelectorAll("a"))
-      .find((element) => element.textContent?.includes("Browse agents"));
+      .find((element) => element.textContent?.includes(t("agents.detail.browseAgents")));
     expect(browseLink?.getAttribute("href")).toBe("/agents/all");
   });
 
@@ -611,12 +612,12 @@ describe("SidebarAgents", () => {
     await openAgentMenu();
 
     const editLink = Array.from(document.body.querySelectorAll("a"))
-      .find((element) => element.textContent?.includes("Edit agent"));
+      .find((element) => element.textContent?.includes(t("agents.detail.editAgent")));
     expect(editLink?.getAttribute("href")).toBe("/agents/alpha/configuration");
-    expect(document.body.textContent).toContain("Pause agent");
+    expect(document.body.textContent).toContain(t("agents.pauseAgent"));
 
     const pauseItem = Array.from(document.body.querySelectorAll('[data-slot="dropdown-menu-item"]'))
-      .find((element) => element.textContent?.includes("Pause agent"));
+      .find((element) => element.textContent?.includes(t("agents.pauseAgent")));
     expect(pauseItem).toBeTruthy();
 
     await act(async () => {
@@ -625,7 +626,7 @@ describe("SidebarAgents", () => {
     await flushReact();
 
     expect(mockAgentsApi.pause).toHaveBeenCalledWith("agent-1", "company-1");
-    expect(mockPushToast).toHaveBeenCalledWith(expect.objectContaining({ title: "Agent paused" }));
+    expect(mockPushToast).toHaveBeenCalledWith(expect.objectContaining({ title: t("agents.pauseAgent") }));
   });
 
   it("offers leave agent from each sidebar agent menu", async () => {
@@ -633,7 +634,7 @@ describe("SidebarAgents", () => {
     await openAgentMenu();
 
     const leaveItem = Array.from(document.body.querySelectorAll('[data-slot="dropdown-menu-item"]'))
-      .find((element) => element.textContent?.includes("Leave agent"));
+      .find((element) => element.textContent?.includes(t("agents.detail.leaveAgent")));
     expect(leaveItem).toBeTruthy();
 
     await act(async () => {
@@ -658,7 +659,7 @@ describe("SidebarAgents", () => {
     await openAgentMenu();
 
     const resumeItem = Array.from(document.body.querySelectorAll('[data-slot="dropdown-menu-item"]'))
-      .find((element) => element.textContent?.includes("Resume agent"));
+      .find((element) => element.textContent?.includes(t("agents.resumeAgent")));
     expect(resumeItem).toBeTruthy();
 
     await act(async () => {
@@ -667,7 +668,7 @@ describe("SidebarAgents", () => {
     await flushReact();
 
     expect(mockAgentsApi.resume).toHaveBeenCalledWith("agent-1", "company-1");
-    expect(mockPushToast).toHaveBeenCalledWith(expect.objectContaining({ title: "Agent resumed" }));
+    expect(mockPushToast).toHaveBeenCalledWith(expect.objectContaining({ title: t("agents.resumeAgent") }));
   });
 
   it("only shows updating state for the agent currently being changed", async () => {
@@ -681,7 +682,7 @@ describe("SidebarAgents", () => {
     await openAgentMenu();
 
     const pauseItem = Array.from(document.body.querySelectorAll('[data-slot="dropdown-menu-item"]'))
-      .find((element) => element.textContent?.includes("Pause agent"));
+      .find((element) => element.textContent?.includes(t("agents.pauseAgent")));
     expect(pauseItem).toBeTruthy();
 
     await act(async () => {
@@ -693,9 +694,9 @@ describe("SidebarAgents", () => {
     const betaPauseItem = Array.from(
       document.body.querySelectorAll('[data-slot="dropdown-menu-item"]'),
     )
-      .find((element) => element.textContent?.includes("Pause agent"));
+      .find((element) => element.textContent?.includes(t("agents.pauseAgent")));
     expect(betaPauseItem).toBeTruthy();
-    expect(document.body.textContent).not.toContain("Updating...");
+    expect(document.body.textContent).not.toContain(t("common.working"));
   });
 
   it("shows only active agents when any agent has a live run", async () => {
@@ -917,7 +918,7 @@ describe("SidebarAgents", () => {
     const budgetPausedItem = Array.from(
       document.body.querySelectorAll('[data-slot="dropdown-menu-item"]'),
     )
-      .find((element) => element.textContent?.includes("Budget paused"));
+      .find((element) => element.textContent?.includes(t("agents.paused")));
     expect(budgetPausedItem).toBeTruthy();
 
     await act(async () => {

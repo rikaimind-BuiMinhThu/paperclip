@@ -48,6 +48,7 @@ import type {
   AgentInstructionsFileSummary,
   HeartbeatRun,
 } from "@paperclipai/shared";
+import { useTranslation } from "@/i18n";
 
 export function RunButton({
   onClick,
@@ -81,11 +82,12 @@ export function PauseResumeButton({
   disabled?: boolean;
   size?: "sm" | "default";
 }) {
+  const { t } = useTranslation();
   if (isPaused) {
     return (
       <Button variant="outline" size={size} onClick={onResume} disabled={disabled}>
         <Play className="h-3.5 w-3.5 sm:mr-1" />
-        <span className="hidden sm:inline">Resume</span>
+        <span className="hidden sm:inline">{t("agents.resume")}</span>
       </Button>
     );
   }
@@ -93,7 +95,7 @@ export function PauseResumeButton({
   return (
     <Button variant="outline" size={size} onClick={onPause} disabled={disabled}>
       <Pause className="h-3.5 w-3.5 sm:mr-1" />
-      <span className="hidden sm:inline">Pause</span>
+      <span className="hidden sm:inline">{t("agents.pause")}</span>
     </Button>
   );
 }
@@ -159,8 +161,8 @@ export function AgentActionButtons({
   agent,
   companyId,
   size = "sm",
-  assignLabel = "Assign Task",
-  runLabel = "Run now",
+  assignLabel,
+  runLabel,
   showStatus = true,
   showRun = true,
   actionsDisabled = false,
@@ -215,8 +217,11 @@ export function AgentActionButtons({
 }) {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
+  const { t } = useTranslation();
   const { openNewIssue } = useDialogActions();
   const { pushToast } = useToastActions();
+  const resolvedAssignLabel = assignLabel ?? t("agents.detail.assignTask");
+  const resolvedRunLabel = runLabel ?? t("agents.detail.runNow");
   const [moreOpen, setMoreOpen] = useState(false);
   const [pauseConfirmOpen, setPauseConfirmOpen] = useState(false);
   const pendingNavigationChangesRef = useRef(hasPendingNavigationChanges);
@@ -249,10 +254,10 @@ export function AgentActionButtons({
       if (onActionError) {
         onActionError(message);
       } else {
-        pushToast({ title: "Action failed", body: message, tone: "error" });
+        pushToast({ title: t("errors.couldNotUpdate"), body: message, tone: "error" });
       }
     },
-    [onActionError, pushToast],
+    [onActionError, pushToast, t],
   );
 
   const invalidateAgent = useCallback(() => {
@@ -291,7 +296,7 @@ export function AgentActionButtons({
       }
     },
     onError: (err) => {
-      reportError(err instanceof Error ? err.message : "Action failed");
+      reportError(err instanceof Error ? err.message : t("errors.couldNotUpdate"));
     },
   });
 
@@ -335,14 +340,14 @@ export function AgentActionButtons({
       if (resolvedCompanyId) {
         await queryClient.invalidateQueries({ queryKey: queryKeys.agents.list(resolvedCompanyId) });
       }
-      pushToast({ title: "Agent duplicated", body: createdAgent.name, tone: "success" });
+      pushToast({ title: t("agents.detail.duplicateAgent"), body: createdAgent.name, tone: "success" });
       if (!confirmLateNavigationChanges(duplicateStartedDirtyRef)) return;
       navigate(`/agents/${agentRouteRef(createdAgent)}/dashboard`);
     },
     onError: (err) => {
       const message = err instanceof Error ? err.message : "Failed to duplicate agent";
       onActionError?.(message);
-      pushToast({ title: "Could not duplicate agent", body: message, tone: "error" });
+      pushToast({ title: t("errors.couldNotDuplicate"), body: message, tone: "error" });
     },
   });
 
@@ -398,7 +403,7 @@ export function AgentActionButtons({
         title={workActionsDisabled ? workActionsDisabledReason : undefined}
       >
         <Plus className="h-3.5 w-3.5 sm:mr-1" />
-        <span className="hidden sm:inline">{assignLabel}</span>
+        <span className="hidden sm:inline">{resolvedAssignLabel}</span>
       </Button>
       {showRun && <RunButton
         onClick={() => {
@@ -406,7 +411,7 @@ export function AgentActionButtons({
           agentAction.mutate("invoke");
         }}
         disabled={assignAndRunDisabled}
-        label={runLabel}
+        label={resolvedRunLabel}
         size={size}
       />}
       {canRunWithProviderTrace && (
@@ -449,9 +454,9 @@ export function AgentActionButtons({
               </AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter>
-              <AlertDialogCancel>Cancel</AlertDialogCancel>
+              <AlertDialogCancel>{t("common.cancel")}</AlertDialogCancel>
               <AlertDialogAction onClick={() => agentAction.mutate("pause")}>
-                Pause anyway
+                {t("agents.pauseAgent")}
               </AlertDialogAction>
             </AlertDialogFooter>
           </AlertDialogContent>
@@ -480,7 +485,7 @@ export function AgentActionButtons({
             ) : (
               <Copy className="h-3 w-3" />
             )}
-            Duplicate Agent
+            {t("agents.detail.duplicateAgent")}
           </button>
           <button
             className="flex items-center gap-2 w-full px-2 py-1.5 text-xs rounded hover:bg-accent/50"
@@ -514,7 +519,7 @@ export function AgentActionButtons({
               }}
             >
               <Trash2 className="h-3 w-3" />
-              Terminate
+              {t("agents.terminateAgent")}
             </button>
           )}
         </PopoverContent>

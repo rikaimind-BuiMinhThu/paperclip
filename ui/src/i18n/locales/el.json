@@ -315,7 +315,45 @@
     "sectionGovernance": "Governance",
     "pendingApprovalNotice": "This agent is pending board approval and cannot be invoked yet.",
     "approveAgent": "Approve agent",
-    "runLabel": "Run {{id}}"
+    "runLabel": "Run {{id}}",
+    "detail": {
+      "loadingLog": "Loading log...",
+      "loadingKeys": "Loading keys...",
+      "errorPrefix": "Error: ",
+      "leftAgent": "You left this agent.",
+      "leftAgentDescription": "You no longer have access to manage this agent.",
+      "escalationPaused": "Escalation paused",
+      "assignTask": "Assign task",
+      "assignTaskDisabled": "This agent cannot take new tasks right now.",
+      "builtInBanner": "This is a built-in agent. Some settings cannot be changed.",
+      "resetBuiltIn": "Reset to defaults",
+      "discardChanges": "Discard",
+      "saveChanges": "Save changes",
+      "confirmLeaveConfig": "You have unsaved changes. Leave without saving?",
+      "overviewRole": "Role",
+      "overviewReportsTo": "Reports to",
+      "overviewLastRun": "Last run",
+      "overviewAdapter": "Adapter",
+      "overviewBudget": "Budget",
+      "savedToast": "Agent saved",
+      "couldNotSave": "Could not save agent",
+      "instructionsEmpty": "No instructions file yet.",
+      "instructionsSync": "Instructions are synced from the agent workspace.",
+      "resumeRun": "Resume",
+      "loadMoreLog": "Load more log",
+      "starAgent": "Star agent",
+      "unstarAgent": "Remove from starred",
+      "editAgent": "Edit agent",
+      "leaving": "Leaving...",
+      "leaveAgent": "Leave agent",
+      "pausedByBudget": "Agent was paused by budget limits",
+      "browseAgents": "Browse agents",
+      "seeAllAgents": "See all",
+      "duplicateAgent": "Duplicate agent",
+      "runNow": "Run now",
+      "configSaved": "Configuration saved",
+      "configDiscarded": "Changes discarded"
+    }
   },
   "issues": {
     "task": "Task",
@@ -399,7 +437,32 @@
     "title": "Connectors",
     "apps": "Apps",
     "connectors": "Connectors",
-    "connect": "Connect",
+    "connect": {
+      "chooseConnection": "Choose connection",
+      "chooseHowToConnect": "Choose how to connect",
+      "loadingConnection": "Loading connection…",
+      "pickApp": "Pick an app",
+      "addYourKey": "Add your key",
+      "healthy": "Healthy",
+      "needsAttention": "Needs attention",
+      "disconnected": "Disconnected",
+      "reviewQueue": "Review queue",
+      "reviewQueueDescription": "Some connections need your attention before they can keep working.",
+      "deleteSuccess": "Connection deleted",
+      "deleteFailed": "Could not delete connection",
+      "oauthFailed": "Could not complete sign-in. Try again.",
+      "oauthCancelled": "Sign-in was cancelled.",
+      "selectOrganization": "Select an organization to manage connections.",
+      "breadcrumbsConnectors": "Connectors",
+      "skipForNow": "Skip for now",
+      "skipTestAndFinish": "Skip test and finish",
+      "continueToMessageTest": "Continue to message test",
+      "connectSlackAccount": "Connect your Slack account",
+      "copyCommand": "Copy command",
+      "linkedToYou": "Linked to you",
+      "emailSetupTitle": "Set up email",
+      "continueSetup": "Continue setup"
+    },
     "disconnect": "Disconnect",
     "connected": "Connected",
     "notConnected": "Not connected",
@@ -435,7 +498,25 @@
     "developer": "Developer",
     "developerDescription": "Advanced setup for developers.",
     "developerDescriptionLong": "Advanced setup for developers. Most teams never open this.",
-    "waitingForOk": "waiting for your OK"
+    "waitingForOk": "waiting for your OK",
+    "chatSetup": {
+      "steps": {
+        "choose": "Choose",
+        "install": "Install",
+        "configure": "Configure",
+        "identity": "Identity",
+        "avatar": "Avatar",
+        "test": "Test",
+        "finish": "Finish"
+      },
+      "defaultSteps": {
+        "pickApp": "Pick app",
+        "connect": "Connect",
+        "configure": "Configure",
+        "test": "Test",
+        "done": "Done"
+      }
+    }
   },
   "settings": {
     "title": "Settings",
@@ -782,5 +863,211 @@
       "zh-CN": "简体中文",
       "zh-TW": "繁體中文"
     }
+  },
+  "onboarding": {
+    "wizard": {
+      "stepper": {
+        "stepOf": "Step {{current}} of {{total}}",
+        "labels": {
+          "orgName": "Name your organization",
+          "firstAgent": "Create your first agent",
+          "connectModel": "Connect a model",
+          "review": "Review"
+        }
+      },
+      "steps": {
+        "orgName": {
+          "title": "What is the name of your organization?",
+          "placeholder": "e.g. Northwind Labs"
+        },
+        "agent": {
+          "title": "Create your first agent",
+          "fieldLabel": "Agent name",
+          "placeholder": "e.g. Chief of staff"
+        },
+        "connect": {
+          "title": "Connect a model",
+          "lede": "Paperclip works with your subscription or API keys.",
+          "modelSource": "Model source",
+          "savedApiKeysOne": "{{count}} saved API key available",
+          "savedApiKeysOther": "{{count}} saved API keys available",
+          "existingConnection": "An existing provider connection is available.",
+          "noBrowserSignIn": "This environment does not support browser sign-in. Use an API key or run the local CLI sign-in.",
+          "gatewayUrl": "Gateway URL",
+          "webhookUrl": "Webhook URL",
+          "placeholderGateway": "ws://127.0.0.1:18789",
+          "placeholderWebhook": "https://..."
+        },
+        "review": {
+          "title": "Let's get started...",
+          "ledeReady": "{{agentName}} is ready to work!",
+          "agentFallback": "Your first agent"
+        }
+      },
+      "footer": {
+        "getStarted": "Get started",
+        "creating": "Creating...",
+        "launching": "Launching...",
+        "connecting": "Connecting"
+      },
+      "connect": {
+        "cta": {
+          "waitingForCode": "Waiting for code",
+          "signInTo": "Sign in to {{providerName}}",
+          "testingConnection": "Testing connection…",
+          "testing": "Testing…",
+          "useSavedSubscription": "Use saved subscription",
+          "useSavedApiKey": "Use saved API key"
+        },
+        "credential": {
+          "subscription": "Subscription",
+          "api": "API",
+          "useApiKeyInstead": "Use API key instead",
+          "useSubscriptionInstead": "Use subscription instead"
+        },
+        "apiCard": {
+          "instructionSaved": "Choose a saved API key or enter a new one",
+          "instructionNew": "Provide your {{providerName}} API key to connect",
+          "fieldLabel": "API key",
+          "placeholder": "Enter API key here"
+        },
+        "saved": {
+          "apiKey": "API key",
+          "subscription": "Subscription",
+          "savedApiKey": "Saved API key",
+          "savedSubscription": "Saved subscription",
+          "enterNewApiKey": "Enter a new API key",
+          "signInAnother": "Sign in to another account",
+          "checking": "Checking saved API keys…",
+          "loadError": "Some saved keys could not be loaded. You can still enter a new key.",
+          "reuseKey": "Reuse this saved key for this agent.",
+          "reuseSubscription": "Reuse this saved subscription for this agent."
+        },
+        "envTest": {
+          "passed": "Passed",
+          "warnings": "Warnings",
+          "failed": "Failed",
+          "hintPrefix": "Hint:",
+          "manualDebug": "Manual debug",
+          "promptLabel": "Prompt:",
+          "anthropicUnsetBody": "ANTHROPIC_API_KEY is set in the adapter config and may block subscription sign-in.",
+          "unsetEnvButton": "Unset ANTHROPIC_API_KEY",
+          "retrying": "Retrying..."
+        }
+      },
+      "errors": {
+        "stateIncomplete": "Onboarding state is incomplete. Please restart onboarding and try again.",
+        "orgSwitched": "Organization created, but onboarding switched to another organization.",
+        "createOrgFailed": "Failed to create organization",
+        "createAgentFailed": "Failed to create agent",
+        "launchTaskFailed": "Failed to launch first task",
+        "storeApiKeyFailed": "Could not store the API key.",
+        "runnerUnavailable": "Paperclip Runner is not available during onboarding. Choose a legacy adapter.",
+        "opencodeModelRequired": "OpenCode requires an explicit model in provider/model format.",
+        "opencodeModelsLoadFailed": "Failed to load OpenCode models.",
+        "opencodeModelsLoading": "OpenCode models are still loading. Please wait and try again.",
+        "opencodeModelsNone": "No OpenCode models discovered. Run `opencode models` and authenticate providers.",
+        "envTestFailedBeforeHire": "The environment test failed. Fix the reported checks before you hire this agent.",
+        "authMissingBeforeHire": "No working authentication was found. Fix the reported checks before you hire this agent.",
+        "selectOrgBeforeTest": "Create or select an organization before testing adapter environment.",
+        "envSettingsLoadFailed": "Could not load environment settings to determine which environment to test in. Retry the test.",
+        "adapterEnvTestFailed": "Adapter environment test failed",
+        "unsetAnthropicStillFailing": "Retried with ANTHROPIC_API_KEY unset in adapter config, but the environment test is still failing.",
+        "unsetAnthropicFailed": "Failed to unset ANTHROPIC_API_KEY and retry."
+      }
+    },
+    "login": {
+      "preparingSignIn": "Preparing the sign-in",
+      "copied": "Copied!",
+      "copyCode": "Copy the code",
+      "copyUrl": "Copy URL",
+      "copySignInCommand": "Copy sign-in command",
+      "authorizationCode": "Authorization code",
+      "pasteAuthorizationCode": "Paste authorization code here",
+      "apiKey": "API key",
+      "enterApiKey": "Enter API key here",
+      "signInToProvider": "Sign in to {{providerName}}",
+      "thenEnterCode": " then come back and enter authorization code",
+      "thenProvideCode": " by providing the authorization code below",
+      "provideApiKey": "Provide your {{providerName}} API key to connect",
+      "local": {
+        "checking": "Checking local {{cliName}} sign-in…",
+        "signedInConnect": "{{cliName}} is signed in. Click Connect to use this account.",
+        "useDifferentAccount": "Use a different account",
+        "isolatedSignIn": "Sign in to {{cliName}} for this connection on the machine running Paperclip. Your existing terminal login stays separate.",
+        "sharedAccount": "Connect uses your local {{cliName}} account on the machine running Paperclip.",
+        "runInTerminal": "Run this in a terminal on that machine and finish signing in in your browser. We'll check automatically when you return.",
+        "startSignInAgain": "Start sign-in again",
+        "checkAgain": "Check again"
+      },
+      "panel": {
+        "signIn": "Sign in",
+        "signInReplace": "Sign in to replace",
+        "cancel": "Cancel",
+        "preparing": "Preparing...",
+        "copyCodeThenOpen": "Copy the code, then open the authentication page.",
+        "stepCode": "1. Code",
+        "stepAuthUrl": "2. Authentication URL",
+        "openAuthPage": "Open the authentication page",
+        "useSavedLogin": "Use saved login",
+        "savedClaudeHint": "A saved Claude login is available for this organization.",
+        "savedClaudeBound": "This agent is bound to a saved Claude login.",
+        "insecureTransport": "This connection is not encrypted. Sign-in codes may be exposed.",
+        "loginTimedOut": "Sign-in timed out. Try again.",
+        "loginCancelled": "Sign-in was cancelled.",
+        "loginFailed": "Sign-in failed. Try again.",
+        "loginConflict": "Another sign-in is already in progress.",
+        "cancelPreviousRetry": "Cancel previous sign-in and retry",
+        "bindFailed": "Could not bind this agent to the signed-in account.",
+        "signInToEnvironment": "Sign in to the environment"
+      },
+      "errors": {
+        "startLogin": "Could not start the login.",
+        "cancelLogin": "Could not cancel the login.",
+        "checkActiveLogin": "Could not check for an active login.",
+        "cancelPrevious": "Could not cancel the previous sign-in. Retry before starting a new one.",
+        "submitBrowserCode": "Could not submit the browser code."
+      }
+    }
+  },
+  "taskChat": {
+    "uncertainSave": "Save your answer?",
+    "reviewConversation": "Review conversation",
+    "pendingInput": "Waiting for your input",
+    "pausedSubtree": "This run is paused. Type /new to start a fresh turn.",
+    "send": "Send",
+    "stop": "Stop",
+    "queue": "Queue",
+    "saveQueued": "Save queued message",
+    "discardQueued": "Discard queued message",
+    "modePlan": "Plan",
+    "modeAsk": "Ask",
+    "modeStandard": "Standard",
+    "addToComposer": "Add to composer",
+    "chooseAssignee": "Choose assignee",
+    "noAgents": "No agents available",
+    "sessionGoalError": "Could not update session goal",
+    "descriptionPlaceholder": "Add a description…",
+    "writeAnswer": "Write your answer…",
+    "planSteps": "Plan steps",
+    "runResult": "Run result",
+    "approvePlan": "Approve plan",
+    "rejectPlan": "Reject plan",
+    "loadingComments": "Loading comments…",
+    "loadOlderComments": "Load older comments",
+    "sidePanel": "Side panel",
+    "thisTask": "This task",
+    "uploadAttachment": "Upload attachment",
+    "placeholder": "Message the agent…",
+    "stopGenerating": "Stop generating",
+    "queuedMessages": "Queued messages",
+    "editQueued": "Edit queued message",
+    "questionTitle": "Question",
+    "planTitle": "Plan",
+    "protocolActivity": "Activity",
+    "blockerLinks": "Blockers",
+    "goalWidget": "Session goal",
+    "composerDisabled": "Composer unavailable",
+    "unassigned": "Unassigned"
   }
 }

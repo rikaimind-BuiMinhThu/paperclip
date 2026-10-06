@@ -1,3 +1,4 @@
+import { useTranslation } from "@/i18n";
 import { AnimatePresence, motion } from "motion/react";
 
 import { cn } from "../../lib/utils";
@@ -17,11 +18,6 @@ import { LINK_LABEL_FADE_IN, LINK_LABEL_FADE_OUT } from "./onboarding-motion";
  * holds up because they are right above it.
  */
 
-const LINK_LABEL: Record<CredentialMode, string> = {
-  subscription: "Use API key instead",
-  api: "Use subscription instead",
-};
-
 const OTHER_MODE: Record<CredentialMode, CredentialMode> = {
   subscription: "api",
   api: "subscription",
@@ -34,6 +30,12 @@ export function CredentialModeLink({
   mode: CredentialMode;
   onChange: (next: CredentialMode) => void;
 }) {
+  const { t } = useTranslation();
+  const linkLabel = (m: CredentialMode) =>
+    m === "subscription"
+      ? t("onboarding.wizard.connect.credential.useApiKeyInstead")
+      : t("onboarding.wizard.connect.credential.useSubscriptionInstead");
+
   return (
     <button
       type="button"
@@ -53,13 +55,13 @@ export function CredentialModeLink({
         also takes them out of the accessibility tree, leaving the button's name
         to the one real label below.
       */}
-      {(Object.keys(LINK_LABEL) as CredentialMode[]).map((sizerMode) => (
+      {(["subscription", "api"] as CredentialMode[]).map((sizerMode) => (
         <span
           key={sizerMode}
           aria-hidden
           className="invisible col-start-1 row-start-1 whitespace-nowrap"
         >
-          {LINK_LABEL[sizerMode]}
+          {linkLabel(sizerMode)}
         </span>
       ))}
 
@@ -81,7 +83,7 @@ export function CredentialModeLink({
           animate={{ opacity: 1, transition: LINK_LABEL_FADE_IN }}
           exit={{ opacity: 0, transition: LINK_LABEL_FADE_OUT }}
         >
-          {LINK_LABEL[mode]}
+          {linkLabel(mode)}
         </motion.span>
       </AnimatePresence>
     </button>

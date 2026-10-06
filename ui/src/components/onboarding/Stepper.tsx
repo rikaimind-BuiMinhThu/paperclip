@@ -1,3 +1,4 @@
+import { t } from "@/i18n";
 import { cn } from "../../lib/utils";
 
 /**
@@ -12,7 +13,18 @@ export const AGENT_ARC_TOTAL_STEPS = 3;
  * place of a bare number: the wizard has its own step numbering, and two
  * controls both announcing "Step 1" while meaning different steps is worse
  * than no number at all. The strip's own "Step N of 3" line carries the count.
+ *
+ * Resolved at call time via `t()` so locale changes apply without remounting.
  */
+export function agentArcStepLabels(): readonly string[] {
+  return [
+    t("onboarding.wizard.stepper.labels.firstAgent"),
+    t("onboarding.wizard.stepper.labels.connectModel"),
+    t("onboarding.wizard.stepper.labels.review"),
+  ];
+}
+
+/** @deprecated Prefer `agentArcStepLabels()` so locale switches apply. */
 export const AGENT_ARC_STEP_LABELS = [
   "Create your first agent",
   "Connect a model",
@@ -34,6 +46,16 @@ export const AGENT_ARC_WIZARD_STEPS = [3, 4, 5] as const;
 export const ONBOARDING_WIZARD_STEPS = [1, 3, 4, 5] as const;
 
 /** Destinations for the full walk, in the same order. */
+export function onboardingStepLabels(): readonly string[] {
+  return [
+    t("onboarding.wizard.stepper.labels.orgName"),
+    t("onboarding.wizard.stepper.labels.firstAgent"),
+    t("onboarding.wizard.stepper.labels.connectModel"),
+    t("onboarding.wizard.stepper.labels.review"),
+  ];
+}
+
+/** @deprecated Prefer `onboardingStepLabels()` so locale switches apply. */
 export const ONBOARDING_STEP_LABELS = [
   "Name your organization",
   "Create your first agent",
@@ -91,7 +113,7 @@ export function agentArcStepFor(wizardStep: number): number | null {
 export function Stepper({
   step,
   total = AGENT_ARC_TOTAL_STEPS,
-  labels = AGENT_ARC_STEP_LABELS,
+  labels,
   canJumpToStep,
   onJumpToStep,
 }: {
@@ -107,6 +129,7 @@ export function Stepper({
   canJumpToStep?: (target: number) => boolean;
   onJumpToStep?: (target: number) => void;
 }) {
+  const resolvedLabels = labels ?? agentArcStepLabels();
   return (
     <div className="mb-11 flex items-center justify-center gap-2">
       {Array.from({ length: total }, (_, index) => index + 1).map((segment) => {
@@ -115,7 +138,7 @@ export function Stepper({
           <button
             key={segment}
             type="button"
-            aria-label={labels[segment - 1] ?? `Step ${segment}`}
+            aria-label={resolvedLabels[segment - 1] ?? t("onboarding.wizard.stepper.stepOf", { current: segment, total })}
             aria-current={segment === step ? "step" : undefined}
             disabled={!jumpable}
             onClick={() => jumpable && onJumpToStep?.(segment)}
@@ -134,7 +157,7 @@ export function Stepper({
       })}
       {/* Out of flow, so it neither takes a row nor picks up the gap. */}
       <span className="sr-only">
-        Step {step} of {total}
+        {t("onboarding.wizard.stepper.stepOf", { current: step, total })}
       </span>
     </div>
   );

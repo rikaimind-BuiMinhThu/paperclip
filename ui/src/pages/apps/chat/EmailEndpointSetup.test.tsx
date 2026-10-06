@@ -5,6 +5,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { MemoryRouter, useLocation } from "react-router-dom";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { ApiError } from "@/api/client";
+import { t } from "@/i18n";
 import { EmailEndpointSetup } from "./EmailEndpointSetup";
 
 const mocks = vi.hoisted(() => ({ companyId: "company" as string | null, listAgents: vi.fn(), connect: vi.fn(), credentials: vi.fn(), control: vi.fn(), inspectNew: vi.fn(), inspect: vi.fn(), checkAddress: vi.fn(), setup: vi.fn(), listInboxes: vi.fn(), listConnections: vi.fn(), getConnection: vi.fn(), putInstalls: vi.fn() }));
@@ -51,8 +52,21 @@ async function mount(saved = true, waitForCompany = true, agentId = "ralph", sea
   ]}><EmailEndpointSetup /><Location /></MemoryRouter></QueryClientProvider>));
   if (waitForCompany) await vi.waitFor(() => expect(container.textContent).toContain(agentId === "support" ? "Support" : "Ralph"));
 }
+function localizedButtonLabel(name: string): string {
+  switch (name) {
+    case "Continue":
+      return t("common.continue");
+    case "Cancel":
+      return t("common.cancel");
+    case "Back":
+      return t("common.back");
+    default:
+      return name;
+  }
+}
 function button(name: string) {
-  const value = [...document.querySelectorAll("button")].find(button => button.textContent?.trim() === name);
+  const label = localizedButtonLabel(name);
+  const value = [...document.querySelectorAll("button")].find(button => button.textContent?.trim() === label);
   expect(value).toBeDefined();
   return value!;
 }

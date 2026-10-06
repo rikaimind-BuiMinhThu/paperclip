@@ -20,6 +20,7 @@ import {
   saveStructuredDraft,
 } from "@/lib/composer-draft";
 import { cn } from "@/lib/utils";
+import { useTranslation } from "@/i18n";
 import {
   TaskChatComposerTakeoverControls,
   useTaskChatComposerTakeoverActions,
@@ -242,6 +243,7 @@ export function QuestionForm({
   onSubmit,
   onCancel,
 }: QuestionFormProps) {
+  const { t } = useTranslation();
   const takeoverActions = useTaskChatComposerTakeoverActions();
   const initialDraft = draftKey
     ? loadStructuredDraft<{
@@ -527,7 +529,7 @@ export function QuestionForm({
       ) : null}
       {question.answerMode === "text" ? (
         <div className="mb-2 flex items-center gap-3 text-xs text-muted-foreground">
-          {question.answerMode === "text" ? <span>Write an answer</span> : null}
+          {question.answerMode === "text" ? <span>{t("taskChat.writeAnswer")}</span> : null}
         </div>
       ) : null}
       {pagination ? (
@@ -569,7 +571,7 @@ export function QuestionForm({
             value={answer.text ?? ""}
             disabled={disabled || working != null}
             onChange={(value) => updateAnswer({ text: value })}
-            placeholder="Write your answer"
+            placeholder={t("taskChat.writeAnswer")}
             imageUploadHandler={imageUploadHandler}
             mentions={mentions}
             autoFocus
@@ -678,7 +680,7 @@ export function QuestionForm({
             {working === "cancel" ? (
               <Loader2 aria-hidden className="h-4 w-4 animate-spin" />
             ) : null}{" "}
-            Cancel
+            {t("common.cancel")}
           </Button>
         ) : null}
         {!question.required ? (
@@ -689,7 +691,7 @@ export function QuestionForm({
             disabled={busy}
             onClick={skipQuestion}
           >
-            Skip
+            {t("common.skip")}
           </Button>
         ) : null}
         <Button
@@ -701,7 +703,7 @@ export function QuestionForm({
           {working === "submit" ? (
             <Loader2 aria-hidden className="h-4 w-4 animate-spin" />
           ) : null}
-          {isLastPage ? (questionSet.submitLabel ?? "Submit answers") : "Next"}
+          {isLastPage ? (questionSet.submitLabel ?? t("common.submit")) : t("common.next")}
         </Button>
       </div>
     </div>

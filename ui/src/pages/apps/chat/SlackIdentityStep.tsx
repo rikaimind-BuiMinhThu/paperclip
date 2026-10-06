@@ -7,6 +7,7 @@ import { chatEndpointsApi } from "@/api/chatEndpoints";
 import { Button } from "@/components/ui/button";
 import { copyTextToClipboard } from "@/lib/clipboard";
 import { queryKeys } from "@/lib/queryKeys";
+import { useTranslation } from "@/i18n";
 
 export function SlackIdentityStep({ endpointId, command, testStartedAt, onConnected, onSaveExit }: {
   endpointId: string;
@@ -15,6 +16,7 @@ export function SlackIdentityStep({ endpointId, command, testStartedAt, onConnec
   onConnected: () => void;
   onSaveExit: () => void;
 }) {
+  const { t } = useTranslation();
   const client = useQueryClient();
   const [copied, setCopied] = useState(false);
   const [copyError, setCopyError] = useState(false);
@@ -45,7 +47,7 @@ export function SlackIdentityStep({ endpointId, command, testStartedAt, onConnec
   return (
     <div className="space-y-5">
       <div>
-        <h1 className="text-xl font-bold">Connect your Slack account</h1>
+        <h1 className="text-xl font-bold">{t("apps.connect.connectSlackAccount")}</h1>
         <p className="mt-1 text-sm text-muted-foreground">
           Send this command in Slack so we can identify your account. It won&apos;t start agent work.
         </p>
@@ -54,7 +56,7 @@ export function SlackIdentityStep({ endpointId, command, testStartedAt, onConnec
         <code className="text-sm">{connectCommand}</code>
         <Button variant="ghost" size="sm" onClick={() => {
           void copyTextToClipboard(connectCommand).then(() => { setCopied(true); setCopyError(false); }, () => setCopyError(true));
-        }}><Copy className="size-4" />{copied ? "Copied" : "Copy command"}</Button>
+        }}><Copy className="size-4" />{copied ? t("common.copied") : t("apps.connect.copyCommand")}</Button>
       </div>
       {copyError && <p role="alert" className="text-sm text-destructive">Couldn&apos;t copy the command. Select and copy it above.</p>}
       <p className="text-sm">
@@ -77,7 +79,7 @@ export function SlackIdentityStep({ endpointId, command, testStartedAt, onConnec
                   <p className="text-sm font-medium">{identity.externalLabel}</p>
                   <p className="text-xs text-muted-foreground">{identity.externalDetail}</p>
                 </div>
-                {mine ? <p role="status" className="flex items-center gap-2 text-sm"><CheckCircle2 className="size-4 text-(--status-task-done)" />Linked to you</p>
+                {mine ? <p role="status" className="flex items-center gap-2 text-sm"><CheckCircle2 className="size-4 text-(--status-task-done)" />{t("apps.connect.linkedToYou")}</p>
                   : identity.status === "linked" ? <p className="text-sm text-muted-foreground">Linked to {identity.paperclipUserLabel ?? "another Paperclip account"}</p>
                   : <Button variant="outline" disabled={!userId || link.isPending} onClick={() => link.mutate(identity.principalId)} aria-label={`Link ${identity.externalLabel} to my Paperclip account`}>
                     {link.isPending && link.variables === identity.principalId && <Loader2 className="size-4 animate-spin" />}This is my Slack account
@@ -90,8 +92,8 @@ export function SlackIdentityStep({ endpointId, command, testStartedAt, onConnec
       {!userId && !session.isPending && !health.isPending && <p role="alert" className="text-sm text-destructive">Sign in to Paperclip to link your Slack account. Refresh this page after signing in.</p>}
       {link.isError && <p role="alert" className="text-sm text-destructive">Couldn&apos;t link your account. Check that you are a member of this company and try again.</p>}
       <div className="flex items-center justify-between gap-3">
-        <Button variant="ghost" className="text-muted-foreground" onClick={onSaveExit}>Save &amp; exit</Button>
-        {linkedToMe && <Button onClick={onConnected}>Continue to message test</Button>}
+        <Button variant="ghost" className="text-muted-foreground" onClick={onSaveExit}>{t("common.saveAndExit")}</Button>
+        {linkedToMe && <Button onClick={onConnected}>{t("apps.connect.continueToMessageTest")}</Button>}
       </div>
     </div>
   );

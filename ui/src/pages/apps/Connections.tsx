@@ -51,6 +51,7 @@ import {
   connectionOwnerProfile,
   type ConnectionOwnerProfile,
 } from "./connection-owner";
+import { useTranslation } from "@/i18n";
 
 const BROWSE_HREF = "/apps";
 
@@ -103,6 +104,24 @@ function rowNeedsAttention(row: AppRow): boolean {
   return row.status.tone === "attention";
 }
 
+function translatedStatusLabel(
+  label: AppStatus["label"],
+  t: (key: string) => string,
+): string {
+  switch (label) {
+    case "Healthy":
+      return t("apps.connect.healthy");
+    case "Needs attention":
+      return t("apps.connect.needsAttention");
+    case "Paused":
+      return t("agents.paused");
+    case "Not connected":
+      return t("apps.notConnected");
+    default:
+      return label;
+  }
+}
+
 const STATUS_CLASS: Record<AppStatus["tone"], string> = {
   connected: "border-emerald-500/40 bg-emerald-500/10 text-emerald-700 dark:text-emerald-300",
   attention: "border-amber-500/40 bg-amber-500/10 text-amber-700 dark:text-amber-300",
@@ -111,6 +130,7 @@ const STATUS_CLASS: Record<AppStatus["tone"], string> = {
 };
 
 export function Connections() {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const { pushToast } = useToast();
@@ -127,11 +147,11 @@ export function Connections() {
 
   useEffect(() => {
     setBreadcrumbs([
-      { label: "Connectors", href: "/apps" },
-      { label: "Connections" },
+      { label: t("apps.connect.breadcrumbsConnectors"), href: "/apps" },
+      { label: t("apps.connections") },
     ]);
     return () => setBreadcrumbs([]);
-  }, [setBreadcrumbs]);
+  }, [setBreadcrumbs, t]);
 
   const galleryQuery = useQuery({
     queryKey: queryKeys.apps.gallery(selectedCompanyId ?? "__none__"),
@@ -187,7 +207,7 @@ export function Connections() {
       queryClient.invalidateQueries({ queryKey: queryKeys.tools.applications(selectedCompanyId!) });
       queryClient.invalidateQueries({ queryKey: queryKeys.apps.attention(selectedCompanyId!) });
       pushToast({
-        title: "Connection deleted",
+        title: t("apps.connect.deleteSuccess"),
         body: target.remainingConnectionCount > 0
           ? `${target.appName} still has ${target.remainingConnectionCount} active ${target.remainingConnectionCount === 1 ? "connection" : "connections"} available to agents.`
           : `${target.appName} is no longer available to agents and its credentials are deleted. Connecting it again needs a new sign-in or key.`,
@@ -197,7 +217,7 @@ export function Connections() {
     },
     onError: (error) =>
       pushToast({
-        title: "Couldn't delete the connection",
+        title: t("apps.connect.deleteFailed"),
         body: error instanceof Error ? error.message : "Please try again.",
         tone: "error",
       }),
@@ -304,7 +324,7 @@ export function Connections() {
   const visibleRows = filter === "attention" ? rowsNeedingAttention : rows;
 
   if (!selectedCompanyId) {
-    return <div className="p-6 text-sm text-muted-foreground">Select an organization to manage apps.</div>;
+    return <div className="p-6 text-sm text-muted-foreground">{t("apps.connect.selectOrganization")}</div>;
   }
 
   const loading = applicationsQuery.isLoading || connectionsQuery.isLoading || galleryQuery.isLoading;
@@ -329,12 +349,12 @@ export function Connections() {
           <Skeleton className="h-64 w-full" />
         </div>
       ) : rows.length === 0 ? (
-        <EmptyConnections onBrowse={() => navigate(BROWSE_HREF)} />
+        <EmptyConnections onBrowse={() => navigate(BROWSE_HREF)} title={t("apps.connections")} />
       ) : (
         <div className="space-y-5">
           <header className="flex flex-wrap items-end justify-between gap-3">
             <div>
-              <h1 className="text-2xl font-bold tracking-tight">Connections</h1>
+              <h1 className="text-2xl font-bold tracking-tight">{t("apps.connections")}</h1>
               <p className="mt-1 text-sm text-muted-foreground">
                 The tools you’ve connected, and whether they’re working.
               </p>
@@ -352,7 +372,7 @@ export function Connections() {
               disabled={rowsNeedingAttention.length === 0}
               onClick={() => setFilter("attention")}
             >
-              Needs attention ({rowsNeedingAttention.length})
+              {t("apps.connect.needsAttention")} ({rowsNeedingAttention.length})
             </FilterChip>
           </div>
 
@@ -365,10 +385,10 @@ export function Connections() {
               <ShieldQuestion className="h-5 w-5 shrink-0 text-amber-600 dark:text-amber-400" />
               <div className="min-w-0 flex-1">
                 <div className="text-sm font-semibold text-amber-900 dark:text-amber-100">
-                  {reviewCount} {reviewCount === 1 ? "action is" : "actions are"} waiting for your OK
+                  {t("apps.connect.reviewQueue")} ({reviewCount})
                 </div>
                 <div className="truncate text-xs text-amber-700 dark:text-amber-300">
-                  Your agents paused to check with you before making a change.
+                  {t("apps.waitingForOk")}
                 </div>
               </div>
               <span className="shrink-0 text-xs font-semibold text-amber-800 dark:text-amber-200">Review →</span>
@@ -384,10 +404,10 @@ export function Connections() {
               <ShieldAlert className="h-5 w-5 shrink-0 text-red-600 dark:text-red-400" />
               <div className="min-w-0 flex-1">
                 <div className="text-sm font-semibold text-red-900 dark:text-red-100">
-                  {rowsNeedingAttention.length} {rowsNeedingAttention.length === 1 ? "connection needs" : "connections need"} attention
+                  {t("apps.connect.needsAttention")} ({rowsNeedingAttention.length})
                 </div>
                 <div className="truncate text-xs text-red-700 dark:text-red-300">
-                  {floatSummary(rowsNeedingAttention)}
+                  {t("apps.connect.reviewQueueDescription")}
                 </div>
               </div>
               <span className="shrink-0 text-xs font-semibold text-red-800 dark:text-red-200">Fix →</span>
@@ -477,7 +497,7 @@ export function Connections() {
                             STATUS_CLASS[status.tone],
                           )}
                         >
-                          {status.label}
+                          {translatedStatusLabel(status.label, t)}
                         </span>
                       </td>
                       <td className="px-4 py-3">
@@ -671,11 +691,11 @@ function floatSummary(rows: AppRow[]): string {
   return `${names.slice(0, 2).join(", ")} and ${names.length - 2} more`;
 }
 
-function EmptyConnections({ onBrowse }: { onBrowse: () => void }) {
+function EmptyConnections({ onBrowse, title }: { onBrowse: () => void; title: string }) {
   return (
     <div className="space-y-6">
       <header>
-        <h1 className="text-2xl font-bold tracking-tight">Connections</h1>
+        <h1 className="text-2xl font-bold tracking-tight">{title}</h1>
         <p className="mt-1 text-sm text-muted-foreground">
           The tools you’ve connected, and whether they’re working.
         </p>

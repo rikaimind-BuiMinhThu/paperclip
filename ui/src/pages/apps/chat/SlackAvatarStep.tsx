@@ -8,6 +8,7 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { SetupWizardFooter } from "@/components/SetupWizard";
+import { useTranslation } from "@/i18n";
 
 export interface SlackAvatarProps {
   agentName: string;
@@ -167,6 +168,7 @@ export function SlackAvatarStep({
   onSkip: () => void;
   onSaveExit: () => void;
 }) {
+  const { t } = useTranslation();
   return (
     <div className="space-y-8">
       <div className="space-y-2">
@@ -192,10 +194,10 @@ export function SlackAvatarStep({
       )}
       <SetupWizardFooter onSaveExit={onSaveExit}>
         <Button variant="ghost" onClick={onSkip}>
-          Skip for now
+          {t("apps.connect.skipForNow")}
         </Button>
         <Button onClick={onUploaded}>
-          {uploaded ? "Continue" : "I’ve uploaded the avatar"}
+          {uploaded ? t("common.continue") : "I’ve uploaded the avatar"}
           <ArrowRight className="size-4" />
         </Button>
       </SetupWizardFooter>
