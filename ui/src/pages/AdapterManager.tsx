@@ -28,6 +28,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { useToastActions } from "@/context/ToastContext";
+import { useTranslation } from "@/i18n";
 import { cn } from "@/lib/utils";
 import { ChoosePathButton } from "@/components/PathInstructionsModal";
 import { invalidateDynamicParser } from "@/adapters/dynamic-loader";
@@ -66,6 +67,7 @@ function AdapterRow({
   toggleTitleDisabled?: string;
   disabledBadgeLabel?: string;
 }) {
+  const { t } = useTranslation();
   return (
     <li>
       <div className="flex items-center gap-4 px-4 py-3">
@@ -142,8 +144,8 @@ function AdapterRow({
             size="icon-sm"
             className="h-8 w-8"
             title={adapter.disabled
-              ? (toggleTitleEnabled ?? "Show in agent menus")
-              : (toggleTitleDisabled ?? "Hide from agent menus")}
+              ? (toggleTitleEnabled ?? t("pages.adapters.showInMenus"))
+              : (toggleTitleDisabled ?? t("pages.adapters.hideInMenus"))}
             disabled={isToggling}
             onClick={() => onToggle(adapter.type, !adapter.disabled)}
           >
@@ -255,6 +257,7 @@ function ReinstallDialog({
 }
 
 export function AdapterManager() {
+  const { t } = useTranslation();
   const { selectedCompany } = useCompany();
   const { setBreadcrumbs } = useBreadcrumbs();
   const queryClient = useQueryClient();
@@ -269,11 +272,11 @@ export function AdapterManager() {
 
   useEffect(() => {
     setBreadcrumbs([
-      { label: selectedCompany?.name ?? "Organization", href: "/dashboard" },
-      { label: "Settings", href: "/company/settings" },
-      { label: "Adapters" },
+      { label: selectedCompany?.name ?? t("nav.organization"), href: "/dashboard" },
+      { label: t("settings.title"), href: "/company/settings" },
+      { label: t("settings.adapters") },
     ]);
-  }, [selectedCompany?.name, setBreadcrumbs]);
+  }, [selectedCompany?.name, setBreadcrumbs, t]);
 
   const { data: adapters, isLoading } = useQuery({
     queryKey: queryKeys.adapters.all,
@@ -391,7 +394,7 @@ export function AdapterManager() {
       menuDisabled: !!a.disabled,
     }));
 
-  if (isLoading) return <div className="p-4 text-sm text-muted-foreground">Loading adapters...</div>;
+  if (isLoading) return <div className="p-4 text-sm text-muted-foreground">{t("pages.adapters.loading")}</div>;
 
   const isMutating = installMutation.isPending || removeMutation.isPending || toggleMutation.isPending || overrideMutation.isPending || reloadMutation.isPending || reinstallMutation.isPending;
 
@@ -401,7 +404,7 @@ export function AdapterManager() {
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
           <Cpu className="h-6 w-6 text-muted-foreground" />
-          <h1 className="text-xl font-semibold">Adapters</h1>
+          <h1 className="text-xl font-semibold">{t("pages.adapters.title")}</h1>
           <Badge variant="outline" className="text-amber-600 border-amber-400">
             Alpha
           </Badge>
@@ -411,12 +414,12 @@ export function AdapterManager() {
           <DialogTrigger asChild>
             <Button size="sm" className="gap-2">
               <Plus className="h-4 w-4" />
-              Install Adapter
+              {t("pages.adapters.installAdapter")}
             </Button>
           </DialogTrigger>
           <DialogContent>
             <DialogHeader>
-              <DialogTitle>Install External Adapter</DialogTitle>
+              <DialogTitle>{t("pages.adapters.installDialogTitle")}</DialogTitle>
               <DialogDescription>
                 Add an adapter from npm or a local path. The adapter package must export <code className="text-xs bg-muted px-1 py-0.5 rounded">createServerAdapter()</code>.
               </DialogDescription>
@@ -495,7 +498,7 @@ export function AdapterManager() {
               )}
             </div>
             <DialogFooter>
-              <Button variant="outline" onClick={() => setInstallDialogOpen(false)}>Cancel</Button>
+              <Button variant="outline" onClick={() => setInstallDialogOpen(false)}>{t("common.cancel")}</Button>
               <Button
                 onClick={() =>
                   installMutation.mutate({
@@ -506,7 +509,7 @@ export function AdapterManager() {
                 }
                 disabled={!installPackage || installMutation.isPending}
               >
-                {installMutation.isPending ? "Installing..." : "Install"}
+                {installMutation.isPending ? t("pages.adapters.installing") : t("pages.adapters.install")}
               </Button>
             </DialogFooter>
           </DialogContent>
@@ -531,16 +534,16 @@ export function AdapterManager() {
       <section className="space-y-3">
         <div className="flex items-center gap-2">
           <Cpu className="h-5 w-5 text-muted-foreground" />
-          <h2 className="text-base font-semibold">External Adapters</h2>
+          <h2 className="text-base font-semibold">{t("pages.adapters.externalSection")}</h2>
         </div>
 
         {externalAdapters.length === 0 ? (
           <Card className="bg-muted/30">
             <CardContent className="flex flex-col items-center justify-center py-10">
               <Cpu className="h-10 w-10 text-muted-foreground mb-4" />
-              <p className="text-sm font-medium">No external adapters installed</p>
+              <p className="text-sm font-medium">{t("pages.adapters.emptyExternalTitle")}</p>
               <p className="text-xs text-muted-foreground mt-1">
-                Install an adapter package to extend model support.
+                {t("pages.adapters.emptyExternalDescription")}
               </p>
             </CardContent>
           </Card>
@@ -588,11 +591,11 @@ export function AdapterManager() {
       <section className="space-y-3">
         <div className="flex items-center gap-2">
           <Cpu className="h-5 w-5 text-muted-foreground" />
-          <h2 className="text-base font-semibold">Built-in Adapters</h2>
+          <h2 className="text-base font-semibold">{t("pages.adapters.builtinSection")}</h2>
         </div>
 
         {builtinAdapters.length === 0 && overriddenBuiltins.length === 0 ? (
-          <div className="text-sm text-muted-foreground">No built-in adapters found.</div>
+          <div className="text-sm text-muted-foreground">{t("pages.adapters.emptyBuiltin")}</div>
         ) : (
           <Card className="block py-0">
           <ul className="divide-y">

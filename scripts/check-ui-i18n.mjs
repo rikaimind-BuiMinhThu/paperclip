@@ -41,6 +41,11 @@ const REQUIRED_I18N_FILES = [
   "pages/ProfileSettings.tsx",
   "pages/apps/Browse.tsx",
   "pages/NotFound.tsx",
+  "pages/apps/AppDetail.tsx",
+  "pages/apps/gateways/GatewaysList.tsx",
+  "pages/CompanyEnvironments.tsx",
+  "pages/PluginManager.tsx",
+  "pages/AdapterManager.tsx",
 ];
 
 const FORBIDDEN_LITERALS = [

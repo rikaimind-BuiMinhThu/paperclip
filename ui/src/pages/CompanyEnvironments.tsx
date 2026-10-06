@@ -53,6 +53,7 @@ import {
   type SecretRefHintsContextValue,
 } from "@/components/SecretBindingPicker";
 import { useBreadcrumbs } from "@/context/BreadcrumbContext";
+import { useTranslation } from "@/i18n";
 import { useCompany } from "@/context/CompanyContext";
 import { useToast } from "@/context/ToastContext";
 import { environmentDisplayLabel, isPlatformManagedEnvironment } from "@/lib/managed-sandbox-environment";
@@ -1292,6 +1293,7 @@ function EnvironmentImageTemplatePanel({
 }
 
 export function CompanyEnvironments({ mode = "list" }: CompanyEnvironmentsProps) {
+  const { t } = useTranslation();
   const { environmentId: routeEnvironmentId } = useParams<{ environmentId?: string }>();
   const navigate = useNavigate();
   const { selectedCompanyId } = useCompany();
@@ -1319,15 +1321,15 @@ export function CompanyEnvironments({ mode = "list" }: CompanyEnvironmentsProps)
 
   useEffect(() => {
     const crumbs = [
-      { label: "Settings", href: "/company/settings" },
+      { label: t("settings.title"), href: "/company/settings" },
       isEnvironmentFormPage
-        ? { label: "Environments", href: ENVIRONMENTS_PATH }
-        : { label: "Environments" },
+        ? { label: t("pages.environments.title"), href: ENVIRONMENTS_PATH }
+        : { label: t("pages.environments.title") },
     ];
-    if (mode === "create") crumbs.push({ label: "Add environment" });
-    if (mode === "edit") crumbs.push({ label: "Edit environment" });
+    if (mode === "create") crumbs.push({ label: t("pages.environments.addEnvironment") });
+    if (mode === "edit") crumbs.push({ label: t("pages.environments.editEnvironment") });
     setBreadcrumbs(crumbs);
-  }, [isEnvironmentFormPage, mode, setBreadcrumbs]);
+  }, [isEnvironmentFormPage, mode, setBreadcrumbs, t]);
 
   const { data: instanceSettings } = useQuery({
     queryKey: queryKeys.instance.settings,
@@ -1940,14 +1942,14 @@ export function CompanyEnvironments({ mode = "list" }: CompanyEnvironmentsProps)
   })();
 
   if (!selectedCompanyId) {
-    return <div className="text-sm text-muted-foreground">Select an organization context to manage environment secrets and bindings.</div>;
+    return <div className="text-sm text-muted-foreground">{t("pages.environments.selectOrganization")}</div>;
   }
 
   if (!environmentsEnabled) {
     return (
       <div className="max-w-6xl space-y-4">
         <div className="text-sm text-muted-foreground">
-          Enable Environments in instance experimental settings to manage shared execution targets.
+          {t("pages.environments.featureDisabled")}
         </div>
       </div>
     );
@@ -1959,10 +1961,10 @@ export function CompanyEnvironments({ mode = "list" }: CompanyEnvironmentsProps)
       <div className="space-y-4">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <label className="flex flex-wrap items-center gap-3 text-sm font-medium">
-            <span>Default</span>
+            <span>{t("pages.environments.defaultLabel")}</span>
             <span>
               <select
-                aria-label="Default environment"
+                aria-label={t("pages.environments.defaultLabel")}
                 className="min-w-(--sz-12rem) max-w-full rounded-md border border-border bg-transparent px-2.5 py-1.5 text-sm font-normal outline-none"
                 value={instanceDefaultEnvironmentId}
                 onChange={(event) =>
@@ -1975,11 +1977,11 @@ export function CompanyEnvironments({ mode = "list" }: CompanyEnvironmentsProps)
                   // placeholder only renders while no default is stamped yet.
                   instanceDefaultEnvironmentId === "" ? (
                     <option value="" disabled>
-                      Select environment
+                      {t("pages.environments.selectEnvironment")}
                     </option>
                   ) : null
                 ) : (
-                  <option value="">Local</option>
+                  <option value="">{t("pages.environments.localOption")}</option>
                 )}
                 {nonLocalEnvironments.map((environment) => (
                   <option key={environment.id} value={environment.id}>
@@ -1990,7 +1992,7 @@ export function CompanyEnvironments({ mode = "list" }: CompanyEnvironmentsProps)
             </span>
           </label>
           <Button size="icon-sm" variant="ghost" asChild>
-            <Link to={`${ENVIRONMENTS_PATH}/new`} aria-label="Add environment" title="Add environment">
+            <Link to={`${ENVIRONMENTS_PATH}/new`} aria-label={t("pages.environments.addEnvironmentAria")} title={t("pages.environments.addEnvironmentAria")}>
               <Plus className="h-4 w-4" />
             </Link>
           </Button>
@@ -2068,7 +2070,7 @@ export function CompanyEnvironments({ mode = "list" }: CompanyEnvironmentsProps)
                       </Button>
                     ) : null}
                     <Button size="sm" variant="ghost" asChild>
-                      <Link to={environmentEditPath(environment.id)}>Edit</Link>
+                      <Link to={environmentEditPath(environment.id)}>{t("common.edit")}</Link>
                     </Button>
                   </div>
                 </div>
@@ -2095,16 +2097,16 @@ export function CompanyEnvironments({ mode = "list" }: CompanyEnvironmentsProps)
 
       {isEnvironmentFormPage && mode === "edit" && environments === undefined ? (
         <div className="text-sm text-muted-foreground">
-          Loading environment...
+          {t("pages.environments.loading")}
         </div>
       ) : null}
 
       {isEnvironmentFormPage && mode === "edit" && environments !== undefined && !editingEnvironment ? (
         <div className="space-y-3 text-sm">
-          <div className="font-medium">Environment not found</div>
-          <div className="text-muted-foreground">The environment may have been removed or is not available in this organization.</div>
+          <div className="font-medium">{t("pages.environments.notFoundTitle")}</div>
+          <div className="text-muted-foreground">{t("pages.environments.notFoundBody")}</div>
           <Button size="sm" variant="outline" asChild>
-            <Link to={ENVIRONMENTS_PATH}>Back to environments</Link>
+            <Link to={ENVIRONMENTS_PATH}>{t("pages.environments.backToEnvironments")}</Link>
           </Button>
         </div>
       ) : null}
@@ -2117,7 +2119,7 @@ export function CompanyEnvironments({ mode = "list" }: CompanyEnvironmentsProps)
               <Button size="sm" variant="ghost" asChild>
                 <Link to={ENVIRONMENTS_PATH}>
                   <ArrowLeft className="mr-1.5 h-3.5 w-3.5" />
-                  Environments
+                  {t("pages.environments.title")}
                 </Link>
               </Button>
             </div>
@@ -2165,13 +2167,13 @@ export function CompanyEnvironments({ mode = "list" }: CompanyEnvironmentsProps)
               onClick={closeEnvironmentForm}
               disabled={managedEnvironmentEnvVarsMutation.isPending}
             >
-              Cancel
+              {t("common.cancel")}
             </Button>
             <Button
               onClick={() => managedEnvironmentEnvVarsMutation.mutate(flushEnvironmentForm().envVars)}
               disabled={managedEnvironmentEnvVarsMutation.isPending}
             >
-              {managedEnvironmentEnvVarsMutation.isPending ? "Saving..." : "Save environment variables"}
+              {managedEnvironmentEnvVarsMutation.isPending ? t("common.saving") : t("pages.environments.saveEnvironmentVariables")}
             </Button>
           </div>
         </div>
@@ -2187,7 +2189,7 @@ export function CompanyEnvironments({ mode = "list" }: CompanyEnvironmentsProps)
               <Button size="sm" variant="ghost" asChild>
                 <Link to={ENVIRONMENTS_PATH}>
                   <ArrowLeft className="mr-1.5 h-3.5 w-3.5" />
-                  Environments
+                  {t("pages.environments.title")}
                 </Link>
               </Button>
               {editingEnvironment ? (
@@ -2207,7 +2209,7 @@ export function CompanyEnvironments({ mode = "list" }: CompanyEnvironmentsProps)
                 </Button>
               ) : null}
             </div>
-            <h1 className="text-lg font-semibold">{editingEnvironmentId ? "Edit environment" : "Add environment"}</h1>
+            <h1 className="text-lg font-semibold">{editingEnvironmentId ? t("pages.environments.editEnvironment") : t("pages.environments.addEnvironment")}</h1>
             <p className="mt-1 max-w-3xl text-sm text-muted-foreground">
               Configure a reusable execution target for your agents. Saved changes affect future runs; Paperclip may start fresh sessions or sandbox leases after environment config changes.
             </p>
@@ -2468,7 +2470,7 @@ export function CompanyEnvironments({ mode = "list" }: CompanyEnvironmentsProps)
               onClick={closeEnvironmentForm}
               disabled={environmentMutation.isPending}
             >
-              Cancel
+              {t("common.cancel")}
             </Button>
             {environmentForm.driver !== "local" ? (
               <Button
@@ -2485,11 +2487,11 @@ export function CompanyEnvironments({ mode = "list" }: CompanyEnvironmentsProps)
             >
               {environmentMutation.isPending
                 ? editingEnvironmentId
-                  ? "Saving..."
-                  : "Creating..."
+                  ? t("common.saving")
+                  : t("common.creating")
                 : editingEnvironmentId
-                  ? "Save environment"
-                  : "Create environment"}
+                  ? t("pages.environments.saveEnvironment")
+                  : t("pages.environments.createEnvironment")}
             </Button>
           </div>
 
@@ -2594,7 +2596,7 @@ export function CompanyEnvironments({ mode = "list" }: CompanyEnvironmentsProps)
                   </div>
                 ) : null}
                 <AlertDialogFooter>
-                  <AlertDialogCancel disabled={deleteEnvironmentMutation.isPending}>Cancel</AlertDialogCancel>
+                  <AlertDialogCancel disabled={deleteEnvironmentMutation.isPending}>{t("common.cancel")}</AlertDialogCancel>
                   <AlertDialogAction
                     className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
                     data-testid="environment-delete-confirm"

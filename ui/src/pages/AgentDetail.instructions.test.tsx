@@ -6,6 +6,8 @@ import { createRoot, type Root } from "react-dom/client";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import type { Agent, AgentInstructionsBundle, AgentInstructionsFileDetail, AgentInstructionsFileSummary } from "@paperclipai/shared";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { i18n, t } from "@/i18n";
+import { DEFAULT_LOCALE } from "@/i18n/locales";
 import { AgentFileRunNotice, PromptsTab } from "./AgentDetail";
 import { queryKeys } from "../lib/queryKeys";
 
@@ -225,7 +227,8 @@ describe("PromptsTab instruction editor", () => {
   let queryClient: QueryClient;
   let saveAction: (() => void) | null;
 
-  beforeEach(() => {
+  beforeEach(async () => {
+    await i18n.changeLanguage("en");
     container = document.createElement("div");
     document.body.appendChild(container);
     root = null;
@@ -261,6 +264,7 @@ describe("PromptsTab instruction editor", () => {
     container.remove();
     document.body.innerHTML = "";
     vi.clearAllMocks();
+    await i18n.changeLanguage(DEFAULT_LOCALE);
   });
 
   async function renderPromptsTab(
@@ -293,9 +297,15 @@ describe("PromptsTab instruction editor", () => {
     await flushReact();
   }
 
-  async function selectInstructionMode(mode: "Read" | "Edit" | "Raw") {
+  async function selectInstructionMode(mode: "read" | "edit" | "raw") {
+    const label =
+      mode === "read"
+        ? t("agents.detail.instructions.viewRead")
+        : mode === "edit"
+          ? t("agents.detail.instructions.viewEdit")
+          : t("agents.detail.instructions.viewRaw");
     await act(async () => {
-      buttonByText(container, mode.toLowerCase()).click();
+      buttonByText(container, label).click();
     });
     await flushReact();
   }
@@ -313,9 +323,9 @@ describe("PromptsTab instruction editor", () => {
     await waitFor(() => {
       expect(container.querySelector('[data-testid="markdown-body"]')?.textContent).toBe("# Current");
     });
-    await selectInstructionMode("Raw");
+    await selectInstructionMode("raw");
     expect(container.querySelector('[data-testid="instructions-raw-source"]')?.textContent?.trim()).toBe("# Current");
-    await selectInstructionMode("Edit");
+    await selectInstructionMode("edit");
 
     const editor = await waitFor(() => {
       const candidate = container.querySelector<HTMLTextAreaElement>('[data-testid="markdown-editor"]');
@@ -356,8 +366,8 @@ describe("PromptsTab instruction editor", () => {
     const revision = { id: "head-1", entryFile: "AGENTS.md" } as NonNullable<AgentInstructionsFileDetail["revision"]>;
     mockAgentsApi.instructionCandidates.mockResolvedValue([{ runId: "preserved-run", entryFile: "AGENTS.md", baseRevisionId: "older-base", baseHash: "base-hash", state: "conflict", candidateHash: "candidate-hash", content: "preserved edit", errorCode: "INSTRUCTION_REVISION_CONFLICT", errorMessage: "Instructions changed", createdAt: "2026-01-01T00:00:00Z", updatedAt: "2026-01-01T00:00:00Z" }]);
     await renderPromptsTab(makeBundle("AGENTS.md", [summary]), { "AGENTS.md": makeDetail(summary, "current content", { revision }) });
-    await waitFor(() => expect(buttonByText(container, "Review preserved edits")).toBeDefined());
-    await act(async () => { buttonByText(container, "Review preserved edits").click(); });
+    await waitFor(() => expect(buttonByText(container, t("agents.detail.instructions.reviewPreservedEdits"))).toBeDefined());
+    await act(async () => { buttonByText(container, t("agents.detail.instructions.reviewPreservedEdits")).click(); });
     const editor = await waitFor(() => {
       const element = container.querySelector<HTMLTextAreaElement>('[data-testid="markdown-editor"]');
       expect(element?.value).toBe("preserved edit"); return element!;
@@ -374,8 +384,8 @@ describe("PromptsTab instruction editor", () => {
     expect(mockAgentsApi.resolveInstructionCandidate.mock.lastCall?.[2].baseRevisionId).toBe("head-1");
     expect(editor.value).toBe("preserved edit");
     mockAgentsApi.instructionsFile.mockResolvedValue(makeDetail(summary, "latest content", { revision: { ...revision, id: "head-3" } }));
-    await waitFor(() => expect(buttonByText(container, "Refresh current revision").disabled).toBe(false));
-    await act(async () => { buttonByText(container, "Refresh current revision").click(); });
+    await waitFor(() => expect(buttonByText(container, t("agents.detail.instructions.refreshCurrentRevision")).disabled).toBe(false));
+    await act(async () => { buttonByText(container, t("agents.detail.instructions.refreshCurrentRevision")).click(); });
     await waitFor(() => expect(container.textContent).toContain("latest content"));
     expect(editor.value).toBe("preserved edit");
     expect(mockAgentsApi.resolveInstructionCandidate).toHaveBeenCalledTimes(2);
@@ -403,7 +413,7 @@ describe("PromptsTab instruction editor", () => {
         content: "Legacy edits to review", createdAt: "2026-01-01T00:00:00Z",
       }]);
     });
-    await waitFor(() => expect(buttonByText(container, "Review preserved edits").disabled).toBe(false));
+    await waitFor(() => expect(buttonByText(container, t("agents.detail.instructions.reviewPreservedEdits")).disabled).toBe(false));
     expect(container.textContent).toContain("Preserved instruction edits");
     expect(container.textContent).not.toContain("could not be retrieved");
   });
@@ -436,8 +446,8 @@ describe("PromptsTab instruction editor", () => {
     const preserved = "# Original entry\nPreserve these exact edits.\n";
     mockAgentsApi.instructionCandidates.mockResolvedValue([{ runId: "old-entry-run", entryFile: "OLD.md", baseRevisionId: "old-head", baseHash: "base-hash", state: "conflict", candidateHash: "candidate-hash", content: preserved, errorCode: "INSTRUCTION_ENTRY_CHANGED", errorMessage: "The instruction entry changed", createdAt: "2026-01-01T00:00:00Z", updatedAt: "2026-01-01T00:00:00Z" }]);
     await renderPromptsTab(makeBundle("CURRENT.md", [summary]), { "CURRENT.md": makeDetail(summary, "Current instructions", { revision }) });
-    await waitFor(() => expect(buttonByText(container, "Review preserved edits").disabled).toBe(false));
-    await act(async () => { buttonByText(container, "Review preserved edits").click(); });
+    await waitFor(() => expect(buttonByText(container, t("agents.detail.instructions.reviewPreservedEdits")).disabled).toBe(false));
+    await act(async () => { buttonByText(container, t("agents.detail.instructions.reviewPreservedEdits")).click(); });
     const review = await waitFor(() => {
       const region = container.querySelector<HTMLElement>('[aria-label="Preserved edits for OLD.md"]');
       expect(region?.querySelector("pre")?.textContent).toBe(preserved);
@@ -455,7 +465,7 @@ describe("PromptsTab instruction editor", () => {
     expect(mockAgentsApi.saveInstructionsFile).not.toHaveBeenCalled();
 
     // Choosing to edit and paste into the current entry is a separate ordinary save.
-    await selectInstructionMode("Edit");
+    await selectInstructionMode("edit");
     const editor = container.querySelector<HTMLTextAreaElement>('[data-testid="markdown-editor"]')!;
     expect(editor.value).toBe("Current instructions");
     await act(async () => { editor.dispatchEvent(new MouseEvent("pointerdown", { bubbles: true })); setNativeValue(editor, preserved); });
@@ -470,7 +480,7 @@ describe("PromptsTab instruction editor", () => {
     const revision = { id: "base-1", entryFile: "AGENTS.md" } as NonNullable<AgentInstructionsFileDetail["revision"]>;
     await renderPromptsTab(makeBundle("AGENTS.md", [summary]), { "AGENTS.md": makeDetail(summary, "original", { revision }) });
     mockAgentsApi.saveInstructionsFile.mockRejectedValue(new Error("Instructions changed since the base revision"));
-    await selectInstructionMode("Edit");
+    await selectInstructionMode("edit");
     const editor = container.querySelector<HTMLTextAreaElement>('[data-testid="markdown-editor"]')!;
     await act(async () => { editor.dispatchEvent(new MouseEvent("pointerdown", { bubbles: true })); setNativeValue(editor, "my unsaved edit"); });
     await waitFor(() => expect(saveAction).toEqual(expect.any(Function)));
@@ -504,7 +514,7 @@ describe("PromptsTab instruction editor", () => {
       { "AGENTS.md": makeDetail(summary, "# Current") },
       { onDirtyChange },
     );
-    await selectInstructionMode("Edit");
+    await selectInstructionMode("edit");
 
     const editorProps = await waitFor(() => {
       const latest = markdownEditorRenderMock.mock.calls.at(-1)?.[0] as
@@ -539,7 +549,7 @@ describe("PromptsTab instruction editor", () => {
         onCancelActionChange: (next) => { cancelAction = next; },
       },
     );
-    await selectInstructionMode("Edit");
+    await selectInstructionMode("edit");
 
     const editor = await waitFor(() => {
       const candidate = container.querySelector<HTMLTextAreaElement>('[data-testid="markdown-editor"]');
@@ -577,7 +587,7 @@ describe("PromptsTab instruction editor", () => {
       { "settings.json": makeDetail(summary, "{\n  \"ok\": true\n}") },
     );
 
-    await selectInstructionMode("Edit");
+    await selectInstructionMode("edit");
     await waitFor(() => {
       expect(container.querySelector<HTMLTextAreaElement>('textarea[placeholder="File contents"]')).not.toBeNull();
     });
@@ -591,10 +601,10 @@ describe("PromptsTab instruction editor", () => {
 
     await act(async () => {
       setNativeValue(input!, "notes.md");
-      buttonByText(container, "Create").click();
+      buttonByText(container, t("common.create")).click();
     });
 
-    await selectInstructionMode("Edit");
+    await selectInstructionMode("edit");
     await waitFor(() => {
       expect(container.querySelector('[data-testid="markdown-editor"]')).not.toBeNull();
     });
@@ -611,7 +621,7 @@ describe("PromptsTab instruction editor", () => {
       { "FALLBACK.md": makeDetail(summary, "# Fallback", { markdown: undefined }) },
     );
 
-    await selectInstructionMode("Edit");
+    await selectInstructionMode("edit");
     await waitFor(() => {
       expect(container.querySelector("[data-testid=\"markdown-editor\"]")).not.toBeNull();
       expect(markdownEditorRenderMock).toHaveBeenLastCalledWith(expect.objectContaining({
@@ -630,7 +640,7 @@ describe("PromptsTab instruction editor", () => {
       { "NOTES.md": makeDetail(summary, "raw instructions") },
     );
 
-    await selectInstructionMode("Edit");
+    await selectInstructionMode("edit");
     await waitFor(() => {
       expect(container.querySelector('[data-testid="markdown-editor"]')).toBeNull();
       expect(container.querySelector<HTMLTextAreaElement>('textarea[placeholder="File contents"]')?.value).toBe("raw instructions");

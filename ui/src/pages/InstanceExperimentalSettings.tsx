@@ -12,6 +12,7 @@ import { experimentalSettingKey } from "@paperclipai/shared";
 import { instanceSettingsApi } from "@/api/instanceSettings";
 import { useHiddenSettings } from "@/hooks/useHiddenSettings";
 import { getWorktreeInstanceId, isWorktreeRuntime } from "../lib/worktree-branding";
+import { useTranslation } from "@/i18n";
 import { useBreadcrumbs } from "../context/BreadcrumbContext";
 import { queryKeys } from "../lib/queryKeys";
 import { ToggleSwitch } from "@/components/ui/toggle-switch";
@@ -119,6 +120,7 @@ function ExperimentalToggleCard({
 }
 
 export function InstanceExperimentalSettings() {
+  const { t } = useTranslation();
   const { setBreadcrumbs } = useBreadcrumbs();
   const queryClient = useQueryClient();
   const { hidden: hiddenSettings } = useHiddenSettings();
@@ -126,10 +128,10 @@ export function InstanceExperimentalSettings() {
 
   useEffect(() => {
     setBreadcrumbs([
-      { label: "Settings", href: "/company/settings" },
-      { label: "Experimental" },
+      { label: t("settings.title"), href: "/company/settings" },
+      { label: t("pages.instanceExperimental.title") },
     ]);
-  }, [setBreadcrumbs]);
+  }, [setBreadcrumbs, t]);
 
   const experimentalQuery = useQuery({
     queryKey: queryKeys.instance.experimentalSettings,
@@ -177,7 +179,7 @@ export function InstanceExperimentalSettings() {
   });
 
   if (experimentalQuery.isLoading) {
-    return <div className="text-sm text-muted-foreground">Loading experimental settings...</div>;
+    return <div className="text-sm text-muted-foreground">{t("pages.instanceExperimental.loading")}</div>;
   }
 
   if (experimentalQuery.error) {
@@ -185,7 +187,7 @@ export function InstanceExperimentalSettings() {
       <div className="text-sm text-destructive">
         {experimentalQuery.error instanceof Error
           ? experimentalQuery.error.message
-          : "Failed to load experimental settings."}
+          : t("pages.instanceExperimental.loadFailed")}
       </div>
     );
   }
@@ -254,10 +256,10 @@ export function InstanceExperimentalSettings() {
       <div className="space-y-2">
         <div className="flex items-center gap-2">
           <FlaskConical className="h-5 w-5 text-muted-foreground" />
-          <h1 className="text-lg font-semibold">Experimental</h1>
+          <h1 className="text-lg font-semibold">{t("pages.instanceExperimental.title")}</h1>
         </div>
         <p className="text-sm text-muted-foreground">
-          Opt into features that are still being evaluated before they become default behavior.
+          {t("pages.instanceExperimental.description")}
         </p>
       </div>
 

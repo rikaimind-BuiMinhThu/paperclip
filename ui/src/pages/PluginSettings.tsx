@@ -2,6 +2,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Puzzle, ArrowLeft, ShieldAlert, ActivitySquare, CheckCircle, XCircle, Loader2, Clock, Cpu, Webhook, CalendarClock, AlertTriangle, FolderOpen, Save } from "lucide-react";
 import type { PluginLocalFolderDeclaration } from "@paperclipai/shared";
+import { useTranslation } from "@/i18n";
 import { useCompany } from "@/context/CompanyContext";
 import { useBreadcrumbs } from "@/context/BreadcrumbContext";
 import { useManagedSandboxOnly } from "@/hooks/useManagedSandboxOnly";
@@ -61,6 +62,7 @@ import {
  * @see doc/plugins/PLUGIN_SPEC.md §19.8 — Plugin Settings UI.
  */
 export function PluginSettings() {
+  const { t } = useTranslation();
   const { selectedCompany, selectedCompanyId } = useCompany();
   const { setBreadcrumbs } = useBreadcrumbs();
   const { companyPrefix, pluginId } = useParams<{ companyPrefix?: string; pluginId: string }>();
@@ -122,19 +124,19 @@ export function PluginSettings() {
 
   useEffect(() => {
     setBreadcrumbs([
-      { label: selectedCompany?.name ?? "Organization", href: "/dashboard" },
-      { label: "Settings", href: "/company/settings" },
-      { label: "Plugins", href: "/company/settings/instance/plugins" },
-      { label: plugin?.manifestJson?.displayName ?? plugin?.packageName ?? "Plugin Details" },
+      { label: selectedCompany?.name ?? t("nav.organization"), href: "/dashboard" },
+      { label: t("settings.title"), href: "/company/settings" },
+      { label: t("settings.plugins"), href: "/company/settings/instance/plugins" },
+      { label: plugin?.manifestJson?.displayName ?? plugin?.packageName ?? t("pages.plugins.pluginDetails") },
     ]);
-  }, [selectedCompany?.name, setBreadcrumbs, companyPrefix, plugin]);
+  }, [selectedCompany?.name, setBreadcrumbs, companyPrefix, plugin, t]);
 
   useEffect(() => {
     setActiveTab("configuration");
   }, [pluginId]);
 
   if (pluginLoading) {
-    return <div className="p-4 text-sm text-muted-foreground">Loading plugin details...</div>;
+    return <div className="p-4 text-sm text-muted-foreground">{t("pages.plugins.loadingDetails")}</div>;
   }
 
   if (!plugin) {
@@ -187,8 +189,8 @@ export function PluginSettings() {
         <PageTabBar
           align="start"
           items={[
-            { value: "configuration", label: "Configuration" },
-            { value: "status", label: "Status" },
+            { value: "configuration", label: t("pages.plugins.configuration") },
+            { value: "status", label: t("pages.plugins.status") },
           ]}
           value={activeTab}
           onValueChange={(value) => setActiveTab(value as "configuration" | "status")}
@@ -592,6 +594,7 @@ interface PluginLocalFoldersSettingsProps {
 }
 
 function PluginLocalFoldersSettings({ pluginId, companyId, declarations }: PluginLocalFoldersSettingsProps) {
+  const { t } = useTranslation();
   const { data, isLoading, error } = useQuery({
     queryKey: companyId
       ? queryKeys.plugins.localFolders(pluginId, companyId)
@@ -624,7 +627,7 @@ function PluginLocalFoldersSettings({ pluginId, companyId, declarations }: Plugi
       {isLoading ? (
         <div className="flex items-center gap-2 py-3 text-sm text-muted-foreground">
           <Loader2 className="h-4 w-4 animate-spin" />
-          Loading local folders...
+          {t("pages.plugins.loadingLocalFolders")}
         </div>
       ) : (
         <div className="space-y-3">
@@ -651,6 +654,7 @@ interface PluginLocalFolderRowProps {
 }
 
 function PluginLocalFolderRow({ pluginId, companyId, declaration, status }: PluginLocalFolderRowProps) {
+  const { t } = useTranslation();
   const queryClient = useQueryClient();
   const serverPath = status?.path ?? "";
   const [pathValue, setPathValue] = useState(serverPath);
@@ -769,7 +773,7 @@ function PluginLocalFolderRow({ pluginId, companyId, declaration, status }: Plug
             ) : (
               <Save className="h-3.5 w-3.5" />
             )}
-            Save
+            {t("common.save")}
           </Button>
         </div>
       </div>
@@ -949,6 +953,7 @@ interface PluginConfigFormProps {
  * re-renders on field changes, not the entire page.
  */
 function PluginConfigForm({ pluginId, companyId, schema, initialValues, isLoading, pluginStatus, supportsConfigTest }: PluginConfigFormProps) {
+  const { t } = useTranslation();
   const queryClient = useQueryClient();
 
   // Form values: start with saved values, fall back to schema defaults
@@ -1058,7 +1063,7 @@ function PluginConfigForm({ pluginId, companyId, schema, initialValues, isLoadin
     return (
       <div className="flex items-center gap-2 text-sm text-muted-foreground py-4">
         <Loader2 className="h-4 w-4 animate-spin" />
-        Loading configuration...
+        {t("pages.plugins.loadingConfiguration")}
       </div>
     );
   }
@@ -1108,10 +1113,10 @@ function PluginConfigForm({ pluginId, companyId, schema, initialValues, isLoadin
           {saveMutation.isPending ? (
             <>
               <Loader2 className="h-3.5 w-3.5 animate-spin" />
-              Saving...
+              {t("common.saving")}
             </>
           ) : (
-            "Save Configuration"
+            t("pages.plugins.saveConfiguration")
           )}
         </Button>
         {pluginStatus === "ready" && supportsConfigTest && (

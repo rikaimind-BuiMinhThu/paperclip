@@ -28,6 +28,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { useToastActions } from "@/context/ToastContext";
+import { useTranslation } from "@/i18n";
 import { cn } from "@/lib/utils";
 
 function firstNonEmptyLine(value: string | null | undefined): string | null {
@@ -86,6 +87,7 @@ function ExperimentalBadge() {
  * @see doc/plugins/PLUGIN_SPEC.md §3 — Plugin Lifecycle for status semantics.
  */
 export function PluginManager() {
+  const { t } = useTranslation();
   const { selectedCompany } = useCompany();
   const { setBreadcrumbs } = useBreadcrumbs();
   const queryClient = useQueryClient();
@@ -99,11 +101,11 @@ export function PluginManager() {
 
   useEffect(() => {
     setBreadcrumbs([
-      { label: selectedCompany?.name ?? "Organization", href: "/dashboard" },
-      { label: "Settings", href: "/company/settings" },
-      { label: "Plugins" },
+      { label: selectedCompany?.name ?? t("nav.organization"), href: "/dashboard" },
+      { label: t("settings.title"), href: "/company/settings" },
+      { label: t("settings.plugins") },
     ]);
-  }, [selectedCompany?.name, setBreadcrumbs]);
+  }, [selectedCompany?.name, setBreadcrumbs, t]);
 
   const { data: plugins, isLoading, error } = useQuery({
     queryKey: queryKeys.plugins.all,
@@ -185,29 +187,29 @@ export function PluginManager() {
     [installedPlugins]
   );
 
-  if (isLoading) return <div className="p-4 text-sm text-muted-foreground">Loading plugins...</div>;
-  if (error) return <div className="p-4 text-sm text-destructive">Failed to load plugins.</div>;
+  if (isLoading) return <div className="p-4 text-sm text-muted-foreground">{t("pages.plugins.loading")}</div>;
+  if (error) return <div className="p-4 text-sm text-destructive">{t("pages.plugins.loadFailed")}</div>;
 
   return (
     <div className="max-w-6xl space-y-6">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
           <Puzzle className="h-6 w-6 text-muted-foreground" />
-          <h1 className="text-xl font-semibold">Plugin Manager</h1>
+          <h1 className="text-xl font-semibold">{t("pages.plugins.managerTitle")}</h1>
         </div>
         
         <Dialog open={installDialogOpen} onOpenChange={setInstallDialogOpen}>
           <DialogTrigger asChild>
             <Button size="sm" className="gap-2">
               <Plus className="h-4 w-4" />
-              Install Plugin
+              {t("pages.plugins.installPlugin")}
             </Button>
           </DialogTrigger>
           <DialogContent>
             <DialogHeader>
-              <DialogTitle>Install Plugin</DialogTitle>
+              <DialogTitle>{t("pages.plugins.installPlugin")}</DialogTitle>
               <DialogDescription>
-                Enter the npm package name of the plugin you wish to install.
+                {t("pages.plugins.installDialogDescription")}
               </DialogDescription>
             </DialogHeader>
             <div className="grid gap-4 py-4">
@@ -222,12 +224,12 @@ export function PluginManager() {
               </div>
             </div>
             <DialogFooter>
-              <Button variant="outline" onClick={() => setInstallDialogOpen(false)}>Cancel</Button>
+              <Button variant="outline" onClick={() => setInstallDialogOpen(false)}>{t("common.cancel")}</Button>
               <Button
                 onClick={() => installMutation.mutate({ packageName: installPackage })}
                 disabled={!installPackage || installMutation.isPending}
               >
-                {installMutation.isPending ? "Installing..." : "Install"}
+                {installMutation.isPending ? t("pages.plugins.installing") : t("pages.plugins.install")}
               </Button>
             </DialogFooter>
           </DialogContent>
@@ -249,7 +251,7 @@ export function PluginManager() {
       <section className="space-y-3">
         <div className="flex items-center gap-2">
           <FlaskConical className="h-5 w-5 text-muted-foreground" />
-          <h2 className="text-base font-semibold">Available Plugins</h2>
+          <h2 className="text-base font-semibold">{t("pages.plugins.availablePlugins")}</h2>
           <Badge variant="outline">Bundled</Badge>
         </div>
 
@@ -318,7 +320,7 @@ export function PluginManager() {
                               disabled={enableMutation.isPending}
                               onClick={() => enableMutation.mutate(installedPlugin.id)}
                             >
-                              Enable
+                              {t("common.enable")}
                             </Button>
                           )}
                           <Button variant="outline" size="sm" asChild>
@@ -338,7 +340,7 @@ export function PluginManager() {
                             })
                           }
                         >
-                          {installPending ? "Installing..." : "Install"}
+                          {installPending ? t("pages.plugins.installing") : t("pages.plugins.install")}
                         </Button>
                       )}
                     </div>
@@ -354,16 +356,16 @@ export function PluginManager() {
       <section className="space-y-3">
         <div className="flex items-center gap-2">
           <Puzzle className="h-5 w-5 text-muted-foreground" />
-          <h2 className="text-base font-semibold">Installed Plugins</h2>
+          <h2 className="text-base font-semibold">{t("pages.plugins.installedSection")}</h2>
         </div>
 
         {!installedPlugins.length ? (
           <Card className="bg-muted/30">
             <CardContent className="flex flex-col items-center justify-center py-10">
               <Puzzle className="h-10 w-10 text-muted-foreground mb-4" />
-              <p className="text-sm font-medium">No plugins installed</p>
+              <p className="text-sm font-medium">{t("pages.plugins.emptyTitle")}</p>
               <p className="text-xs text-muted-foreground mt-1">
-                Install a plugin to extend functionality.
+                {t("pages.plugins.emptyDescription")}
               </p>
             </CardContent>
           </Card>
@@ -453,7 +455,7 @@ export function PluginManager() {
                           variant="outline"
                           size="icon-sm"
                           className="h-8 w-8"
-                          title={plugin.status === "ready" ? "Disable" : "Enable"}
+                          title={plugin.status === "ready" ? t("common.disable") : t("common.enable")}
                           onClick={() => {
                             if (plugin.status === "ready") {
                               disableMutation.mutate(plugin.id);

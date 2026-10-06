@@ -706,13 +706,15 @@ function AttributionAvatar({
   label,
   actor,
   via,
+  viaLabel,
 }: {
-  label: "Assignee" | "Originating";
+  label: string;
   actor: AttributionActor;
   via?: string | null;
+  viaLabel?: string;
 }) {
   const accessibleLabel = via
-    ? `${label}: ${actor.name} · via ${via}`
+    ? `${label}: ${actor.name} · ${viaLabel ?? via}`
     : `${label}: ${actor.name}`;
   const testIdLabel = label.toLowerCase();
 
@@ -772,6 +774,9 @@ function IssueAttributionByline({
   >;
   userLabelMap: ReadonlyMap<string, string>;
 }) {
+  const { t } = useTranslation();
+  const assigneeLabel = t("issues.assignee");
+  const originatingLabel = t("issues.detail.originating");
   const assignee: AttributionActor | null = issue.assigneeAgentId
     ? {
         kind: "agent",
@@ -824,17 +829,22 @@ function IssueAttributionByline({
     <TooltipProvider>
       <AvatarGroup
         className="-space-x-1.5"
-        aria-label="Task people"
+        aria-label={t("issues.detail.taskPeople")}
         data-testid="issue-attribution-avatar-stack"
       >
         {assignee ? (
-          <AttributionAvatar label="Assignee" actor={assignee} />
+          <AttributionAvatar label={assigneeLabel} actor={assignee} />
         ) : null}
         {originator ? (
           <AttributionAvatar
-            label="Originating"
+            label={originatingLabel}
             actor={originator}
             via={originatorVia}
+            viaLabel={
+              originatorVia
+                ? t("issues.detail.viaAgent", { name: originatorVia })
+                : undefined
+            }
           />
         ) : null}
       </AvatarGroup>
@@ -1101,6 +1111,7 @@ function InboxMobileToolbar({
   onHide,
 }: InboxMobileToolbarProps) {
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const [menuOpen, setMenuOpen] = useState(false);
 
   return (
@@ -1118,7 +1129,7 @@ function InboxMobileToolbar({
             navigate(backHref);
           }
         }}
-        aria-label="Back to inbox"
+        aria-label={t("issues.detail.backToInbox")}
       >
         <ArrowLeft className="h-5 w-5" />
       </Button>
@@ -1130,7 +1141,7 @@ function InboxMobileToolbar({
             size="icon-sm"
             onClick={onArchive}
             disabled={archivePending}
-            aria-label="Archive from inbox"
+            aria-label={t("issues.detail.archiveFromInbox")}
           >
             <Archive className="h-5 w-5" />
           </Button>
@@ -1138,7 +1149,7 @@ function InboxMobileToolbar({
 
         <Popover open={menuOpen} onOpenChange={setMenuOpen}>
           <PopoverTrigger asChild>
-            <Button variant="ghost" size="icon-sm" aria-label="More actions">
+            <Button variant="ghost" size="icon-sm" aria-label={t("common.moreActions")}>
               <MoreVertical className="h-5 w-5" />
             </Button>
           </PopoverTrigger>
@@ -1151,7 +1162,7 @@ function InboxMobileToolbar({
               }}
             >
               <Copy className="h-3 w-3" />
-              Copy as markdown
+              {t("issues.detail.copyAsMarkdown")}
             </button>
             <button
               className="flex items-center gap-2 w-full px-2 py-1.5 text-xs rounded hover:bg-accent/50"
@@ -1161,7 +1172,7 @@ function InboxMobileToolbar({
               }}
             >
               <SlidersHorizontal className="h-3 w-3" />
-              Properties
+              {t("issues.detail.properties")}
             </button>
             {issueIdProp && (
               <button
@@ -1172,7 +1183,7 @@ function InboxMobileToolbar({
                 }}
               >
                 <EyeOff className="h-3 w-3" />
-                Hide this task
+                {t("issues.detail.hideTask")}
               </button>
             )}
           </PopoverContent>
@@ -6222,15 +6233,15 @@ export function TaskDetailSurface({ conversation, tasksTab }: { tasksTab?: TaskS
     try {
       await copyTextToClipboard(md);
       setCopied(true);
-      pushToast({ title: "Copied to clipboard", tone: "success" });
+      pushToast({ title: t("issues.detail.copiedToClipboard"), tone: "success" });
       setTimeout(() => setCopied(false), 2000);
     } catch (error) {
       pushToast({
-        title: "Copy failed",
+        title: t("issues.detail.copyFailed"),
         body:
           error instanceof Error
             ? error.message
-            : "Unable to copy task markdown",
+            : t("issues.detail.copyTaskMarkdownFailed"),
         tone: "error",
       });
     }
@@ -7241,7 +7252,7 @@ export function TaskDetailSurface({ conversation, tasksTab }: { tasksTab?: TaskS
               variant="ghost"
               size="icon-xs"
               onClick={copyIssueToClipboard}
-              title="Copy task as markdown"
+              title={t("issues.detail.copyTaskAsMarkdown")}
             >
               {copied ? (
                 <Check className="h-4 w-4 text-green-500" />
@@ -7253,7 +7264,7 @@ export function TaskDetailSurface({ conversation, tasksTab }: { tasksTab?: TaskS
               variant="ghost"
               size="icon-xs"
               onClick={() => setMobilePropsOpen(true)}
-              title="Properties"
+              title={t("issues.detail.properties")}
             >
               <SlidersHorizontal className="h-4 w-4" />
             </Button>
@@ -7281,8 +7292,8 @@ export function TaskDetailSurface({ conversation, tasksTab }: { tasksTab?: TaskS
               variant="ghost"
               size="icon-xs"
               onClick={() => setFileViewerPromptOpen(true)}
-              title="Open file... (g f)"
-              aria-label="Open file in this issue"
+              title={t("issues.detail.openFileShortcut")}
+              aria-label={t("issues.detail.openFileInIssue")}
             >
               <FileCode2 className="h-4 w-4" />
             </Button>
@@ -7292,7 +7303,7 @@ export function TaskDetailSurface({ conversation, tasksTab }: { tasksTab?: TaskS
               variant="ghost"
               size="icon-xs"
               onClick={copyIssueToClipboard}
-              title="Copy task as markdown"
+              title={t("issues.detail.copyTaskAsMarkdown")}
             >
               {copied ? (
                 <Check className="h-4 w-4 text-green-500" />
@@ -7326,8 +7337,8 @@ export function TaskDetailSurface({ conversation, tasksTab }: { tasksTab?: TaskS
                   variant="ghost"
                   size="icon-xs"
                   className="shrink-0"
-                  aria-label="More task actions"
-                  title="More task actions"
+                  aria-label={t("issues.detail.moreTaskActions")}
+                  title={t("issues.detail.moreTaskActions")}
                   onKeyDown={(event) => {
                     if (event.key === "Enter" || event.key === " ") {
                       event.preventDefault();
@@ -7349,7 +7360,7 @@ export function TaskDetailSurface({ conversation, tasksTab }: { tasksTab?: TaskS
                       }}
                     >
                       <Plus className="h-3 w-3" />
-                      Add subtask
+                      {t("issues.detail.addSubtask")}
                     </button>
                     <button
                       className="flex w-full items-center gap-2 rounded px-2 py-1.5 text-xs hover:bg-accent/50"
@@ -7363,7 +7374,7 @@ export function TaskDetailSurface({ conversation, tasksTab }: { tasksTab?: TaskS
                       ) : (
                         <Copy className="h-3 w-3" />
                       )}
-                      Copy as markdown
+                      {t("issues.detail.copyAsMarkdown")}
                     </button>
                     {canArchiveFromInbox ? (
                       <button
@@ -7376,7 +7387,7 @@ export function TaskDetailSurface({ conversation, tasksTab }: { tasksTab?: TaskS
                         }}
                       >
                         <Archive className="h-3 w-3" />
-                        Archive from inbox
+                        {t("issues.detail.archiveFromInbox")}
                       </button>
                     ) : null}
                   </>
@@ -7434,7 +7445,7 @@ export function TaskDetailSurface({ conversation, tasksTab }: { tasksTab?: TaskS
                   }}
                 >
                   <EyeOff className="h-3 w-3" />
-                  Hide this task
+                  {t("issues.detail.hideTask")}
                 </button>
               </PopoverContent>
             </Popover>
@@ -8360,8 +8371,8 @@ export function TaskDetailSurface({ conversation, tasksTab }: { tasksTab?: TaskS
                   <SheetHeader>
                     <SheetTitle className="text-sm">
                       {documentDeepLink?.documentKey === "plan"
-                        ? "Plan"
-                        : "Properties"}
+                        ? t("pages.issueDetail.planSheetTitle")
+                        : t("pages.issueDetail.propertiesSheetTitle")}
                     </SheetTitle>
                   </SheetHeader>
                   <ScrollArea className="flex-1 overflow-y-auto">
