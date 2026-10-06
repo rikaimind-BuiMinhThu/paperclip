@@ -29,12 +29,24 @@ import { Card } from "@/components/ui/card";
 type ProjectSortField = "name" | "updated" | "created" | "targetDate";
 type ProjectSortDir = "asc" | "desc";
 
-const PROJECT_SORT_OPTIONS: Array<{ field: ProjectSortField; label: string }> = [
-  { field: "name", label: "Name" },
-  { field: "updated", label: "Updated" },
-  { field: "created", label: "Created" },
-  { field: "targetDate", label: "Target date" },
-];
+const PROJECT_SORT_FIELDS: ProjectSortField[] = ["name", "updated", "created", "targetDate"];
+
+function projectSortLabel(field: ProjectSortField, t: (key: string) => string) {
+  switch (field) {
+    case "name":
+      return t("pages.projects.sortName");
+    case "updated":
+      return t("pages.projects.sortUpdated");
+    case "created":
+      return t("pages.projects.sortCreated");
+    case "targetDate":
+      return t("pages.projects.sortTargetDate");
+    default: {
+      const _exhaustive: never = field;
+      return _exhaustive;
+    }
+  }
+}
 
 function compareProjectNames(left: Project, right: Project) {
   const nameDiff = left.name.localeCompare(right.name, undefined, { sensitivity: "base" });
@@ -118,10 +130,10 @@ export function Projects() {
 
     return groups;
   }, [membershipsQuery.data, sortedProjects]);
-  const sortLabel = PROJECT_SORT_OPTIONS.find((option) => option.field === sortField)?.label ?? "Name";
+  const sortLabel = projectSortLabel(sortField, t);
 
   if (!selectedCompanyId) {
-    return <EmptyState icon={Hexagon} message="Select an organization to view projects." />;
+    return <EmptyState icon={Hexagon} message={t("pages.projects.selectOrganization")} />;
   }
 
   if (isLoading) {
@@ -133,36 +145,36 @@ export function Projects() {
       <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
         <Popover>
           <PopoverTrigger asChild>
-            <Button variant="ghost" size="sm" className="w-fit text-xs" title="Sort">
+            <Button variant="ghost" size="sm" className="w-fit text-xs" title={t("pages.projects.sortTitle")}>
               <ArrowUpDown className="h-3.5 w-3.5 sm:h-3 sm:w-3 sm:mr-1" />
-              <span>Sort: {sortLabel}</span>
+              <span>{t("pages.projects.sortPrefix", { label: sortLabel })}</span>
             </Button>
           </PopoverTrigger>
           <PopoverContent align="start" className="w-44 p-0">
             <div className="p-2 space-y-0.5">
-              {PROJECT_SORT_OPTIONS.map((option) => (
+              {PROJECT_SORT_FIELDS.map((field) => (
                 <button
-                  key={option.field}
+                  key={field}
                   type="button"
                   className={`flex w-full items-center justify-between rounded-sm px-2 py-1.5 text-sm ${
-                    sortField === option.field
+                    sortField === field
                       ? "bg-accent/50 text-foreground"
                       : "text-muted-foreground hover:bg-accent/50"
                   }`}
                   onClick={() => {
-                    if (sortField === option.field) {
+                    if (sortField === field) {
                       setSortDir((current) => (current === "asc" ? "desc" : "asc"));
                       return;
                     }
-                    setSortField(option.field);
-                    setSortDir(option.field === "name" || option.field === "targetDate" ? "asc" : "desc");
+                    setSortField(field);
+                    setSortDir(field === "name" || field === "targetDate" ? "asc" : "desc");
                   }}
                 >
-                  <span>{option.label}</span>
-                  {sortField === option.field ? (
+                  <span>{projectSortLabel(field, t)}</span>
+                  {sortField === field ? (
                     <span className="flex items-center gap-1 text-xs text-muted-foreground">
                       <Check className="h-3 w-3" />
-                      {sortDir === "asc" ? "Asc" : "Desc"}
+                      {sortDir === "asc" ? t("pages.projects.sortAsc") : t("pages.projects.sortDesc")}
                     </span>
                   ) : null}
                 </button>
@@ -172,7 +184,7 @@ export function Projects() {
         </Popover>
         <Button size="sm" variant="outline" onClick={openNewProject}>
           <Plus className="h-4 w-4 mr-1" />
-          Add Project
+          {t("pages.projects.addProject")}
         </Button>
       </div>
 
@@ -182,7 +194,7 @@ export function Projects() {
         <EmptyState
           icon={Hexagon}
           message={t("empty.noProjects")}
-          action="Add Project"
+          action={t("pages.projects.addProject")}
           onAction={openNewProject}
         />
       )}
@@ -190,9 +202,9 @@ export function Projects() {
       {projects.length > 0 && (
         <div className="space-y-6">
           {([
-            ["My Projects", groupedProjects.mine],
-            ["Other Projects", groupedProjects.other],
-          ] as const).map(([label, sectionProjects]) => {
+            [t("pages.projects.myProjects"), groupedProjects.mine] as const,
+            [t("pages.projects.otherProjects"), groupedProjects.other] as const,
+          ]).map(([label, sectionProjects]) => {
             if (sectionProjects.length === 0) return null;
 
             return (
@@ -200,7 +212,9 @@ export function Projects() {
                 <div className="flex items-center justify-between">
                   <h2 className="text-sm font-medium">{label}</h2>
                   <span className="text-xs text-muted-foreground">
-                    {sectionProjects.length} project{sectionProjects.length === 1 ? "" : "s"}
+                    {t(sectionProjects.length === 1 ? "pages.projects.projectCountOne" : "pages.projects.projectCountOther", {
+                      count: sectionProjects.length,
+                    })}
                   </span>
                 </div>
                 <Card className="block py-0 overflow-hidden divide-y divide-border">
@@ -225,9 +239,13 @@ export function Projects() {
                           <div className="flex items-center gap-3">
                             <span
                               className="hidden text-xs text-muted-foreground tabular-nums sm:inline"
-                              title={`${formatNumber(project.taskCount ?? 0)} task${(project.taskCount ?? 0) === 1 ? "" : "s"}`}
+                              title={t((project.taskCount ?? 0) === 1 ? "pages.projects.taskCountOne" : "pages.projects.taskCountOther", {
+                                count: project.taskCount ?? 0,
+                              })}
                             >
-                              {formatNumber(project.taskCount ?? 0)} task{(project.taskCount ?? 0) === 1 ? "" : "s"}
+                              {t((project.taskCount ?? 0) === 1 ? "pages.projects.taskCountOne" : "pages.projects.taskCountOther", {
+                                count: project.taskCount ?? 0,
+                              })}
                             </span>
                             {project.budget && (
                               <span className="hidden text-xs text-muted-foreground tabular-nums sm:inline">

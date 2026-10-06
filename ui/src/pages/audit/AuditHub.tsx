@@ -1,4 +1,5 @@
-import { useCallback, useEffect } from "react";
+import { useCallback, useEffect, useMemo } from "react";
+import { useTranslation } from "@/i18n";
 import { History } from "lucide-react";
 import { EmptyState } from "@/components/EmptyState";
 import { PageTabBar } from "@/components/PageTabBar";
@@ -18,7 +19,16 @@ import {
   type AuditSection,
 } from "./audit-navigation";
 
+const AUDIT_SECTION_LABEL_KEYS: Record<AuditSection, string> = {
+  activity: "pages.activity.title",
+  runs: "pages.activity.runs",
+  costs: "pages.activity.costs",
+  budgets: "pages.activity.budgets",
+  timeline: "pages.activity.timeline",
+};
+
 export function AuditHub({ section }: { section: AuditSection }) {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const { selectedCompanyId } = useCompany();
   const { setBreadcrumbs } = useBreadcrumbs();
@@ -39,13 +49,22 @@ export function AuditHub({ section }: { section: AuditSection }) {
     "company.",
   ].includes(actionParam ?? "") ? actionParam! : "__all";
 
+  const sectionTabs = useMemo(
+    () =>
+      AUDIT_SECTIONS.map((item) => ({
+        ...item,
+        label: t(AUDIT_SECTION_LABEL_KEYS[item.value]),
+      })),
+    [t],
+  );
+
   useEffect(() => {
-    const current = AUDIT_SECTIONS.find((candidate) => candidate.value === section);
+    const current = sectionTabs.find((candidate) => candidate.value === section);
     setBreadcrumbs([
-      { label: "Audit", href: section === "activity" ? undefined : "/activity" },
+      { label: t("nav.audit"), href: section === "activity" ? undefined : "/activity" },
       ...(section === "activity" || !current ? [] : [{ label: current.label }]),
     ]);
-  }, [section, setBreadcrumbs]);
+  }, [section, sectionTabs, setBreadcrumbs, t]);
 
   const handleModeChange = useCallback(
     (next: AuditFeedMode) => {
@@ -78,16 +97,15 @@ export function AuditHub({ section }: { section: AuditSection }) {
   );
 
   if (!selectedCompanyId) {
-    return <EmptyState icon={History} message="Select an organization to view Audit." />;
+    return <EmptyState icon={History} message={t("pages.activity.selectOrganizationAudit")} />;
   }
 
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-3xl font-semibold tracking-tight text-foreground">Audit</h1>
+        <h1 className="text-3xl font-semibold tracking-tight text-foreground">{t("nav.audit")}</h1>
         <p className="mt-2 max-w-3xl text-sm leading-6 text-muted-foreground">
-          Review what happened, inspect agent runs, and understand the costs and budget controls
-          behind your organization.
+          {t("pages.activity.hubDescription")}
         </p>
       </div>
 
@@ -98,7 +116,7 @@ export function AuditHub({ section }: { section: AuditSection }) {
           navigate(auditSectionHref(next, scope));
         }}
       >
-        <PageTabBar items={AUDIT_SECTIONS} value={section} align="start" />
+        <PageTabBar items={sectionTabs} value={section} align="start" />
       </Tabs>
 
       {section === "activity" && routineId ? (

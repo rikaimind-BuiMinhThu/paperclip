@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useTranslation } from "@/i18n";
 import {
   AlertCircle,
   AlertTriangle,
@@ -650,6 +651,7 @@ export function getAwsManagedPathPreview(input: {
 }
 
 export function Secrets() {
+  const { t } = useTranslation();
   const queryClient = useQueryClient();
   const { selectedCompanyId } = useCompany();
   const { setBreadcrumbs } = useBreadcrumbs();
@@ -731,8 +733,8 @@ export function Secrets() {
   const [newFolderError, setNewFolderError] = useState<string | null>(null);
 
   useEffect(() => {
-    setBreadcrumbs([{ label: "Secrets" }]);
-  }, [setBreadcrumbs]);
+    setBreadcrumbs([{ label: t("pages.secrets.title") }]);
+  }, [setBreadcrumbs, t]);
 
   const secretsQuery = useQuery({
     queryKey: selectedCompanyId
@@ -1799,7 +1801,9 @@ export function Secrets() {
 
   if (!selectedCompanyId) {
     return (
-      <div className="p-6 text-sm text-muted-foreground">Select an organization to manage secrets.</div>
+      <div className="p-6 text-sm text-muted-foreground">
+        {t("inbox.selectOrganization", { surface: t("settings.secrets") })}
+      </div>
     );
   }
 
@@ -1808,7 +1812,7 @@ export function Secrets() {
     <div className="flex max-w-6xl flex-col gap-4">
       <div className="flex items-center gap-2">
         <KeyRound className="h-5 w-5 text-muted-foreground" />
-        <h1 className="text-lg font-semibold">Secrets</h1>
+        <h1 className="text-lg font-semibold">{t("pages.secrets.title")}</h1>
       </div>
 
       <Tabs
@@ -1818,7 +1822,7 @@ export function Secrets() {
       >
         <PageTabBar
           items={[
-            { value: "secrets", label: "Secrets" },
+            { value: "secrets", label: t("pages.secrets.title") },
             { value: "my-secrets", label: "My secrets" },
             ...(hideVaultsTab ? [] : [{ value: "vaults", label: "Provider vaults" }]),
             ...(hideProposalsTab
@@ -1917,7 +1921,7 @@ export function Secrets() {
               </Button>
             ) : null}
             <Button onClick={openCreateSecret} size="sm">
-              <Plus className="h-3.5 w-3.5 mr-1" /> New secret
+              <Plus className="h-3.5 w-3.5 mr-1" /> {t("pages.secrets.newSecret")}
             </Button>
           </div>
           {newFolderOpen && showFolderView ? (
@@ -1948,7 +1952,7 @@ export function Secrets() {
                 Create folder
               </Button>
               <Button type="button" variant="ghost" size="sm" onClick={closeNewFolder}>
-                Cancel
+                {t("pages.common.cancel")}
               </Button>
             </div>
           ) : null}
@@ -1965,7 +1969,7 @@ export function Secrets() {
                     void userDefinitionsQuery.refetch();
                   }}
                 >
-                  Retry
+                  {t("common.retry")}
                 </Button>
               </div>
             ) : unifiedRows.length === 0 &&
@@ -1974,8 +1978,8 @@ export function Secrets() {
               !(showFolderView && folderPath) ? (
               <EmptyState
                 icon={KeyRound}
-                message="No secrets yet. Create a shared organization secret or one that each user supplies."
-                action="New secret"
+                message={t("pages.secrets.empty")}
+                action={t("pages.secrets.newSecret")}
                 onAction={openCreateSecret}
               />
             ) : (
@@ -2007,8 +2011,8 @@ export function Secrets() {
                   ) : showFolderView && folderPath && activeSecretFilterCount === 0 ? (
                     <EmptyState
                       icon={FolderOpen}
-                      message="No secrets in this folder yet."
-                      action="New secret here"
+                      message={t("pages.secrets.empty")}
+                      action={t("pages.secrets.newSecret")}
                       onAction={openCreateSecret}
                     />
                   ) : (

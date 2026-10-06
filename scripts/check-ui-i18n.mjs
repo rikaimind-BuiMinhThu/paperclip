@@ -33,6 +33,14 @@ const REQUIRED_I18N_FILES = [
   "pages/Dashboard.tsx",
   "pages/apps/Connections.tsx",
   "pages/apps/chat/ChatEndpointSetup.tsx",
+  "pages/Issues.tsx",
+  "pages/Approvals.tsx",
+  "pages/Goals.tsx",
+  "pages/Routines.tsx",
+  "pages/Secrets.tsx",
+  "pages/ProfileSettings.tsx",
+  "pages/apps/Browse.tsx",
+  "pages/NotFound.tsx",
 ];
 
 const FORBIDDEN_LITERALS = [
