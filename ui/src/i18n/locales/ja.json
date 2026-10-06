@@ -632,8 +632,8 @@
     "additionalResults": "件"
   },
   "auth": {
-    "signInTitle": "Paperclipにサインイン",
-    "signUpTitle": "Paperclipアカウントを作成",
+    "signInTitle": "Kujira AI Harnessにサインイン",
+    "signUpTitle": "Kujira AI Harnessアカウントを作成",
     "signInDescription": "メールアドレスとパスワードで、このインスタンスにアクセスします。",
     "signUpDescription": "このインスタンス用のアカウントを作成します。v1ではメール確認は不要です。",
     "name": "名前",
@@ -659,7 +659,7 @@
   },
   "dashboard": {
     "title": "ダッシュボード",
-    "welcome": "Paperclipへようこそ。最初の組織とエージェントを作成して始めましょう。",
+    "welcome": "Kujira AI Harnessへようこそ。最初の組織とエージェントを作成して始めましょう。",
     "getStarted": "始める",
     "selectOrganization": "ダッシュボードを表示するには、組織を作成または選択してください。",
     "agentsEnabled": "有効なエージェント",
@@ -736,7 +736,7 @@
   },
   "locale": {
     "label": "言語",
-    "description": "Paperclipの表示言語を選びます。",
+    "description": "Kujira AI Harnessの表示言語を選びます。",
     "current": "現在の言語",
     "switchToEnglish": "英語に切り替え",
     "switchToJapanese": "日本語に切り替え",

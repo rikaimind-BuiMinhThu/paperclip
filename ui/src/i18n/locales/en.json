@@ -632,8 +632,8 @@
     "additionalResults": "results"
   },
   "auth": {
-    "signInTitle": "Sign in to Paperclip",
-    "signUpTitle": "Create your Paperclip account",
+    "signInTitle": "Sign in to Kujira AI Harness",
+    "signUpTitle": "Create your Kujira AI Harness account",
     "signInDescription": "Use your email and password to access this instance.",
     "signUpDescription": "Create an account for this instance. Email confirmation is not required in v1.",
     "name": "Name",
@@ -659,7 +659,7 @@
   },
   "dashboard": {
     "title": "Dashboard",
-    "welcome": "Welcome to Paperclip. Set up your first organization and agent to get started.",
+    "welcome": "Welcome to Kujira AI Harness. Set up your first organization and agent to get started.",
     "getStarted": "Get Started",
     "selectOrganization": "Create or select an organization to view the dashboard.",
     "agentsEnabled": "Agents Enabled",
@@ -736,7 +736,7 @@
   },
   "locale": {
     "label": "Language",
-    "description": "Choose the language for the Paperclip interface.",
+    "description": "Choose the language for the Kujira AI Harness interface.",
     "current": "Current language",
     "switchToEnglish": "Switch to English",
     "switchToJapanese": "Switch to Japanese",

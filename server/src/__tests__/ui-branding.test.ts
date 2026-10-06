@@ -13,7 +13,6 @@ const TEMPLATE = `<!doctype html>
     <!-- PAPERCLIP_RUNTIME_BRANDING_END -->
     <!-- PAPERCLIP_FAVICON_START -->
     <link rel="icon" href="/favicon.ico" sizes="48x48" />
-    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
     <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
     <!-- PAPERCLIP_FAVICON_END -->
@@ -97,10 +96,10 @@ describe("ui branding", () => {
     });
     expect(branded).toContain("data:image/svg+xml,");
     expect(branded).toContain('name="paperclip-worktree-name"');
-    expect(branded).not.toContain('href="/favicon.svg"');
+    expect(branded).not.toContain('href="/favicon-32x32.png"');
 
     const defaultHtml = applyUiBranding(TEMPLATE, {});
-    expect(defaultHtml).toContain('href="/favicon.svg"');
+    expect(defaultHtml).toContain('href="/favicon-32x32.png"');
     expect(defaultHtml).not.toContain('name="paperclip-worktree-name"');
   });
 });

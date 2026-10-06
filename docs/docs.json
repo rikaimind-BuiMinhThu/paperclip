@@ -1,6 +1,6 @@
 {
   "$schema": "https://mintlify.com/docs.json",
-  "name": "Paperclip",
+  "name": "Kujira AI Harness",
   "description": "The control plane for autonomous AI companies",
   "theme": "mint",
   "colors": {
@@ -8,10 +8,10 @@
     "light": "#3B82F6",
     "dark": "#1D4ED8"
   },
-  "favicon": "/favicon.svg",
+  "favicon": "/favicon.png",
   "logo": {
-    "dark": "/images/logo-dark.svg",
-    "light": "/images/logo-light.svg"
+    "dark": "/images/logo-dark.jpg",
+    "light": "/images/logo-light.jpg"
   },
   "topbarLinks": [
     {

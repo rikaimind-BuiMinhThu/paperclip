@@ -11,6 +11,8 @@ describe("PaperclipLoading", () => {
     expect(html).toContain('role="status"');
     expect(html).toContain("min-h-dvh");
     expect(html).toContain('aria-hidden="true"');
+    expect(html).toContain('src="/brands/kujira-loading.png"');
+    expect(html).toContain("kujira-loading-mark");
     expect(html).toContain('<span class="sr-only">Loading…</span>');
   });
 

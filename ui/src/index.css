@@ -100,7 +100,7 @@
   --native-select-caret-stroke: 1.5px;
   --native-select-end-padding: calc(var(--spacing) * 9);
   --radius: 0.5rem;
-  /* RIKAI light brand (rikai.technology): primary #008FD5 */
+  /* RIKAI light brand: #008FD5 primary, #e6f2fa tint, #1a1a1a / #333 text */
   --background: oklch(1 0 0);
   --foreground: oklch(0.218 0 0);
   --card: oklch(1 0 0);
@@ -111,8 +111,8 @@
   --primary-foreground: oklch(0.985 0 0);
   --secondary: oklch(0.955 0.017 236.7);
   --secondary-foreground: oklch(0.218 0 0);
-  --muted: oklch(0.982 0.002 247.8);
-  --muted-foreground: oklch(0.45 0.02 241);
+  --muted: oklch(0.975 0.012 236.7);
+  --muted-foreground: oklch(0.321 0.012 241);
   --accent: oklch(0.955 0.017 236.7);
   --accent-foreground: oklch(0.35 0.08 241);
   --destructive: oklch(0.577 0.245 27.325);
@@ -126,7 +126,7 @@
   --scrollbar-radius: 999px;
   --chart-1: oklch(0.621 0.145 241.1);
   --chart-2: oklch(0.816 0.145 216.5);
-  --chart-3: oklch(0.556 0.08 241);
+  --chart-3: oklch(0.833 0.097 235);
   --chart-4: oklch(0.45 0.06 241);
   --chart-5: oklch(0.35 0.05 241);
   --sidebar: oklch(0.985 0.005 236);
@@ -401,44 +401,45 @@
 }
 
 .dark {
-  --background: oklch(0.205 0 0);
+  /* RIKAI dark: navy #0f1a24 surfaces, cyan #00D9FF CTAs */
+  --background: oklch(0.212 0.025 246.7);
   --foreground: oklch(0.985 0 0);
   --side-panel-bg: var(--background);
   --side-panel-fg: oklch(0.985 0 0);
   --streamlined-task-detail-bg: var(--background);
-  --card: oklch(0.205 0 0);
+  --card: oklch(0.212 0.025 246.7);
   --card-foreground: oklch(0.985 0 0);
-  --popover: oklch(0.205 0 0);
+  --popover: oklch(0.212 0.025 246.7);
   --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.922 0 0);
-  --primary-foreground: oklch(0.205 0 0);
-  --bubble-agent: oklch(0.185 0 0);
-  --secondary: oklch(0.269 0 0);
+  --primary: oklch(0.816 0.145 216.5);
+  --primary-foreground: oklch(0.212 0.025 246.7);
+  --bubble-agent: oklch(0.185 0.028 246.7);
+  --secondary: oklch(0.28 0.03 241);
   --secondary-foreground: oklch(0.985 0 0);
-  --muted: oklch(0.269 0 0);
-  --muted-foreground: oklch(0.708 0 0);
-  --accent: oklch(0.269 0 0);
+  --muted: oklch(0.28 0.03 241);
+  --muted-foreground: oklch(0.72 0.03 241);
+  --accent: oklch(0.28 0.03 241);
   --accent-foreground: oklch(0.985 0 0);
   --destructive: oklch(0.637 0.237 25.331); /* Gallery feedback round 1: user preferred master's original dark destructive red over the preset's softer 0.704 0.191 22.216. */
   --destructive-foreground: oklch(0.985 0 0);
-  --border: oklch(1 0 0 / 10%);
-  --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.556 0 0);
-  --scrollbar-thumb: oklch(0.4 0 0);
-  --scrollbar-thumb-hover: oklch(0.5 0 0);
-  --chart-1: oklch(0.87 0 0);
-  --chart-2: oklch(0.556 0 0);
-  --chart-3: oklch(0.439 0 0);
-  --chart-4: oklch(0.371 0 0);
-  --chart-5: oklch(0.269 0 0);
-  --sidebar: oklch(0.205 0 0);
+  --border: oklch(0.85 0.03 241 / 18%);
+  --input: oklch(0.85 0.03 241 / 22%);
+  --ring: oklch(0.816 0.145 216.5);
+  --scrollbar-thumb: oklch(0.45 0.04 241);
+  --scrollbar-thumb-hover: oklch(0.55 0.06 241);
+  --chart-1: oklch(0.816 0.145 216.5);
+  --chart-2: oklch(0.833 0.097 235);
+  --chart-3: oklch(0.621 0.145 241.1);
+  --chart-4: oklch(0.5 0.08 241);
+  --chart-5: oklch(0.38 0.05 241);
+  --sidebar: oklch(0.212 0.025 246.7);
   --sidebar-foreground: oklch(0.985 0 0);
-  --sidebar-primary: oklch(0.488 0.243 264.376);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.32 0 0);
+  --sidebar-primary: oklch(0.816 0.145 216.5);
+  --sidebar-primary-foreground: oklch(0.212 0.025 246.7);
+  --sidebar-accent: oklch(0.28 0.03 241);
   --sidebar-accent-foreground: oklch(0.985 0 0);
-  --sidebar-border: oklch(1 0 0 / 10%);
-  --sidebar-ring: oklch(0.556 0 0);
+  --sidebar-border: oklch(0.85 0.03 241 / 18%);
+  --sidebar-ring: oklch(0.816 0.145 216.5);
   --chip-match-title-bg: oklch(0.27 0.04 265 / 0.5);
   --chip-match-title-fg: oklch(0.78 0.10 265);
   --chip-match-title-border: oklch(0.4 0.06 265);
@@ -1516,6 +1517,21 @@ select:where(:not([multiple]):not(.appearance-none)):where(:not([size]), [size="
   animation: paperclip-thinking-draw 1s linear infinite;
 }
 
+/* Kujira full-page loading mark: soft opacity fade. */
+@keyframes kujira-loading-fade {
+  0%,
+  100% {
+    opacity: 0.4;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+.kujira-loading-mark {
+  animation: kujira-loading-fade 2.5s ease-in-out infinite;
+}
+
 /* Muted variant (task-chat v7 activity rows): the sweep runs over the
    muted-foreground tier so live "Thinking…"/"Working…" labels stay subordinate
    to real content. */
@@ -1574,6 +1590,11 @@ select:where(:not([multiple]):not(.appearance-none)):where(:not([size]), [size="
     opacity: 1;
     stroke-dasharray: 85.717 85.717;
     stroke-dashoffset: 0;
+  }
+
+  .kujira-loading-mark {
+    animation: none;
+    opacity: 1;
   }
 }
 
