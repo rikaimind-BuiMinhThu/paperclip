@@ -96,7 +96,13 @@ interface MarkdownEditorProps {
   mentions?: MentionOption[];
   /** Capability-aware action commands supplied by the owning composer. */
   actionCommands?: SlashCommandOption[];
-  /** Called on Cmd/Ctrl+Enter */
+  /**
+   * Send-key behavior when `onSubmit` is set.
+   * - `"mod-enter"` (default): Cmd/Ctrl+Enter submits; Enter inserts a newline.
+   * - `"enter"`: Enter submits; Shift+Enter inserts a newline. Cmd/Ctrl+Enter also submits.
+   */
+  submitKey?: "enter" | "mod-enter";
+  /** Called when the submit key chord fires. */
   onSubmit?: () => void;
   /** Render the rich editor without allowing edits. */
   readOnly?: boolean;
@@ -715,9 +721,19 @@ export const MarkdownEditor = forwardRef<MarkdownEditorRef, MarkdownEditorProps>
   bordered = true,
   mentions,
   actionCommands = [],
+  submitKey = "mod-enter",
   onSubmit,
   readOnly = false,
 }: MarkdownEditorProps, forwardedRef) {
+  const wantsSubmitKey = useCallback(
+    (event: { key: string; metaKey: boolean; ctrlKey: boolean; shiftKey: boolean }) => {
+      if (!onSubmit || event.key !== "Enter") return false;
+      if (event.metaKey || event.ctrlKey) return true;
+      if (submitKey === "enter" && !event.shiftKey) return true;
+      return false;
+    },
+    [onSubmit, submitKey],
+  );
   const editorValue = useMemo(() => prepareMarkdownForEditor(value), [value]);
   const { slashCommands: sharedSlashCommands } = useEditorAutocomplete();
   const slashCommands = useMemo(
@@ -1343,9 +1359,9 @@ export const MarkdownEditor = forwardRef<MarkdownEditorRef, MarkdownEditorProps>
           }}
           onBlur={() => onBlur?.()}
           onKeyDown={(event) => {
-            if (onSubmit && event.key === "Enter" && (event.metaKey || event.ctrlKey)) {
+            if (wantsSubmitKey(event)) {
               event.preventDefault();
-              onSubmit();
+              onSubmit?.();
             }
           }}
           className={cn(
@@ -1368,15 +1384,8 @@ export const MarkdownEditor = forwardRef<MarkdownEditorRef, MarkdownEditorProps>
       )}
       onKeyDownCapture={(e) => {
         if (readOnly) return;
-        // Cmd/Ctrl+Enter to submit
-        if (onSubmit && e.key === "Enter" && (e.metaKey || e.ctrlKey)) {
-          e.preventDefault();
-          e.stopPropagation();
-          onSubmit();
-          return;
-        }
 
-        // Mention keyboard handling
+        // Mention keyboard handling first so Enter accepts autocomplete before submit.
         if (mentionActive) {
           if (e.key === " " && mentionStateRef.current?.trigger === "skill") {
             mentionStateRef.current = null;
@@ -1422,6 +1431,12 @@ export const MarkdownEditor = forwardRef<MarkdownEditorRef, MarkdownEditorProps>
               return;
             }
           }
+        }
+
+        if (wantsSubmitKey(e)) {
+          e.preventDefault();
+          e.stopPropagation();
+          onSubmit?.();
         }
       }}
       onDragEnter={(evt) => {

@@ -349,8 +349,8 @@ function escapeMarkdownLabel(name: string): string {
  * (rich lists, @-mentions, /-commands, inline pasted images) over a 32px
  * comp-bar of [add] [optional mode chip] … [assignee] [send]. The add menu
  * offers files, supported goals, Plan, and Ask. Cmd/Ctrl+. and Shift+Tab cycle modes (captured before
- * Lexical); Cmd/Ctrl+Enter posts via the editor's native onSubmit; plain Enter
- * stays a newline / next list item. Pasted or dropped images upload through
+ * Lexical); Enter posts via the editor's onSubmit (Shift+Enter inserts a
+ * newline). Pasted or dropped images upload through
  * `onAttachImage` (or the `onImageUpload` fallback) and land inline at the
  * caret via the editor's image plugin; non-image files render as shadcn
  * base/attachment chips (kind icon · name · size, remove ×, uploading/error
@@ -1283,6 +1283,7 @@ export function TaskChatComposer({
                 disabled,
               }] : [goalCommandOption]}
               onSubmit={() => void submit()}
+              submitKey="enter"
               imageUploadHandler={
                 canAcceptFiles ? uploadInlineImage : undefined
               }
@@ -1510,7 +1511,7 @@ export function TaskChatComposer({
                       ? "Waiting for upload to finish"
                       : uploadFailed
                         ? "Remove the failed attachment to send"
-                        : "Send (⌘+Enter)"
+                        : "Send (Enter)"
               }
               aria-label={
                 showStop

@@ -821,7 +821,7 @@ describe("TaskChatComposer", () => {
     expect(editable().dataset.contentClassName).toContain("max-h-(--sz-28dvh)");
   });
 
-  it("submits the trimmed body on Cmd+Enter and clears the draft", async () => {
+  it("submits the trimmed body on Enter and clears the draft", async () => {
     const onAdd = vi.fn().mockResolvedValue(undefined);
     render(<TaskChatComposer onAdd={onAdd} workMode="standard" />);
 
@@ -829,7 +829,7 @@ describe("TaskChatComposer", () => {
     typeText("  hello there  ");
     expect(sendButton().disabled).toBe(false);
 
-    pressKey("Enter", { metaKey: true });
+    pressKey("Enter");
     await flushAsync();
     await flushAsync();
 
@@ -837,23 +837,27 @@ describe("TaskChatComposer", () => {
     expect(editable().textContent).toBe("");
   });
 
-  it("submits on Ctrl+Enter", async () => {
+  it("submits on Cmd+Enter and Ctrl+Enter as secondary chords", async () => {
     const onAdd = vi.fn().mockResolvedValue(undefined);
     render(<TaskChatComposer onAdd={onAdd} workMode="standard" />);
 
     typeText("hello");
+    pressKey("Enter", { metaKey: true });
+    await flushAsync();
+    expect(onAdd).toHaveBeenCalledWith("hello", undefined, undefined, undefined, expect.any(String));
+
+    onAdd.mockClear();
+    typeText("again");
     pressKey("Enter", { ctrlKey: true });
     await flushAsync();
-
-    expect(onAdd).toHaveBeenCalledWith("hello", undefined, undefined, undefined, expect.any(String));
+    expect(onAdd).toHaveBeenCalledWith("again", undefined, undefined, undefined, expect.any(String));
   });
 
-  it("does not submit on plain Enter or Shift+Enter (newline stays with the editor)", async () => {
+  it("does not submit on Shift+Enter (newline stays with the editor)", async () => {
     const onAdd = vi.fn().mockResolvedValue(undefined);
     render(<TaskChatComposer onAdd={onAdd} workMode="standard" />);
 
     typeText("line one");
-    pressKey("Enter");
     pressKey("Enter", { shiftKey: true });
     await flushAsync();
 
