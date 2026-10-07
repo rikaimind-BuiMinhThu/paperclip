@@ -24417,9 +24417,7 @@ export function heartbeatService(
           issueRef?.workMode === "skill_test"
             ? { kind: "skill_test" as const, issueId: issueRef.id }
             : { kind: "standard" as const };
-        const authToken =
-          nativeRuntimeResolution.kind === "legacy" &&
-          adapter.supportsLocalAgentJwt
+        const authToken = adapter.supportsLocalAgentJwt
             ? createLocalAgentJwt(
                 agent.id,
                 agent.companyId,
@@ -24429,20 +24427,8 @@ export function heartbeatService(
                 localAgentJwtScope,
               )
             : null;
-        if (
-          nativeRuntimeResolution.kind === "legacy" &&
-          adapter.supportsLocalAgentJwt &&
-          !authToken
-        ) {
-          logger.warn(
-            {
-              companyId: agent.companyId,
-              agentId: agent.id,
-              runId: run.id,
-              adapterType: agent.adapterType,
-            },
-            "local agent jwt secret missing or invalid; running without injected PAPERCLIP_API_KEY",
-          );
+        if (adapter.supportsLocalAgentJwt && !authToken) {
+          throw new Error("local_agent_jwt_unavailable");
         }
         let adapterFinalizeOutcome: "succeeded" | "failed" | null = null;
         const inspectFinalizeWorkspaceBranch = async () => {
@@ -24819,6 +24805,18 @@ export function heartbeatService(
                         executionWorkspace.cwd,
                       ),
                       ...(instructionCopy && isAgentDirectoryCopy(instructionCopy) ? { AGENT_HOME: instructionCopy.executionRoot } : {}),
+                      ...(authToken
+                        ? {
+                            PAPERCLIP_API_KEY: authToken,
+                            PAPERCLIP_AGENT_ID: agent.id,
+                            PAPERCLIP_COMPANY_ID: agent.companyId,
+                            PAPERCLIP_RUN_ID: run.id,
+                            ...(issueRef ? { PAPERCLIP_TASK_ID: issueRef.id } : {}),
+                            ...(configuredPaperclipApiBaseUrl()
+                              ? { PAPERCLIP_API_URL: paperclipApiBaseUrl() }
+                              : {}),
+                          }
+                        : {}),
                       ...(nativeMcpServer
                         ? {
                             PAPERCLIP_NATIVE_MCP_NAME: nativeMcpServer.name,
