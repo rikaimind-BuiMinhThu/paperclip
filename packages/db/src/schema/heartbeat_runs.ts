@@ -16,6 +16,8 @@ import {
 import { companies } from "./companies.js";
 import { agents } from "./agents.js";
 import { agentWakeupRequests } from "./agent_wakeup_requests.js";
+import { apiApps } from "./api_apps.js";
+import { apiAppCustomers } from "./api_app_customers.js";
 
 export const heartbeatRuns = pgTable(
   "heartbeat_runs",
@@ -29,6 +31,10 @@ export const heartbeatRuns = pgTable(
     responsibleUserId: text("responsible_user_id"),
     // The service validates the company/run boundary; avoid a cyclic schema import.
     activeIdentityContextId: uuid("active_identity_context_id"),
+    apiAppId: uuid("api_app_id").references(() => apiApps.id, { onDelete: "set null" }),
+    apiAppCustomerId: uuid("api_app_customer_id").references(() => apiAppCustomers.id, {
+      onDelete: "set null",
+    }),
     startedAt: timestamp("started_at", { withTimezone: true }),
     finishedAt: timestamp("finished_at", { withTimezone: true }),
     // Set only after provider execution settles; never a timeout on thinking.

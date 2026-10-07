@@ -2516,6 +2516,33 @@ export {
   type ListPluginState,
 } from "./validators/index.js";
 
+export {
+  apiAppStatusSchema,
+  billingUnitAggregationSchema,
+  createApiAppSchema,
+  updateApiAppSchema,
+  createApiAppCustomerSchema,
+  updateApiAppCustomerSchema,
+  createApiAppCustomerKeySchema,
+  createBillingUnitDefSchema,
+  updateBillingUnitDefSchema,
+  customerUnitPriceRowSchema,
+  putCustomerUnitPricesSchema,
+  recordBillingUnitMeterSchema,
+  type ApiAppStatus,
+  type BillingUnitAggregation,
+  type CreateApiApp,
+  type UpdateApiApp,
+  type CreateApiAppCustomer,
+  type UpdateApiAppCustomer,
+  type CreateApiAppCustomerKey,
+  type CreateBillingUnitDef,
+  type UpdateBillingUnitDef,
+  type CustomerUnitPriceRow,
+  type PutCustomerUnitPrices,
+  type RecordBillingUnitMeter,
+} from "./validators/api-apps.js";
+
 export { API_PREFIX, API } from "./api.js";
 export { normalizeAgentUrlKey, deriveAgentUrlKey, isUuidLike } from "./agent-url-key.js";
 export { deriveProjectUrlKey, normalizeProjectUrlKey, hasNonAsciiContent } from "./project-url-key.js";

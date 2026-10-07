@@ -1822,6 +1822,7 @@ export interface IssueFilters {
   originKind?: string;
   originKindPrefix?: string;
   originId?: string;
+  apiAppCustomerId?: string;
   includeRoutineExecutions?: boolean;
   excludeRoutineExecutions?: boolean;
   includePluginOperations?: boolean;
@@ -8030,6 +8031,9 @@ export function issueService(db: Db) {
       }
       if (filters?.parentId)
         conditions.push(eq(issues.parentId, filters.parentId));
+      if (filters?.apiAppCustomerId) {
+        conditions.push(eq(issues.apiAppCustomerId, filters.apiAppCustomerId));
+      }
       if (filters?.originKind)
         conditions.push(eq(issues.originKind, filters.originKind));
       if (filters?.originKindPrefix)

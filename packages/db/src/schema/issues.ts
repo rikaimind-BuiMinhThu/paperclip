@@ -21,6 +21,8 @@ import { companies } from "./companies.js";
 import { heartbeatRuns } from "./heartbeat_runs.js";
 import { projectWorkspaces } from "./project_workspaces.js";
 import { executionWorkspaces } from "./execution_workspaces.js";
+import { apiApps } from "./api_apps.js";
+import { apiAppCustomers } from "./api_app_customers.js";
 import type { IssueReviewPolicy, IssueUnblockDescriptor, SourceTrustMetadata } from "@paperclipai/shared";
 
 export const issues = pgTable(
@@ -67,6 +69,10 @@ export const issues = pgTable(
     originFingerprint: text("origin_fingerprint").notNull().default("default"),
     requestDepth: integer("request_depth").notNull().default(0),
     billingCode: text("billing_code"),
+    apiAppId: uuid("api_app_id").references(() => apiApps.id, { onDelete: "set null" }),
+    apiAppCustomerId: uuid("api_app_customer_id").references(() => apiAppCustomers.id, {
+      onDelete: "set null",
+    }),
     assigneeAdapterOverrides: jsonb("assignee_adapter_overrides").$type<Record<string, unknown>>(),
     executionPolicy: jsonb("execution_policy").$type<Record<string, unknown>>(),
     executionState: jsonb("execution_state").$type<Record<string, unknown>>(),
@@ -124,6 +130,10 @@ export const issues = pgTable(
     dueMonitorIdx: index("issues_company_monitor_due_idx").on(table.companyId, table.monitorNextCheckAt),
     companyUpdatedIdx: index("issues_company_updated_idx").on(table.companyId, table.updatedAt),
     companyCreatedIdx: index("issues_company_created_idx").on(table.companyId, table.createdAt),
+    companyApiAppCustomerIdx: index("issues_company_api_app_customer_idx").on(
+      table.companyId,
+      table.apiAppCustomerId,
+    ),
     openNormalizedTitleCreatedIdx: index("issues_open_normalized_title_created_idx")
       .on(
         table.companyId,

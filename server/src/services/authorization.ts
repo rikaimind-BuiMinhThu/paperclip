@@ -42,7 +42,7 @@ import { grantsForHumanRole, normalizeHumanRole } from "./company-member-roles.j
 
 export type AuthorizationActor =
   {
-    type: "board" | "agent" | "none";
+    type: "board" | "agent" | "api_customer" | "none";
     userId?: string | null;
     sessionId?: string | null;
     companyIds?: string[];
@@ -52,6 +52,8 @@ export type AuthorizationActor =
     ignoreInstanceAdmin?: boolean;
     agentId?: string | null;
     companyId?: string | null;
+    apiAppId?: string | null;
+    apiAppCustomerId?: string | null;
     keyId?: string | null;
     keyScope?: AgentApiKeyScope | null;
     runId?: string | null;
@@ -62,6 +64,7 @@ export type AuthorizationActor =
       | "board_key"
       | "agent_key"
       | "agent_jwt"
+      | "api_app_customer_key"
       | "cloud_tenant"
       | "cloud_control"
       | "none";
@@ -99,6 +102,7 @@ export type AuthorizationResource =
       parentIssueId?: string | null;
       assigneeAgentId?: string | null;
       assigneeUserId?: string | null;
+      apiAppCustomerId?: string | null;
       originKind?: string | null;
       originId?: string | null;
       status?: string | null;
@@ -1679,6 +1683,47 @@ export function authorizationService(db: Db | DbTransaction) {
         action: input.action,
         reason: "deny_unauthenticated",
         explanation: "Authentication required.",
+      });
+    }
+
+    if (input.actor.type === "api_customer") {
+      if (input.actor.companyId !== companyId) {
+        return deny({
+          action: input.action,
+          reason: "deny_company_boundary",
+          explanation: "API customer key cannot access another company.",
+        });
+      }
+      if (
+        input.action === "issue:read" ||
+        input.action === "issue:comment" ||
+        input.action === "issue:mutate" ||
+        input.action === "agent:wake" ||
+        input.action === "agent:read" ||
+        input.action === "project:read"
+      ) {
+        if (
+          input.resource.type === "issue" &&
+          input.actor.apiAppCustomerId &&
+          input.resource.issueId &&
+          input.resource.apiAppCustomerId !== input.actor.apiAppCustomerId
+        ) {
+          return deny({
+            action: input.action,
+            reason: "deny_scope",
+            explanation: "API customers can only access their own tasks.",
+          });
+        }
+        return allow({
+          action: input.action,
+          reason: "allow_company_agent",
+          explanation: "Allowed for API customer control-plane access in this company.",
+        });
+      }
+      return deny({
+        action: input.action,
+        reason: "deny_missing_grant",
+        explanation: "API customer keys cannot perform this action.",
       });
     }
 

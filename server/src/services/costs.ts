@@ -65,11 +65,40 @@ export function costService(db: Db, budgetHooks: BudgetServiceHooks = {}) {
         throw unprocessable("Agent does not belong to company");
       }
 
+      let apiAppId = data.apiAppId ?? null;
+      let apiAppCustomerId = data.apiAppCustomerId ?? null;
+      if ((!apiAppId || !apiAppCustomerId) && data.issueId) {
+        const issue = await db
+          .select({
+            apiAppId: issues.apiAppId,
+            apiAppCustomerId: issues.apiAppCustomerId,
+          })
+          .from(issues)
+          .where(eq(issues.id, data.issueId))
+          .then((rows) => rows[0] ?? null);
+        apiAppId = apiAppId ?? issue?.apiAppId ?? null;
+        apiAppCustomerId = apiAppCustomerId ?? issue?.apiAppCustomerId ?? null;
+      }
+      if ((!apiAppId || !apiAppCustomerId) && data.heartbeatRunId) {
+        const run = await db
+          .select({
+            apiAppId: heartbeatRuns.apiAppId,
+            apiAppCustomerId: heartbeatRuns.apiAppCustomerId,
+          })
+          .from(heartbeatRuns)
+          .where(eq(heartbeatRuns.id, data.heartbeatRunId))
+          .then((rows) => rows[0] ?? null);
+        apiAppId = apiAppId ?? run?.apiAppId ?? null;
+        apiAppCustomerId = apiAppCustomerId ?? run?.apiAppCustomerId ?? null;
+      }
+
       const event = await db
         .insert(costEvents)
         .values({
           ...data,
           companyId,
+          apiAppId,
+          apiAppCustomerId,
           biller: data.biller ?? data.provider,
           billingType: data.billingType ?? "unknown",
           cachedInputTokens: data.cachedInputTokens ?? 0,

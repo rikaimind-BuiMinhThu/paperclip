@@ -27,6 +27,7 @@ import type { BetterAuthSessionResult } from "../auth/better-auth.js";
 import { logger } from "./logger.js";
 import { captureRunIdentity } from "../services/run-identity.js";
 import { boardAuthService } from "../services/board-auth.js";
+import { apiAppsService } from "../services/api-apps.js";
 import { retryIdempotentDatabaseOperation } from "../database-retry.js";
 
 export {
@@ -342,6 +343,51 @@ export function actorMiddleware(db: Db, opts: ActorMiddlewareOptions): RequestHa
         next();
         return;
       }
+    }
+
+    if (token.startsWith("pcp_cust_")) {
+      const apiApps = apiAppsService(db);
+      const matched = await apiApps.findCustomerKeyByToken(token);
+      if (!matched) {
+        next(unauthorized("Invalid or revoked API customer key"));
+        return;
+      }
+      if (matched.app.status !== "active") {
+        next(forbidden("API app is inactive"));
+        return;
+      }
+      if (matched.customer.status !== "active") {
+        next(forbidden("API app customer is inactive"));
+        return;
+      }
+      const responsibleUserId = matched.app.responsibleUserId?.trim() || null;
+      if (!responsibleUserId) {
+        next(
+          forbidden("API app responsible user is unavailable", {
+            code: "RESPONSIBLE_USER_UNAVAILABLE",
+          }),
+        );
+        return;
+      }
+      await apiApps.touchKeyLastUsed(matched.key.id);
+      req.actor = {
+        type: "api_customer",
+        userId: responsibleUserId,
+        apiAppId: matched.app.id,
+        apiAppCustomerId: matched.customer.id,
+        planId: matched.customer.planId,
+        companyId: matched.customer.companyId,
+        keyId: matched.key.id,
+        onBehalfOfUserId: responsibleUserId,
+        onBehalfOfMemberships: await loadResponsibleUserMemberships(db, {
+          companyId: matched.customer.companyId,
+          userId: responsibleUserId,
+        }),
+        runId: runIdHeader || undefined,
+        source: "api_app_customer_key",
+      };
+      next();
+      return;
     }
 
     const tokenHash = hashToken(token);

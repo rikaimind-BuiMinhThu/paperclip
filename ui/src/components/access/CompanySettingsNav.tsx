@@ -12,6 +12,7 @@ const items = [
   { value: "import", label: "Import", href: "/company/import" },
   { value: "members", label: "Members", href: "/company/settings/members" },
   { value: "secrets", label: "Secrets", href: "/company/settings/secrets" },
+  { value: "api-apps", label: "API Apps", href: "/company/settings/api-apps" },
   { value: "instance-profile", label: "Profile", href: `${INSTANCE_SETTINGS_PATH_PREFIX}/profile` },
   { value: "instance-environments", label: "Environments", href: `${INSTANCE_SETTINGS_PATH_PREFIX}/environments` },
   { value: "instance-access", label: "Access", href: `${INSTANCE_SETTINGS_PATH_PREFIX}/access` },
@@ -28,6 +29,7 @@ const settingsLabelKeyByTab: Record<CompanySettingsTab, string> = {
   import: "settings.import",
   members: "settings.members",
   secrets: "settings.secrets",
+  "api-apps": "settings.apiApps",
   "instance-profile": "settings.profile",
   "instance-environments": "settings.environments",
   "instance-access": "settings.access",
@@ -42,6 +44,7 @@ const hiddenSettingKeyByTab: Partial<Record<CompanySettingsTab, string>> = {
   import: "company.import",
   members: "company.members",
   secrets: "company.secrets",
+  "api-apps": "company.apiApps",
   "instance-profile": "instance.profile",
   "instance-environments": "instance.environments",
   "instance-access": "instance.access",
@@ -102,6 +105,10 @@ export function getCompanySettingsTab(pathname: string): CompanySettingsTab {
 
   if (pathname.includes("/company/settings/secrets")) {
     return "secrets";
+  }
+
+  if (pathname.includes("/company/settings/api-apps")) {
+    return "api-apps";
   }
 
   return "general";

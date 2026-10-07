@@ -256,6 +256,7 @@ import { retainBacklogHumanAssignment } from "../services/human-directed-work.js
 import { queueIssueAssignmentWakeup } from "../services/issue-assignment-wakeup.js";
 import { shouldWakeAssigneeForIssueComment } from "../services/issue-comment-wakeup.js";
 import { createSecretProposalsService } from "../services/secret-proposals.js";
+import { apiAppsService } from "../services/api-apps.js";
 import { notifySecretProposalResolution } from "../services/secret-proposal-notifications.js";
 import {
   renderOnboardingGreeting,
@@ -3520,6 +3521,7 @@ export function issueRoutes(
 ) {
   const router = Router();
   const svc = issueService(db);
+  const apiAppsSvc = apiAppsService(db);
   const runRedactions = createRunSecretRedactionRegistry(db);
   const access = accessService(db);
   const secretProposals = createSecretProposalsService(db);
@@ -4962,6 +4964,7 @@ export function issueRoutes(
       assigneeAgentId: string | null;
       assigneeUserId: string | null;
       status: string;
+      apiAppCustomerId?: string | null;
     },
     action: "issue:comment" | "issue:read" | "issue:mutate",
   ) {
@@ -4976,6 +4979,7 @@ export function issueRoutes(
         parentIssueId: issue.parentId,
         assigneeAgentId: issue.assigneeAgentId,
         assigneeUserId: issue.assigneeUserId,
+        apiAppCustomerId: issue.apiAppCustomerId ?? null,
         status: issue.status,
       },
       scope: {
@@ -8090,6 +8094,9 @@ export function issueRoutes(
       afterId: req.query.afterId as string | undefined,
       sortDir: sortDir === "asc" || sortDir === "desc" ? sortDir : undefined,
       updatedSince: rawUpdatedSince,
+      ...(req.actor.type === "api_customer" && req.actor.apiAppCustomerId
+        ? { apiAppCustomerId: req.actor.apiAppCustomerId }
+        : {}),
     };
     const requestKey = issueListRequestKey({
       req,
@@ -11601,6 +11608,12 @@ export function issueRoutes(
     async (req, res) => {
       const companyId = req.params.companyId as string;
       assertCompanyAccess(req, companyId);
+      if (req.actor.type === "api_customer") {
+        await apiAppsSvc.assertCustomerNotBlocked(
+          companyId,
+          req.actor.apiAppCustomerId!,
+        );
+      }
       if (isSkillTestScopedActor(req)) {
         res.status(403).json({
           error: "Skill-test run tokens cannot create issues.",
@@ -11697,10 +11710,23 @@ export function issueRoutes(
         ))
       )
         return;
+      let assigneeAgentIdForCreate =
+        rawCreateBody.assigneeAgentId as string | null | undefined;
+      if (
+        req.actor.type === "api_customer" &&
+        (assigneeAgentIdForCreate == null || assigneeAgentIdForCreate === "")
+      ) {
+        const customer = await apiAppsSvc.getCustomer(req.actor.apiAppCustomerId!);
+        const app = customer
+          ? await apiAppsSvc.getApp(customer.apiAppId)
+          : null;
+        assigneeAgentIdForCreate =
+          customer?.defaultAgentId ?? app?.defaultAgentId ?? null;
+      }
       const normalizedAssigneeAgentId =
         await normalizeIssueAssigneeAgentReference(
           companyId,
-          rawCreateBody.assigneeAgentId as string | null | undefined,
+          assigneeAgentIdForCreate,
           { actorType: req.actor.type },
         );
       await assertNoAgentDelegationCycle({
@@ -11846,6 +11872,12 @@ export function issueRoutes(
         originIdentityContextId: req.actor.identityContextId ?? null,
         executionPolicy,
         ...(sourceTrust ? { sourceTrust } : {}),
+        ...(req.actor.type === "api_customer"
+          ? {
+              apiAppId: req.actor.apiAppId ?? null,
+              apiAppCustomerId: req.actor.apiAppCustomerId ?? null,
+            }
+          : {}),
         createdByAgentId: actor.agentId,
         createdByUserId: actor.actorType === "user" ? actor.actorId : null,
         actorRunId: actor.runId,

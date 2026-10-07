@@ -97,6 +97,9 @@ import { AdapterManager } from "./pages/AdapterManager";
 import { PluginPage } from "./pages/PluginPage";
 import { NewAgent } from "./pages/NewAgent";
 import { AuthPage } from "./pages/Auth";
+import { ApiAppsList } from "./pages/ApiAppsList";
+import { ApiAppDetail } from "./pages/ApiAppDetail";
+import { ApiAppCustomerDetail } from "./pages/ApiAppCustomerDetail";
 import { BoardClaimPage } from "./pages/BoardClaim";
 import { CliAuthPage } from "./pages/CliAuth";
 import { InviteLandingPage } from "./pages/InviteLanding";
@@ -193,6 +196,14 @@ function boardRoutes(streamlinedUiEnabled: boolean, combinedInboxTasksEnabled: b
       </Route>
       <Route element={<HiddenSettingsPageGate pageKey="company.secrets" />}>
         <Route path="company/settings/secrets" element={<Secrets />} />
+      </Route>
+      <Route element={<HiddenSettingsPageGate pageKey="company.apiApps" />}>
+        <Route path="company/settings/api-apps" element={<ApiAppsList />} />
+        <Route path="company/settings/api-apps/:appId" element={<ApiAppDetail />} />
+        <Route
+          path="company/settings/api-apps/:appId/customers/:customerId"
+          element={<ApiAppCustomerDetail />}
+        />
       </Route>
       <Route path="company/settings/tools" element={<LegacyToolsSettingsRedirect />} />
       <Route path="company/settings/tools/:tab" element={<LegacyToolsSettingsRedirect />} />

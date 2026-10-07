@@ -79,6 +79,8 @@ describe("CompanySettingsNav", () => {
     expect(getCompanySettingsTab("/PAP/company/settings/access")).toBe("members");
     expect(getCompanySettingsTab("/company/settings/invites")).toBe("members");
     expect(getCompanySettingsTab("/PAP/company/settings/secrets")).toBe("secrets");
+    expect(getCompanySettingsTab("/company/settings/api-apps")).toBe("api-apps");
+    expect(getCompanySettingsTab("/PAP/company/settings/api-apps/abc")).toBe("api-apps");
     expect(getCompanySettingsTab("/company/settings/instance/profile")).toBe("instance-profile");
     expect(getCompanySettingsTab("/PAP/company/settings/instance/general")).toBe("general");
     expect(getCompanySettingsTab("/company/settings/instance/environments")).toBe("instance-environments");

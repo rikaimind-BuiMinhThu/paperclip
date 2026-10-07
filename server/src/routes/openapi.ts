@@ -302,6 +302,16 @@ import {
   resolveChatPublicationSchema,
   replaceChatEndpointResourcesSchema,
   updateChatEndpointSchema,
+  // External API apps / customer plans
+  createApiAppSchema,
+  updateApiAppSchema,
+  createApiAppCustomerSchema,
+  updateApiAppCustomerSchema,
+  createApiAppCustomerKeySchema,
+  createBillingUnitDefSchema,
+  updateBillingUnitDefSchema,
+  putCustomerUnitPricesSchema,
+  recordBillingUnitMeterSchema,
 } from "@paperclipai/shared";
 import {
   COMPANY_IMPORT_TRANSFERS_API_PATH,
@@ -1261,6 +1271,8 @@ type OpenApiAuthLevel =
   | "agent_run"
   | "runtime_tools"
   | "authenticated"
+  | "api_customer"
+  | "board_or_api_customer"
   | "board"
   | "instance_admin";
 
@@ -1269,6 +1281,7 @@ const BOARD_API_KEY_AUTH_SCHEME = "BoardApiKeyAuth";
 const AGENT_BEARER_AUTH_SCHEME = "AgentBearerAuth";
 const AGENT_RUN_AUTH_SCHEME = "AgentRunAuth";
 const RUNTIME_TOOLS_BEARER_AUTH_SCHEME = "RuntimeToolsBearerAuth";
+const API_CUSTOMER_BEARER_AUTH_SCHEME = "ApiCustomerBearerAuth";
 
 function securityRequirement(name: string): Record<string, string[]> {
   return { [name]: [] };
@@ -1284,9 +1297,27 @@ const AUTHENTICATED_SECURITY: Array<Record<string, string[]>> = [
   securityRequirement(AGENT_BEARER_AUTH_SCHEME),
 ];
 
+const API_CUSTOMER_SECURITY: Array<Record<string, string[]>> = [
+  securityRequirement(API_CUSTOMER_BEARER_AUTH_SCHEME),
+];
+
+const BOARD_OR_API_CUSTOMER_SECURITY: Array<Record<string, string[]>> = [
+  ...BOARD_SECURITY,
+  securityRequirement(API_CUSTOMER_BEARER_AUTH_SCHEME),
+];
+
 const RUNTIME_TOOLS_SECURITY: Array<Record<string, string[]>> = [
   securityRequirement(RUNTIME_TOOLS_BEARER_AUTH_SCHEME),
 ];
+
+const API_CUSTOMER_OPERATIONS = new Set([
+  "GET /api/api-app-customers/me/usage",
+  "POST /api/api-app-customers/me/meter",
+]);
+
+const BOARD_OR_API_CUSTOMER_OPERATIONS = new Set([
+  "GET /api/api-app-customers/{id}/usage",
+]);
 
 const RUNTIME_TOOLS_OPERATIONS = new Set([
   "POST /runtime-tools/github/credentials",
@@ -1564,6 +1595,26 @@ const BOARD_ONLY_OPERATIONS = new Set([
   "POST /api/chat-endpoints/{endpointId}/conversations/{conversationId}/publications",
   "GET /api/chat-endpoints/{endpointId}/conversations/{conversationId}/publications/{publicationId}/status",
   "GET /api/issues/{issueId}/chat-binding",
+  // External API apps — board operator management surfaces
+  "GET /api/pricing-plans",
+  "GET /api/companies/{companyId}/api-apps",
+  "POST /api/companies/{companyId}/api-apps",
+  "GET /api/api-apps/{id}",
+  "PATCH /api/api-apps/{id}",
+  "GET /api/api-apps/{id}/usage-summary",
+  "GET /api/api-apps/{apiAppId}/customers",
+  "POST /api/api-apps/{apiAppId}/customers",
+  "GET /api/api-app-customers/{id}",
+  "PATCH /api/api-app-customers/{id}",
+  "GET /api/api-app-customers/{id}/keys",
+  "POST /api/api-app-customers/{id}/keys",
+  "DELETE /api/api-app-customers/{id}/keys/{keyId}",
+  "GET /api/api-apps/{apiAppId}/billing-units",
+  "POST /api/api-apps/{apiAppId}/billing-units",
+  "PATCH /api/billing-units/{id}",
+  "GET /api/api-app-customers/{id}/unit-prices",
+  "PUT /api/api-app-customers/{id}/unit-prices",
+  "GET /api/api-app-customers/{id}/meter-events",
 ]);
 
 const INSTANCE_ADMIN_OPERATIONS = new Set([
@@ -1631,6 +1682,11 @@ const CREATED_OPERATIONS = new Set([
   "POST /api/companies/{companyId}/tools/gateways",
   "POST /api/tool-gateway/gateways/{gatewayId}/tokens",
   "POST /api/tool-gateway/sessions",
+  "POST /api/companies/{companyId}/api-apps",
+  "POST /api/api-apps/{apiAppId}/customers",
+  "POST /api/api-app-customers/{id}/keys",
+  "POST /api/api-apps/{apiAppId}/billing-units",
+  "POST /api/api-app-customers/me/meter",
 ]);
 
 const ACCEPTED_OPERATIONS = new Set([
@@ -1668,6 +1724,8 @@ function resolveOperationAuthLevel(
   if (key === "POST /api/mcp/project-tools" || key === "POST /api/companies/{companyId}/slack/tasks/{issueId}/tools") return "agent_run";
   if (RUNTIME_TOOLS_OPERATIONS.has(key)) return "runtime_tools";
   if (INSTANCE_ADMIN_OPERATIONS.has(key)) return "instance_admin";
+  if (API_CUSTOMER_OPERATIONS.has(key)) return "api_customer";
+  if (BOARD_OR_API_CUSTOMER_OPERATIONS.has(key)) return "board_or_api_customer";
   if (
     isBoardOnlyOperation(method, path) ||
     experimentalApiMetadata[`${method.toUpperCase()} ${path}`]?.boardOnly
@@ -1724,6 +1782,13 @@ function applyDocumentFixups(document: any): any {
       bearerFormat: "Task-bound agent JWT",
       description: "Paperclip-issued JWT bound to an active task run. Agent API keys, board sessions, and connection-only tokens are rejected.",
     },
+    [API_CUSTOMER_BEARER_AUTH_SCHEME]: {
+      type: "http",
+      scheme: "bearer",
+      bearerFormat: "API App Customer Key",
+      description:
+        "Per-customer external app key (`pcp_cust_…`) presented in the Authorization bearer header. Scoped to one api_app_customer; meters custom units and creates customer-stamped tasks.",
+    },
   };
   document.security = AUTHENTICATED_SECURITY;
 
@@ -1738,6 +1803,10 @@ function applyDocumentFixups(document: any): any {
         operation.security = [securityRequirement(AGENT_RUN_AUTH_SCHEME)];
       } else if (authLevel === "runtime_tools") {
         operation.security = RUNTIME_TOOLS_SECURITY;
+      } else if (authLevel === "api_customer") {
+        operation.security = API_CUSTOMER_SECURITY;
+      } else if (authLevel === "board_or_api_customer") {
+        operation.security = BOARD_OR_API_CUSTOMER_SECURITY;
       } else if (authLevel === "authenticated") {
         operation.security = AUTHENTICATED_SECURITY;
       } else {
@@ -1753,6 +1822,10 @@ function applyDocumentFixups(document: any): any {
               ? { actor: "agent", heartbeatBound: true, taskBound: true }
             : authLevel === "runtime_tools"
               ? { actor: "runtime_tools", heartbeatBound: true }
+              : authLevel === "api_customer"
+                ? { actor: "api_customer" }
+                : authLevel === "board_or_api_customer"
+                  ? { actor: "board_or_api_customer" }
               : authLevel === "authenticated"
                 ? { actor: "board_or_agent" }
                 : { actor: "public" };
@@ -11465,6 +11538,181 @@ registerCurrentRoute({
     search: z.string().optional(),
     cursor: z.string().optional(),
   }),
+});
+
+// ─── External API apps (customer plans + billing units) ───────────────────────
+
+registerCurrentRoute({
+  method: "get",
+  path: "/api/pricing-plans",
+  tags: ["api-apps"],
+  summary: "List pricing plans available for API app customers",
+});
+
+registerCurrentRoute({
+  method: "get",
+  path: "/api/companies/{companyId}/api-apps",
+  tags: ["api-apps"],
+  summary: "List API apps for a company",
+});
+
+registerCurrentRoute({
+  method: "post",
+  path: "/api/companies/{companyId}/api-apps",
+  tags: ["api-apps"],
+  summary: "Create an API app",
+  body: createApiAppSchema,
+});
+
+registerCurrentRoute({
+  method: "get",
+  path: "/api/api-apps/{id}",
+  tags: ["api-apps"],
+  summary: "Get an API app",
+});
+
+registerCurrentRoute({
+  method: "patch",
+  path: "/api/api-apps/{id}",
+  tags: ["api-apps"],
+  summary: "Update an API app",
+  body: updateApiAppSchema,
+});
+
+registerCurrentRoute({
+  method: "get",
+  path: "/api/api-apps/{id}/usage-summary",
+  tags: ["api-apps"],
+  summary: "Get rollup usage for an API app",
+});
+
+registerCurrentRoute({
+  method: "get",
+  path: "/api/api-apps/{apiAppId}/customers",
+  tags: ["api-apps"],
+  summary: "List customers for an API app",
+});
+
+registerCurrentRoute({
+  method: "post",
+  path: "/api/api-apps/{apiAppId}/customers",
+  tags: ["api-apps"],
+  summary: "Create an API app customer on a plan",
+  body: createApiAppCustomerSchema,
+});
+
+registerCurrentRoute({
+  method: "get",
+  path: "/api/api-app-customers/{id}",
+  tags: ["api-apps"],
+  summary: "Get an API app customer",
+});
+
+registerCurrentRoute({
+  method: "patch",
+  path: "/api/api-app-customers/{id}",
+  tags: ["api-apps"],
+  summary: "Update an API app customer",
+  body: updateApiAppCustomerSchema,
+});
+
+registerCurrentRoute({
+  method: "get",
+  path: "/api/api-app-customers/{id}/usage",
+  tags: ["api-apps"],
+  summary: "Get month-to-date usage for an API app customer",
+});
+
+registerCurrentRoute({
+  method: "get",
+  path: "/api/api-app-customers/me/usage",
+  tags: ["api-apps"],
+  summary: "Get month-to-date usage for the authenticated API customer",
+});
+
+registerCurrentRoute({
+  method: "get",
+  path: "/api/api-app-customers/{id}/keys",
+  tags: ["api-apps"],
+  summary: "List API keys for an API app customer",
+});
+
+registerCurrentRoute({
+  method: "post",
+  path: "/api/api-app-customers/{id}/keys",
+  tags: ["api-apps"],
+  summary: "Mint a pcp_cust_ API key for a customer",
+  body: createApiAppCustomerKeySchema,
+});
+
+registerCurrentRoute({
+  method: "delete",
+  path: "/api/api-app-customers/{id}/keys/{keyId}",
+  tags: ["api-apps"],
+  summary: "Revoke an API app customer key",
+});
+
+registerCurrentRoute({
+  method: "get",
+  path: "/api/api-apps/{apiAppId}/billing-units",
+  tags: ["api-apps"],
+  summary: "List billing unit definitions for an API app",
+});
+
+registerCurrentRoute({
+  method: "post",
+  path: "/api/api-apps/{apiAppId}/billing-units",
+  tags: ["api-apps"],
+  summary: "Create a billing unit definition",
+  body: createBillingUnitDefSchema,
+});
+
+registerCurrentRoute({
+  method: "patch",
+  path: "/api/billing-units/{id}",
+  tags: ["api-apps"],
+  summary: "Update a billing unit definition",
+  body: updateBillingUnitDefSchema,
+});
+
+registerCurrentRoute({
+  method: "get",
+  path: "/api/api-app-customers/{id}/unit-prices",
+  tags: ["api-apps"],
+  summary: "List per-customer unit prices",
+});
+
+registerCurrentRoute({
+  method: "put",
+  path: "/api/api-app-customers/{id}/unit-prices",
+  tags: ["api-apps"],
+  summary: "Replace per-customer unit prices",
+  body: putCustomerUnitPricesSchema,
+});
+
+registerCurrentRoute({
+  method: "get",
+  path: "/api/api-app-customers/{id}/meter-events",
+  tags: ["api-apps"],
+  summary: "List recent billing unit meter events for a customer",
+});
+
+registerCurrentRoute({
+  method: "post",
+  path: "/api/api-app-customers/me/meter",
+  tags: ["api-apps"],
+  summary: "Record a billing unit meter event for the authenticated API customer",
+  body: recordBillingUnitMeterSchema,
+  responses: {
+    200: r.ok(),
+    201: r.ok(),
+    400: r.badRequest,
+    401: r.unauthorized,
+    402: r.badRequest,
+    403: r.forbidden,
+    404: r.notFound,
+    422: r.badRequest,
+  },
 });
 
 // Every experimental REST route remains discoverable while its runtime feature

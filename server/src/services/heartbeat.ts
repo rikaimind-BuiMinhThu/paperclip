@@ -187,7 +187,7 @@ import {
   toolProfiles,
   workspaceOperations,
 } from "@paperclipai/db";
-import { conflict, HttpError, notFound } from "../errors.js";
+import { conflict, HttpError, notFound, paymentRequired, unprocessable as unprocessableError } from "../errors.js";
 import {
   getStartupTraceContext,
   getStartupTracer,
@@ -342,6 +342,7 @@ import { reportRunFailure } from "./run-failure-report.js";
 import { collectRunFailureSecretValues, type RunFailureReportOptions } from "./run-failure-diagnostics.js";
 import { companySkillService } from "./company-skills.js";
 import { budgetService, type BudgetEnforcementScope } from "./budgets.js";
+import { apiAppsService } from "./api-apps.js";
 import { secretService, type MissingRuntimeBinding } from "./secrets.js";
 import {
   resolveDefaultAgentWorkspaceDir,
@@ -27324,6 +27325,66 @@ export function heartbeatService(
       });
     }
 
+    let apiAppAttribution: { apiAppId: string | null; apiAppCustomerId: string | null } = {
+      apiAppId: null,
+      apiAppCustomerId: null,
+    };
+    if (issueId) {
+      const attributedIssue = await db
+        .select({
+          apiAppId: issues.apiAppId,
+          apiAppCustomerId: issues.apiAppCustomerId,
+        })
+        .from(issues)
+        .where(eq(issues.id, issueId))
+        .then((rows) => rows[0] ?? null);
+      apiAppAttribution = {
+        apiAppId: attributedIssue?.apiAppId ?? null,
+        apiAppCustomerId: attributedIssue?.apiAppCustomerId ?? null,
+      };
+      if (apiAppAttribution.apiAppCustomerId) {
+        const adapterConfig =
+          agent.adapterConfig && typeof agent.adapterConfig === "object"
+            ? (agent.adapterConfig as Record<string, unknown>)
+            : {};
+        const model =
+          typeof adapterConfig.model === "string" ? adapterConfig.model : null;
+        const customerBlock = await apiAppsService(db).getApiCustomerInvocationBlock(
+          agent.companyId,
+          apiAppAttribution.apiAppCustomerId,
+          { model },
+        );
+        if (customerBlock) {
+          await writeSkippedRequest("api_customer.blocked", {
+            error: customerBlock.message,
+            code: customerBlock.code,
+          });
+          if (
+            customerBlock.code === "API_CUSTOMER_PLAN_TOKEN_EXCEEDED" ||
+            customerBlock.code === "API_CUSTOMER_PLAN_COST_EXCEEDED" ||
+            customerBlock.code === "API_CUSTOMER_UNIT_SPEND_EXCEEDED"
+          ) {
+            throw paymentRequired(customerBlock.message, { code: customerBlock.code });
+          }
+          if (customerBlock.code === "API_CUSTOMER_MODEL_NOT_ALLOWED") {
+            throw unprocessableError(customerBlock.message, { code: customerBlock.code });
+          }
+          throw conflict(customerBlock.message, { code: customerBlock.code });
+        }
+        const inlineKey =
+          (typeof adapterConfig.apiKey === "string" && adapterConfig.apiKey.trim()) ||
+          (typeof adapterConfig.anthropicApiKey === "string" &&
+            adapterConfig.anthropicApiKey.trim()) ||
+          null;
+        if (inlineKey && !inlineKey.startsWith("secret:") && !inlineKey.startsWith("{{")) {
+          throw unprocessableError(
+            "API customer runs require platform vault provider keys",
+            { code: "API_CUSTOMER_REQUIRES_PLATFORM_KEYS" },
+          );
+        }
+      }
+    }
+
     const invokability = await getAgentInvokability(agent);
     if (!invokability.invokable) {
       if (opts.requestedByActorType !== "user" || executionWaitRequestId) {
@@ -29027,6 +29088,8 @@ export function heartbeatService(
           contextSnapshot: enrichedContextSnapshot,
           sessionIdBefore: sessionBefore,
           continuationAttempt,
+          apiAppId: apiAppAttribution.apiAppId,
+          apiAppCustomerId: apiAppAttribution.apiAppCustomerId,
         })
         .returning()
         .then((rows) => rows[0]);

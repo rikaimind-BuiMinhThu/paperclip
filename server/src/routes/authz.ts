@@ -57,11 +57,20 @@ export function assertBoardOrAgent(req: Request) {
   if (req.actor.type === "agent") {
     return;
   }
+  if (req.actor.type === "api_customer") {
+    return;
+  }
   if (req.actor.type === "board") {
     assertBoardOrgAccess(req);
     return;
   }
   throw forbidden("Board or agent access required");
+}
+
+export function assertApiCustomer(req: Request) {
+  if (req.actor.type !== "api_customer") {
+    throw forbidden("API customer access required");
+  }
 }
 
 export function assertInstanceAdmin(req: Request) {
@@ -74,8 +83,35 @@ export function assertInstanceAdmin(req: Request) {
 
 export function assertCompanyAccess(req: Request, companyId: string) {
   assertAuthenticated(req);
+  if (req.actor.type === "api_customer" && req.actor.companyId !== companyId) {
+    throw forbidden("API customer key cannot access another company");
+  }
   if (req.actor.type === "agent" && req.actor.companyId !== companyId) {
     throw forbidden("Agent key cannot access another company");
+  }
+  if (req.actor.type === "api_customer" && req.actor.onBehalfOfUserId?.trim()) {
+    const membership = req.actor.onBehalfOfMemberships?.find(
+      (item) => item.companyId === companyId && item.status === "active",
+    );
+    if (!membership) {
+      throwOrShadowResponsibleUserCompanyAccessDeny(
+        req,
+        companyId,
+        "RESPONSIBLE_USER_UNAVAILABLE",
+        "Responsible user is unavailable for this company",
+      );
+      return;
+    }
+    const method = typeof req.method === "string" ? req.method.toUpperCase() : "GET";
+    const isSafeMethod = ["GET", "HEAD", "OPTIONS"].includes(method);
+    if (!isSafeMethod && membership.membershipRole === "viewer") {
+      throwOrShadowResponsibleUserCompanyAccessDeny(
+        req,
+        companyId,
+        "RESPONSIBLE_USER_UNAUTHORIZED",
+        "Responsible user is not authorized for write access",
+      );
+    }
   }
   if (req.actor.type === "agent" && req.actor.onBehalfOfUserId?.trim()) {
     const membership = req.actor.onBehalfOfMemberships?.find(
@@ -157,6 +193,7 @@ export function assertCompanyAccess(req: Request, companyId: string) {
 export function hasCompanyAccess(req: Request, companyId: string): boolean {
   if (req.actor.type === "none") return false;
   if (req.actor.type === "agent") return req.actor.companyId === companyId;
+  if (req.actor.type === "api_customer") return req.actor.companyId === companyId;
   if (req.actor.source === "local_implicit") return true;
   return (req.actor.companyIds ?? []).includes(companyId);
 }
@@ -210,7 +247,7 @@ export function getActorInfo(req: Request): (
     agentId: null;
     runId: string | null;
     agentApiKeyId: null;
-    actorSource: "local_implicit" | "session" | "board_key" | "cloud_tenant";
+    actorSource: "local_implicit" | "session" | "board_key" | "cloud_tenant" | "api_app_customer_key";
   }
 ) {
   assertAuthenticated(req);
@@ -223,6 +260,18 @@ export function getActorInfo(req: Request): (
       runId: req.actor.runId ?? null,
       agentApiKeyId: req.actor.keyId ?? null,
       actorSource,
+    };
+  }
+
+  if (req.actor.type === "api_customer") {
+    return {
+      actorType: "user" as const,
+      actorId: req.actor.userId ?? req.actor.onBehalfOfUserId ?? "api-customer",
+      sessionId: null,
+      agentId: null,
+      runId: req.actor.runId ?? null,
+      agentApiKeyId: null,
+      actorSource: "api_app_customer_key",
     };
   }
 

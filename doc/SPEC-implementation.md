@@ -485,6 +485,7 @@ The current implementation includes additional V1-control-plane tables beyond th
 - Execution and workspace control: `execution_workspaces`, `project_workspaces`, `workspace_runtime_services`, `workspace_operations`, `environments`, `environment_leases`, `agent_task_sessions`, `agent_runtime_state`, `agent_wakeup_requests`, heartbeat events, and watchdog decision tables.
 - Plugins and routines: `plugins`, plugin config/state/entities/jobs/logs/webhooks, plugin database namespaces/migrations, plugin company settings, `routines`, `routine_revisions`, `routine_triggers`, and `routine_runs`.
 - Access and operations: company memberships, instance roles, principal permission grants, invites, join requests, board API keys, CLI auth challenges, budget policies/incidents, feedback exports/votes, company skills, sidebar preferences, and company logos.
+- External app control plane: `pricing_plans`, `api_apps`, `api_app_customers`, `api_app_customer_keys` (`pcp_cust_` bearer keys), `billing_unit_defs`, `api_app_customer_unit_prices`, and `billing_unit_meter_events`. Board operators manage apps and customers under company settings; partner apps authenticate as actor `api_customer`, create/list scoped issues, and meter custom units with `Idempotency-Key`. Customer runs attribute spend on issues/heartbeat runs/cost events, enforce plan hard-stops (LLM + unit), apply plan model allowlists, and use platform-vault LLM keys for reseller execution.
 
 Decision-desk triage uses company-scoped sidecars rather than adding queue fields to every attention source:
 

@@ -52,6 +52,7 @@ export const HIDEABLE_COMPANY_PAGES = [
   "company.members",
   "company.invites",
   "company.secrets",
+  "company.apiApps",
   "company.export",
   "company.import",
 ] as const;

@@ -30,6 +30,7 @@ describe("hideable setting keys", () => {
       "company.members",
       "company.invites",
       "company.secrets",
+      "company.apiApps",
       "company.export",
       "company.import",
     ]);

@@ -22,6 +22,7 @@ const apiPrefixes: Record<string, string> = {
   "agent-avatars.ts": "/api",
   "announcements.ts": "/api",
   "ai-connections.ts": "/api",
+  "api-apps.ts": "/api",
   "attention.ts": "/api",
   "approvals.ts": "/api",
   "assets.ts": "/api",
@@ -277,7 +278,16 @@ describe("openapi routes", () => {
       BoardSessionAuth: { type: "apiKey", in: "cookie" },
       BoardApiKeyAuth: { type: "http", scheme: "bearer" },
       AgentBearerAuth: { type: "http", scheme: "bearer" },
+      ApiCustomerBearerAuth: { type: "http", scheme: "bearer" },
     });
+    expect(
+      res.body.paths["/api/api-app-customers/me/meter"].post.security,
+    ).toEqual([{ ApiCustomerBearerAuth: [] }]);
+    expect(
+      res.body.paths["/api/api-app-customers/me/meter"].post[
+        "x-paperclip-authorization"
+      ],
+    ).toEqual({ actor: "api_customer" });
     expect(res.body.paths["/api/health"].get.security).toEqual([]);
     expect(res.body.paths["/api/mcp/project-tools"].post.security).toEqual([{ AgentRunAuth: [] }]);
     expect(res.body.paths["/api/mcp/project-tools"].post["x-paperclip-authorization"]).toEqual({ actor: "agent", heartbeatBound: true, taskBound: true });
