@@ -960,6 +960,7 @@
     "import": "インポート",
     "members": "メンバー",
     "secrets": "シークレット",
+    "apiApps": "APIアプリ",
     "profile": "プロフィール",
     "environments": "環境",
     "access": "アクセス",

@@ -46,7 +46,7 @@ export function ApiAppsList() {
       <EmptyState
         icon={AppWindow}
         title="Select a company"
-        description="Choose a company to manage API apps."
+        message="Choose a company to manage API apps."
       />
     );
   }
@@ -99,7 +99,7 @@ export function ApiAppsList() {
         <EmptyState
           icon={AppWindow}
           title="No API apps yet"
-          description="Create an API app, then add customers with plans and keys."
+          message="Create an API app, then add customers with plans and keys."
           action="Create API app"
           onAction={() => setCreating(true)}
         />
