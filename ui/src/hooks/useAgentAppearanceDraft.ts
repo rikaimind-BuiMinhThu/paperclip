@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { agentAppearanceSchema, randomAgentAppearance } from "@paperclipai/shared";
+import { agentAppearanceSchema, appearanceForPalette } from "@paperclipai/shared";
 
 /** Non-secret visual identity, retained across navigation and company changes. */
 export function useAgentAppearanceDraft(draftKey: string) {
@@ -9,7 +9,7 @@ export function useAgentAppearanceDraft(draftKey: string) {
       const stored = agentAppearanceSchema.safeParse(JSON.parse(sessionStorage.getItem(key) ?? "null"));
       if (stored.success) return stored.data;
     } catch { /* Storage can be unavailable; retain the in-memory assignment. */ }
-    const value = randomAgentAppearance();
+    const value = appearanceForPalette("rikai-blue");
     try { sessionStorage.setItem(key, JSON.stringify(value)); } catch { /* In-memory draft still works. */ }
     return value;
   }

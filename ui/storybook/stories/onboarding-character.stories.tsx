@@ -7,7 +7,7 @@ import { Button } from "../../src/components/ui/button";
 const meta = {
   title: "Onboarding/Character",
   component: OnboardingCharacter,
-  args: { appearance: appearanceForPalette("bubblegum-sky"), awake: false },
+  args: { appearance: appearanceForPalette("rikai-blue"), awake: false },
   parameters: { docs: { description: { component: "The onboarding hero: the persona character (the studio's App export) on the shared ClipLab v0.2.0 engine. Gray and dozing until Review, where it plays the one-shot sleepy → wink → idle transition while its palette fades in, then settles into the idle loop. Reduced motion skips the sequence." } } },
   argTypes: { awake: { control: "boolean" } },
 } satisfies Meta<typeof OnboardingCharacter>;

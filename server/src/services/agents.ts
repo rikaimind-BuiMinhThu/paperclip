@@ -1,4 +1,4 @@
-import { agentAppearanceSchema, randomAgentAppearance, resolveAgentAppearance, agentAvatarUrl } from "@paperclipai/shared";
+import { agentAppearanceSchema, appearanceForPalette, resolveAgentAppearance, agentAvatarUrl } from "@paperclipai/shared";
 import { createHash, randomBytes } from "node:crypto";
 import { and, desc, eq, gte, inArray, lt, ne, or, sql } from "drizzle-orm";
 import type { Db } from "@paperclipai/db";
@@ -920,7 +920,7 @@ export function agentService(db: Db) {
           .values({
             ...data,
             name: uniqueName,
-            appearance: data.appearance == null ? randomAgentAppearance() : agentAppearanceSchema.parse(data.appearance),
+            appearance: data.appearance == null ? appearanceForPalette("rikai-blue") : agentAppearanceSchema.parse(data.appearance),
             companyId,
             role,
             adapterType,

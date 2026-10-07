@@ -17,7 +17,7 @@ interface ThemeContextValue {
 }
 
 const THEME_STORAGE_KEY = "paperclip.theme";
-const DARK_THEME_COLOR = "#18181b";
+const DARK_THEME_COLOR = "#0f1a24";
 const LIGHT_THEME_COLOR = "#008FD5";
 const ThemeContext = createContext<ThemeContextValue | undefined>(undefined);
 
@@ -26,6 +26,15 @@ function hasStoredTheme(): boolean {
   try {
     const stored = window.localStorage.getItem(THEME_STORAGE_KEY);
     return stored === "light" || stored === "dark";
+  } catch {
+    return false;
+  }
+}
+
+function prefersDark(): boolean {
+  if (typeof window === "undefined") return false;
+  try {
+    return window.matchMedia("(prefers-color-scheme: dark)").matches;
   } catch {
     return false;
   }
@@ -51,8 +60,7 @@ function resolveInitialTheme(): Theme {
   } catch {
     // Ignore restricted storage.
   }
-  // RIKAI fork: light is the product default when the operator has not chosen.
-  return "light";
+  return prefersDark() ? "dark" : "light";
 }
 
 export function ThemeProvider({ children }: { children: ReactNode }) {
@@ -71,22 +79,31 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     applyTheme(theme);
-    if (!hasExplicitChoice) {
-      // Persist the RIKAI light default once so later loads stay light.
-      try {
-        localStorage.setItem(THEME_STORAGE_KEY, theme);
-        setHasExplicitChoice(true);
-      } catch {
-        // Ignore local storage write failures in restricted environments.
-      }
-      return;
-    }
+  }, [theme]);
+
+  useEffect(() => {
+    if (!hasExplicitChoice) return;
     try {
       localStorage.setItem(THEME_STORAGE_KEY, theme);
     } catch {
       // Ignore local storage write failures in restricted environments.
     }
   }, [theme, hasExplicitChoice]);
+
+  useEffect(() => {
+    if (hasExplicitChoice || typeof window === "undefined") return;
+    let media: MediaQueryList;
+    try {
+      media = window.matchMedia("(prefers-color-scheme: dark)");
+    } catch {
+      return;
+    }
+    const onChange = (event: MediaQueryListEvent) => {
+      setThemeState(event.matches ? "dark" : "light");
+    };
+    media.addEventListener("change", onChange);
+    return () => media.removeEventListener("change", onChange);
+  }, [hasExplicitChoice]);
 
   const value = useMemo(
     () => ({

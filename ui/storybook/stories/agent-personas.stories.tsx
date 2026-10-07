@@ -8,7 +8,7 @@ import { AgentCharacter } from "../../src/components/AgentCharacter";
 import { AgentIdentity } from "../../src/components/AgentIdentity";
 import { Button } from "../../src/components/ui/button";
 
-const appearance = appearanceForPalette("bubblegum-sky");
+const appearance = appearanceForPalette("rikai-blue");
 const agent = { id: "storybook-agent", name: "Chief of Staff", appearance };
 const meta = {
   title: "Agents/Personas",

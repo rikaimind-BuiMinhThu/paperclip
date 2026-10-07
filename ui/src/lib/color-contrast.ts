@@ -6,7 +6,7 @@
  * light page backgrounds.
  */
 
-const DARK_BG = { r: 24, g: 24, b: 27 }; // zinc-900 (#18181b)
+const DARK_BG = { r: 15, g: 26, b: 36 }; // RIKAI navy (#0f1a24)
 const LIGHT_BG = { r: 255, g: 255, b: 255 }; // white
 
 export function hexToRgb(hex: string): { r: number; g: number; b: number } | null {
@@ -73,7 +73,7 @@ function composite(
  * text over an arbitrary background" logic. Byte-identical values were
  * previously duplicated in lib/worktree-branding.ts (DECISION-SHEET.md A2);
  * this is the single source. NOT the same thing as ThemeContext.tsx's
- * <meta theme-color> pair (#18181b/#ffffff), which stays separate.
+ * <meta theme-color> pair (#0f1a24/#008FD5), which stays separate.
  */
 export const READABLE_TEXT_LIGHT = "#f8fafc";
 export const READABLE_TEXT_DARK = "#111827";
