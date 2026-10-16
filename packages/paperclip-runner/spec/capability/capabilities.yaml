@@ -15,11 +15,11 @@
   ],
   "rows": [
     {
-      "id": "skill:skills/paperclip/SKILL.md:paperclip-skill:10",
+      "id": "skill:skills/paperclip/SKILL.md:rikai-ai-harness-skill:10",
       "sourceKind": "skill_heading",
       "sourceAnchor": "skills/paperclip/SKILL.md:10",
-      "title": "Paperclip Skill",
-      "expectedSemantics": "Skill guidance headed “Paperclip Skill”.",
+      "title": "RIKAI AI Harness Skill",
+      "expectedSemantics": "Skill guidance headed “RIKAI AI Harness Skill”.",
       "primaryDisposition": "optional_agent_tool",
       "requiredGrants": [],
       "assertionClasses": [
@@ -480,11 +480,11 @@
       ]
     },
     {
-      "id": "skill:skills/paperclip/references/api-reference.md:paperclip-api-reference:1",
+      "id": "skill:skills/paperclip/references/api-reference.md:rikai-ai-harness-api-reference:1",
       "sourceKind": "skill_heading",
       "sourceAnchor": "skills/paperclip/references/api-reference.md:1",
-      "title": "Paperclip API Reference",
-      "expectedSemantics": "Skill guidance headed “Paperclip API Reference”.",
+      "title": "RIKAI AI Harness API Reference",
+      "expectedSemantics": "Skill guidance headed “RIKAI AI Harness API Reference”.",
       "primaryDisposition": "optional_agent_tool",
       "requiredGrants": [],
       "assertionClasses": [
@@ -990,11 +990,11 @@
       ]
     },
     {
-      "id": "skill:skills/paperclip/references/api-reference.md:load-tests-depend-on-caching-layer-being-done-first-paperclip-will-auto-wake-agent-55-when-the-blocker-resolves:621",
+      "id": "skill:skills/paperclip/references/api-reference.md:load-tests-depend-on-caching-layer-being-done-first-rikai-ai-harness-will-auto-wake-agent-55-when-the-blocker-resolves:621",
       "sourceKind": "skill_heading",
       "sourceAnchor": "skills/paperclip/references/api-reference.md:621",
-      "title": "^ Load tests depend on caching layer being done first. Paperclip will auto-wake agent-55 when the blocker resolves.",
-      "expectedSemantics": "Skill guidance headed “^ Load tests depend on caching layer being done first. Paperclip will auto-wake agent-55 when the blocker resolves.”.",
+      "title": "^ Load tests depend on caching layer being done first. RIKAI AI Harness will auto-wake agent-55 when the blocker resolves.",
+      "expectedSemantics": "Skill guidance headed “^ Load tests depend on caching layer being done first. RIKAI AI Harness will auto-wake agent-55 when the blocker resolves.”.",
       "primaryDisposition": "control_plane_owned",
       "requiredGrants": [],
       "assertionClasses": [
@@ -2100,11 +2100,11 @@
       ]
     },
     {
-      "id": "skill:skills/paperclip/references/routines.md:paperclip-routines:1",
+      "id": "skill:skills/paperclip/references/routines.md:rikai-ai-harness-routines:1",
       "sourceKind": "skill_heading",
       "sourceAnchor": "skills/paperclip/references/routines.md:1",
-      "title": "Paperclip Routines",
-      "expectedSemantics": "Skill guidance headed “Paperclip Routines”.",
+      "title": "RIKAI AI Harness Routines",
+      "expectedSemantics": "Skill guidance headed “RIKAI AI Harness Routines”.",
       "primaryDisposition": "optional_agent_tool",
       "requiredGrants": [],
       "assertionClasses": [
@@ -2325,11 +2325,11 @@
       ]
     },
     {
-      "id": "skill:skills/paperclip/references/workflows.md:paperclip-workflow-playbooks:1",
+      "id": "skill:skills/paperclip/references/workflows.md:rikai-ai-harness-workflow-playbooks:1",
       "sourceKind": "skill_heading",
       "sourceAnchor": "skills/paperclip/references/workflows.md:1",
-      "title": "Paperclip Workflow Playbooks",
-      "expectedSemantics": "Skill guidance headed “Paperclip Workflow Playbooks”.",
+      "title": "RIKAI AI Harness Workflow Playbooks",
+      "expectedSemantics": "Skill guidance headed “RIKAI AI Harness Workflow Playbooks”.",
       "primaryDisposition": "optional_agent_tool",
       "requiredGrants": [],
       "assertionClasses": [
