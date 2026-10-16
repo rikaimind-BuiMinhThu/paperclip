@@ -13,6 +13,8 @@ Current implementation status:
 
 - canonical model: `local_trusted` and `authenticated` (with `private/public` exposure)
 
+Google sign-in is optional on `authenticated` instances. See [Google sign-in](auth/GOOGLE-SSO.md). `local_trusted` stays a zero-login dev mode.
+
 ## Prerequisites
 
 - Node.js 24.11+

@@ -85,6 +85,8 @@ docker run --name paperclip \
 
 Open: `http://localhost:3100`
 
+Optional Google sign-in: pass `GOOGLE_CLIENT_ID` and `GOOGLE_CLIENT_SECRET` together. The redirect URI is `http://localhost:3100/api/auth/callback/google` for this port. See [Google sign-in](auth/GOOGLE-SSO.md). Email and password still work when those variables are unset.
+
 Data persistence:
 
 - Embedded PostgreSQL data

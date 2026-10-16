@@ -12,6 +12,8 @@ import { AuthPage } from "./Auth";
 const getSessionMock = vi.hoisted(() => vi.fn());
 const signInEmailMock = vi.hoisted(() => vi.fn());
 const signUpEmailMock = vi.hoisted(() => vi.fn());
+const getProvidersMock = vi.hoisted(() => vi.fn());
+const signInWithGoogleMock = vi.hoisted(() => vi.fn());
 const healthMock = vi.hoisted(() => vi.fn());
 const beginCloudSignInMock = vi.hoisted(() => vi.fn());
 
@@ -26,7 +28,10 @@ vi.mock("../api/auth", () => ({
     getSession: () => getSessionMock(),
     signInEmail: (input: unknown) => signInEmailMock(input),
     signUpEmail: (input: unknown) => signUpEmailMock(input),
+    getProviders: () => getProvidersMock(),
+    signInWithGoogle: (input: unknown) => signInWithGoogleMock(input),
   },
+  AuthApiError: class AuthApiError extends Error {},
 }));
 
 // The ASCII art animation drives a canvas/requestAnimationFrame loop that adds
@@ -99,6 +104,8 @@ describe("AuthPage", () => {
     beginCloudSignInMock.mockReturnValue(true);
     signInEmailMock.mockResolvedValue(undefined);
     signUpEmailMock.mockResolvedValue(undefined);
+    signInWithGoogleMock.mockResolvedValue(undefined);
+    getProvidersMock.mockResolvedValue({ emailPassword: true, providers: [] });
   });
 
   afterEach(() => {
@@ -180,8 +187,7 @@ describe("AuthPage", () => {
     expect(emailInput).not.toBeNull();
     expect(passwordInput).not.toBeNull();
 
-    // 1Password / password-manager recognition: identifier field is "username".
-    expect(emailInput.getAttribute("autocomplete")).toBe("username");
+    expect(emailInput.getAttribute("autocomplete")).toBe("email");
     expect(emailInput.getAttribute("type")).toBe("email");
     expect(passwordInput.getAttribute("autocomplete")).toBe("current-password");
 
@@ -208,7 +214,7 @@ describe("AuthPage", () => {
     const { root } = await mount();
 
     const createOne = Array.from(container.querySelectorAll("button")).find(
-      (button) => button.textContent === t("auth.createOne"),
+      (button) => button.textContent === t("auth.signUp"),
     );
     expect(createOne).not.toBeNull();
 
@@ -309,5 +315,110 @@ describe("AuthPage", () => {
     await act(async () => {
       root.unmount();
     });
+  });
+
+  it("hides Google until the instance reports the provider", async () => {
+    const { root } = await mount();
+    expect(container.textContent).not.toContain(t("auth.continueWithGoogle"));
+    await act(() => root.unmount());
+  });
+
+  it("starts Google sign-in with the safe next path", async () => {
+    getProvidersMock.mockResolvedValue({
+      emailPassword: true,
+      providers: [{ id: "google", name: "Google" }],
+    });
+    const { root } = await mount("/auth?next=%2Finvite%2FABC");
+    await vi.waitFor(() => expect(container.textContent).toContain(t("auth.continueWithGoogle")));
+
+    const google = Array.from(container.querySelectorAll("button")).find(
+      (button) => button.textContent?.includes(t("auth.continueWithGoogle")),
+    );
+    await act(async () => {
+      google?.dispatchEvent(new MouseEvent("click", { bubbles: true }));
+    });
+    await flushReact();
+
+    expect(signInWithGoogleMock).toHaveBeenCalledWith({
+      callbackURL: "/invite/ABC",
+      errorCallbackURL: "/auth?mode=sign_in&next=%2Finvite%2FABC",
+    });
+    expect(container.textContent).toContain(t("auth.connectingGoogle"));
+    await act(() => root.unmount());
+  });
+
+  it("drops an unsafe next target before Google sign-in", async () => {
+    getProvidersMock.mockResolvedValue({
+      emailPassword: true,
+      providers: [{ id: "google", name: "Google" }],
+    });
+    const { root } = await mount("/auth?next=https%3A%2F%2Fevil.test%2Fphish");
+    await vi.waitFor(() => expect(container.textContent).toContain(t("auth.continueWithGoogle")));
+    const google = Array.from(container.querySelectorAll("button")).find(
+      (button) => button.textContent?.includes(t("auth.continueWithGoogle")),
+    );
+    await act(async () => {
+      google?.dispatchEvent(new MouseEvent("click", { bubbles: true }));
+    });
+    await flushReact();
+    expect(signInWithGoogleMock).toHaveBeenCalledWith({
+      callbackURL: "/",
+      errorCallbackURL: "/auth?mode=sign_in",
+    });
+    await act(() => root.unmount());
+  });
+
+  it("shows a signup form and blocks a mismatched confirmation", async () => {
+    const { root } = await mount("/auth?mode=sign_up");
+    const inputValueSetter = Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, "value")?.set;
+    const nameInput = container.querySelector('input[name="name"]') as HTMLInputElement;
+    const emailInput = container.querySelector('input[name="email"]') as HTMLInputElement;
+    const passwordInput = container.querySelector('input[name="password"]') as HTMLInputElement;
+    const confirmInput = container.querySelector('input[name="confirmPassword"]') as HTMLInputElement;
+    expect(confirmInput.getAttribute("autocomplete")).toBe("new-password");
+
+    await act(async () => {
+      inputValueSetter!.call(nameInput, "Jane");
+      nameInput.dispatchEvent(new Event("input", { bubbles: true }));
+      inputValueSetter!.call(emailInput, "jane@example.com");
+      emailInput.dispatchEvent(new Event("input", { bubbles: true }));
+      inputValueSetter!.call(passwordInput, "correct-horse");
+      passwordInput.dispatchEvent(new Event("input", { bubbles: true }));
+      inputValueSetter!.call(confirmInput, "other-horse");
+      confirmInput.dispatchEvent(new Event("input", { bubbles: true }));
+    });
+
+    const form = container.querySelector("form") as HTMLFormElement;
+    await act(async () => {
+      form.dispatchEvent(new Event("submit", { bubbles: true, cancelable: true }));
+    });
+    await flushReact();
+
+    expect(container.textContent).toContain(t("auth.passwordMismatch"));
+    expect(signUpEmailMock).not.toHaveBeenCalled();
+    await act(() => root.unmount());
+  });
+
+  it("shows the signing-in label while email login is in flight", async () => {
+    signInEmailMock.mockReturnValue(new Promise(() => {}));
+    const { root } = await mount();
+    const inputValueSetter = Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, "value")?.set;
+    const emailInput = container.querySelector('input[name="email"]') as HTMLInputElement;
+    const passwordInput = container.querySelector('input[name="password"]') as HTMLInputElement;
+    await act(async () => {
+      inputValueSetter!.call(emailInput, "jane@example.com");
+      emailInput.dispatchEvent(new Event("input", { bubbles: true }));
+      inputValueSetter!.call(passwordInput, "correct-horse");
+      passwordInput.dispatchEvent(new Event("input", { bubbles: true }));
+    });
+    const form = container.querySelector("form") as HTMLFormElement;
+    await act(async () => {
+      form.dispatchEvent(new Event("submit", { bubbles: true, cancelable: true }));
+    });
+    await flushReact();
+    expect(container.textContent).toContain(t("auth.signingIn"));
+    const submit = container.querySelector('button[type="submit"]') as HTMLButtonElement;
+    expect(submit.disabled).toBe(true);
+    await act(() => root.unmount());
   });
 });

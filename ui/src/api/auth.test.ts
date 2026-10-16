@@ -3,7 +3,7 @@ import {
   createTenantSessionRecoveryCoordinator,
   tenantSessionRecovery,
 } from "@/lib/tenant-session-recovery";
-import { authApi } from "./auth";
+import { authApi, googleAuthorizeUrl } from "./auth";
 
 afterEach(() => {
   vi.restoreAllMocks();
@@ -45,6 +45,15 @@ describe("authApi.getSession", () => {
     );
     await Promise.resolve();
     expect(settled).toBe(false);
+  });
+});
+
+describe("googleAuthorizeUrl", () => {
+  it("accepts only the Google accounts host", () => {
+    expect(googleAuthorizeUrl({ url: "https://accounts.google.com/o/oauth2/v2/auth?state=1" }))
+      .toBe("https://accounts.google.com/o/oauth2/v2/auth?state=1");
+    expect(() => googleAuthorizeUrl({ url: "https://evil.test/auth" })).toThrow(/Google/);
+    expect(() => googleAuthorizeUrl({})).toThrow(/Google/);
   });
 });
 

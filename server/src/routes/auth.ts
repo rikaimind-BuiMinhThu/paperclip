@@ -3,10 +3,12 @@ import { eq } from "drizzle-orm";
 import type { Db } from "@paperclipai/db";
 import { authUsers } from "@paperclipai/db";
 import {
+  authProvidersResponseSchema,
   authSessionSchema,
   currentUserProfileSchema,
   updateCurrentUserProfileSchema,
 } from "@paperclipai/shared";
+import { buildAuthProvidersResponse } from "../auth/google-auth.js";
 import { unauthorized } from "../errors.js";
 import { validate } from "../middleware/validate.js";
 import { resolveSentryDsns } from "../sentry-dsn.js";
@@ -37,6 +39,11 @@ async function loadCurrentUserProfile(db: Db, userId: string) {
 
 export function authRoutes(db: Db) {
   const router = Router();
+
+  router.get("/providers", (_req, res) => {
+    res.set("Cache-Control", "no-store");
+    res.json(authProvidersResponseSchema.parse(buildAuthProvidersResponse()));
+  });
 
   router.get("/get-session", async (req, res) => {
     if (req.actor.type !== "board" || !req.actor.userId) {

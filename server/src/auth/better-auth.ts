@@ -11,7 +11,13 @@ import {
   authVerifications,
 } from "@paperclipai/db";
 import type { Config } from "../config.js";
+import { logger } from "../middleware/logger.js";
 import { resolvePaperclipInstanceId } from "../home-paths.js";
+import {
+  googleOAuthConfigStatus,
+  resolveGoogleOAuthCredentials,
+  stripGoogleOAuthTokens,
+} from "./google-auth.js";
 import {
   workspaceLoginHandoffPlugin,
   type WorkspaceHandoffExpectedIdentity,
@@ -238,6 +244,51 @@ export function resolveWorkspaceHandoffIdentity(
   };
 }
 
+export function buildGoogleAuthOptions(input: {
+  clientId: string;
+  clientSecret: string;
+  disableSignUp: boolean;
+}) {
+  return {
+    socialProviders: {
+      google: {
+        clientId: input.clientId,
+        clientSecret: input.clientSecret,
+        // Default scopes are openid, email, and profile. Online access
+        // avoids a refresh token, and prior grants must not widen scope.
+        accessType: "online" as const,
+        includeGrantedScopes: false,
+        prompt: "select_account" as const,
+        disableSignUp: input.disableSignUp,
+      },
+    },
+    account: {
+      accountLinking: {
+        enabled: true,
+        // Google is trusted only for Better Auth's verified-email link
+        // rules. requireLocalEmailVerified stays at its default (true):
+        // an unverified email/password row cannot absorb a Google identity.
+        trustedProviders: ["google" as const],
+        allowDifferentEmails: false,
+      },
+    },
+    databaseHooks: {
+      account: {
+        create: {
+          before: async (account: { providerId?: string }) => ({
+            data: stripGoogleOAuthTokens(account),
+          }),
+        },
+        update: {
+          before: async (account: { providerId?: string }) => ({
+            data: stripGoogleOAuthTokens(account),
+          }),
+        },
+      },
+    },
+  };
+}
+
 export function createBetterAuthInstance(db: Db, config: Config, trustedOrigins: string[]): BetterAuthInstance {
   const baseUrl = config.authBaseUrlMode === "explicit" ? config.authPublicBaseUrl : undefined;
   const publicUrl = process.env.PAPERCLIP_PUBLIC_URL?.trim() || baseUrl;
@@ -256,6 +307,13 @@ export function createBetterAuthInstance(db: Db, config: Config, trustedOrigins:
     authPublicBaseUrl: config.authPublicBaseUrl,
     publicUrl,
   });
+  const googleStatus = googleOAuthConfigStatus();
+  if (googleStatus === "incomplete") {
+    logger.warn(
+      "Google sign-in is disabled because both the client id and client secret must be set",
+    );
+  }
+  const googleCredentials = googleStatus === "enabled" ? resolveGoogleOAuthCredentials() : null;
 
   const authConfig = {
     baseURL: baseUrl,
@@ -275,6 +333,13 @@ export function createBetterAuthInstance(db: Db, config: Config, trustedOrigins:
       requireEmailVerification: false,
       disableSignUp: config.authDisableSignUp,
     },
+    ...(googleCredentials
+      ? buildGoogleAuthOptions({
+          clientId: googleCredentials.clientId,
+          clientSecret: googleCredentials.clientSecret,
+          disableSignUp: config.authDisableSignUp,
+        })
+      : {}),
     rateLimit: buildBetterAuthRateLimitOptions({
       deploymentMode: config.deploymentMode,
       deploymentExposure: config.deploymentExposure,

@@ -211,6 +211,19 @@ export const authSessionSchema = z.object({
 
 export type AuthSession = z.infer<typeof authSessionSchema>;
 
+export const authProviderCapabilitySchema = z.object({
+  id: z.string().trim().min(1).max(64),
+  name: z.string().trim().min(1).max(64),
+});
+
+export const authProvidersResponseSchema = z.object({
+  emailPassword: z.literal(true),
+  providers: z.array(authProviderCapabilitySchema),
+});
+
+export type AuthProviderCapability = z.infer<typeof authProviderCapabilitySchema>;
+export type AuthProvidersResponse = z.infer<typeof authProvidersResponseSchema>;
+
 export const updateCurrentUserProfileSchema = z.object({
   name: z.string().trim().min(1).max(120),
   image: z

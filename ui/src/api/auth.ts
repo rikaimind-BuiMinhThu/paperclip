@@ -1,6 +1,8 @@
 import {
+  authProvidersResponseSchema,
   authSessionSchema,
   currentUserProfileSchema,
+  type AuthProvidersResponse,
   type AuthSession,
   type CurrentUserProfile,
   type UpdateCurrentUserProfile,
@@ -34,6 +36,16 @@ export class AuthApiError extends Error {
     this.code = code;
     this.body = body;
   }
+}
+
+export function googleAuthorizeUrl(payload: unknown): string {
+  const url = payload && typeof payload === "object" && "url" in payload
+    ? (payload as { url?: unknown }).url
+    : null;
+  if (typeof url !== "string" || !url.startsWith("https://accounts.google.com/")) {
+    throw new AuthApiError("Unable to sign in with Google. Please try again.", 502, payload, "google_start_failed");
+  }
+  return url;
 }
 
 function toSession(value: unknown): AuthSession | null {
@@ -177,6 +189,30 @@ export const authApi = {
 
   signUpEmail: async (input: { name: string; email: string; password: string }) => {
     await authPost("/sign-up/email", input);
+  },
+
+  getProviders: async (): Promise<AuthProvidersResponse> => {
+    const res = await fetch("/api/auth/providers", {
+      credentials: "include",
+      headers: { Accept: "application/json" },
+      cache: "no-store",
+    });
+    const payload = await res.json().catch(() => null);
+    if (!res.ok) {
+      throw extractAuthError(payload as AuthErrorBody, res.status);
+    }
+    return authProvidersResponseSchema.parse(payload);
+  },
+
+  signInWithGoogle: async (input: { callbackURL: string; errorCallbackURL: string }) => {
+    const payload = await authPost("/sign-in/social", {
+      provider: "google",
+      callbackURL: input.callbackURL,
+      errorCallbackURL: input.errorCallbackURL,
+      disableRedirect: true,
+    });
+    const url = googleAuthorizeUrl(payload);
+    window.location.assign(url);
   },
 
   getProfile: async (): Promise<CurrentUserProfile> => {

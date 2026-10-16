@@ -324,4 +324,29 @@ describe.sequential("auth routes", () => {
 
     expect(res.status).toBe(400);
   });
+
+  it("returns email/password capability and hides Google without credentials", async () => {
+    vi.stubEnv("GOOGLE_CLIENT_ID", "");
+    vi.stubEnv("GOOGLE_CLIENT_SECRET", "");
+    vi.stubEnv("PAPERCLIP_GOOGLE_CLIENT_ID", "");
+    vi.stubEnv("PAPERCLIP_GOOGLE_CLIENT_SECRET", "");
+    const app = await createApp({ type: "none", source: "none" }, baseUser);
+    const res = await request(app).get("/api/auth/providers");
+    expect(res.status).toBe(200);
+    expect(res.body).toEqual({ emailPassword: true, providers: [] });
+  });
+
+  it("returns the Google provider without its credentials", async () => {
+    vi.stubEnv("GOOGLE_CLIENT_ID", "google-client-id");
+    vi.stubEnv("GOOGLE_CLIENT_SECRET", "google-client-secret");
+    const app = await createApp({ type: "none", source: "none" }, baseUser);
+    const res = await request(app).get("/api/auth/providers");
+    expect(res.status).toBe(200);
+    expect(res.body).toEqual({
+      emailPassword: true,
+      providers: [{ id: "google", name: "Google" }],
+    });
+    expect(JSON.stringify(res.body)).not.toContain("google-client-id");
+    expect(JSON.stringify(res.body)).not.toContain("google-client-secret");
+  });
 });
