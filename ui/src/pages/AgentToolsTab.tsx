@@ -761,7 +761,7 @@ export function AgentToolsTab({ agent, companyId }: { agent: AgentDetailRecord; 
               ) : (
                 <>
                   <p className="text-(length:--text-micro) text-muted-foreground">
-                    Tools the agent could name but Paperclip would block:
+                    Tools the agent could name but RIKAI AI Harness would block:
                   </p>
                   <div className="flex flex-wrap gap-1">
                     {deniedTools.slice(0, DENIED_TOOLS_DISPLAY_LIMIT).map((tool) => (

@@ -192,7 +192,7 @@ describe("Workspaces", () => {
     const heading = Array.from(container.querySelectorAll("h2")).find((node) => node.textContent === "Workspaces");
     const summaryCard = container.querySelector('[data-testid="summary-slot-card"]');
     expect(heading && summaryCard ? Boolean(heading.compareDocumentPosition(summaryCard) & Node.DOCUMENT_POSITION_FOLLOWING) : false).toBe(true);
-    expect(container.textContent).toContain("Paperclip App");
+    expect(container.textContent).toContain("RIKAI AI Harness App");
     expect(container.textContent).toContain("Workspace Alpha");
     expect(container.textContent).toContain("PAP-11916");
     expect(container.textContent).toContain("+1 more");

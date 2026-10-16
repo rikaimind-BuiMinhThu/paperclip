@@ -1,4 +1,4 @@
-# Paperclip Create Agent API Reference
+# RIKAI AI Harness Create Agent API Reference
 
 ## Core Endpoints
 

@@ -2,7 +2,9 @@
 
 import { flushSync } from "react-dom";
 import { createRoot, type Root } from "react-dom/client";
-import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
+import { i18n } from "@/i18n";
+import { DEFAULT_LOCALE } from "@/i18n/locales";
 import { savePendingCloudHandoff } from "@/lib/oauthHandoff";
 import { PaperclipCloudOAuthHandoffPage } from "./PaperclipCloudOAuthHandoff";
 
@@ -51,6 +53,14 @@ afterEach(() => {
 });
 
 describe("PaperclipCloudOAuthHandoffPage", () => {
+  beforeAll(async () => {
+    await i18n.changeLanguage("en");
+  });
+
+  afterAll(async () => {
+    await i18n.changeLanguage(DEFAULT_LOCALE);
+  });
+
   it("keeps a tenant loading state visible until the provider URL is ready", async () => {
     savePendingCloudHandoff(SESSION);
     let complete: ((response: Response) => void) | undefined;
@@ -80,7 +90,7 @@ describe("PaperclipCloudOAuthHandoffPage", () => {
     await act(async () => root.render(<PaperclipCloudOAuthHandoffPage />));
     await flushReact();
 
-    expect(container.textContent).toContain("Sign-in couldn’t continue");
+    expect(container.textContent).toContain("Sign-in couldn't continue");
     expect(container.textContent).toContain("This sign-in expired. Start the connection again.");
     expect(navigateTopLevel).not.toHaveBeenCalled();
   });
@@ -95,7 +105,7 @@ describe("PaperclipCloudOAuthHandoffPage", () => {
     await act(async () => root.render(<PaperclipCloudOAuthHandoffPage />));
     await flushReact();
 
-    expect(container.textContent).toContain("Paperclip couldn’t refresh this sign-in. Try again to continue.");
+    expect(container.textContent).toContain("RIKAI AI Harness couldn't refresh this sign-in. Try again to continue.");
     expect(navigateTopLevel).not.toHaveBeenCalled();
   });
 });

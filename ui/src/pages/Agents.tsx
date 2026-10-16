@@ -73,8 +73,8 @@ interface EnvironmentDescriptor {
 
 const localEnvironmentDescriptor: EnvironmentDescriptor = {
   label: "Local",
-  detail: "Paperclip host",
-  title: "Local - Paperclip host",
+  detail: "RIKAI AI Harness host",
+  title: "Local - RIKAI AI Harness host",
 };
 
 const loadingEnvironmentDescriptor: EnvironmentDescriptor = {
@@ -135,11 +135,11 @@ function describeEnvironment(
   capabilities?: EnvironmentCapabilities | null,
 ): EnvironmentDescriptor {
   const detail = isPlatformManagedEnvironment(environment)
-    ? "Managed by Paperclip"
+    ? "Managed by RIKAI AI Harness"
     : environment.driver === "sandbox"
       ? `${getSandboxProviderLabel(environment, capabilities)} sandbox provider`
       : environment.driver === "local"
-        ? "Paperclip host"
+        ? "RIKAI AI Harness host"
         : formatEnvironmentDriver(environment.driver);
 
   return {

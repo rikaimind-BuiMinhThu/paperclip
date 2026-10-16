@@ -239,9 +239,9 @@ export function githubReviewPrompt(
   revision: number,
 ): string {
   return [
-    "GitHub channel request for the assigned Paperclip agent. Continue this ordinary Paperclip task.",
+    "GitHub channel request for the assigned RIKAI AI Harness agent. Continue this ordinary RIKAI AI Harness task.",
     `Review configuration revision: ${revision}.`,
-    "Use this task's GitHub bot tools. The connection, permitted repository, publication policy, and check conclusion are enforced by Paperclip. Never substitute personal credentials.",
+    "Use this task's GitHub bot tools. The connection, permitted repository, publication policy, and check conclusion are enforced by RIKAI AI Harness. Never substitute personal credentials.",
     policy.prompts[context.event],
     policy.instructions,
     "Assessment rubric (0–5):",

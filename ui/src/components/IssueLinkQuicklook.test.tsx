@@ -241,7 +241,7 @@ describe("IssueLinkQuicklook", () => {
     const text = card?.textContent ?? "";
 
     expect(text).toContain("PAP-1");
-    expect(text).toContain("Paperclip App");
+    expect(text).toContain("RIKAI AI Harness App");
     expect(text).toContain("Quicklook title");
     expect(text).toContain("Quicklook description");
     expect(text.indexOf("PAP-1")).toBeLessThan(text.indexOf("Quicklook title"));

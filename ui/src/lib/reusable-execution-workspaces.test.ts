@@ -192,7 +192,7 @@ describe("buildReusableExecutionWorkspaceOptionGroups", () => {
     ], { now });
 
     const option = groups[0]!.options[0]!;
-    expect(option.label).toBe("Paperclip app");
+    expect(option.label).toBe("RIKAI AI Harness app");
     expect(option.description).toBe("feature/workspaces");
     expect(option.searchText).toBe("Paperclip app active feature/workspaces /repo/paperclip workspace-1");
   });

@@ -566,7 +566,7 @@ describe("worktree helpers", () => {
       availableMigrations: ["0001_initial.sql", "0002_current.sql"],
       appliedMigrations: ["0001_initial.sql", "0003_unknown.sql"],
       journalEntryCount: 3,
-    }, "sourcePrefix")).toThrow("Migration journal is not a prefix of this Paperclip checkout");
+    }, "sourcePrefix")).toThrow("Migration journal is not a prefix of this RIKAI AI Harness checkout");
   });
 
   it("accepts a current source whose migration application order differs from filename order", () => {
@@ -2039,7 +2039,7 @@ describe("worktree helpers", () => {
         resolveWorktreeReseedTargetPaths({
           configPath,
           rootPath: worktreeRoot,
-        })).toThrow("does not look like a worktree-local Paperclip instance");
+        })).toThrow("does not look like a worktree-local RIKAI AI Harness instance");
     } finally {
       fs.rmSync(tempRoot, { recursive: true, force: true });
     }

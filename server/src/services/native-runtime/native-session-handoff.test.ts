@@ -16,7 +16,7 @@ describe("bounded fresh-session handoff", () => {
     expect(rendered).toContain('"truncated":true');
     expect(rendered).toContain("content omitted");
     expect(rendered).toContain("get_task_history");
-    expect(rendered).toContain("Legacy adapters can use the equivalent Paperclip");
+    expect(rendered).toContain("Legacy adapters can use the equivalent RIKAI AI Harness");
   });
 
   it("restores the handoff on fresh bootstrap and resume failure, without replaying it on resume", () => {

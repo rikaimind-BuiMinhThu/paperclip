@@ -12892,7 +12892,7 @@ describeEmbeddedPostgres("chat channel control-plane integration", () => {
             command: "task",
             description: "Start or continue a Paperclip task",
           },
-          { command: "status", description: "Show the active Paperclip task" },
+          { command: "task", description: "Start or continue a RIKAI AI Harness task" },
           {
             command: "new",
             description: "Start a new task after the current one",
@@ -17525,7 +17525,7 @@ describeEmbeddedPostgres("chat channel control-plane integration", () => {
       expect.objectContaining({ state: "active", sessionGeneration: 1 }),
     ]);
     expect(runtime.endpoints.get(endpoint.id)?.posts[0]?.text).toBe(
-      "Send your request to start a new Paperclip task.",
+      "Send your request to start a new RIKAI AI Harness task.",
     );
     // Command-only acknowledgements have no run whose final reply can retire
     // a processing reaction. The subsequent task message has its own receipt.
@@ -29745,7 +29745,7 @@ describeEmbeddedPostgres("chat channel control-plane integration", () => {
     ).toMatchObject({
       progressState: "failed",
       text: expect.stringContaining(
-        "Ask a Paperclip admin to create a private identity link for this account or enable isolated guest execution, then start a new task.",
+        "Ask a RIKAI AI Harness admin to create a private identity link for this account or enable isolated guest execution, then start a new task.",
       ),
     });
   });
@@ -34679,7 +34679,7 @@ describeEmbeddedPostgres("chat channel control-plane integration", () => {
     expect(providerRuntime.posts).toHaveLength(1);
     const delivered = providerRuntime.posts[0]!;
     expect(delivered.text).toBe(
-      "Paperclip attached the complete response because it exceeds Discord’s message limit.",
+      "RIKAI AI Harness attached the complete response because it exceeds Discord’s message limit.",
     );
     expect(delivered.text).not.toContain("...");
     expect(delivered.files).toHaveLength(1);
@@ -35421,7 +35421,7 @@ describeEmbeddedPostgres("chat channel control-plane integration", () => {
     expect(completed).toMatchObject({ state: "published", attempts: 2 });
     expect(providerRuntime.posts).toHaveLength(1);
     expect(providerRuntime.posts[0]?.text).toBe(
-      "Paperclip attached the complete response to preserve its Markdown formatting.",
+      "RIKAI AI Harness attached the complete response to preserve its Markdown formatting.",
     );
     const attachment = providerRuntime.posts[0]?.attachments?.[0] as {
       data: Buffer;
@@ -36395,7 +36395,7 @@ describeEmbeddedPostgres("chat channel control-plane integration", () => {
     );
     await vi.waitFor(() =>
       expect(channel.post).toHaveBeenCalledWith(
-        "This Paperclip action is no longer available.",
+        "This RIKAI AI Harness action is no longer available.",
       ),
     );
     expect(channel.postEphemeral).toHaveBeenCalledTimes(2);
@@ -40594,7 +40594,7 @@ describeEmbeddedPostgres("chat channel control-plane integration", () => {
       ) ?? [],
     ).toEqual([]);
     expect(publication.payload.text).toContain(
-      "Open the task in Paperclip to respond",
+      "Open the task in RIKAI AI Harness to respond",
     );
     expect(callbacks.onModalSubmit).toBeTypeOf("function");
     expect(callbacks.onModalClose).toBeUndefined();
@@ -48443,7 +48443,7 @@ describeEmbeddedPostgres("chat channel control-plane integration", () => {
     expect((await service.listPrincipals(other.id))[0]?.lastConnectAt).toBeNull();
     const notice = String((postEphemeral.mock.calls[0] as unknown[])[1]);
     const token = /token=([A-Za-z0-9_-]+)/.exec(notice)![1];
-    expect(notice).toContain("Connect your Paperclip account");
+    expect(notice).toContain("Connect your RIKAI AI Harness account");
     expect((postEphemeral.mock.calls[0] as unknown[])[2]).toEqual({ fallbackToDM: false });
     expect(await service.previewIdentityLink(token, "owner-user")).toMatchObject({ selfService: true, canConfirm: true, externalLabel: "Connect Person" });
     expect(await service.setupTestStatus(endpoint.id, "owner-user")).toEqual({ messageReceivedAt: null });
@@ -49471,9 +49471,9 @@ describeEmbeddedPostgres("chat channel control-plane integration", () => {
         principalId: null,
         redactedError:
           authorizationChange === "resource_disabled"
-            ? "Destination is not enabled in Paperclip"
+            ? "Destination is not enabled in RIKAI AI Harness"
             : authorizationChange === "viewer"
-              ? "Linked Paperclip account is not currently permitted"
+              ? "Linked RIKAI AI Harness account is not currently permitted"
               : "External identity must be linked to a Paperclip account",
         state: "filtered",
       });
@@ -50765,7 +50765,7 @@ describeEmbeddedPostgres("chat channel control-plane integration", () => {
     await vi.waitFor(() => expect(postEphemeral).toHaveBeenCalledTimes(3));
     for (const call of postEphemeral.mock.calls) {
       expect(call[1]).toBe(
-        "Use status, new, and close in a direct message with this agent. In a channel, open the Paperclip task from its Slack thread.",
+        "Use status, new, and close in a direct message with this agent. In a channel, open the RIKAI AI Harness task from its Slack thread.",
       );
       expect(call[2]).toEqual({ fallbackToDM: false });
     }
@@ -52061,7 +52061,7 @@ describeEmbeddedPostgres("chat channel control-plane integration", () => {
     ).toEqual([
       expect.stringMatching(/— todo$/),
       expect.stringContaining(
-        "Open a new Telegram forum topic to start a new Paperclip task.",
+        "Open a new Telegram forum topic to start a new RIKAI AI Harness task.",
       ),
       "This chat conversation is closed. A later message here will continue the same Paperclip task.",
     ]);
@@ -52255,7 +52255,7 @@ describeEmbeddedPostgres("chat channel control-plane integration", () => {
     await vi.waitFor(() =>
       expect(postEphemeral).toHaveBeenCalledWith(
         "U-COMMANDER",
-        "This channel or account is not allowed to start Paperclip work.",
+        "This channel or account is not allowed to start RIKAI AI Harness work.",
         { fallbackToDM: false },
       ),
     );
@@ -63395,7 +63395,7 @@ describeEmbeddedPostgres("chat channel control-plane integration", () => {
       const [conversation] = await service.listConversations(endpoint.id);
       if (!conversation)
         throw new Error("Expected Telegram attachment failure conversation");
-      const visibleFailure = `Paperclip could not safely import the attached Telegram file. Please resend it as a supported file under ${formatAttachmentSize(MAX_ATTACHMENT_BYTES)} or include text describing the request.`;
+      const visibleFailure = `RIKAI AI Harness could not safely import the attached Telegram file. Please resend it as a supported file under ${formatAttachmentSize(MAX_ATTACHMENT_BYTES)} or include text describing the request.`;
       await expect(
         db
           .select({ body: issueComments.body })
@@ -65092,7 +65092,7 @@ describeEmbeddedPostgres("chat channel control-plane integration", () => {
             ),
           );
         expect(publication).toMatchObject({ state: "retry", attempts: 1 });
-        expect(publication.payload.text).toContain("Open this Paperclip task");
+        expect(publication.payload.text).toContain("Open this RIKAI AI Harness task");
         const payload = { ...publication.payload };
         if (mode === "text") payload.text += "\nChanged after preparation";
         if (mode === "progress") payload.progressState = "completed";

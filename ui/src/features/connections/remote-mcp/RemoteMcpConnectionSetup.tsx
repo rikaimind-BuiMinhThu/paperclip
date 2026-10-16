@@ -62,7 +62,7 @@ export function RemoteMcpConnectionSetup({ provider, state: s, actions: a, agent
   const change = (patch: Partial<RemoteMcpSetupState>) => a.edit(patch);
   const external = (purpose: Parameters<typeof a.openProvider>[0], text: string) => <Button type="button" variant="link" className="h-auto p-0 text-sm text-current underline" onClick={() => a.openProvider(purpose)}>{text}<ExternalLink className="size-3.5" aria-hidden="true" /></Button>;
   const boundary = <InlineBanner compact>
-    Paperclip controls access to the tools listed here. App and action permissions inside these tools are managed in {external("manage", provider.name)}.
+    RIKAI AI Harness controls access to the tools listed here. App and action permissions inside these tools are managed in {external("manage", provider.name)}.
   </InlineBanner>;
   const footer = (children: ReactNode) => <SetupWizardFooter onSaveExit={a.saveExit} disabled={busy}>{children}</SetupWizardFooter>;
 
@@ -111,13 +111,13 @@ export function RemoteMcpConnectionSetup({ provider, state: s, actions: a, agent
   const error = s.connectStatus === "invalid_url" ? { title: "Enter a valid MCP URL", body: "Paste the complete server URL, including https:// or http://. A dashboard page is not an MCP endpoint." }
     : s.connectStatus === "oauth_failed" ? { title: `${provider.name} couldn’t connect`, body: "Authorization did not complete. Your saved connection is still here, so you can try again." }
     : s.connectStatus === "rejected" ? { title: "Credentials were rejected", body: `Check or replace the credentials from ${provider.name}, then reconnect. Your agent access and tool choices are preserved.` }
-    : s.connectStatus === "unreachable" ? { title: "Paperclip could not reach this server", body: "Check that the endpoint is running and reachable from Paperclip, then try again. Your draft is still here." }
+    : s.connectStatus === "unreachable" ? { title: "RIKAI AI Harness could not reach this server", body: "Check that the endpoint is running and reachable from RIKAI AI Harness, then try again. Your draft is still here." }
     : null;
 
   return <div className={host === "dialog" ? "min-w-0 text-foreground" : "mx-auto max-w-6xl p-4 text-foreground sm:p-8"} data-remote-mcp-provider={provider.id}>
     <StepHeader headingRef={heading} appIdentity={{ name: provider.name, logoUrl: null }}
       title={upstreamServiceName ? `Connect ${upstreamServiceName} through ${provider.name}` : s.step === "draft" ? "Continue your setup" : s.setupComplete ? s.step === "access" ? "Who can use this connection" : s.step === "connect" ? `Reconnect ${provider.name}` : provider.name : undefined}
-      subtitle={currentStep >= 0 && !s.setupComplete ? `Paperclip will use ${provider.name} on your behalf.` : s.step === "draft" ? `Your ${provider.name} setup is ready to resume.` : s.step === "permissions" ? `Connected${s.identity ? ` as ${s.identity}` : ""} · ${s.tools.length} actions available` : `Manage this ${provider.name} connection.`}
+      subtitle={currentStep >= 0 && !s.setupComplete ? `RIKAI AI Harness will use ${provider.name} on your behalf.` : s.step === "draft" ? `Your ${provider.name} setup is ready to resume.` : s.step === "permissions" ? `Connected${s.identity ? ` as ${s.identity}` : ""} · ${s.tools.length} actions available` : `Manage this ${provider.name} connection.`}
       step={currentStep >= 0 && !s.setupComplete ? "key" : "gallery"} activeIndex={currentStep} labels={steps.map(() => "Connect")} onCancel={busy || s.step === "management" || s.step === "permissions" || s.step === "draft" ? undefined : onCancel ?? a.saveExit} />
     <main className="space-y-6">
         {upstreamServiceName && <InlineBanner compact>{provider.name} is an external service that handles the connection and requests to {upstreamServiceName}. After connecting, the agent will verify the app and guide you through any additional authorization.</InlineBanner>}
@@ -146,7 +146,7 @@ export function RemoteMcpConnectionSetup({ provider, state: s, actions: a, agent
           </div>
           {s.connectStatus === "sign_in" && provider.supportsBrowserAuth ? <>
             <div role="status"><InlineBanner title={`Finish signing in to ${provider.name}`}>
-              Complete sign-in in the provider window, then return here. Paperclip is waiting for confirmation.
+              Complete sign-in in the provider window, then return here. RIKAI AI Harness is waiting for confirmation.
             </InlineBanner></div>
             <p className="text-sm text-muted-foreground">If a window did not open, {authorizationUrl ? <a className="text-current underline" href={authorizationUrl} onClick={() => a.openProvider("sign_in")} target="_blank" rel="noopener noreferrer">open sign-in again</a> : external("sign_in", "open sign-in again")}.</p>
             {footer(<><Button variant="outline" onClick={a.cancelConnect}>Cancel sign-in</Button><Button disabled>Waiting for sign-in</Button></>)}

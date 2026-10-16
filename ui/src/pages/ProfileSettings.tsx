@@ -138,8 +138,8 @@ export function ProfileSettings() {
   const initials = deriveInitials(currentName);
   const isSavingProfile = updateMutation.isPending || uploadAvatarMutation.isPending || removeAvatarMutation.isPending;
   const uploadHint = selectedCompany
-    ? `Stored in Paperclip file storage for ${selectedCompany.name}.`
-    : "Select an organization to upload an avatar into Paperclip storage.";
+    ? `Stored in RIKAI AI Harness file storage for ${selectedCompany.name}.`
+    : "Select an organization to upload an avatar into RIKAI AI Harness storage.";
 
   return (
     <div className="max-w-6xl space-y-6">

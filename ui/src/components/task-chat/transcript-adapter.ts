@@ -1148,7 +1148,7 @@ export function paperclipRunnerHistoryItems(
 }
 
 /**
- * Semantic rows for the Paperclip runner's Codex-style activity disclosure.
+ * Semantic rows for the RIKAI AI Harness runner's Codex-style activity disclosure.
  *
  * This is intentionally narrower than the stored transcript and the runner
  * inspector: it keeps work a person can understand or act on while excluding
@@ -1589,12 +1589,12 @@ function phaseSummary(
         case "paperclip_read":
           text =
             count === 1
-              ? "Read from Paperclip"
-              : `Read from Paperclip ${count} times`;
+              ? "Read from RIKAI AI Harness"
+              : `Read from RIKAI AI Harness ${count} times`;
           break;
         case "task_operation":
           text =
-            count === 1 ? "Used Paperclip" : `Used Paperclip ${count} times`;
+            count === 1 ? "Used RIKAI AI Harness" : `Used RIKAI AI Harness ${count} times`;
           break;
         default:
           text = count === 1 ? "Used a tool" : `Used ${count} tools`;

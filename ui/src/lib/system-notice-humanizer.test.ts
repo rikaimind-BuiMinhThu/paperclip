@@ -29,7 +29,7 @@ describe("humanizeSystemNotice", () => {
   it("classifies configuration_incomplete failures", () => {
     const result = humanizeSystemNotice({
       body:
-        "Paperclip stopped before dispatching the adapter because required secret/env bindings are missing. " +
+        "RIKAI AI Harness stopped before dispatching the adapter because required secret/env bindings are missing. " +
         "Latest retry failure: `configuration_incomplete`. Moving it to `blocked` with a source-scoped recovery action.",
     });
     expect(result.title).toBe("Task paused — a secret/config binding is missing");
@@ -39,7 +39,7 @@ describe("humanizeSystemNotice", () => {
   it("classifies missing secret bindings even without a failure code", () => {
     const result = humanizeSystemNotice({
       body:
-        "Paperclip stopped before dispatching the adapter because required secret/env bindings are missing. " +
+        "RIKAI AI Harness stopped before dispatching the adapter because required secret/env bindings are missing. " +
         "Moving it to `blocked` so an operator can bind the missing secret(s).",
     });
     expect(result.title).toBe("Task paused — a secret/config binding is missing");
@@ -48,7 +48,7 @@ describe("humanizeSystemNotice", () => {
   it("classifies workspace validation failures", () => {
     const result = humanizeSystemNotice({
       body:
-        "Paperclip stopped before launching the local adapter because the issue workspace failed validation. " +
+        "RIKAI AI Harness stopped before launching the local adapter because the issue workspace failed validation. " +
         "This prevents git-sensitive adapters from running in an unrelated fallback cwd.",
     });
     expect(result.title).toBe("Task paused — workspace problem");

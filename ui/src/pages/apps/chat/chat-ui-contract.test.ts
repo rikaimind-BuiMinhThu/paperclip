@@ -82,9 +82,9 @@ describe("chat connector UI contract", () => {
     expect(detail).toContain("Allow direct messages");
     expect(detail).toContain("Allow group chats");
     expect(detail).toContain("Their tasks run only with an isolated workspace");
-    expect(detail).toContain("otherwise Paperclip safely refuses the request");
+    expect(detail).toContain("otherwise RIKAI AI Harness safely refuses the request");
     expect(setup).toContain("Link the account you’re testing");
-    expect(setup).toContain("Paperclip does not replay the refused request");
+    expect(setup).toContain("RIKAI AI Harness does not replay the refused request");
     expect(setup).toContain("Review identity access");
     expect(setup).toContain("instanceSettingsApi.getExperimental()");
     expect(setup).toContain("chatEndpointsApi.listPrincipals(endpointId)");

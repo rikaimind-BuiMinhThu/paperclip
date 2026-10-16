@@ -221,7 +221,7 @@ function buildConnectionErrorMessage(input: {
 }): string {
   const healthUrl = buildHealthCheckUrl(input.url);
   const lines = [
-    "Could not reach the Paperclip API.",
+    "Could not reach the RIKAI AI Harness API.",
     "",
     `Request: ${input.method} ${input.url}`,
   ];
@@ -230,12 +230,12 @@ function buildConnectionErrorMessage(input: {
   }
   lines.push(
     "",
-    "This usually means the Paperclip server is not running, the configured URL is wrong, or the request is being blocked before it reaches Paperclip.",
+    "This usually means the RIKAI AI Harness server is not running, the configured URL is wrong, or the request is being blocked before it reaches RIKAI AI Harness.",
     "",
     "Try:",
-    "- Start Paperclip with `pnpm dev` (from a source checkout) or `npx paperclipai run`.",
+    "- Start RIKAI AI Harness with `pnpm dev` (from a source checkout) or `npx paperclipai run`.",
     `- Verify the server is reachable with \`curl ${healthUrl}\`.`,
-    `- If Paperclip is running elsewhere, pass \`--api-base ${input.apiBase.replace(/\/+$/, "")}\` or set \`PAPERCLIP_API_URL\`.`,
+    `- If RIKAI AI Harness is running elsewhere, pass \`--api-base ${input.apiBase.replace(/\/+$/, "")}\` or set \`PAPERCLIP_API_URL\`.`,
   );
   return lines.join("\n");
 }

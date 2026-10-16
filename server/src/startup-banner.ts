@@ -45,6 +45,7 @@ const ansi = {
   yellow: "\x1b[33m",
   magenta: "\x1b[35m",
   blue: "\x1b[34m",
+  white: "\x1b[37m",
 };
 
 function color(text: string, c: keyof typeof ansi): string {
@@ -135,12 +136,13 @@ export function printStartupBanner(opts: StartupBannerOptions): void {
     : color("disabled", "yellow");
 
   const art = [
-    color("██████╗  █████╗ ██████╗ ███████╗██████╗  ██████╗██╗     ██╗██████╗ ", "cyan"),
-    color("██╔══██╗██╔══██╗██╔══██╗██╔════╝██╔══██╗██╔════╝██║     ██║██╔══██╗", "cyan"),
-    color("██████╔╝███████║██████╔╝█████╗  ██████╔╝██║     ██║     ██║██████╔╝", "cyan"),
-    color("██╔═══╝ ██╔══██║██╔═══╝ ██╔══╝  ██╔══██╗██║     ██║     ██║██╔═══╝ ", "cyan"),
-    color("██║     ██║  ██║██║     ███████╗██║  ██║╚██████╗███████╗██║██║     ", "cyan"),
-    color("╚═╝     ╚═╝  ╚═╝╚═╝     ╚══════╝╚═╝  ╚═╝ ╚═════╝╚══════╝╚═╝╚═╝     ", "cyan"),
+    color("██████╗ ██╗██╗  ██╗ █████╗ ██╗", "cyan"),
+    color("██╔══██╗██║██║ ██╔╝██╔══██╗██║", "cyan"),
+    color("██████╔╝██║█████╔╝ ███████║██║", "cyan"),
+    color("██╔══██╗██║██╔═██╗ ██╔══██║██║", "cyan"),
+    color("██║  ██║██║██║  ██╗██║  ██║██║", "cyan"),
+    color("╚═╝  ╚═╝╚═╝╚═╝  ╚═╝╚═╝  ╚═╝╚═╝", "cyan"),
+    color("  RIKAI AI Harness", "white"),
   ];
 
   const lines = [

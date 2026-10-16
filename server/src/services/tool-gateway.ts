@@ -978,9 +978,9 @@ const BUILTIN_TOOLS: ToolGatewayDescriptor[] = [
   },
   {
     name: "paperclip-self:list_my_issues",
-    displayName: "List my Paperclip issues",
+    displayName: "List my RIKAI AI Harness issues",
     description:
-      "Paperclip self-MCP read fixture that lists the authenticated agent's current issues.",
+      "RIKAI AI Harness self-MCP read fixture that lists the authenticated agent's current issues.",
     parametersSchema: {
       type: "object",
       properties: { limit: { type: "number" } },
@@ -994,7 +994,7 @@ const BUILTIN_TOOLS: ToolGatewayDescriptor[] = [
     name: "paperclip-self:get_issue_context",
     displayName: "Get issue context",
     description:
-      "Paperclip self-MCP read fixture that returns scoped issue context and plan document metadata.",
+      "RIKAI AI Harness self-MCP read fixture that returns scoped issue context and plan document metadata.",
     parametersSchema: {
       type: "object",
       properties: { issueId: { type: "string" } },
@@ -1038,7 +1038,7 @@ const VIRTUAL_SEARCH_TOOLS: ToolGatewayDescriptor = {
   name: "search_tools",
   displayName: "Search available tools",
   description:
-    "Search the tools available through this Paperclip gateway without loading every target tool into the tool list.",
+    "Search the tools available through this RIKAI AI Harness gateway without loading every target tool into the tool list.",
   parametersSchema: {
     type: "object",
     properties: {
@@ -1056,7 +1056,7 @@ const VIRTUAL_RUN_TOOL: ToolGatewayDescriptor = {
   name: "run_tool",
   displayName: "Run a selected tool",
   description:
-    "Run a target tool by name after Paperclip applies the target tool's profile, policy, approval, and rate-limit checks.",
+    "Run a target tool by name after RIKAI AI Harness applies the target tool's profile, policy, approval, and rate-limit checks.",
   parametersSchema: {
     type: "object",
     properties: {
@@ -3134,7 +3134,7 @@ export function createToolGatewayService(
       if (!session.agentId) {
         throw new ToolGatewayHttpError(
           403,
-          "Paperclip self tools require an agent-scoped gateway session",
+          "RIKAI AI Harness self tools require an agent-scoped gateway session",
           "agent_context_required",
         );
       }
@@ -3167,7 +3167,7 @@ export function createToolGatewayService(
       if (!session.agentId) {
         throw new ToolGatewayHttpError(
           403,
-          "Paperclip self tools require an agent-scoped gateway session",
+          "RIKAI AI Harness self tools require an agent-scoped gateway session",
           "agent_context_required",
         );
       }
@@ -3737,9 +3737,9 @@ export function createToolGatewayService(
     )
       return grant;
     if (oauth.strategy === "paperclip_id_connector") {
-      // Paperclip ID used different endpoints, signing metadata, envelope
+      // RIKAI AI Harness ID used different endpoints, signing metadata, envelope
       // purposes, and a different Google client. Its refresh token cannot be
-      // exchanged through Paperclip Cloud. Let an unexpired access token finish
+      // exchanged through RIKAI AI Harness Cloud. Let an unexpired access token finish
       // its useful life, then require an explicit managed-connector enrollment
       // and provider reconnect instead of sending it to the wrong client.
       await db
@@ -3751,7 +3751,7 @@ export function createToolGatewayService(
         .where(eq(connectionGrants.id, grant.id));
       throw new ToolGatewayHttpError(
         409,
-        "Legacy authorization must be reconnected through Paperclip Cloud",
+        "Legacy authorization must be reconnected through RIKAI AI Harness Cloud",
         "connector_reauthorization_required",
         {
           connectionId: connection.id,
@@ -4335,7 +4335,7 @@ export function createToolGatewayService(
       detailsMarkdown:
         grantKind === "organization"
           ? "Vercel Connect reports that the shared organization identity needs authorization."
-          : "This run needs your personal authorization. Paperclip will not use another user's identity.",
+          : "This run needs your personal authorization. RIKAI AI Harness will not use another user's identity.",
       target: {
         type: "custom" as const,
         key: `connection:${connection.uid}:user:${userId}`,
@@ -5796,7 +5796,7 @@ export function createToolGatewayService(
         status: "awaiting_approval",
         errorCode: "elicitation_required",
         errorMessage:
-          "Remote MCP tool requested elicitation; Paperclip created an issue interaction for the response.",
+          "Remote MCP tool requested elicitation; RIKAI AI Harness created an issue interaction for the response.",
         updatedAt: now,
       })
       .where(eq(toolInvocations.id, input.invocationId));
@@ -6446,7 +6446,7 @@ export function createToolGatewayService(
             },
           },
         },
-        notes: ["Use the full Paperclip origin before the endpoint path."],
+        notes: ["Use the full RIKAI AI Harness origin before the endpoint path."],
       },
       {
         client: "claude_desktop",
@@ -6506,7 +6506,7 @@ export function createToolGatewayService(
             },
           },
         },
-        notes: ["Use the full Paperclip origin before the endpoint path."],
+        notes: ["Use the full RIKAI AI Harness origin before the endpoint path."],
       },
     ];
   }

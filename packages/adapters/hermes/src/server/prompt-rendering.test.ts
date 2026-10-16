@@ -29,7 +29,7 @@ function baseContext(overrides: Record<string, unknown> = {}) {
         fallbackFetchNeeded: false,
       },
       paperclipTaskMarkdown: [
-        "Paperclip task context:",
+        "RIKAI AI Harness task context:",
         '- Issue: "PAP-3404"',
         '- Title: "Plan the Hermes prompt update"',
         "",
@@ -64,7 +64,7 @@ test("renders standard assignment wake with task authority and no backlog discov
       fallbackFetchNeeded: false,
     },
     paperclipTaskMarkdown: [
-      "Paperclip task context:",
+      "RIKAI AI Harness task context:",
       '- Issue: "PAP-11750"',
       '- Title: "Add Hermes prompt rendering regression tests"',
       "",
@@ -79,7 +79,7 @@ test("renders standard assignment wake with task authority and no backlog discov
   expect(prompt).toContain("- reason: issue_assigned");
   expect(prompt).toContain("- issue: PAP-11750 Add Hermes prompt rendering regression tests");
   expect(prompt).toContain("- issue work mode: standard");
-  expect(prompt).toContain("Paperclip task context:");
+  expect(prompt).toContain("RIKAI AI Harness task context:");
   expect(prompt).toContain("Add focused unit tests for assignment wake and custom prompt rendering.");
   expect(prompt).toContain("The harness already checked out this issue for the current run.");
   expect(prompt).not.toContain("clear final disposition");
@@ -105,7 +105,7 @@ test("keeps current wake comments in the wake owner and preserves assignment mar
       fallbackFetchNeeded: false,
     },
     paperclipTaskMarkdown: [
-      "Paperclip task context:",
+      "RIKAI AI Harness task context:",
       '- Issue: "PAP-11751"',
     ].join("\n"),
     paperclipTurnContext: {
@@ -220,7 +220,7 @@ test("renders accepted-plan continuation without authorizing implementation on t
 test("keeps authoritative parent and ancestor context from task markdown", () => {
   const prompt = buildPrompt(baseContext({
     paperclipTaskMarkdown: [
-      "Paperclip task context:",
+      "RIKAI AI Harness task context:",
       '- Issue: "PAP-3404"',
       "",
       "Authoritative parent / ancestor context:",

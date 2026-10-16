@@ -48,7 +48,7 @@ describe("TrustPresetSection", () => {
 
     expect(view.text()).toContain("Trust preset");
     expect(view.text()).not.toContain("Boundary type");
-    expect(view.text()).not.toContain("Get Paperclip EE.");
+    expect(view.text()).not.toContain("Get RIKAI AI Harness EE.");
   });
 
   it("shows a selectable CE boundary editor for low-trust review", () => {
@@ -67,8 +67,8 @@ describe("TrustPresetSection", () => {
 
     expect(view.text()).toContain("Containment active");
     expect(view.text()).toContain("Boundary type");
-    expect(view.text()).toContain("Paperclip App");
-    expect(view.text()).toContain("Get Paperclip EE.");
+    expect(view.text()).toContain("RIKAI AI Harness App");
+    expect(view.text()).toContain("Get RIKAI AI Harness EE.");
     expect(view.text()).not.toContain("Managed by EE/API");
   });
 

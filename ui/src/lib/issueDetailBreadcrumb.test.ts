@@ -182,7 +182,7 @@ describe("issueDetailBreadcrumb", () => {
       status: "todo",
       priority: "medium",
       projectId: "project-1",
-      projectName: "Paperclip App",
+      projectName: "RIKAI AI Harness App",
       originKind: "manual",
       originId: null,
     });
@@ -205,7 +205,7 @@ describe("issueDetailBreadcrumb", () => {
       status: "todo",
       priority: "medium",
       projectId: "project-1",
-      projectName: "Paperclip App",
+      projectName: "RIKAI AI Harness App",
       originKind: "manual",
       originId: null,
     });
