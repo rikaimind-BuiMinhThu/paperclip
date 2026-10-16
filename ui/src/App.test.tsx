@@ -308,6 +308,14 @@ describe("CloudAccessGate", () => {
   });
 });
 
+describe("Public marketing home", () => {
+  it("serves PublicHome at the index outside CloudAccessGate", () => {
+    expect(appSource).toContain('import { PublicHome } from "./pages/marketing/PublicHome";');
+    expect(appSource).toContain("<PublicHome appEntry={<CompanyRootRedirect />} />");
+    expect(appSource).not.toContain('<Route index element={<CompanyRootRedirect />} />');
+  });
+});
+
 describe("Skill Studio routes", () => {
   it("registers create mode before the skillId route in prefixed and unprefixed routing", () => {
     const createRoute = 'path="skills/studio/new"';

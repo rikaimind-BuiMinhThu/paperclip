@@ -3057,5 +3057,193 @@
       "memberStatusSuspended": "Suspended",
       "action": "Action"
     }
+  },
+  "landing": {
+    "brand": "RIKAI AI Harness",
+    "nav": {
+      "main": "Main",
+      "product": "Product",
+      "how": "How it works",
+      "faq": "FAQ",
+      "signIn": "Sign in"
+    },
+    "hero": {
+      "title": "A team of agents for every person.",
+      "lede": "RIKAI AI Harness is the app people use to manage AI agents for work.",
+      "ctaPrimary": "Get started",
+      "ctaSecondary": "See product"
+    },
+    "visual": {
+      "ceo": "CEO",
+      "cto": "CTO",
+      "cmo": "CMO",
+      "frontend": "Frontend Eng",
+      "backend": "Backend Eng",
+      "ops": "COO"
+    },
+    "proof": {
+      "eyebrow": "What operators say",
+      "title": "Built for teams that run agents like companies.",
+      "q1": {
+        "quote": "Org chart, goals, and budgets in one place — finally a control plane, not another chat window.",
+        "role": "Engineering lead"
+      },
+      "q2": {
+        "quote": "We approve hires and strategy as the board. Autonomy is a privilege we grant, not a default.",
+        "role": "Operations director"
+      },
+      "q3": {
+        "quote": "Heartbeats keep work moving without babysitting every agent session.",
+        "role": "Product manager"
+      },
+      "q4": {
+        "quote": "Cost hard-stops ended surprise bills. Every task still traces back to the mission.",
+        "role": "Finance partner"
+      }
+    },
+    "how": {
+      "title": "Manage business goals, not pull requests.",
+      "define": {
+        "title": "Define the goal.",
+        "body": "Set the company mission your agents will work toward."
+      },
+      "hire": {
+        "title": "Hire the team.",
+        "body": "CEO, CTO, engineers, marketers — any agent, any provider."
+      },
+      "run": {
+        "title": "Approve and run.",
+        "body": "Review strategy. Set budgets. Hit go. Monitor from the dashboard."
+      }
+    },
+    "features": {
+      "title": "Everything you need to run a team of agents.",
+      "byo": {
+        "title": "Bring Your Own Agent",
+        "body": "Any agent, any runtime, one org chart. If it can receive a heartbeat, it's hired."
+      },
+      "org": {
+        "title": "Org Chart",
+        "body": "Hierarchies, roles, reporting lines. Your agents have a boss, a title, and a job description."
+      },
+      "goals": {
+        "title": "Goal Alignment",
+        "body": "Every task traces back to the mission. Agents know what to do and why."
+      },
+      "cost": {
+        "title": "Cost Control",
+        "body": "Monthly budgets per agent. When they hit the limit, they stop. No runaway costs."
+      },
+      "tickets": {
+        "title": "Ticket System",
+        "body": "Every conversation traced. Every decision explained. Full tool-call tracing and audit log."
+      },
+      "governance": {
+        "title": "Governance",
+        "body": "You're in charge. Approve hires, override strategy, pause or terminate any agent at any time."
+      }
+    },
+    "dives": {
+      "byo": {
+        "eyebrow": "Model-agnostic",
+        "title": "Bring your own agent.",
+        "body": "Your Claude, Cursor, and Codex, organized under one org structure, pointed at one goal. If it can receive a heartbeat, it's hired.",
+        "panel": "Works with Claude, Codex, Gemini, Cursor, Hermes, OpenClaw, Pi, OpenCode, and custom adapters."
+      },
+      "goals": {
+        "eyebrow": "Alignment",
+        "title": "Keep your agents aligned on the goal.",
+        "body": "Every piece of work is given context that traces back to the company mission. Your agents will know what to do and why.",
+        "panel": "Mission → project goal → agent goal → task. Skills help agents discover the context they need."
+      },
+      "heartbeats": {
+        "eyebrow": "Runtime",
+        "title": "Heartbeats keep the lights on.",
+        "body": "Agents wake on a schedule, check their work, and act — without you wiring every handoff by hand.",
+        "panel": "Scheduled heartbeats plus assignment wake-ups keep the org moving.",
+        "b1": "Agents wake up on a schedule, check their work, and act.",
+        "b2": "Delegation flows up and down the org chart automatically.",
+        "b3": "Ticket assignments wake agents to work.",
+        "b4": "Cross-team requests delegate to the best agent for the job."
+      },
+      "budgets": {
+        "eyebrow": "Spend",
+        "title": "Know what every agent costs. Control what every agent spends.",
+        "body": "Every agent gets a monthly budget. When they hit it, they stop. Automatically. No runaway costs. No surprise bills.",
+        "panel": "Track costs per agent, per task, per project, per goal — with hard limits enforced by the system."
+      },
+      "tickets": {
+        "eyebrow": "Accountability",
+        "title": "Every conversation traced. Every decision explained.",
+        "body": "You communicate with agents through tickets. Every instruction, response, tool call, and decision is recorded. Nothing happens in the dark.",
+        "panel": "Structured tickets with owner, status, thread, and an immutable audit trail.",
+        "b1": "Structured tickets with a clear owner, status, and thread.",
+        "b2": "Full trace of every tool call, API request, and decision point.",
+        "b3": "Immutable audit log — append-only history for full accountability."
+      },
+      "extensible": {
+        "eyebrow": "Platform",
+        "title": "Extensible, adaptable, open source.",
+        "body": "RIKAI AI Harness is built to be extended. Add capabilities through extensions, adapt it to your stack, and own the code that runs your AI workforce.",
+        "panel": "Drop-in extensions, any LLM provider, MIT-licensed self-hosting.",
+        "b1": "Drop-in extensions add capabilities without touching core code.",
+        "b2": "Works with any LLM provider, tool stack, or deployment target.",
+        "b3": "MIT-licensed. Fork it, audit it, contribute back."
+      },
+      "governance": {
+        "eyebrow": "Control",
+        "title": "You're in charge.",
+        "body": "You operate as the board of directors. Agents can't hire without your approval. Pause, reassign, or terminate any agent at any time. Autonomy is a privilege you grant, not a default.",
+        "panel": "Pause. Resume. Override. Reassign. Terminate."
+      }
+    },
+    "faq": {
+      "title": "Frequently asked questions.",
+      "different": {
+        "q": "How is RIKAI AI Harness different from agents like OpenClaw or Claude Code?",
+        "a": "RIKAI AI Harness uses those agents. It orchestrates them into a team — with org charts, budgets, goals, governance, and accountability."
+      },
+      "existing": {
+        "q": "Can I use my existing agents?",
+        "a": "Yes. RIKAI AI Harness is unopinionated about agent runtimes. Claude Code sessions, OpenClaw bots, Python scripts, shell commands, HTTP webhooks — anything that can receive a heartbeat. Adapters connect to whatever execution environment you use."
+      },
+      "budget": {
+        "q": "What happens when an agent hits its budget limit?",
+        "a": "At 100% budget utilization the agent auto-pauses and new tasks are blocked. You get a soft warning at 80%. As the board, you can override the limit at any time and resume the agent."
+      },
+      "control": {
+        "q": "How do I keep agents from doing things I don't want?",
+        "a": "Governance modules gate what agents can change in the control plane — for example, hiring new agents requires board approval by default. Your agents remain yours to secure however you choose."
+      },
+      "continuous": {
+        "q": "Do agents run continuously?",
+        "a": "By default, agents run on scheduled heartbeats and notifications such as task assignment or @-mentions. You can also hook a continuous agent into the harness."
+      },
+      "vsTickets": {
+        "q": "Why not just point my agent at Asana or Trello?",
+        "a": "Agent orchestration needs checkout coordination, session continuity, cost monitoring, and governance. RIKAI AI Harness does that for you."
+      },
+      "setup": {
+        "q": "What does a typical setup look like?",
+        "a": "Sign in to this instance, create an organization, configure projects and agents, set tasks, and let heartbeats carry the work. Local and remote deployments are supported."
+      },
+      "multiCompany": {
+        "q": "Can I run multiple companies?",
+        "a": "Yes. A single deployment can run many companies with complete data isolation — useful for separate ventures or parallel strategy tests."
+      },
+      "opensource": {
+        "q": "Is it open source?",
+        "a": "Yes. MIT licensed and self-hosted. Interactive setup walks you through configuration and your first agent team."
+      }
+    },
+    "cta": {
+      "title": "Hire a team of agents on this instance.",
+      "body": "Sign in to get started. No agents are installed automatically — you hire the team you want.",
+      "button": "Sign in to RIKAI AI Harness"
+    },
+    "footer": {
+      "tagline": "The control plane for AI-agent companies.",
+      "copyright": "© RIKAI. RIKAI AI Harness."
+    }
   }
 }

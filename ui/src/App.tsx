@@ -23,6 +23,7 @@ import { CaseDetail } from "./pages/CaseDetail";
 import { OnboardingWizardVariant } from "./components/OnboardingWizardVariant";
 import { CloudAccessGate } from "./components/CloudAccessGate";
 import { PaperclipLoading } from "./components/AnimatedPaperclipIcon";
+import { PublicHome } from "./pages/marketing/PublicHome";
 import { Dashboard } from "./pages/Dashboard";
 import { DashboardLive } from "./pages/DashboardLive";
 import { Timeline } from "./pages/Timeline";
@@ -817,8 +818,17 @@ export function App() {
         <Route path="ux-lab/responsible-user-denial" element={<ResponsibleUserDenialUxLab />} />
         <Route path="ux-lab/cross-issue-collaboration" element={<CrossIssueCollaborationUxLab />} />
 
+        <Route
+          index
+          element={
+            streamlinedUiLoaded ? (
+              <PublicHome appEntry={<CompanyRootRedirect />} />
+            ) : (
+              <PaperclipLoading />
+            )
+          }
+        />
         <Route element={streamlinedUiLoaded ? <CloudAccessGate /> : <PaperclipLoading />}>
-          <Route index element={<CompanyRootRedirect />} />
           <Route path="onboarding" element={<OnboardingRoutePage />} />
           <Route path="instance" element={<LegacySettingsRedirect />} />
           <Route path="instance/settings" element={<LegacySettingsRedirect />} />

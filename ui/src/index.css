@@ -157,6 +157,12 @@
   --paperclip-doc-annotation-highlight-x-outset: 0.25rem;
   --paperclip-doc-annotation-highlight-y-outset: 0.125rem;
   --paperclip-doc-annotation-highlight-radius: 0.1875rem;
+  /* Marketing landing hero wash (RIKAI AI Harness public `/`). */
+  --landing-hero-glow: radial-gradient(
+    120% 80% at 50% 0%,
+    color-mix(in oklab, var(--primary) 22%, transparent),
+    transparent 70%
+  );
 
   /* Brand agent-capsule gradient stops (paperclip.ing/brand/).
      "The capsule is the agent" — each agent gets a 2-stop gradient,
@@ -1530,6 +1536,83 @@ select:where(:not([multiple]):not(.appearance-none)):where(:not([size]), [size="
 
 .kujira-loading-mark {
   animation: kujira-loading-fade 2.5s ease-in-out infinite;
+}
+
+/* Marketing landing (RIKAI AI Harness public `/`). */
+.landing-hero-glow {
+  background-image: var(--landing-hero-glow);
+}
+
+@keyframes landing-hero-enter {
+  from {
+    opacity: 0;
+    transform: translateY(0.75rem);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.landing-hero-enter {
+  animation: landing-hero-enter var(--motion-duration-deliberate) var(--motion-ease-out, ease-out) both;
+}
+
+@keyframes landing-reveal {
+  from {
+    opacity: 0;
+    transform: translateY(0.5rem);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.landing-reveal > * {
+  animation: landing-reveal var(--motion-duration-slow) var(--motion-ease-out, ease-out) both;
+}
+
+.landing-reveal > *:nth-child(2) {
+  animation-delay: calc(var(--motion-duration-fast, 120ms) * 1);
+}
+
+.landing-reveal > *:nth-child(3) {
+  animation-delay: calc(var(--motion-duration-fast, 120ms) * 2);
+}
+
+.landing-reveal > *:nth-child(4) {
+  animation-delay: calc(var(--motion-duration-fast, 120ms) * 3);
+}
+
+.landing-reveal > *:nth-child(5) {
+  animation-delay: calc(var(--motion-duration-fast, 120ms) * 4);
+}
+
+.landing-reveal > *:nth-child(6) {
+  animation-delay: calc(var(--motion-duration-fast, 120ms) * 5);
+}
+
+@keyframes landing-cta-pulse {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 color-mix(in oklab, var(--primary) 35%, transparent);
+  }
+  50% {
+    box-shadow: 0 0 0 0.5rem color-mix(in oklab, var(--primary) 0%, transparent);
+  }
+}
+
+.landing-cta-pulse {
+  animation: landing-cta-pulse 2.4s var(--motion-ease-out, ease-out) infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .landing-hero-enter,
+  .landing-reveal > *,
+  .landing-cta-pulse {
+    animation: none;
+  }
 }
 
 /* Muted variant (task-chat v7 activity rows): the sweep runs over the
