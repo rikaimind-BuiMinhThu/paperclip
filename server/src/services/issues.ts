@@ -4896,6 +4896,8 @@ const issueListSelect = {
   identifier: issues.identifier,
   originKind: issues.originKind,
   originId: issues.originId,
+  apiAppId: issues.apiAppId,
+  apiAppCustomerId: issues.apiAppCustomerId,
   originRunId: issues.originRunId,
   originIdentityContextId: issues.originIdentityContextId,
   continuationIdentityContextId: issues.continuationIdentityContextId,

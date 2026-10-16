@@ -50,6 +50,7 @@ export type AdapterLoginChrome = "panel" | "onboarding";
 export const CONNECT_SOURCE_NAMES: Record<string, string> = {
   claude_local: "Claude",
   codex_local: "OpenAI",
+  cursor: "Cursor",
   grok_local: "Grok",
 };
 
@@ -481,9 +482,19 @@ export function LocalProviderLoginInstructions({ adapterType, login }: {
 }) {
   const { t } = useTranslation();
   const [showCommand, setShowCommand] = useState(false);
-  const provider = adapterType === "claude_local" ? "Claude Code" : adapterType === "grok_local" ? "Grok CLI" : "Codex CLI";
+  const provider = adapterType === "claude_local"
+    ? "Claude Code"
+    : adapterType === "cursor"
+      ? "Cursor"
+      : adapterType === "grok_local"
+        ? "Grok CLI"
+        : "Codex CLI";
   const isolated = login?.isolated ?? (adapterType === "codex_local" || adapterType === "grok_local");
-  const command = isolated ? login?.command : "claude auth login";
+  const command = adapterType === "cursor"
+    ? (login?.command ?? "agent login")
+    : isolated
+      ? login?.command
+      : "claude auth login";
   if (login?.preparing) return <p role="status" className="flex items-center gap-2 text-sm text-muted-foreground"><Loader2 className="size-4 animate-spin" />{t("onboarding.login.local.checking", { cliName: provider })}</p>;
   const ready = login?.status === "ready";
   return <div className="min-w-0 max-w-full space-y-3 text-sm text-muted-foreground">

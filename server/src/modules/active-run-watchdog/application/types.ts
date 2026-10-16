@@ -119,6 +119,7 @@ export type FoldOutcome =
 export type WatchdogDecisionActor =
   | { type: "board"; userId?: string | null; runId?: string | null }
   | { type: "agent"; agentId?: string | null; runId?: string | null }
+  | { type: "api_customer"; userId?: string | null; runId?: string | null }
   | { type: "none" };
 
 export type RecordDecisionInput = {

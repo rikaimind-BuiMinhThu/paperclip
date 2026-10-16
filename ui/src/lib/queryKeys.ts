@@ -627,6 +627,11 @@ export const queryKeys = {
     generalSettings: ["instance", "general-settings"] as const,
     experimentalSettings: ["instance", "experimental-settings"] as const,
   },
+  masterAgents: {
+    agents: (includeDisabled: boolean) => ["master-agents", includeDisabled] as const,
+    teams: (includeDisabled: boolean) => ["master-teams", includeDisabled] as const,
+    defaultModel: ["instance", "default-model"] as const,
+  },
   health: ["health"] as const,
   stagingCommit: ["staging-commit"] as const,
   cloud: {

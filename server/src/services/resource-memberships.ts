@@ -18,7 +18,7 @@ import { forbidden, notFound } from "../errors.js";
 import { logger } from "../middleware/logger.js";
 
 type BoardActor = {
-  type: "board" | "agent" | "none";
+  type: "board" | "agent" | "api_customer" | "none";
   userId?: string;
   companyIds?: string[];
   memberships?: Array<{

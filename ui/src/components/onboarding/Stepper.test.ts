@@ -11,8 +11,8 @@ describe("agentArcStepFor", () => {
     // The wizard's step 3 is the customer's step 1: company creation happened
     // in Cloud, and the mission step is skipped when it did.
     expect(agentArcStepFor(3)).toBe(1);
-    expect(agentArcStepFor(4)).toBe(2);
-    expect(agentArcStepFor(5)).toBe(3);
+    expect(agentArcStepFor(4)).toBeNull();
+    expect(agentArcStepFor(5)).toBe(2);
   });
 
   it("has no position for steps outside the arc", () => {
@@ -38,12 +38,11 @@ describe("agentArcStepFor", () => {
 
 describe("onboardingStepPositionFor", () => {
   it("counts the full walk's own steps, not the wizard's", () => {
-    // The strip draws steps 1, 3, 4, 5 — four segments over a wizard that
-    // numbers to five.
+    // The strip draws steps 1, 3, 5 — organization, starter, review.
     expect(onboardingStepPositionFor(1)).toBe(1);
     expect(onboardingStepPositionFor(3)).toBe(2);
-    expect(onboardingStepPositionFor(4)).toBe(3);
-    expect(onboardingStepPositionFor(5)).toBe(4);
+    expect(onboardingStepPositionFor(4)).toBe(2);
+    expect(onboardingStepPositionFor(5)).toBe(3);
   });
 
   it("holds the last completed segment on a step it does not draw", () => {

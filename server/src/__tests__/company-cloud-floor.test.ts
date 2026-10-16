@@ -121,4 +121,46 @@ describe("POST /api/companies Cloud floor", () => {
       "active",
     );
   });
+
+  it("lets a signed-in user create a company they own without instance admin", async () => {
+    const app = await createApp({
+      type: "board",
+      source: "session",
+      userId: "gmail-user",
+      isInstanceAdmin: false,
+    });
+
+    const res = await request(app).post("/api/companies").send({
+      name: "My Board",
+      defaultResponsibleUserId: "someone-else",
+    });
+
+    expect(res.status).toBe(201);
+    expect(mockCompanyService.create).toHaveBeenCalledWith(expect.objectContaining({
+      name: "My Board",
+      defaultResponsibleUserId: "gmail-user",
+    }));
+    expect(mockAccessService.ensureMembership).toHaveBeenCalledWith(
+      "company-new",
+      "user",
+      "gmail-user",
+      "owner",
+      "active",
+    );
+  });
+
+  it("still rejects a board key that is not an instance admin", async () => {
+    const app = await createApp({
+      type: "board",
+      source: "board_key",
+      userId: "key-user",
+      isInstanceAdmin: false,
+    });
+
+    const res = await request(app).post("/api/companies").send({ name: "My Board" });
+
+    expect(res.status).toBe(403);
+    expect(res.body.error).toBe("Instance admin required");
+    expect(mockCompanyService.create).not.toHaveBeenCalled();
+  });
 });

@@ -1009,7 +1009,35 @@
     "alreadyArchived": "Already archived",
     "logoUploadFailed": "Logo upload failed",
     "failedToSave": "Failed to save",
-    "failedToArchive": "Failed to archive organization"
+    "failedToArchive": "Failed to archive organization",
+    "masterAgents": "Master agents",
+    "masterAgentsPage": {
+      "defaultModel": "Default model",
+      "adapter": "Adapter",
+      "model": "Model",
+      "storedLogin": "Stored login",
+      "apiKey": "API key",
+      "apiKeyPlaceholder": "API key",
+      "saveModel": "Save model",
+      "agents": "Agents",
+      "teams": "Teams",
+      "enabled": "Enabled",
+      "recommended": "Recommended",
+      "edit": "Edit",
+      "addAgent": "Add agent",
+      "titleField": "Title",
+      "department": "Department",
+      "description": "Description",
+      "instructions": "Instructions",
+      "role": "Role",
+      "icon": "Icon",
+      "skills": "Skills",
+      "canHire": "Can hire agents",
+      "save": "Save",
+      "teamName": "Team name",
+      "members": "Members. The radio chooses the manager.",
+      "noTeam": "No team"
+    }
   },
   "inbox": {
     "title": "Inbox",
@@ -1328,7 +1356,8 @@
           "orgName": "Name your organization",
           "firstAgent": "Create your first agent",
           "connectModel": "Connect a model",
-          "review": "Review"
+          "review": "Review",
+          "chooseStarter": "Choose a starter"
         }
       },
       "steps": {
@@ -1358,13 +1387,17 @@
           "title": "Let's get started...",
           "ledeReady": "{{agentName}} is ready to work!",
           "agentFallback": "Your first agent"
+        },
+        "gallery": {
+          "title": "Choose a starter"
         }
       },
       "footer": {
         "getStarted": "Get started",
         "creating": "Creating...",
         "launching": "Launching...",
-        "connecting": "Connecting"
+        "connecting": "Connecting",
+        "hiring": "Hiring…"
       },
       "connect": {
         "cta": {
@@ -1430,6 +1463,26 @@
         "adapterEnvTestFailed": "Adapter environment test failed",
         "unsetAnthropicStillFailing": "Retried with ANTHROPIC_API_KEY unset in adapter config, but the environment test is still failing.",
         "unsetAnthropicFailed": "Failed to unset ANTHROPIC_API_KEY and retry."
+      },
+      "gallery": {
+        "lede": "Pick one role, or hire that department's team. They all use the platform model.",
+        "modelMissing": "An instance admin must set the platform model.",
+        "setModel": "Set the platform model",
+        "selected": "Selected: {{name}}",
+        "empty": "No starters are available.",
+        "recommended": "Recommended",
+        "hireTeam": "Hire the {{department}} team",
+        "agentCount": "{{count}} agents",
+        "hireFailed": "Could not hire this starter.",
+        "departments": {
+          "leadership": "Leadership",
+          "marketing": "Marketing",
+          "sales": "Sales",
+          "engineering": "Engineering",
+          "product": "Product",
+          "customerSuccess": "Customer success",
+          "backOffice": "Back office"
+        }
       }
     },
     "login": {
@@ -3079,7 +3132,7 @@
     }
   },
   "landing": {
-    "brand": "RIKAI AI Harness",
+    "brand": "Kujira AI Harness",
     "nav": {
       "main": "Main",
       "product": "Product",
@@ -3089,7 +3142,7 @@
     },
     "hero": {
       "title": "A team of agents for every person.",
-      "lede": "RIKAI AI Harness is the app people use to manage AI agents for work.",
+      "lede": "Kujira AI Harness is the app people use to manage AI agents for work.",
       "ctaPrimary": "Get started",
       "ctaSecondary": "See product"
     },
@@ -3204,7 +3257,7 @@
       "extensible": {
         "eyebrow": "Platform",
         "title": "Extensible, adaptable, open source.",
-        "body": "RIKAI AI Harness is built to be extended. Add capabilities through extensions, adapt it to your stack, and own the code that runs your AI workforce.",
+        "body": "Kujira AI Harness is built to be extended. Add capabilities through extensions, adapt it to your stack, and own the code that runs your AI workforce.",
         "panel": "Drop-in extensions, any LLM provider, MIT-licensed self-hosting.",
         "b1": "Drop-in extensions add capabilities without touching core code.",
         "b2": "Works with any LLM provider, tool stack, or deployment target.",
@@ -3220,12 +3273,12 @@
     "faq": {
       "title": "Frequently asked questions.",
       "different": {
-        "q": "How is RIKAI AI Harness different from agents like OpenClaw or Claude Code?",
-        "a": "RIKAI AI Harness uses those agents. It orchestrates them into a team — with org charts, budgets, goals, governance, and accountability."
+        "q": "How is Kujira AI Harness different from agents like OpenClaw or Claude Code?",
+        "a": "Kujira AI Harness uses those agents. It orchestrates them into a team — with org charts, budgets, goals, governance, and accountability."
       },
       "existing": {
         "q": "Can I use my existing agents?",
-        "a": "Yes. RIKAI AI Harness is unopinionated about agent runtimes. Claude Code sessions, OpenClaw bots, Python scripts, shell commands, HTTP webhooks — anything that can receive a heartbeat. Adapters connect to whatever execution environment you use."
+        "a": "Yes. Kujira AI Harness is unopinionated about agent runtimes. Claude Code sessions, OpenClaw bots, Python scripts, shell commands, HTTP webhooks — anything that can receive a heartbeat. Adapters connect to whatever execution environment you use."
       },
       "budget": {
         "q": "What happens when an agent hits its budget limit?",
@@ -3241,7 +3294,7 @@
       },
       "vsTickets": {
         "q": "Why not just point my agent at Asana or Trello?",
-        "a": "Agent orchestration needs checkout coordination, session continuity, cost monitoring, and governance. RIKAI AI Harness does that for you."
+        "a": "Agent orchestration needs checkout coordination, session continuity, cost monitoring, and governance. Kujira AI Harness does that for you."
       },
       "setup": {
         "q": "What does a typical setup look like?",
@@ -3259,11 +3312,11 @@
     "cta": {
       "title": "Hire a team of agents on this instance.",
       "body": "Sign in to get started. No agents are installed automatically — you hire the team you want.",
-      "button": "Sign in to RIKAI AI Harness"
+      "button": "Sign in to Kujira AI Harness"
     },
     "footer": {
       "tagline": "The control plane for AI-agent companies.",
-      "copyright": "© RIKAI. RIKAI AI Harness."
+      "copyright": "© RIKAI. Kujira AI Harness."
     }
   }
 }

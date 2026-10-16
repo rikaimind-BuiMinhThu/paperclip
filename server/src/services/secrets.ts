@@ -634,7 +634,7 @@ type SecretConsumerContext = {
   responsibleUserId?: string | null;
   actorType?: "agent" | "user" | "system" | "plugin";
   actorId?: string | null;
-  actorSource?: "local_implicit" | "session" | "board_key" | "agent_key" | "agent_jwt" | "cloud_tenant";
+  actorSource?: "local_implicit" | "session" | "board_key" | "agent_key" | "agent_jwt" | "cloud_tenant" | "api_app_customer_key";
   issueId?: string | null;
   heartbeatRunId?: string | null;
   pluginId?: string | null;

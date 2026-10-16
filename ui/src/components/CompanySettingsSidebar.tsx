@@ -200,6 +200,13 @@ export function CompanySettingsSidebar() {
               icon={Cpu}
             />
           )}
+          {showPage("instance.masterAgents") && (
+            <SidebarNavItem
+              to={`${INSTANCE_SETTINGS_PATH_PREFIX}/master-agents`}
+              label={t("settings.masterAgents")}
+              icon={Users}
+            />
+          )}
         </div>
       </nav>
     </ContextualSidebarFrame>

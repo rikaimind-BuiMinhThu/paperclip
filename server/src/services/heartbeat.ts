@@ -27357,7 +27357,10 @@ export function heartbeatService(
         if (customerBlock) {
           await writeSkippedRequest("api_customer.blocked", {
             error: customerBlock.message,
-            code: customerBlock.code,
+            payload: {
+              ...(payload && typeof payload === "object" ? payload : {}),
+              apiCustomerBlockCode: customerBlock.code,
+            },
           });
           if (
             customerBlock.code === "API_CUSTOMER_PLAN_TOKEN_EXCEEDED" ||

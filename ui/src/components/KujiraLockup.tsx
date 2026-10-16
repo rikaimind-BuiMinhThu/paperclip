@@ -23,13 +23,13 @@ export function KujiraLockup({
       aria-hidden={decorative ? true : undefined}
     >
       <img
-        src="/brands/kujira-lockup-light.jpg"
+        src="/brands/kujira-lockup-light.png"
         alt=""
         className="h-full w-auto dark:hidden"
         draggable={false}
       />
       <img
-        src="/brands/kujira-lockup-dark.jpg"
+        src="/brands/kujira-lockup-dark.png"
         alt=""
         className="hidden h-full w-auto dark:block"
         draggable={false}

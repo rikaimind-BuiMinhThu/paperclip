@@ -1,3 +1,5 @@
+import { accessApi } from "@/api/access";
+import { masterAgentsApi } from "@/api/masterAgents";
 import { healthApi } from "@/api/health";
 import { LocalProviderLoginInstructions } from "./AdapterLoginChrome";
 import { useLocalAiLogin } from "./ai-connections/useLocalAiLogin";
@@ -19,7 +21,7 @@ import type {
   Environment,
   InstanceSettings,
 } from "@paperclipai/shared";
-import { AGENT_ROLES, AGENT_ROLE_LABELS, ADAPTER_AUTH_MISSING_CHECK_CODE } from "@paperclipai/shared";
+import { AGENT_ROLES, AGENT_ROLE_LABELS, ADAPTER_AUTH_MISSING_CHECK_CODE, MASTER_AGENT_DEPARTMENTS, type MasterAgentDepartment } from "@paperclipai/shared";
 import { AdapterLoginPanel } from "./AgentConfigForm";
 import {
   CONNECT_SOURCE_NAMES,
@@ -128,6 +130,11 @@ import {
   onboardingStepPositionFor,
 } from "./onboarding/Stepper";
 import { AgentPreview } from "./onboarding/AgentPreview";
+import {
+  GALLERY_DEPARTMENT_LABEL,
+  MasterAgentGallery,
+  type GallerySelection,
+} from "./onboarding/MasterAgentGallery";
 import { ModelSourceTiles, type CredentialMode } from "./onboarding/ModelSourceTiles";
 import { CredentialModeLink } from "./onboarding/CredentialModeLink";
 import { FooterNav, type FooterPrimaryIcon } from "./onboarding/FooterNav";
@@ -144,6 +151,13 @@ import {
 } from "lucide-react";
 
 type Step = 0 | 1 | 2 | 3 | 4 | 5;
+
+function resumeOnboardingStep(value: unknown, fallback: number): Step {
+  const numeric = typeof value === "number" ? value : fallback;
+  if (numeric === 4) return 3;
+  if (numeric === 0 || numeric === 1 || numeric === 2 || numeric === 3 || numeric === 5) return numeric;
+  return (fallback === 4 ? 3 : fallback) as Step;
+}
 // Plugin/external adapters use arbitrary type ids, so this mirrors the master
 // wizard's registry-driven approach rather than a fixed union.
 type AdapterType = string;
@@ -237,8 +251,21 @@ function OpenAiBlossom({ className }: { className?: string }) {
   );
 }
 
+function CursorMark({ className }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 24 24" className={className} fill="none" aria-hidden>
+      <path
+        fill="currentColor"
+        fillRule="evenodd"
+        d="M22.106 5.68L12.5.135a.998.998 0 00-.998 0L1.893 5.68a.84.84 0 00-.419.726v11.186c0 .3.16.577.42.727l9.607 5.547a.999.999 0 00.998 0l9.608-5.547a.84.84 0 00.42-.727V6.407a.84.84 0 00-.42-.726zm-.603 1.176L12.228 22.92c-.063.108-.228.064-.228-.061V12.34a.59.59 0 00-.295-.51l-9.11-5.26c-.107-.062-.063-.228.062-.228h18.55c.264 0 .428.286.296.514z"
+      />
+    </svg>
+  );
+}
+
 const MODEL_SOURCE_INLINE_MARKS: Record<string, ComponentType<{ className?: string }>> = {
   codex_local: OpenAiBlossom,
+  cursor: CursorMark,
 };
 
 /**
@@ -252,6 +279,7 @@ const MODEL_SOURCE_INLINE_MARKS: Record<string, ComponentType<{ className?: stri
 const API_KEY_ENV_KEYS: Record<string, string> = {
   claude_local: ANTHROPIC_API_KEY_ENV_KEY,
   codex_local: "OPENAI_API_KEY",
+  cursor: "CURSOR_API_KEY",
 };
 
 function apiKeyEnvKeyFor(adapterType: string): string {
@@ -537,13 +565,13 @@ function OnboardingWizardInner({
   const initialStep = effectiveOnboardingOptions.initialStep ?? 1;
   const existingCompanyId = effectiveOnboardingOptions.companyId;
 
-  const [step, setStep] = useState<Step>((saved?.step as Step) ?? initialStep);
+  const [step, setStep] = useState<Step>(resumeOnboardingStep(saved?.step, initialStep));
   // The step this run *entered* on, which bounds how far back it can walk.
   // Captured once, when the wizard opens, for the same reason the step itself
   // is: it derives from queries, so a live read would move the floor under a
   // customer mid-flow — and here that would quietly re-open the "create a
   // company" step to a run that already holds one.
-  const [entryStep, setEntryStep] = useState<number>((saved?.step as Step) ?? initialStep);
+  const [entryStep, setEntryStep] = useState<number>(resumeOnboardingStep(saved?.step, initialStep));
   /**
    * A page that opens straight onto the agent step — a cloud-managed
    * workspace arriving from Cloud's naming screen, or a reload — plays the
@@ -715,6 +743,48 @@ function OnboardingWizardInner({
     string | null
   >((saved?.createdCompanyPrefix as string) ?? null);
   const [createdAgentId, setCreatedAgentId] = useState<string | null>((saved?.createdAgentId as string) ?? null);
+  const [galleryDepartment, setGalleryDepartment] = useState<MasterAgentDepartment>("leadership");
+  const [gallerySelection, setGallerySelection] = useState<GallerySelection | null>(null);
+  const [galleryError, setGalleryError] = useState<string | null>(null);
+  const [hiring, setHiring] = useState(false);
+  const hiringRef = useRef(false);
+  const gallerySeeded = useRef(false);
+  const galleryEnabled = effectiveOnboardingOpen && step === 3;
+  const galleryAgentsQuery = useQuery({
+    queryKey: queryKeys.masterAgents.agents(false),
+    queryFn: () => masterAgentsApi.list(false),
+    enabled: galleryEnabled,
+  });
+  const galleryTeamsQuery = useQuery({
+    queryKey: queryKeys.masterAgents.teams(false),
+    queryFn: () => masterAgentsApi.listTeams(false),
+    enabled: galleryEnabled,
+  });
+  const defaultModelQuery = useQuery({
+    queryKey: queryKeys.masterAgents.defaultModel,
+    queryFn: () => masterAgentsApi.defaultModel(),
+    enabled: galleryEnabled,
+  });
+  const boardAccessQuery = useQuery({
+    queryKey: queryKeys.access.currentBoardAccess,
+    queryFn: () => accessApi.getCurrentBoardAccess(),
+    enabled: galleryEnabled,
+  });
+  useEffect(() => {
+    if (gallerySeeded.current) return;
+    const rows = galleryAgentsQuery.data;
+    if (!rows || rows.length === 0) return;
+    const recommended = rows.find((row) => row.recommended);
+    const fallback = MASTER_AGENT_DEPARTMENTS
+      .map((department) => rows.find((row) => row.department === department))
+      .find((row) => row !== undefined);
+    const picked = recommended ?? fallback;
+    if (!picked) return;
+    gallerySeeded.current = true;
+    setGallerySelection({ kind: "agent", id: picked.id });
+    setGalleryDepartment(picked.department);
+    setAgentName(picked.title);
+  }, [galleryAgentsQuery.data]);
   const [createdCompanyGoalId, setCreatedCompanyGoalId] = useState<string | null>(
     (saved?.createdCompanyGoalId as string) ?? null
   );
@@ -2303,6 +2373,42 @@ function OnboardingWizardInner({
     }
   }
 
+  function selectGallery(next: GallerySelection) {
+    setGallerySelection(next);
+    setGalleryError(null);
+    if (next.kind === "agent") {
+      const agent = galleryAgentsQuery.data?.find((row) => row.id === next.id);
+      if (agent) setAgentName(agent.title);
+      return;
+    }
+    const team = galleryTeamsQuery.data?.find((row) => row.id === next.id);
+    if (team) setAgentName(team.name);
+  }
+
+  async function hireFromGallery() {
+    if (!createdCompanyId || !gallerySelection || hiringRef.current) return;
+    if (!defaultModelQuery.data?.configured) return;
+    hiringRef.current = true;
+    setHiring(true);
+    setGalleryError(null);
+    try {
+      const result = await masterAgentsApi.hire(
+        createdCompanyId,
+        gallerySelection.kind === "agent"
+          ? { masterAgentId: gallerySelection.id }
+          : { masterTeamId: gallerySelection.id },
+      );
+      setCreatedAgentId(result.managerAgentId);
+      setAgentName(result.label);
+      setStep(5);
+    } catch (error) {
+      setGalleryError(error instanceof Error ? error.message : t("onboarding.wizard.gallery.hireFailed"));
+    } finally {
+      hiringRef.current = false;
+      setHiring(false);
+    }
+  }
+
   function handleKeyDown(e: React.KeyboardEvent) {
     // Something nearer the key already dealt with it. The company-name field
     // handles Enter itself and does not check for a modifier, so Cmd+Enter in
@@ -2320,7 +2426,7 @@ function OnboardingWizardInner({
       // yet — two organizations for one name, two agents for one hire.
       if (loading) return;
       if (step === 1 && companyName.trim()) void handleCreateCompany();
-      else if (step === 3 && agentName.trim()) setStep(4);
+      else if (step === 3 && gallerySelection && defaultModelQuery.data?.configured && !hiring) void hireFromGallery();
       // `connectStepReady`, the same predicate the step's button uses. Spelling
       // the condition out here again is what let this path hire against a
       // source the tile row had never shown, after the button was gated and
@@ -2341,6 +2447,39 @@ function OnboardingWizardInner({
 
   if (!effectiveOnboardingOpen) return null;
 
+  const galleryAgents = (galleryAgentsQuery.data ?? []).map((agent) => ({
+    id: agent.id,
+    title: agent.title,
+    description: agent.description,
+    icon: agent.icon,
+    department: agent.department,
+    recommended: agent.recommended,
+  }));
+  const galleryTeams = (galleryTeamsQuery.data ?? [])
+    .filter((team) => team.enabled)
+    .map((team) => ({
+      id: team.id,
+      name: team.name,
+      description: team.description,
+      department: team.department,
+      memberTitles: [...team.members].sort((left, right) => left.sortOrder - right.sortOrder).map((member) => member.title),
+    }));
+  const galleryPreview = (() => {
+    if (!gallerySelection) return { name: "", role: "" };
+    if (gallerySelection.kind === "agent") {
+      const agent = galleryAgents.find((row) => row.id === gallerySelection.id);
+      return {
+        name: agent?.title ?? "",
+        role: agent ? t(GALLERY_DEPARTMENT_LABEL[agent.department]) : "",
+      };
+    }
+    const team = galleryTeams.find((row) => row.id === gallerySelection.id);
+    return {
+      name: team?.name ?? "",
+      role: team ? t("onboarding.wizard.gallery.agentCount", { count: team.memberTitles.length }) : "",
+    };
+  })();
+
   // The arc strip stands in for the full-length bar only when the run began on
   // the arc — the Cloud-first path, where the company already exists and step 1
   // never happens. A run that started at step 1 keeps one continuous count.
@@ -2350,7 +2489,8 @@ function OnboardingWizardInner({
   // naming the organization and naming the agent), so the agent step walks
   // back to step 1 rather than to a screen the customer never saw.
   function backStepFrom(current: Step): Step {
-    if (current === 3) return 1;
+    if (current === 3 || current === 4) return 1;
+    if (current === 5) return 3;
     return (current - 1) as Step;
   }
 
@@ -2544,7 +2684,7 @@ function OnboardingWizardInner({
                       <div className="relative size-(--sz-160px)">
                         <OnboardingCharacter appearance={agentAppearance} awake={step === 5} className="size-full" />
                       </div>
-                      <AgentPreview agentName={agentName} agentRole="" />
+                      <AgentPreview agentName={galleryPreview.name || agentName} agentRole={galleryPreview.role} />
                     </motion.div>
                     </motion.div>
 
@@ -2558,7 +2698,7 @@ function OnboardingWizardInner({
                           {step === 1
                             ? t("onboarding.wizard.steps.orgName.title")
                             : step === 3
-                              ? t("onboarding.wizard.steps.agent.title")
+                              ? t("onboarding.wizard.steps.gallery.title")
                               : step === 4
                                 ? t("onboarding.wizard.steps.connect.title")
                                 : t("onboarding.wizard.steps.review.title")}
@@ -2640,35 +2780,18 @@ function OnboardingWizardInner({
                   `general` role; a specific one can be set later, where there
                   is context to choose it in. */}
               {step === 3 && (
-                <motion.div key="step-3" {...stepContentMotion} exit={stepHandoff ? stepContentMotion.exit : undefined} className="mx-auto flex w-full flex-col gap-9">
-                  <div className="flex flex-col gap-2">
-                    <Label htmlFor="onboarding-agent-name">
-                      {t("onboarding.wizard.steps.agent.fieldLabel")}
-                    </Label>
-                    {/*
-                      Filled, not outlined, and the column's full width — the
-                      same field the naming step before the hand-off draws.
-                      `bg-muted` is the design's field surface; the default
-                      Input is a hairline border over `bg-input/30`, which on
-                      this ground reads as an empty outline rather than a place
-                      to type. The border is kept but made transparent so the
-                      focus ring, which colours the border, still has one.
-                    */}
-                    <Input
-                      id="onboarding-agent-name"
-                      className="h-(--sz-44px) rounded-lg border-transparent bg-muted shadow-none dark:bg-muted"
-                      placeholder={t("onboarding.wizard.steps.agent.placeholder")}
-                      value={agentName}
-                      onChange={(e) => setAgentName(e.target.value)}
-                      onKeyDown={(e) => {
-                        if (e.key === "Enter" && !e.nativeEvent.isComposing && agentName.trim()) {
-                          e.preventDefault();
-                          setStep(4);
-                        }
-                      }}
-                      autoFocus
-                    />
-                  </div>
+                <motion.div key="step-3" {...stepContentMotion} exit={stepHandoff ? stepContentMotion.exit : undefined} className="mx-auto flex w-full flex-col gap-4">
+                  <MasterAgentGallery
+                    agents={galleryAgents}
+                    teams={galleryTeams}
+                    department={galleryDepartment}
+                    onDepartment={setGalleryDepartment}
+                    selection={gallerySelection}
+                    onSelect={selectGallery}
+                    modelMissing={!defaultModelQuery.isLoading && defaultModelQuery.data?.configured !== true}
+                    isInstanceAdmin={boardAccessQuery.data?.isInstanceAdmin === true || boardAccessQuery.data?.source === "local_implicit"}
+                    error={galleryError}
+                  />
                 </motion.div>
               )}
 
@@ -2706,6 +2829,7 @@ function OnboardingWizardInner({
                         setSourcePicked(true);
                         setAdapterType(id);
                         if (id === "opencode_local") setModel(DEFAULT_OPENCODE_LOCAL_MODEL);
+                        else if (id === "cursor") setModel(DEFAULT_CURSOR_LOCAL_MODEL);
                         else if (id !== "codex_local") setModel("");
                         setConnectPhase("collapsing");
                       }}
@@ -2920,6 +3044,8 @@ function OnboardingWizardInner({
                           });
                         }}
                       />
+                    ) : adapterType === "cursor" && credentialMode !== "api" && connectStepHasNoSandbox ? (
+                      <LocalProviderLoginInstructions adapterType="cursor" />
                     ) : hasSavedSubscription || localLogin.status === "ready" ? null : connectStepHasNoSandbox ? (
                       canUseLocalLogin && managedProvider ? (
                         <LocalProviderLoginInstructions adapterType={adapterType} login={{ ...localLogin, retry: () => { autoConnectStartedRef.current = false; setError(null); localLogin.retry(); } }} />
@@ -3126,7 +3252,7 @@ function OnboardingWizardInner({
                   // one advances — which is exactly the distinction the
                   // prototype's own local flow draws with "Next".
                   primaryLabel={
-                    step === 1
+                    step === 1 || step === 3
                       ? t("common.continue")
                       : step === 5
                         ? t("onboarding.wizard.footer.getStarted")
@@ -3138,7 +3264,9 @@ function OnboardingWizardInner({
                   loadingLabel={
                     step === 1
                       ? t("onboarding.wizard.footer.creating")
-                      : step === 4
+                      : step === 3
+                        ? t("onboarding.wizard.footer.hiring")
+                        : step === 4
                         ? t("onboarding.wizard.footer.connecting")
                         : t("onboarding.wizard.footer.launching")
                   }
@@ -3149,19 +3277,19 @@ function OnboardingWizardInner({
                   // against work happening in another tab.
                   // Step 4 says what it is doing through `connectCta` instead:
                   // it has four faces and only two of them are the step working.
-                  loading={step === 3 || step === 4 ? false : loading}
+                  loading={step === 4 ? false : step === 3 ? hiring : loading}
                   primaryDisabled={
                     step === 1
                       ? !companyName.trim() || loading
                       : step === 3
-                        ? !agentName.trim()
+                        ? !gallerySelection || defaultModelQuery.data?.configured !== true || hiring || galleryAgents.length === 0
                         : step === 4
                           ? connectCta.disabled || loading
                           : loading || launchStateIncomplete
                   }
                   onPrimary={() => {
                     if (step === 1) void handleCreateCompany();
-                    else if (step === 3) setStep(4);
+                    else if (step === 3) void hireFromGallery();
                     // One button, two jobs — start the sign-in, or hire — and
                     // Cmd+Enter has to do the same thing. See
                     // `handleConnectStepPrimary`.

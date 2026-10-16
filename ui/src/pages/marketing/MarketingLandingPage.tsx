@@ -10,7 +10,7 @@ import { SocialProof } from "./sections/SocialProof";
 
 export function MarketingLandingPage() {
   return (
-    <div className="min-h-svh bg-background text-foreground">
+    <div className="h-dvh overflow-y-auto bg-background text-foreground">
       <MarketingNav />
       <main>
         <Hero />

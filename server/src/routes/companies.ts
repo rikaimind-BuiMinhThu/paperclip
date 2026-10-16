@@ -119,6 +119,15 @@ function requestContentType(req: Request) {
   return (req.header("content-type") ?? "").toLowerCase();
 }
 
+/** A signed-in user may create a company they own. Instance admin is not granted. */
+function signedInUserCreatesOwnCompany(req: Request) {
+  const userId = req.actor.userId?.trim();
+  return req.actor.type === "board"
+    && req.actor.source === "session"
+    && req.actor.isInstanceAdmin !== true
+    && Boolean(userId);
+}
+
 function isMultipartImport(req: Request) {
   return requestContentType(req).includes("multipart/form-data");
 }
@@ -1200,13 +1209,16 @@ export function companyRoutes(db: Db, storage?: StorageService, options?: Compan
     next();
   }, validate(createCompanySchema), async (req, res) => {
     assertBoard(req);
-    if (!(req.actor.source === "local_implicit" || req.actor.isInstanceAdmin)) {
+    const createsOwnCompany = signedInUserCreatesOwnCompany(req);
+    if (!(req.actor.source === "local_implicit" || req.actor.isInstanceAdmin || createsOwnCompany)) {
       throw forbidden("Instance admin required");
     }
     const ownerPrincipalId = req.actor.userId ?? "local-board";
     const company = await svc.create({
       ...req.body,
-      defaultResponsibleUserId: req.body.defaultResponsibleUserId ?? ownerPrincipalId,
+      defaultResponsibleUserId: createsOwnCompany
+        ? ownerPrincipalId
+        : req.body.defaultResponsibleUserId ?? ownerPrincipalId,
     });
     await access.ensureMembership(company.id, "user", ownerPrincipalId, "owner", "active");
     await access.ensureRoleDefaultGrants(

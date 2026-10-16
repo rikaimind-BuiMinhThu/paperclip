@@ -43,11 +43,11 @@ import {
 } from "../services/hot-restart.js";
 
 function shouldExposeFullHealthDetails(
-  actorType: "none" | "board" | "agent" | null | undefined,
+  actorType: "none" | "board" | "agent" | "api_customer" | null | undefined,
   deploymentMode: DeploymentMode,
 ) {
   if (deploymentMode !== "authenticated") return true;
-  return actorType === "board" || actorType === "agent";
+  return actorType === "board" || actorType === "agent" || actorType === "api_customer";
 }
 
 function matchesSharedToken(expectedToken: string | undefined | null, providedToken: string | undefined) {

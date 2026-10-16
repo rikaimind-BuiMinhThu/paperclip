@@ -25,6 +25,9 @@ describe("normalizeRememberedInstanceSettingsPath", () => {
     expect(normalizeRememberedInstanceSettingsPath("/PAP/company/settings/instance/adapters")).toBe(
       "/company/settings/instance/adapters",
     );
+    expect(normalizeRememberedInstanceSettingsPath("/company/settings/instance/master-agents")).toBe(
+      "/company/settings/instance/master-agents",
+    );
     expect(normalizeRememberedInstanceSettingsPath("/company/settings/instance/general")).toBe(
       "/company/settings/instance/general",
     );
@@ -52,7 +55,7 @@ describe("normalizeRememberedInstanceSettingsPath", () => {
 });
 
 describe("filterHiddenInstanceSettingsPath", () => {
-  const hidden = new Set(["instance.plugins", "instance.environments"]);
+  const hidden = new Set(["instance.plugins", "instance.environments", "instance.masterAgents"]);
 
   it("remaps hidden pages (including sub-paths) to the default settings path", () => {
     expect(
@@ -63,6 +66,9 @@ describe("filterHiddenInstanceSettingsPath", () => {
     ).toBe(DEFAULT_INSTANCE_SETTINGS_PATH);
     expect(
       filterHiddenInstanceSettingsPath("/company/settings/instance/environments", hidden),
+    ).toBe(DEFAULT_INSTANCE_SETTINGS_PATH);
+    expect(
+      filterHiddenInstanceSettingsPath("/company/settings/instance/master-agents", hidden),
     ).toBe(DEFAULT_INSTANCE_SETTINGS_PATH);
   });
 

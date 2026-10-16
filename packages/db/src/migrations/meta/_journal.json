@@ -2059,6 +2059,13 @@
       "when": 1791339534434,
       "tag": "0295_quick_mole_man",
       "breakpoints": true
+    },
+    {
+      "idx": 296,
+      "version": "7",
+      "when": 1792130476767,
+      "tag": "0296_curious_goliath",
+      "breakpoints": true
     }
   ]
 }

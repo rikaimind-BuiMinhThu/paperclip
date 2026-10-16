@@ -28,7 +28,7 @@ describe("MarketingLandingPage", () => {
     container?.remove();
   });
 
-  it("renders the RIKAI AI Harness hero and primary auth CTA", async () => {
+  it("renders the Kujira AI Harness hero and primary auth CTA", async () => {
     container = document.createElement("div");
     document.body.appendChild(container);
     root = createRoot(container);
@@ -49,5 +49,7 @@ describe("MarketingLandingPage", () => {
     expect(authLinks.length).toBeGreaterThan(0);
     expect(container.querySelector("#product")).not.toBeNull();
     expect(container.querySelector("#faq")).not.toBeNull();
+    const page = container.querySelector("#product")?.closest(".h-dvh");
+    expect(page?.className).toContain("overflow-y-auto");
   });
 });

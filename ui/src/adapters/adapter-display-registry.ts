@@ -126,6 +126,7 @@ const adapterDisplayMap: Record<string, AdapterDisplayInfo> = {
     label: "Cursor",
     description: "Cursor CLI harness",
     icon: MousePointer2,
+    recommended: true,
   },
   cursor_cloud: {
     label: "Cursor Cloud",

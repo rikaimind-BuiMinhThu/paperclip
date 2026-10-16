@@ -2,7 +2,9 @@
 
 import { createRoot } from "react-dom/client";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
+import { i18n } from "@/i18n";
+import { DEFAULT_LOCALE } from "@/i18n/locales";
 import { queryKeys } from "@/lib/queryKeys";
 import { CompanySettingsSidebar } from "./CompanySettingsSidebar";
 import { primarySidebarStyles } from "./primary-sidebar-styles";
@@ -100,6 +102,14 @@ async function flushReact() {
 }
 
 describe("CompanySettingsSidebar", () => {
+  beforeAll(async () => {
+    await i18n.changeLanguage("en");
+  });
+
+  afterAll(async () => {
+    await i18n.changeLanguage(DEFAULT_LOCALE);
+  });
+
   let container: HTMLDivElement;
 
   beforeEach(() => {
@@ -372,6 +382,14 @@ describe("CompanySettingsSidebar", () => {
 });
 
 describe("CompanySettingsSidebar operator-hidden entries", () => {
+  beforeAll(async () => {
+    await i18n.changeLanguage("en");
+  });
+
+  afterAll(async () => {
+    await i18n.changeLanguage(DEFAULT_LOCALE);
+  });
+
   let container: HTMLDivElement;
 
   beforeEach(() => {
@@ -427,6 +445,7 @@ describe("CompanySettingsSidebar operator-hidden entries", () => {
     expect(container.textContent).toContain("Access");
     expect(container.textContent).toContain("Plugins");
     expect(container.textContent).toContain("Adapters");
+    expect(container.textContent).toContain("Master agents");
     expect(container.textContent).toContain("Import");
     expect(mockPluginsApi.list).toHaveBeenCalled();
   });

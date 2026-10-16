@@ -157,7 +157,7 @@
   --paperclip-doc-annotation-highlight-x-outset: 0.25rem;
   --paperclip-doc-annotation-highlight-y-outset: 0.125rem;
   --paperclip-doc-annotation-highlight-radius: 0.1875rem;
-  /* Marketing landing hero wash (RIKAI AI Harness public `/`). */
+  /* Marketing landing hero wash (Kujira AI Harness public `/`). */
   --landing-hero-glow: radial-gradient(
     120% 80% at 50% 0%,
     color-mix(in oklab, var(--primary) 22%, transparent),
@@ -1538,7 +1538,7 @@ select:where(:not([multiple]):not(.appearance-none)):where(:not([size]), [size="
   animation: kujira-loading-fade 2.5s ease-in-out infinite;
 }
 
-/* Marketing landing (RIKAI AI Harness public `/`). */
+/* Marketing landing (Kujira AI Harness public `/`). */
 .landing-hero-glow {
   background-image: var(--landing-hero-glow);
 }

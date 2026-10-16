@@ -6,7 +6,7 @@ import { cn } from "../../lib/utils";
  * wizard a customer walks as a numbered sequence. Company creation happens in
  * Cloud before the tenant is ever reached, so it is not one of these steps.
  */
-export const AGENT_ARC_TOTAL_STEPS = 3;
+export const AGENT_ARC_TOTAL_STEPS = 2;
 
 /**
  * What each segment goes to. These are the labels assistive tech reads, in
@@ -18,8 +18,7 @@ export const AGENT_ARC_TOTAL_STEPS = 3;
  */
 export function agentArcStepLabels(): readonly string[] {
   return [
-    t("onboarding.wizard.stepper.labels.firstAgent"),
-    t("onboarding.wizard.stepper.labels.connectModel"),
+    t("onboarding.wizard.stepper.labels.chooseStarter"),
     t("onboarding.wizard.stepper.labels.review"),
   ];
 }
@@ -32,7 +31,7 @@ export const AGENT_ARC_STEP_LABELS = [
 ] as const;
 
 /** Wizard step numbers that make up the arc, in order. */
-export const AGENT_ARC_WIZARD_STEPS = [3, 4, 5] as const;
+export const AGENT_ARC_WIZARD_STEPS = [3, 5] as const;
 
 /**
  * The full walk, for a run that started at the front door rather than partway
@@ -43,14 +42,13 @@ export const AGENT_ARC_WIZARD_STEPS = [3, 4, 5] as const;
  * on the "grow" path, which is why position is counted rather than looked up —
  * see `onboardingStepPositionFor`.
  */
-export const ONBOARDING_WIZARD_STEPS = [1, 3, 4, 5] as const;
+export const ONBOARDING_WIZARD_STEPS = [1, 3, 5] as const;
 
 /** Destinations for the full walk, in the same order. */
 export function onboardingStepLabels(): readonly string[] {
   return [
     t("onboarding.wizard.stepper.labels.orgName"),
-    t("onboarding.wizard.stepper.labels.firstAgent"),
-    t("onboarding.wizard.stepper.labels.connectModel"),
+    t("onboarding.wizard.stepper.labels.chooseStarter"),
     t("onboarding.wizard.stepper.labels.review"),
   ];
 }

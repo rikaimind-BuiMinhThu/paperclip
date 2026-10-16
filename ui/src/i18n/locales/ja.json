@@ -1009,7 +1009,35 @@
     "alreadyArchived": "すでにアーカイブ済み",
     "logoUploadFailed": "ロゴのアップロードに失敗しました",
     "failedToSave": "保存に失敗しました",
-    "failedToArchive": "組織のアーカイブに失敗しました"
+    "failedToArchive": "組織のアーカイブに失敗しました",
+    "masterAgents": "マスターエージェント",
+    "masterAgentsPage": {
+      "defaultModel": "標準モデル",
+      "adapter": "アダプター",
+      "model": "モデル",
+      "storedLogin": "保存済みログイン",
+      "apiKey": "APIキー",
+      "apiKeyPlaceholder": "APIキー",
+      "saveModel": "モデルを保存",
+      "agents": "エージェント",
+      "teams": "チーム",
+      "enabled": "有効",
+      "recommended": "おすすめ",
+      "edit": "編集",
+      "addAgent": "エージェントを追加",
+      "titleField": "肩書き",
+      "department": "部門",
+      "description": "説明",
+      "instructions": "指示",
+      "role": "ロール",
+      "icon": "アイコン",
+      "skills": "スキル",
+      "canHire": "エージェントを採用できる",
+      "save": "保存",
+      "teamName": "チーム名",
+      "members": "メンバー。ラジオボタンがマネージャーです。",
+      "noTeam": "チームなし"
+    }
   },
   "inbox": {
     "title": "受信トレイ",
@@ -1328,7 +1356,8 @@
           "orgName": "組織に名前を付ける",
           "firstAgent": "最初のエージェントを作成",
           "connectModel": "モデルを接続",
-          "review": "確認"
+          "review": "確認",
+          "chooseStarter": "スターターを選ぶ"
         }
       },
       "steps": {
@@ -1358,13 +1387,17 @@
           "title": "始めましょう...",
           "ledeReady": "{{agentName}} の準備ができました！",
           "agentFallback": "最初のエージェント"
+        },
+        "gallery": {
+          "title": "スターターを選ぶ"
         }
       },
       "footer": {
         "getStarted": "始める",
         "creating": "作成中...",
         "launching": "起動中...",
-        "connecting": "接続中"
+        "connecting": "接続中",
+        "hiring": "採用しています…"
       },
       "connect": {
         "cta": {
@@ -1430,6 +1463,26 @@
         "adapterEnvTestFailed": "アダプター環境テストに失敗しました",
         "unsetAnthropicStillFailing": "アダプター設定から ANTHROPIC_API_KEY を外して再試行しましたが、環境テストはまだ失敗しています。",
         "unsetAnthropicFailed": "ANTHROPIC_API_KEY の解除と再試行に失敗しました。"
+      },
+      "gallery": {
+        "lede": "役割を1つ選ぶか、その部門のチームを採用します。全員がプラットフォームのモデルを使います。",
+        "modelMissing": "インスタンス管理者がプラットフォームのモデルを設定する必要があります。",
+        "setModel": "モデルを設定",
+        "selected": "選択中: {{name}}",
+        "empty": "利用できるスターターはありません。",
+        "recommended": "おすすめ",
+        "hireTeam": "{{department}}チームを採用",
+        "agentCount": "{{count}}人のエージェント",
+        "hireFailed": "採用できませんでした。",
+        "departments": {
+          "leadership": "リーダーシップ",
+          "marketing": "マーケティング",
+          "sales": "営業",
+          "engineering": "エンジニアリング",
+          "product": "プロダクト",
+          "customerSuccess": "カスタマーサクセス",
+          "backOffice": "バックオフィス"
+        }
       }
     },
     "login": {
@@ -3079,7 +3132,7 @@
     }
   },
   "landing": {
-    "brand": "RIKAI AI Harness",
+    "brand": "Kujira AI Harness",
     "nav": {
       "main": "メイン",
       "product": "プロダクト",
@@ -3089,7 +3142,7 @@
     },
     "hero": {
       "title": "一人ひとりに、エージェントのチームを。",
-      "lede": "RIKAI AI Harness は、仕事のための AI エージェントを管理するアプリです。",
+      "lede": "Kujira AI Harness は、仕事のための AI エージェントを管理するアプリです。",
       "ctaPrimary": "はじめる",
       "ctaSecondary": "プロダクトを見る"
     },
@@ -3204,7 +3257,7 @@
       "extensible": {
         "eyebrow": "プラットフォーム",
         "title": "拡張でき、適応でき、オープンソース。",
-        "body": "RIKAI AI Harness は拡張前提で設計されています。拡張で能力を足し、スタックに合わせ、AI 労働力を動かすコードを自分で所有できます。",
+        "body": "Kujira AI Harness は拡張前提で設計されています。拡張で能力を足し、スタックに合わせ、AI 労働力を動かすコードを自分で所有できます。",
         "panel": "ドロップイン拡張、任意の LLM、MIT ライセンスのセルフホスト。",
         "b1": "コアを触らずに能力を足せるドロップイン拡張。",
         "b2": "任意の LLM・ツール・デプロイ先で動作。",
@@ -3221,7 +3274,7 @@
       "title": "よくある質問。",
       "different": {
         "q": "OpenClaw や Claude Code などのエージェントと何が違うのですか？",
-        "a": "RIKAI AI Harness はそれらのエージェントを使います。組織図・予算・目標・ガバナンス・説明責任を持つチームとしてオーケストレーションします。"
+        "a": "Kujira AI Harness はそれらのエージェントを使います。組織図・予算・目標・ガバナンス・説明責任を持つチームとしてオーケストレーションします。"
       },
       "existing": {
         "q": "既存のエージェントを使えますか？",
@@ -3241,7 +3294,7 @@
       },
       "vsTickets": {
         "q": "なぜ Asana や Trello にエージェントをつなぐだけでは不十分ですか？",
-        "a": "オーケストレーションにはチェックアウト調整、セッション継続、コスト監視、ガバナンスが必要です。RIKAI AI Harness がそれを担います。"
+        "a": "オーケストレーションにはチェックアウト調整、セッション継続、コスト監視、ガバナンスが必要です。Kujira AI Harness がそれを担います。"
       },
       "setup": {
         "q": "典型的なセットアップは？",
@@ -3259,11 +3312,11 @@
     "cta": {
       "title": "このインスタンスでエージェントチームを雇う。",
       "body": "サインインして開始。エージェントは自動インストールされません — 必要なチームをあなたが雇います。",
-      "button": "RIKAI AI Harness にサインイン"
+      "button": "Kujira AI Harness にサインイン"
     },
     "footer": {
       "tagline": "AI エージェント企業のためのコントロールプレーン。",
-      "copyright": "© RIKAI. RIKAI AI Harness."
+      "copyright": "© RIKAI. Kujira AI Harness."
     }
   }
 }

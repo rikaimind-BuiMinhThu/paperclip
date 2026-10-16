@@ -38,6 +38,7 @@ export { inboxDismissalRoutes } from "./inbox-dismissals.js";
 export { llmRoutes } from "./llms.js";
 export { accessRoutes } from "./access.js";
 export { instanceSettingsRoutes } from "./instance-settings.js";
+export { masterAgentRoutes } from "./master-agents.js";
 export { instanceDatabaseBackupRoutes } from "./instance-database-backups.js";
 export { managedAgentProfileRoutes } from "./managed-agent-profiles.js";
 export { remoteAgentProfileRoutes } from "./remote-agent-profiles.js";

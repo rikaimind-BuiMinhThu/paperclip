@@ -2954,6 +2954,29 @@ for (const route of [
   });
 }
 
+// ─── Master agents ──────────────────────────────────────────────────────────
+
+for (const route of [
+  ["get", "/api/instance/master-agents", "List master agents"],
+  ["post", "/api/instance/master-agents", "Create a master agent"],
+  ["patch", "/api/instance/master-agents/{id}", "Update a master agent"],
+  ["delete", "/api/instance/master-agents/{id}", "Delete a master agent"],
+  ["get", "/api/instance/master-teams", "List master teams"],
+  ["post", "/api/instance/master-teams", "Create a master team"],
+  ["patch", "/api/instance/master-teams/{id}", "Update a master team"],
+  ["delete", "/api/instance/master-teams/{id}", "Delete a master team"],
+  ["get", "/api/instance/default-model", "Read the platform default model"],
+  ["put", "/api/instance/default-model", "Set the platform default model"],
+  ["post", "/api/companies/{companyId}/onboarding/hires", "Hire a master agent or team"],
+] as const) {
+  registerCurrentRoute({
+    method: route[0],
+    path: route[1],
+    tags: ["master-agents"],
+    summary: route[2],
+  });
+}
+
 // ─── Agents ──────────────────────────────────────────────────────────────────
 
 registry.register("AgentAppearance", agentAppearanceSchema);

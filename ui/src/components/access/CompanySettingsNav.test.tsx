@@ -3,7 +3,9 @@
 import { createRoot } from "react-dom/client";
 import { flushSync } from "react-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
+import { DEFAULT_LOCALE } from "@/i18n/locales";
+import { i18n } from "@/i18n";
 import { queryKeys } from "@/lib/queryKeys";
 import { CompanySettingsNav, getCompanySettingsTab } from "./CompanySettingsNav";
 
@@ -53,6 +55,14 @@ async function act(callback: () => void | Promise<void>) {
 describe("CompanySettingsNav", () => {
   let container: HTMLDivElement;
 
+  beforeAll(async () => {
+    await i18n.changeLanguage("en");
+  });
+
+  afterAll(async () => {
+    await i18n.changeLanguage(DEFAULT_LOCALE);
+  });
+
   beforeEach(() => {
     container = document.createElement("div");
     document.body.appendChild(container);
@@ -89,6 +99,7 @@ describe("CompanySettingsNav", () => {
     expect(getCompanySettingsTab("/company/settings/instance/experimental")).toBe("instance-experimental");
     expect(getCompanySettingsTab("/PAP/company/settings/instance/plugins/example")).toBe("instance-plugins");
     expect(getCompanySettingsTab("/company/settings/instance/adapters")).toBe("instance-adapters");
+    expect(getCompanySettingsTab("/company/settings/instance/master-agents")).toBe("instance-master-agents");
   });
 
   function renderNav(
@@ -127,12 +138,14 @@ describe("CompanySettingsNav", () => {
           { value: "import", label: "Import" },
           { value: "members", label: "Members" },
           { value: "secrets", label: "Secrets" },
+          { value: "api-apps", label: "API Apps" },
           { value: "instance-profile", label: "Profile" },
           { value: "instance-environments", label: "Environments" },
           { value: "instance-access", label: "Access" },
           { value: "instance-experimental", label: "Experimental" },
           { value: "instance-plugins", label: "Plugins" },
           { value: "instance-adapters", label: "Adapters" },
+          { value: "instance-master-agents", label: "Master agents" },
         ],
       }),
     );
@@ -168,11 +181,13 @@ describe("CompanySettingsNav", () => {
       "import",
       "members",
       "secrets",
+      "api-apps",
       "instance-profile",
       "instance-environments",
       "instance-access",
       "instance-experimental",
       "instance-adapters",
+      "instance-master-agents",
     ]);
 
     await act(async () => {
