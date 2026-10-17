@@ -252,7 +252,7 @@ export async function admitExplicitNativeContinuation(input: {
         // A missing process identity is not evidence that a provider exited.
         if (!run.processPid && !run.processGroupId &&
             !await hasNativeLocalProcessStop(db, companyId, run.id) &&
-            !await hasHistoricalSuspendedNativeSession(db, run)) return blocked("process_identity_missing", "The previous run has no verified stop record. RIKAI AI Harness cannot start this message yet.");
+            !await hasHistoricalSuspendedNativeSession(db, run)) return blocked("process_identity_missing", "The previous run has no verified stop record. Kujira AI Harness cannot start this message yet.");
         if (run.processPid && !processStopped(run.processPid)) return blocked("process_running", "Waiting for the previous process to stop. Your message will start automatically.");
         if (run.processGroupId && !processStopped(-run.processGroupId)) return blocked("process_running", "Waiting for the previous process to stop. Your message will start automatically.");
       }

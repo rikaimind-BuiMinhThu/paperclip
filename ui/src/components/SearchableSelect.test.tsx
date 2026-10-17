@@ -446,7 +446,7 @@ describe("SearchableSelect", () => {
     setInputValue(input!, "pclip reusable");
     await flush();
 
-    expect(container.textContent).toContain("RIKAI AI Harness app");
+    expect(container.textContent).toContain("Kujira AI Harness app");
     expect(container.textContent).not.toContain("Marketing site");
 
     const selectedOptionKey = () => (

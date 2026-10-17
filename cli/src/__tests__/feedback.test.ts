@@ -119,7 +119,7 @@ describe("renderFeedbackReport", () => {
       includePayloads: false,
     });
 
-    expect(report).toContain("RIKAI AI Harness Feedback Report");
+    expect(report).toContain("Kujira AI Harness Feedback Report");
     expect(report).toContain("thumbs up");
     expect(report).toContain("thumbs down");
     expect(report).toContain("Needed more detail");

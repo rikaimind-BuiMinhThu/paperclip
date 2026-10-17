@@ -286,7 +286,7 @@ export function githubChatManagementService(db: Db, fetchImpl = fetch) {
         .for("update");
       if (prior?.status === "linked" && prior.paperclipUserId !== userId)
         throw conflict(
-          "This GitHub account is already linked to another RIKAI AI Harness member",
+          "This GitHub account is already linked to another Kujira AI Harness member",
         );
       const [grant] = await tx
         .select()
@@ -477,7 +477,7 @@ export function githubChatManagementService(db: Db, fetchImpl = fetch) {
           !!agent &&
           ["paperclip_runner", "codex_local"].includes(agent.adapterType),
         detail:
-          "Use RIKAI AI Harness Runner or Codex with managed MCP tools. Low-trust execution also requires a valid scoped boundary and isolated sandbox; the test task proves runtime execution.",
+          "Use Kujira AI Harness Runner or Codex with managed MCP tools. Low-trust execution also requires a valid scoped boundary and isolated sandbox; the test task proves runtime execution.",
       });
       const [savedConfig] = await db
         .select()

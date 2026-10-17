@@ -52,8 +52,8 @@ export function DevRestartBanner({ devServer }: { devServer?: DevServerHealthSta
   async function requestRestartNow() {
     const warning =
       currentDevServer.activeRunCount > 0
-        ? `Restart RIKAI AI Harness now? This may interrupt ${activeRunLabel}.`
-        : "Restart RIKAI AI Harness now?";
+        ? `Restart Kujira AI Harness now? This may interrupt ${activeRunLabel}.`
+        : "Restart Kujira AI Harness now?";
     if (!window.confirm(warning)) return;
 
     setRestartPending(true);

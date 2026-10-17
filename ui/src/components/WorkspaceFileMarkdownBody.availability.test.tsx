@@ -300,7 +300,7 @@ describe("WorkspaceFileMarkdownBody availability gating", () => {
           workspaceKind: "project_workspace",
           workspaceId: WORKSPACE_ID,
           projectId: PROJECT_ID,
-          projectName: "RIKAI AI Harness App",
+          projectName: "Kujira AI Harness App",
         }),
       },
     ]));

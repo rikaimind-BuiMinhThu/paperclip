@@ -41,7 +41,7 @@ The skill/reference inventory and eval cases are the only normative behavior sou
 
 | Capability | Primary disposition | Source anchor |
 | --- | --- | --- |
-| skill:skills/paperclip/SKILL.md:rikai-ai-harness-skill:10 | optional_agent_tool | skills/paperclip/SKILL.md:10 |
+| skill:skills/paperclip/SKILL.md:kujira-ai-harness-skill:10 | optional_agent_tool | skills/paperclip/SKILL.md:10 |
 | skill:skills/paperclip/SKILL.md:terminology:14 | optional_agent_tool | skills/paperclip/SKILL.md:14 |
 | skill:skills/paperclip/SKILL.md:authentication:20 | control_plane_owned | skills/paperclip/SKILL.md:20 |
 | skill:skills/paperclip/SKILL.md:conversation-tasks:32 | optional_agent_tool | skills/paperclip/SKILL.md:32 |
@@ -72,7 +72,7 @@ The skill/reference inventory and eval cases are the only normative behavior sou
 | skill:skills/paperclip/SKILL.md:searching-issues:711 | optional_agent_tool | skills/paperclip/SKILL.md:711 |
 | skill:skills/paperclip/SKILL.md:full-reference:721 | optional_agent_tool | skills/paperclip/SKILL.md:721 |
 | skill:skills/paperclip/SKILL.md:conversational-confirmation-answers:725 | always_agent_tool | skills/paperclip/SKILL.md:725 |
-| skill:skills/paperclip/references/api-reference.md:rikai-ai-harness-api-reference:1 | optional_agent_tool | skills/paperclip/references/api-reference.md:1 |
+| skill:skills/paperclip/references/api-reference.md:kujira-ai-harness-api-reference:1 | optional_agent_tool | skills/paperclip/references/api-reference.md:1 |
 | skill:skills/paperclip/references/api-reference.md:response-schemas:9 | optional_agent_tool | skills/paperclip/references/api-reference.md:9 |
 | skill:skills/paperclip/references/api-reference.md:agent-record-get-api-agents-me-or-get-api-agents-agentid:11 | optional_agent_tool | skills/paperclip/references/api-reference.md:11 |
 | skill:skills/paperclip/references/api-reference.md:company-portability:44 | optional_agent_tool | skills/paperclip/references/api-reference.md:44 |
@@ -106,7 +106,7 @@ The skill/reference inventory and eval cases are the only normative behavior sou
 | skill:skills/paperclip/references/api-reference.md:4-unblock-reassign-and-comment:604 | control_plane_owned | skills/paperclip/references/api-reference.md:604 |
 | skill:skills/paperclip/references/api-reference.md:5-check-own-assignments:608 | optional_agent_tool | skills/paperclip/references/api-reference.md:608 |
 | skill:skills/paperclip/references/api-reference.md:6-create-subtasks-and-delegate:615 | optional_agent_tool | skills/paperclip/references/api-reference.md:615 |
-| skill:skills/paperclip/references/api-reference.md:load-tests-depend-on-caching-layer-being-done-first-rikai-ai-harness-will-auto-wake-agent-55-when-the-blocker-resolves:621 | control_plane_owned | skills/paperclip/references/api-reference.md:621 |
+| skill:skills/paperclip/references/api-reference.md:load-tests-depend-on-caching-layer-being-done-first-kujira-ai-harness-will-auto-wake-agent-55-when-the-blocker-resolves:621 | control_plane_owned | skills/paperclip/references/api-reference.md:621 |
 | skill:skills/paperclip/references/api-reference.md:7-dashboard-for-health-check:626 | optional_agent_tool | skills/paperclip/references/api-reference.md:626 |
 | skill:skills/paperclip/references/api-reference.md:comments-and-mentions:632 | always_agent_tool | skills/paperclip/references/api-reference.md:632 |
 | skill:skills/paperclip/references/api-reference.md:update:639 | optional_agent_tool | skills/paperclip/references/api-reference.md:639 |
@@ -180,7 +180,7 @@ The skill/reference inventory and eval cases are the only normative behavior sou
 | skill:skills/paperclip/references/issue-workspaces.md:stop-all-running-services:44 | optional_agent_tool | skills/paperclip/references/issue-workspaces.md:44 |
 | skill:skills/paperclip/references/issue-workspaces.md:read-the-url:63 | optional_agent_tool | skills/paperclip/references/issue-workspaces.md:63 |
 | skill:skills/paperclip/references/issue-workspaces.md:mcp-tools:72 | optional_agent_tool | skills/paperclip/references/issue-workspaces.md:72 |
-| skill:skills/paperclip/references/routines.md:rikai-ai-harness-routines:1 | optional_agent_tool | skills/paperclip/references/routines.md:1 |
+| skill:skills/paperclip/references/routines.md:kujira-ai-harness-routines:1 | optional_agent_tool | skills/paperclip/references/routines.md:1 |
 | skill:skills/paperclip/references/routines.md:lifecycle:16 | optional_agent_tool | skills/paperclip/references/routines.md:16 |
 | skill:skills/paperclip/references/routines.md:creating-a-routine:27 | optional_agent_tool | skills/paperclip/references/routines.md:27 |
 | skill:skills/paperclip/references/routines.md:concurrency-policies:64 | optional_agent_tool | skills/paperclip/references/routines.md:64 |
@@ -195,7 +195,7 @@ The skill/reference inventory and eval cases are the only normative behavior sou
 | skill:skills/paperclip/references/routines.md:manual-run:196 | optional_agent_tool | skills/paperclip/references/routines.md:196 |
 | skill:skills/paperclip/references/routines.md:updating-a-routine:212 | optional_agent_tool | skills/paperclip/references/routines.md:212 |
 | skill:skills/paperclip/references/routines.md:reading-routines-and-runs:223 | optional_agent_tool | skills/paperclip/references/routines.md:223 |
-| skill:skills/paperclip/references/workflows.md:rikai-ai-harness-workflow-playbooks:1 | optional_agent_tool | skills/paperclip/references/workflows.md:1 |
+| skill:skills/paperclip/references/workflows.md:kujira-ai-harness-workflow-playbooks:1 | optional_agent_tool | skills/paperclip/references/workflows.md:1 |
 | skill:skills/paperclip/references/workflows.md:project-setup-ceo-manager:7 | optional_agent_tool | skills/paperclip/references/workflows.md:7 |
 | skill:skills/paperclip/references/workflows.md:openclaw-invite-ceo:22 | optional_agent_tool | skills/paperclip/references/workflows.md:22 |
 | skill:skills/paperclip/references/workflows.md:setting-agent-instructions-path:50 | optional_agent_tool | skills/paperclip/references/workflows.md:50 |

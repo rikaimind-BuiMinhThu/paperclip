@@ -540,7 +540,7 @@ export function slackSearchOAuthService(
         typeof user.access_token !== "string"
       )
         throw forbidden(
-          "Authorize the same Slack user and workspace that you linked in RIKAI AI Harness",
+          "Authorize the same Slack user and workspace that you linked in Kujira AI Harness",
         );
       const scopes = String(user.scope ?? "").split(",");
       if (

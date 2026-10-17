@@ -227,7 +227,7 @@ export class PaperclipRunnerToolAuthority {
         name: descriptor.operationId,
         description:
           descriptor.operationId === "register_deliverable"
-            ? "Prepare one verified workspace file for RIKAI AI Harness's final task or external-chat response. This records the attachment, work product, and explicit same-run selection; it does not confirm provider delivery."
+            ? "Prepare one verified workspace file for Kujira AI Harness's final task or external-chat response. This records the attachment, work product, and explicit same-run selection; it does not confirm provider delivery."
             : descriptor.description,
         inputSchema:
           descriptor.operationId === "register_deliverable"
@@ -575,9 +575,9 @@ export class PaperclipRunnerToolAuthority {
     const context = { ...this.binding, issueIdentifier: bound.issue.identifier, workMode: bound.issue.workMode };
     const { input, operation } = validateRunnerApiCall(value, context);
     const apiUrl = this.binding.apiUrl ?? process.env.PAPERCLIP_API_URL;
-    if (!apiUrl) throw new Error("RIKAI AI Harness API origin is unavailable");
+    if (!apiUrl) throw new Error("Kujira AI Harness API origin is unavailable");
     const token = createLocalAgentJwt(this.binding.agentId, this.binding.companyId, bound.actor.adapterType, this.binding.runId, bound.run.responsibleUserId);
-    if (!token) throw new Error("RIKAI AI Harness run authentication is unavailable");
+    if (!token) throw new Error("Kujira AI Harness run authentication is unavailable");
     const execute = async () => {
       let reservationId: string | undefined;
       let storageAttempted = false;

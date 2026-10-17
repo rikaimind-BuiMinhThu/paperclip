@@ -96,7 +96,7 @@ export async function handoffToOnboardedService(
   const deps = { ...defaultDashboardDependencies, ...dependencies };
   const runtime = await deps.waitUntilReady();
   const dashboardUrl = resolveOnboardServiceDashboardUrl(config, runtime);
-  deps.info(`RIKAI AI Harness dashboard: ${pc.cyan(dashboardUrl)}`);
+  deps.info(`Kujira AI Harness dashboard: ${pc.cyan(dashboardUrl)}`);
 
   if (!runtime) {
     deps.warn(
@@ -109,7 +109,7 @@ export async function handoffToOnboardedService(
   if (!deps.isInteractive() || envDisablesBrowser()) return;
 
   if (await deps.openDashboard(dashboardUrl)) {
-    deps.success("Sent the RIKAI AI Harness dashboard to your browser.");
+    deps.success("Sent the Kujira AI Harness dashboard to your browser.");
   } else {
     deps.warn(`Could not open a browser automatically. Open ${dashboardUrl} manually.`);
   }
@@ -191,14 +191,14 @@ const defaultDependencies: OnboardServiceDependencies = {
   },
   confirm: async () => {
     const answer = await p.confirm({
-      message: "Install RIKAI AI Harness as a background service?",
+      message: "Install Kujira AI Harness as a background service?",
       initialValue: true,
     });
     return !p.isCancel(answer) && answer === true;
   },
   confirmLinger: async () => {
     const answer = await p.confirm({
-      message: "Allow RIKAI AI Harness to keep running after logout? This may request system authorization.",
+      message: "Allow Kujira AI Harness to keep running after logout? This may request system authorization.",
       initialValue: false,
     });
     return !p.isCancel(answer) && answer === true;

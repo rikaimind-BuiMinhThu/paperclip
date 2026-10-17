@@ -43,7 +43,7 @@ describe("readGitHubPrivateKeyFile", () => {
         },
       }),
     ).rejects.toThrow(
-      "RIKAI AI Harness couldn't read that file. Choose the .pem file again or paste the private key.",
+      "Kujira AI Harness couldn't read that file. Choose the .pem file again or paste the private key.",
     );
   });
 

@@ -247,7 +247,7 @@ function listAvailableSkills(): AvailableSkill[] {
   const claudeSkillsDir = resolveClaudeSkillsDir();
   const paperclipSkillsDir = resolvePaperclipSkillsDir();
 
-  // Build set of RIKAI AI Harness-managed skill names
+  // Build set of Kujira AI Harness-managed skill names
   const paperclipSkillNames = new Set<string>();
   if (paperclipSkillsDir) {
     try {
@@ -295,7 +295,7 @@ function listAvailableSkills(): AvailableSkill[] {
           isPaperclipManaged: true,
         });
       }
-    } catch { /* skip RIKAI AI Harness skills directory */ }
+    } catch { /* skip Kujira AI Harness skills directory */ }
   }
 
   skills.sort((a, b) => a.name.localeCompare(b.name));
@@ -676,7 +676,7 @@ export function assertLegacyAgentInviteAdapterType(
 ) {
   if (adapterType === "paperclip_runner") {
     throw badRequest(
-      "RIKAI AI Harness Runner is not available through agent invite onboarding.",
+      "Kujira AI Harness Runner is not available through agent invite onboarding.",
       { code: "paperclip_runner_invite_onboarding_disabled" },
     );
   }
@@ -797,7 +797,7 @@ export function normalizeAgentDefaultsForJoin(input: {
               code: "hermes_gateway_dashboard_root_mapped",
               level: "info",
               message: `Default Hermes dashboard root mapped to API base ${apiBaseUrl.toString()}`,
-              hint: "Hermes dashboard and /chat routes are browser UI routes. RIKAI AI Harness gateway calls use /api/health and /api/v1/runs.",
+              hint: "Hermes dashboard and /chat routes are browser UI routes. Kujira AI Harness gateway calls use /api/health and /api/v1/runs.",
             });
           }
           if (apiBaseUrl.protocol === "http:" && !isLoopbackHost(apiBaseUrl.hostname)) {
@@ -1635,7 +1635,7 @@ function buildOnboardingDiscoveryDiagnostics(input: {
       code: "openclaw_onboarding_api_loopback",
       level: "warn",
       message:
-        "Onboarding URL resolves to loopback hostname. Remote OpenClaw agents cannot reach localhost on your RIKAI AI Harness host.",
+        "Onboarding URL resolves to loopback hostname. Remote OpenClaw agents cannot reach localhost on your Kujira AI Harness host.",
       hint: "Use a reachable hostname/IP (for example Tailscale hostname, Docker host alias, or public domain)."
     });
   }
@@ -1648,7 +1648,7 @@ function buildOnboardingDiscoveryDiagnostics(input: {
     diagnostics.push({
       code: "openclaw_onboarding_private_loopback_bind",
       level: "warn",
-      message: "RIKAI AI Harness is bound to loopback in authenticated/private mode.",
+      message: "Kujira AI Harness is bound to loopback in authenticated/private mode.",
       hint: "Use a reachable private bind mode such as `pnpm dev --bind lan` or `pnpm dev --bind tailnet` for private-network onboarding."
     });
   }
@@ -1770,7 +1770,7 @@ function buildInviteOnboardingManifest(
     ),
     onboarding: {
       instructions:
-        "Join as an external RIKAI AI Harness agent, save your one-time claim secret, wait for board approval, then claim your RIKAI AI Harness API key through the standard claim endpoint. Use requestType='agent', include your agentName and capabilities, and set adapterType plus agentDefaultsPayload for your runtime when applicable. Hermes Gateway agents must use adapterType='hermes_gateway', start a clean Hermes install with API_SERVER_ENABLED=true and a fresh API_SERVER_KEY, then run `hermes gateway run --replace --accept-hooks`. Put the Hermes gateway URL in agentDefaultsPayload.apiBaseUrl, put the exact API_SERVER_KEY value in agentDefaultsPayload.apiKey, and put the reachable RIKAI AI Harness base URL in agentDefaultsPayload.paperclipApiUrl. If you use the default Hermes dashboard root or /chat URL on port 9119, RIKAI AI Harness maps it to /api automatically. OpenClaw Gateway agents must use adapterType='openclaw_gateway', set agentDefaultsPayload.url to a ws:// or wss:// gateway endpoint, and include agentDefaultsPayload.headers.x-openclaw-token.",
+        "Join as an external Kujira AI Harness agent, save your one-time claim secret, wait for board approval, then claim your Kujira AI Harness API key through the standard claim endpoint. Use requestType='agent', include your agentName and capabilities, and set adapterType plus agentDefaultsPayload for your runtime when applicable. Hermes Gateway agents must use adapterType='hermes_gateway', start a clean Hermes install with API_SERVER_ENABLED=true and a fresh API_SERVER_KEY, then run `hermes gateway run --replace --accept-hooks`. Put the Hermes gateway URL in agentDefaultsPayload.apiBaseUrl, put the exact API_SERVER_KEY value in agentDefaultsPayload.apiKey, and put the reachable Kujira AI Harness base URL in agentDefaultsPayload.paperclipApiUrl. If you use the default Hermes dashboard root or /chat URL on port 9119, Kujira AI Harness maps it to /api automatically. OpenClaw Gateway agents must use adapterType='openclaw_gateway', set agentDefaultsPayload.url to a ws:// or wss:// gateway endpoint, and include agentDefaultsPayload.headers.x-openclaw-token.",
       inviteMessage: extractInviteMessage(invite),
       recommendedAdapterType: null,
       requiredFields: {
@@ -1805,8 +1805,8 @@ function buildInviteOnboardingManifest(
         guidance:
           opts.deploymentMode === "authenticated" &&
           opts.deploymentExposure === "private"
-            ? "If OpenClaw runs on another machine, ensure the RIKAI AI Harness hostname is reachable and allowed via `npx paperclipai allowed-hostname <host>`."
-            : "Ensure OpenClaw can reach this RIKAI AI Harness API base URL for invite, claim, and skill bootstrap calls."
+            ? "If OpenClaw runs on another machine, ensure the Kujira AI Harness hostname is reachable and allowed via `npx paperclipai allowed-hostname <host>`."
+            : "Ensure OpenClaw can reach this Kujira AI Harness API base URL for invite, claim, and skill bootstrap calls."
       },
       textInstructions: {
         path: onboardingTextPath,
@@ -1817,7 +1817,7 @@ function buildInviteOnboardingManifest(
         name: "paperclip",
         path: skillPath,
         url: skillUrl,
-        installPath: "runtime-specific RIKAI AI Harness skill location"
+        installPath: "runtime-specific Kujira AI Harness skill location"
       }
     }
   };
@@ -1869,7 +1869,7 @@ export function buildInviteOnboardingTextDocument(
   };
 
   appendBlock(`
-    # RIKAI AI Harness Agent Onboarding
+    # Kujira AI Harness Agent Onboarding
 
     This document is meant to be readable by both humans and agents.
 
@@ -1893,9 +1893,9 @@ export function buildInviteOnboardingTextDocument(
   appendBlock(`
     ## Step 0
 
-    Decide which RIKAI AI Harness adapter type matches your runtime.
+    Decide which Kujira AI Harness adapter type matches your runtime.
 
-    Use adapterType only when there is a matching RIKAI AI Harness adapter. Put runtime-specific settings in agentDefaultsPayload.
+    Use adapterType only when there is a matching Kujira AI Harness adapter. Put runtime-specific settings in agentDefaultsPayload.
 
     ## Step 1: Submit agent join request
     ${onboarding.registrationEndpoint.method} ${
@@ -1935,15 +1935,15 @@ export function buildInviteOnboardingTextDocument(
     - For a clean Hermes install, generate a fresh random gateway key and start Hermes with API_SERVER_ENABLED=true and API_SERVER_KEY=<random-gateway-key>.
     - Run: hermes gateway run --replace --accept-hooks
     - Default Hermes API server port: 8642.
-    - Set agentDefaultsPayload.apiBaseUrl to the Hermes gateway URL RIKAI AI Harness can reach.
-    - Set agentDefaultsPayload.apiKey to the exact same value as API_SERVER_KEY. This is the Hermes gateway key, not the RIKAI AI Harness key.
+    - Set agentDefaultsPayload.apiBaseUrl to the Hermes gateway URL Kujira AI Harness can reach.
+    - Set agentDefaultsPayload.apiKey to the exact same value as API_SERVER_KEY. This is the Hermes gateway key, not the Kujira AI Harness key.
     - If you only have the default Hermes dashboard or chat URL, http://127.0.0.1:9119 and http://127.0.0.1:9119/chat are accepted and map to /api automatically.
-    - Watch out: /chat and the dashboard root are browser UI routes. RIKAI AI Harness tests /api/health and starts runs with /api/v1/runs after mapping them to the API base.
-    - Set agentDefaultsPayload.paperclipApiUrl to the RIKAI AI Harness base URL Hermes can reach.
-    - Use hermes_local when RIKAI AI Harness should start Hermes on the RIKAI AI Harness host.
-    - Use hermes_gateway when RIKAI AI Harness should call an already-running Hermes API server.
-    - After board approval, claim the RIKAI AI Harness API key once with the claim endpoint below and save it as PAPERCLIP_API_KEY. Store the parsed token field from the raw HTTP JSON response before printing or summarizing it; do not copy token values from chat, transcript, or tool-output previews. A token value containing literal ... or [redacted] is a masked display preview, not a valid key. Do not rotate or invent a RIKAI AI Harness key manually.
-    - Hermes-originated RIKAI AI Harness API usage means Hermes calls RIKAI AI Harness with PAPERCLIP_API_URL and PAPERCLIP_API_KEY after approval/key claim. Do not confuse that with agentDefaultsPayload.apiBaseUrl, which points RIKAI AI Harness to Hermes.
+    - Watch out: /chat and the dashboard root are browser UI routes. Kujira AI Harness tests /api/health and starts runs with /api/v1/runs after mapping them to the API base.
+    - Set agentDefaultsPayload.paperclipApiUrl to the Kujira AI Harness base URL Hermes can reach.
+    - Use hermes_local when Kujira AI Harness should start Hermes on the Kujira AI Harness host.
+    - Use hermes_gateway when Kujira AI Harness should call an already-running Hermes API server.
+    - After board approval, claim the Kujira AI Harness API key once with the claim endpoint below and save it as PAPERCLIP_API_KEY. Store the parsed token field from the raw HTTP JSON response before printing or summarizing it; do not copy token values from chat, transcript, or tool-output previews. A token value containing literal ... or [redacted] is a masked display preview, not a valid key. Do not rotate or invent a Kujira AI Harness key manually.
+    - Hermes-originated Kujira AI Harness API usage means Hermes calls Kujira AI Harness with PAPERCLIP_API_URL and PAPERCLIP_API_KEY after approval/key claim. Do not confuse that with agentDefaultsPayload.apiBaseUrl, which points Kujira AI Harness to Hermes.
 
     Hermes Gateway payload example:
     {
@@ -1960,10 +1960,10 @@ export function buildInviteOnboardingTextDocument(
 
     Hermes Gateway network examples:
     - Local loopback API server: agentDefaultsPayload.apiBaseUrl = "http://127.0.0.1:8642" and agentDefaultsPayload.paperclipApiUrl = "http://127.0.0.1:3100".
-    - Local loopback dashboard root or chat URL: agentDefaultsPayload.apiBaseUrl = "http://127.0.0.1:9119" or "http://127.0.0.1:9119/chat"; RIKAI AI Harness maps either one to "http://127.0.0.1:9119/api".
+    - Local loopback dashboard root or chat URL: agentDefaultsPayload.apiBaseUrl = "http://127.0.0.1:9119" or "http://127.0.0.1:9119/chat"; Kujira AI Harness maps either one to "http://127.0.0.1:9119/api".
     - LAN/private network: use reachable private addresses, for example agentDefaultsPayload.apiBaseUrl = "http://192.168.1.25:8642" and agentDefaultsPayload.paperclipApiUrl = "http://192.168.1.10:3100".
     - Private overlay: use overlay DNS names, for example agentDefaultsPayload.apiBaseUrl = "http://hermes-host.tailnet-name.ts.net:8642" and agentDefaultsPayload.paperclipApiUrl = "http://paperclip-host.tailnet-name.ts.net:3100".
-    - Docker: if RIKAI AI Harness runs in Docker and Hermes runs on the host, use agentDefaultsPayload.apiBaseUrl = "http://host.docker.internal:8642"; if both run in Compose, use the Hermes service name.
+    - Docker: if Kujira AI Harness runs in Docker and Hermes runs on the host, use agentDefaultsPayload.apiBaseUrl = "http://host.docker.internal:8642"; if both run in Compose, use the Hermes service name.
     - Reverse proxy/TLS: use HTTPS origins, for example agentDefaultsPayload.apiBaseUrl = "https://hermes-gateway.example" and agentDefaultsPayload.paperclipApiUrl = "https://paperclip.example".
 
     Expected response includes:
@@ -1972,7 +1972,7 @@ export function buildInviteOnboardingTextDocument(
     - claimApiKeyPath
 
     ## Step 2: Wait for board approval
-    The board approves the join request in RIKAI AI Harness before key claim is allowed.
+    The board approves the join request in Kujira AI Harness before key claim is allowed.
 
     ## Step 3: Claim API key (one-time)
     ${
@@ -1984,14 +1984,14 @@ export function buildInviteOnboardingTextDocument(
       "claimSecret": "<one-time-claim-secret>"
     }
 
-    On successful claim, save the full JSON response somewhere private for your runtime and set PAPERCLIP_API_KEY and PAPERCLIP_API_URL for future RIKAI AI Harness API calls. The response body includes the full token exactly once, but runtime displays and tool summaries may mask or truncate it. Write the raw response token directly to private storage before logging anything, then verify it with an authenticated RIKAI AI Harness API call. Do not persist displayed previews containing literal ... or [redacted].
+    On successful claim, save the full JSON response somewhere private for your runtime and set PAPERCLIP_API_KEY and PAPERCLIP_API_URL for future Kujira AI Harness API calls. The response body includes the full token exactly once, but runtime displays and tool summaries may mask or truncate it. Write the raw response token directly to private storage before logging anything, then verify it with an authenticated Kujira AI Harness API call. Do not persist displayed previews containing literal ... or [redacted].
 
     Important:
     - claim secrets expire
     - claim secrets are single-use
     - claim fails before board approval
 
-    ## Step 4: Install RIKAI AI Harness skill
+    ## Step 4: Install Kujira AI Harness skill
     GET ${onboarding.skill.url}
     Install path: ${onboarding.skill.installPath}
 
@@ -2003,7 +2003,7 @@ export function buildInviteOnboardingTextDocument(
     ## Connectivity guidance
     ${
       onboarding.connectivity?.guidance ??
-      "Ensure RIKAI AI Harness is reachable from your OpenClaw runtime."
+      "Ensure Kujira AI Harness is reachable from your OpenClaw runtime."
     }
   `);
 
@@ -2016,7 +2016,7 @@ export function buildInviteOnboardingTextDocument(
     : [];
 
   if (connectionCandidates.length > 0) {
-    lines.push("## Suggested RIKAI AI Harness base URLs to try");
+    lines.push("## Suggested Kujira AI Harness base URLs to try");
     for (const candidate of connectionCandidates) {
       lines.push(`- ${candidate}`);
     }
@@ -2029,7 +2029,7 @@ export function buildInviteOnboardingTextDocument(
       If none are reachable: ask your human operator for a reachable hostname/address and help them update network configuration.
       For authenticated/private mode, they may need:
       - npx paperclipai allowed-hostname <host>
-      - then restart RIKAI AI Harness and retry onboarding.
+      - then restart Kujira AI Harness and retry onboarding.
     `);
   }
 

@@ -4,8 +4,8 @@
     {
       "id": "skill:skills/paperclip/SKILL.md:10",
       "kind": "skill_heading",
-      "sourceAnchor": "skills/paperclip/SKILL.md#L10:rikai-ai-harness-skill",
-      "heading": "RIKAI AI Harness Skill",
+      "sourceAnchor": "skills/paperclip/SKILL.md#L10:kujira-ai-harness-skill",
+      "heading": "Kujira AI Harness Skill",
       "primaryDisposition": "optional_agent_tool",
       "semanticOperation": "scoped_discovery",
       "expectedMockState": "operation_result"
@@ -283,8 +283,8 @@
     {
       "id": "skill:skills/paperclip/references/api-reference.md:1",
       "kind": "skill_heading",
-      "sourceAnchor": "skills/paperclip/references/api-reference.md#L1:rikai-ai-harness-api-reference",
-      "heading": "RIKAI AI Harness API Reference",
+      "sourceAnchor": "skills/paperclip/references/api-reference.md#L1:kujira-ai-harness-api-reference",
+      "heading": "Kujira AI Harness API Reference",
       "primaryDisposition": "optional_agent_tool",
       "semanticOperation": "scoped_discovery",
       "expectedMockState": "operation_result"
@@ -589,8 +589,8 @@
     {
       "id": "skill:skills/paperclip/references/api-reference.md:621",
       "kind": "skill_heading",
-      "sourceAnchor": "skills/paperclip/references/api-reference.md#L621:load-tests-depend-on-caching-layer-being-done-first-rikai-ai-harness-will-auto-wake-agent-55-when-the-blocker-resolves",
-      "heading": "^ Load tests depend on caching layer being done first. RIKAI AI Harness will auto-wake agent-55 when the blocker resolves.",
+      "sourceAnchor": "skills/paperclip/references/api-reference.md#L621:load-tests-depend-on-caching-layer-being-done-first-kujira-ai-harness-will-auto-wake-agent-55-when-the-blocker-resolves",
+      "heading": "^ Load tests depend on caching layer being done first. Kujira AI Harness will auto-wake agent-55 when the blocker resolves.",
       "primaryDisposition": "control_plane_owned",
       "semanticOperation": "runtime_reconciliation",
       "expectedMockState": "runtime_decision_record"
@@ -1264,8 +1264,8 @@
     {
       "id": "skill:skills/paperclip/references/routines.md:1",
       "kind": "skill_heading",
-      "sourceAnchor": "skills/paperclip/references/routines.md#L1:rikai-ai-harness-routines",
-      "heading": "RIKAI AI Harness Routines",
+      "sourceAnchor": "skills/paperclip/references/routines.md#L1:kujira-ai-harness-routines",
+      "heading": "Kujira AI Harness Routines",
       "primaryDisposition": "optional_agent_tool",
       "semanticOperation": "scoped_discovery",
       "expectedMockState": "operation_result"
@@ -1399,8 +1399,8 @@
     {
       "id": "skill:skills/paperclip/references/workflows.md:1",
       "kind": "skill_heading",
-      "sourceAnchor": "skills/paperclip/references/workflows.md#L1:rikai-ai-harness-workflow-playbooks",
-      "heading": "RIKAI AI Harness Workflow Playbooks",
+      "sourceAnchor": "skills/paperclip/references/workflows.md#L1:kujira-ai-harness-workflow-playbooks",
+      "heading": "Kujira AI Harness Workflow Playbooks",
       "primaryDisposition": "control_plane_owned",
       "semanticOperation": "runtime_reconciliation",
       "expectedMockState": "runtime_decision_record"

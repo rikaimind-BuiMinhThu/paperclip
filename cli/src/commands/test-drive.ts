@@ -90,7 +90,7 @@ const NON_PAPERCLIP_ISOLATED_ENV_KEYS = [
 
 function requiredApiResult<T>(value: T | null, action: string): T {
   if (value === null) {
-    throw new Error(`RIKAI AI Harness returned no result while ${action}.`);
+    throw new Error(`Kujira AI Harness returned no result while ${action}.`);
   }
   return value;
 }
@@ -310,7 +310,7 @@ export async function reconcileTestDriveWorktreeExecution(
   );
   if (!worktreeExecutionArmed(verified, instanceId)) {
     throw new Error(
-      `Could not arm “Run tasks in this worktree” for RIKAI AI Harness instance ${instanceId}. ` +
+      `Could not arm “Run tasks in this worktree” for Kujira AI Harness instance ${instanceId}. ` +
         "Check that PAPERCLIP_IN_WORKTREE=true and retry the command.",
     );
   }
@@ -424,7 +424,7 @@ export async function testDriveCommand(
   ];
 
   p.log.message(pc.dim(`Data directory: ${dataDir}`));
-  p.log.message(pc.dim("The data directory is retained when RIKAI AI Harness exits."));
+  p.log.message(pc.dim("The data directory is retained when Kujira AI Harness exits."));
   if (options.apiKey !== undefined) {
     p.log.warn("A key passed with --api-key may be visible in process arguments and shell history.");
   }
@@ -463,14 +463,14 @@ export async function testDriveCommand(
 
         const url = dashboardUrl(server);
         if (options.browser === false) {
-          p.log.success(`RIKAI AI Harness is ready at ${pc.cyan(url)}.`);
+          p.log.success(`Kujira AI Harness is ready at ${pc.cyan(url)}.`);
           return;
         }
         const opened = await dependencies.openBrowser(url);
         if (opened) {
-          p.log.success(`RIKAI AI Harness is ready and opened at ${pc.cyan(url)}.`);
+          p.log.success(`Kujira AI Harness is ready and opened at ${pc.cyan(url)}.`);
         } else {
-          p.log.warn(`RIKAI AI Harness is ready, but the browser could not be opened. Visit ${url}.`);
+          p.log.warn(`Kujira AI Harness is ready, but the browser could not be opened. Visit ${url}.`);
         }
       },
     });
@@ -482,8 +482,8 @@ export async function testDriveCommand(
 export function registerTestDriveCommand(program: Command): void {
   program
     .command("test-drive")
-    .description("Start an isolated, initialized RIKAI AI Harness instance for manual testing")
-    .option("-d, --data-dir <path>", "RIKAI AI Harness data directory to create or reuse")
+    .description("Start an isolated, initialized Kujira AI Harness instance for manual testing")
+    .option("-d, --data-dir <path>", "Kujira AI Harness data directory to create or reuse")
     .option("--company-name <name>", "Initial company name", "Test Company")
     .option("--agent-name <name>", "Initial CEO agent name", "CEO")
     .addOption(

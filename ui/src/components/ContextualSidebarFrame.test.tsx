@@ -48,7 +48,7 @@ describe("ContextualSidebarFrame", () => {
 
   it("renders the contextual identity and uses a safe fallback", () => {
     const root = render();
-    expect(container.textContent).toContain("RIKAI AI Harness");
+    expect(container.textContent).toContain("Kujira AI Harness");
     expect(container.textContent).toContain("Settings");
 
     act(() => {

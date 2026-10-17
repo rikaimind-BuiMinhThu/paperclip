@@ -116,7 +116,7 @@ class TraceConformanceDriver implements HarnessDriver {
       codexVersion: "trace-fixture",
       clientInfo: {
         name: "paperclip-runner",
-        title: "RIKAI AI Harness Runner",
+        title: "Kujira AI Harness Runner",
         version: "1.0.0",
       },
       model: "codex-fixture",

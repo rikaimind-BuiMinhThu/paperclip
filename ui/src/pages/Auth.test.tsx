@@ -164,7 +164,7 @@ describe("AuthPage", () => {
     healthMock.mockResolvedValue({ cloud: { managed: true, managedBy: "paperclip-cloud", cloudBaseUrl: "https://my.paperclip.app", stackSlug: "team" } });
     beginCloudSignInMock.mockReturnValue(false);
     const { root } = await mount();
-    await vi.waitFor(() => expect(container.textContent).toContain("Continue to RIKAI AI Harness Cloud"));
+    await vi.waitFor(() => expect(container.textContent).toContain("Continue to Kujira AI Harness Cloud"));
     expect(container.querySelector("form")).toBeNull();
     await act(() => root.unmount());
   });

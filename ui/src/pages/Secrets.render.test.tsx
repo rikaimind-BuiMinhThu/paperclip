@@ -548,7 +548,7 @@ describe("Secrets page layout", () => {
     await flushReact();
 
     expect(document.body.textContent).toContain("Remove provider vault");
-    expect(document.body.textContent).toContain("from RIKAI AI Harness only");
+    expect(document.body.textContent).toContain("from Kujira AI Harness only");
     expect(document.body.textContent).toContain("does not delete");
     expect(document.body.textContent).toContain("AWS Secrets Manager");
 
@@ -1291,7 +1291,7 @@ describe("Secrets page layout", () => {
     expect(errorBanner).not.toBeNull();
     expect(errorBanner?.textContent).toContain("AWS discovery needs ListSecrets permission");
     expect(errorBanner?.textContent).toContain("secretsmanager:ListSecrets");
-    expect(errorBanner?.textContent).toContain("RIKAI AI Harness server runtime/provider credential path");
+    expect(errorBanner?.textContent).toContain("Kujira AI Harness server runtime/provider credential path");
     expect(errorBanner?.textContent).toContain("paste/link that ARN");
     expect(errorBanner?.textContent).toContain("DescribeSecret");
     expect(errorBanner?.textContent).toContain("us-west-2");

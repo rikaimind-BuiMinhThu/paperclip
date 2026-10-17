@@ -104,7 +104,7 @@ export function buildAgentSkillSourceMeta(skill: SourceSkill): AgentSkillSourceM
   }
 
   if (skill.sourceBadge === "paperclip") {
-    return { icon: Paperclip, label: skill.sourceLabel?.trim() || "RIKAI AI Harness managed" };
+    return { icon: Paperclip, label: skill.sourceLabel?.trim() || "Kujira AI Harness managed" };
   }
 
   if (skill.sourceBadge === "catalog" || skill.sourceType === "catalog") {

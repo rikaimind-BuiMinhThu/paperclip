@@ -422,7 +422,7 @@ async function promptForImportSelection(preview: CompanyPortabilityPreviewResult
 
   while (true) {
     const choice = await p.select<ImportSelectableGroup | "company" | "confirm">({
-      message: "Select what RIKAI AI Harness should import",
+      message: "Select what Kujira AI Harness should import",
       options: [
         {
           value: "company",

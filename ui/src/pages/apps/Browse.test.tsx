@@ -699,7 +699,7 @@ describe("Connectors landing page", () => {
     await flushReact();
     expect(chatSetupMock).not.toHaveBeenCalled();
     expect(emailControlMock).not.toHaveBeenCalled();
-    expect(document.body.textContent).toContain("Existing RIKAI AI Harness tasks and conversation history remain available.");
+    expect(document.body.textContent).toContain("Existing Kujira AI Harness tasks and conversation history remain available.");
     chatListMock.mockResolvedValue([]);
     await act(() => Array.from(document.querySelectorAll("button")).find((button) => button.textContent?.trim() === "Remove connection")!.click());
     await flushReact();

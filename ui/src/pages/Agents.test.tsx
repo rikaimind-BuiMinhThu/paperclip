@@ -637,7 +637,7 @@ describe("Agents", () => {
     await flushReact();
 
     expect(container.textContent).toContain("Dev Laptop");
-    expect(container.textContent).toContain("RIKAI AI Harness host");
+    expect(container.textContent).toContain("Kujira AI Harness host");
   });
 
   it("reserves the environment column while environment metadata is loading", async () => {

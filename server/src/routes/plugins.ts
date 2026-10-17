@@ -331,7 +331,7 @@ async function discoverBundledPlugins(): Promise<DiscoveredBundledPlugin[]> {
         pluginKey: metadata.pluginKey ?? packageName,
         displayName: metadata.displayName ?? titleCasePluginName(packageName),
         description: metadata.description
-          ?? `Bundled RIKAI AI Harness plugin from ${path.relative(REPO_ROOT, packageRoot)}.`,
+          ?? `Bundled Kujira AI Harness plugin from ${path.relative(REPO_ROOT, packageRoot)}.`,
         localPath: packageRoot,
         tag,
         experimental: isExperimentalBundledPlugin(packageRoot, packageName),

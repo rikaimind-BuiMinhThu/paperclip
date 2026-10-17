@@ -69,7 +69,7 @@ export function StandaloneBrowserControls({ mobile }: { mobile: boolean }) {
     const url = window.location.href;
     try {
       if (navigator.share) {
-        await navigator.share({ title: document.title || "RIKAI AI Harness", url });
+        await navigator.share({ title: document.title || "Kujira AI Harness", url });
         return;
       }
       await copyTextToClipboard(url);

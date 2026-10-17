@@ -4,8 +4,8 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
     <meta name="theme-color" content="#008FD5" />
-    <meta name="apple-mobile-web-app-title" content="RIKAI AI Harness" />
-    <title>RIKAI AI Harness</title>
+    <meta name="apple-mobile-web-app-title" content="Kujira AI Harness" />
+    <title>Kujira AI Harness</title>
     <!-- PAPERCLIP_RUNTIME_BRANDING_START -->
     <!-- PAPERCLIP_RUNTIME_BRANDING_END -->
     <!-- PAPERCLIP_FAVICON_START -->
@@ -50,7 +50,7 @@
     <section id="paperclip-startup" role="status" aria-live="polite" hidden>
       <div class="mx-auto flex min-h-screen max-w-2xl flex-col justify-center space-y-4 px-4 py-10">
         <div>
-          <h1 id="paperclip-startup-title" class="text-lg font-semibold">RIKAI AI Harness couldn’t start</h1>
+          <h1 id="paperclip-startup-title" class="text-lg font-semibold">Kujira AI Harness couldn’t start</h1>
           <p id="paperclip-startup-message" class="mt-1 text-sm text-muted-foreground">
             Part of the app failed to load. Check your connection and reload this page to try again.
           </p>
@@ -83,7 +83,7 @@
         };
         const onFailure = () => {
           if (finished()) return cleanup();
-          title.textContent = "RIKAI AI Harness couldn’t start";
+          title.textContent = "Kujira AI Harness couldn’t start";
           message.textContent = "Part of the app failed to load. Check your connection and reload this page to try again.";
           notice.hidden = false;
         };
@@ -98,7 +98,7 @@
         const timer = setTimeout(() => {
           if (finished()) return cleanup();
           if (!notice.hidden) return;
-          title.textContent = "RIKAI AI Harness is taking longer to load";
+          title.textContent = "Kujira AI Harness is taking longer to load";
           message.textContent = "You can keep waiting, or reload this page to try again.";
           notice.hidden = false;
         }, 30_000);

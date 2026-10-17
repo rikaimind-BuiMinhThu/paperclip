@@ -105,7 +105,7 @@ describe("PaperclipCloudOAuthHandoffPage", () => {
     await act(async () => root.render(<PaperclipCloudOAuthHandoffPage />));
     await flushReact();
 
-    expect(container.textContent).toContain("RIKAI AI Harness couldn't refresh this sign-in. Try again to continue.");
+    expect(container.textContent).toContain("Kujira AI Harness couldn't refresh this sign-in. Try again to continue.");
     expect(navigateTopLevel).not.toHaveBeenCalled();
   });
 });

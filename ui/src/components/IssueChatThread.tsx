@@ -2924,7 +2924,7 @@ function IssueChatFeedbackButtons({
           <DialogHeader>
             <DialogTitle>Save your feedback sharing preference</DialogTitle>
             <DialogDescription>
-              Choose whether voted AI outputs can be shared with RIKAI AI Harness Labs.
+              Choose whether voted AI outputs can be shared with Kujira AI Harness Labs.
               This answer becomes the default for future thumbs up and thumbs
               down votes.
             </DialogDescription>
@@ -3544,14 +3544,14 @@ function SystemNoticeCommentContent({
       ? (agentMap?.get(runAgentId)?.name ?? null)
       : null;
     if (authorType === "system") {
-      const label = runAgentName ?? "RIKAI AI Harness";
+      const label = runAgentName ?? "Kujira AI Harness";
       if (runAgentId && runId)
         return { label, href: `/agents/${runAgentId}/runs/${runId}` };
       return { label };
     }
     if (runAgentId && runId) {
       return {
-        label: authorName ?? runAgentName ?? "RIKAI AI Harness",
+        label: authorName ?? runAgentName ?? "Kujira AI Harness",
         href: `/agents/${runAgentId}/runs/${runId}`,
       };
     }

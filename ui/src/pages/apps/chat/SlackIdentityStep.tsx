@@ -70,7 +70,7 @@ export function SlackIdentityStep({ endpointId, command, testStartedAt, onConnec
         <div className={`space-y-3 rounded-lg border p-4 ${linkedToMe
           ? "border-(--status-task-done)/30 bg-(--status-task-done)/10"
           : "border-(--status-task-todo)/30 bg-(--status-task-todo)/10"}`}>
-          <p className="text-sm">Choose your Slack account below to link it to <strong>{userLabel ?? "your RIKAI AI Harness account"}</strong>. Only confirm an account that belongs to you. Future messages will use your RIKAI AI Harness permissions.</p>
+          <p className="text-sm">Choose your Slack account below to link it to <strong>{userLabel ?? "your Kujira AI Harness account"}</strong>. Only confirm an account that belongs to you. Future messages will use your Kujira AI Harness permissions.</p>
           {candidates.map((identity) => {
             const mine = identity.status === "linked" && identity.paperclipUserId === userId;
             return (
@@ -80,8 +80,8 @@ export function SlackIdentityStep({ endpointId, command, testStartedAt, onConnec
                   <p className="text-xs text-muted-foreground">{identity.externalDetail}</p>
                 </div>
                 {mine ? <p role="status" className="flex items-center gap-2 text-sm"><CheckCircle2 className="size-4 text-(--status-task-done)" />{t("apps.connect.linkedToYou")}</p>
-                  : identity.status === "linked" ? <p className="text-sm text-muted-foreground">Linked to {identity.paperclipUserLabel ?? "another RIKAI AI Harness account"}</p>
-                  : <Button variant="outline" disabled={!userId || link.isPending} onClick={() => link.mutate(identity.principalId)} aria-label={`Link ${identity.externalLabel} to my RIKAI AI Harness account`}>
+                  : identity.status === "linked" ? <p className="text-sm text-muted-foreground">Linked to {identity.paperclipUserLabel ?? "another Kujira AI Harness account"}</p>
+                  : <Button variant="outline" disabled={!userId || link.isPending} onClick={() => link.mutate(identity.principalId)} aria-label={`Link ${identity.externalLabel} to my Kujira AI Harness account`}>
                     {link.isPending && link.variables === identity.principalId && <Loader2 className="size-4 animate-spin" />}This is my Slack account
                   </Button>}
               </div>
@@ -89,7 +89,7 @@ export function SlackIdentityStep({ endpointId, command, testStartedAt, onConnec
           })}
         </div>
       )}
-      {!userId && !session.isPending && !health.isPending && <p role="alert" className="text-sm text-destructive">Sign in to RIKAI AI Harness to link your Slack account. Refresh this page after signing in.</p>}
+      {!userId && !session.isPending && !health.isPending && <p role="alert" className="text-sm text-destructive">Sign in to Kujira AI Harness to link your Slack account. Refresh this page after signing in.</p>}
       {link.isError && <p role="alert" className="text-sm text-destructive">Couldn&apos;t link your account. Check that you are a member of this company and try again.</p>}
       <div className="flex items-center justify-between gap-3">
         <Button variant="ghost" className="text-muted-foreground" onClick={onSaveExit}>{t("common.saveAndExit")}</Button>

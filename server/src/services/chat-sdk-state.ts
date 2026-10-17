@@ -111,7 +111,7 @@ function decodeEnvelope(
 }
 
 /**
- * Chat SDK StateAdapter backed by RIKAI AI Harness's injected, company-scoped CAS
+ * Chat SDK StateAdapter backed by Kujira AI Harness's injected, company-scoped CAS
  * persistence. Instances are endpoint-scoped and never own or close the shared
  * database connection.
  */

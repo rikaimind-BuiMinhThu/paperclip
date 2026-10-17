@@ -16,7 +16,7 @@ export function EmailSafetyNotice() {
             allowlist in AgentMail to limit who can contact this inbox.
           </p>
           <p className="text-xs text-muted-foreground">
-            RIKAI AI Harness does not verify sender restrictions. AgentMail controls
+            Kujira AI Harness does not verify sender restrictions. AgentMail controls
             new messages and replies separately; check both lists.
           </p>
         </div>

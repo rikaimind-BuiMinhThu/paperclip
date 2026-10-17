@@ -42,7 +42,7 @@ describe("SystemNotice", () => {
     expect(status.length).toBe(1);
     expect(status[0]?.getAttribute("aria-label")).toBe("System warning");
     expect(node.textContent).toContain(
-      "RIKAI AI Harness needs a disposition before this issue can continue.",
+      "Kujira AI Harness needs a disposition before this issue can continue.",
     );
   });
 

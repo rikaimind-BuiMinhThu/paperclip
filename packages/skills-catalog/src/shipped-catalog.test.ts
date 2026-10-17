@@ -185,7 +185,7 @@ describe("shipped skills catalog", () => {
     const rampSkill = readFileSync(new URL("../catalog/optional/finance/ramp/SKILL.md", import.meta.url), "utf8");
 
     expect(rampSkill).toContain("mixes Official and Community playbooks");
-    expect(rampSkill).toContain("do not execute them inside RIKAI AI Harness unless a RIKAI AI Harness approval explicitly names the playbook");
+    expect(rampSkill).toContain("do not execute them inside Kujira AI Harness unless a Kujira AI Harness approval explicitly names the playbook");
     expect(rampSkill).toContain("third-party browser automation, MCP server, CLI, or connector");
   });
 

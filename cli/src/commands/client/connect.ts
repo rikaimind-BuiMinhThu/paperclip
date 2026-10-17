@@ -64,7 +64,7 @@ async function connectWizard(opts: ConnectOptions) {
   const resolvedProfile = resolveProfile(context, opts.profile);
   const initialApiBase = resolveApiBase(opts, resolvedProfile.profile);
   const apiBaseInput = await p.text({
-    message: "RIKAI AI Harness API base",
+    message: "Kujira AI Harness API base",
     initialValue: initialApiBase,
     placeholder: "http://localhost:3100",
   });

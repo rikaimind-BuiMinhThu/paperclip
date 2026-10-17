@@ -437,7 +437,7 @@ describe("native execution input external-chat framing", () => {
         "Preparation does not confirm provider delivery",
       );
       expect(input.task.prompt).toContain(
-        "RIKAI AI Harness owns recovery navigation for unavailable GitHub attachments",
+        "Kujira AI Harness owns recovery navigation for unavailable GitHub attachments",
       );
       expect(input.task.prompt).toContain(
         "after an accepted response, only when the current source remains authorized and a safe configured Board URL is available",
@@ -449,7 +449,7 @@ describe("native execution input external-chat framing", () => {
         "Do not invent a URL or promise that a link will appear",
       );
       expect(input.task.prompt).toContain(
-        "Briefly explain the unavailable input and ask the user to attach it directly to this RIKAI AI Harness task or paste the needed text",
+        "Briefly explain the unavailable input and ask the user to attach it directly to this Kujira AI Harness task or paste the needed text",
       );
       expect(input.task.prompt).toContain(
         "Never infer the file's contents or substitute an older file",
@@ -470,7 +470,7 @@ describe("native execution input external-chat framing", () => {
           wakePayload: { ...wake, ...patch },
         });
         expect(unrelated.task.prompt).not.toContain(
-          "RIKAI AI Harness owns recovery navigation for unavailable GitHub attachments",
+          "Kujira AI Harness owns recovery navigation for unavailable GitHub attachments",
         );
       }
     },
@@ -505,7 +505,7 @@ describe("native execution input external-chat framing", () => {
       : provider === "opencode" ? { kind: "opencode", permissionMode: "allow" }
       : { kind: "codex", approvalPolicy: "never" });
     expect(input.task.prompt).not.toContain("## Questions that need a user response");
-    expect(input.task.prompt).toContain("Use RIKAI AI Harness's request_human_input for durable task questions.");
+    expect(input.task.prompt).toContain("Use Kujira AI Harness's request_human_input for durable task questions.");
     expect(input.task.prompt).not.toContain("payload.questionSet");
   });
 

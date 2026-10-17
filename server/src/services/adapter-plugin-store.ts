@@ -72,7 +72,7 @@ function ensureDirs(): string {
       name: "paperclip-adapter-plugins",
       version: "0.0.0",
       private: true,
-      description: "Managed directory for RIKAI AI Harness external adapter plugins. Do not edit manually.",
+      description: "Managed directory for Kujira AI Harness external adapter plugins. Do not edit manually.",
     }, null, 2) + "\n");
   }
   return adapterPluginsDir;

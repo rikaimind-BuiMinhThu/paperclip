@@ -215,7 +215,7 @@ function assertPermissionMode(
     if (provider === "codex") {
       throw new PaperclipRunnerProviderProfileError(
         "paperclip_runner_codex_permission_mode_unqualified",
-        "RIKAI AI Harness Runner currently supports Codex only with codexPermissionMode set to never. Update the agent configuration before starting a new native run.",
+        "Kujira AI Harness Runner currently supports Codex only with codexPermissionMode set to never. Update the agent configuration before starting a new native run.",
       );
     }
     throw new PaperclipRunnerProviderProfileError(
@@ -341,7 +341,7 @@ export function resolvePaperclipRunnerProviderProfile(
   if (!isPaperclipRunnerProvider(candidate)) {
     throw new PaperclipRunnerProviderProfileError(
       "paperclip_runner_provider_unsupported",
-      "RIKAI AI Harness Runner provider must be Codex, OpenCode, Claude Managed, AWS AgentCore, or ACPX.",
+      "Kujira AI Harness Runner provider must be Codex, OpenCode, Claude Managed, AWS AgentCore, or ACPX.",
     );
   }
 
@@ -359,7 +359,7 @@ export function resolvePaperclipRunnerProviderProfile(
     if (!model || !model.includes("/") || model.endsWith("/")) {
       throw new PaperclipRunnerProviderProfileError(
         "paperclip_runner_opencode_model_invalid",
-        "RIKAI AI Harness Runner OpenCode requires model in provider/model form.",
+        "Kujira AI Harness Runner OpenCode requires model in provider/model form.",
       );
     }
     return {
@@ -374,13 +374,13 @@ export function resolvePaperclipRunnerProviderProfile(
     if (!managedProfileId) {
       throw new PaperclipRunnerProviderProfileError(
         "paperclip_runner_claude_managed_profile_required",
-        "RIKAI AI Harness Runner Claude Managed requires a company managed-agent profile.",
+        "Kujira AI Harness Runner Claude Managed requires a company managed-agent profile.",
       );
     }
     if (config.managedAgentsRetentionAcknowledged !== true) {
       throw new PaperclipRunnerProviderProfileError(
         "paperclip_runner_claude_managed_retention_required",
-        "RIKAI AI Harness Runner Claude Managed requires acknowledgement of stateful beta retention.",
+        "Kujira AI Harness Runner Claude Managed requires acknowledgement of stateful beta retention.",
       );
     }
     if (model !== null && model !== CLAUDE_MANAGED_QUALIFIED_MODEL) {
@@ -397,7 +397,7 @@ export function resolvePaperclipRunnerProviderProfile(
       maxSessionListCostUsd: positiveNumberOrNull(
         config.maxSessionListCostUsd,
         "paperclip_runner_claude_managed_spend_cap_invalid",
-        "RIKAI AI Harness Runner Claude Managed requires a positive session spend ceiling when overridden.",
+        "Kujira AI Harness Runner Claude Managed requires a positive session spend ceiling when overridden.",
       ),
     };
   }
@@ -407,13 +407,13 @@ export function resolvePaperclipRunnerProviderProfile(
     if (!agentCoreProfileId) {
       throw new PaperclipRunnerProviderProfileError(
         "paperclip_runner_aws_agentcore_profile_required",
-        "RIKAI AI Harness Runner AWS AgentCore requires a company remote-agent profile.",
+        "Kujira AI Harness Runner AWS AgentCore requires a company remote-agent profile.",
       );
     }
     if (config.agentCoreRetentionAcknowledged !== true) {
       throw new PaperclipRunnerProviderProfileError(
         "paperclip_runner_aws_agentcore_retention_required",
-        "RIKAI AI Harness Runner AWS AgentCore requires acknowledgement of 90-day Memory retention.",
+        "Kujira AI Harness Runner AWS AgentCore requires acknowledgement of 90-day Memory retention.",
       );
     }
     if (model !== null && model !== AGENTCORE_QUALIFIED_MODEL) {
@@ -430,7 +430,7 @@ export function resolvePaperclipRunnerProviderProfile(
       maxEstimatedSessionCostUsd: positiveNumberOrNull(
         config.maxEstimatedSessionCostUsd,
         "paperclip_runner_aws_agentcore_spend_cap_invalid",
-        "RIKAI AI Harness Runner AWS AgentCore requires a positive estimated session spend ceiling when overridden.",
+        "Kujira AI Harness Runner AWS AgentCore requires a positive estimated session spend ceiling when overridden.",
       ),
     };
   }
@@ -455,14 +455,14 @@ export function resolvePaperclipRunnerProviderProfile(
   if (acpxAgent !== "claude" && acpxAgent !== "codex" && acpxAgent !== "grok") {
     throw new PaperclipRunnerProviderProfileError(
       "paperclip_runner_acpx_agent_unavailable",
-      "RIKAI AI Harness Runner ACPX requires a qualified agent profile.",
+      "Kujira AI Harness Runner ACPX requires a qualified agent profile.",
     );
   }
   const qualifiedModel = QUALIFIED_ACPX_RUNNER_MODELS[acpxAgent];
   if (acpxAgent === "codex" && model !== qualifiedModel) {
     throw new PaperclipRunnerProviderProfileError(
       "paperclip_runner_acpx_model_unqualified",
-      `RIKAI AI Harness Runner ACPX ${acpxAgent} requires exact model ${qualifiedModel}.`,
+      `Kujira AI Harness Runner ACPX ${acpxAgent} requires exact model ${qualifiedModel}.`,
     );
   }
   return {
@@ -503,7 +503,7 @@ export function resolvePaperclipRunnerNativeProviderInput(input: {
   if (profile.backend !== input.backend) {
     throw new PaperclipRunnerProviderProfileError(
       "paperclip_runner_provider_changed",
-      "RIKAI AI Harness Runner provider changed after this run selected its native backend.",
+      "Kujira AI Harness Runner provider changed after this run selected its native backend.",
     );
   }
   if (profile.provider === "opencode") {
@@ -687,7 +687,7 @@ export function resolvePaperclipRunnerNativeProviderInput(input: {
   )) {
     throw new PaperclipRunnerProviderProfileError(
       "paperclip_runner_codex_effort_invalid",
-      "RIKAI AI Harness Runner Codex reasoning effort is not supported for this model.",
+      "Kujira AI Harness Runner Codex reasoning effort is not supported for this model.",
     );
   }
   return {

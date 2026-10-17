@@ -21,7 +21,7 @@ describe("managed sandbox environment helpers", () => {
         driver: "sandbox",
         metadata: { managedByPaperclip: true },
       }),
-    ).toBe("RIKAI AI Harness Computer");
+    ).toBe("Kujira AI Harness Computer");
     expect(
       environmentDisplayLabel({ name: "E2B", driver: "sandbox", metadata: null }),
     ).toBe("E2B · sandbox");

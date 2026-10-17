@@ -25,12 +25,12 @@ const MAX_HEADER_NAME_LENGTH = 128;
 const MAX_HEADER_VALUE_LENGTH = 8_192;
 
 /**
- * Headers RIKAI AI Harness refuses to project from a user-supplied config.
+ * Headers Kujira AI Harness refuses to project from a user-supplied config.
  *
  * `connection`/`keep-alive`/`te`/`trailer`/`transfer-encoding`/`upgrade` are
  * hop-by-hop (RFC 9110 §7.6.1) and belong to the fetch implementation.
  * `content-length`/`host` frame and route the request. `cookie` would attach
- * ambient browser-style credentials that RIKAI AI Harness cannot scope or rotate.
+ * ambient browser-style credentials that Kujira AI Harness cannot scope or rotate.
  * `proxy-*` targets an intermediary rather than the MCP server.
  */
 const FORBIDDEN_HEADER_NAMES = new Set([
@@ -72,7 +72,7 @@ export interface McpRemoteHeaderCheck {
 const OK: McpRemoteHeaderCheck = { ok: true };
 
 /**
- * Is `name` a header RIKAI AI Harness is willing to send on a user-configured remote
+ * Is `name` a header Kujira AI Harness is willing to send on a user-configured remote
  * MCP request? Returns the specific rejection reason so callers can produce an
  * actionable, UI-safe message.
  */
@@ -124,7 +124,7 @@ export function mcpRemoteHeaderRejectionMessage(
     case "invalid_characters":
       return `"${headerName.slice(0, MAX_HEADER_NAME_LENGTH)}" is not a valid header name. Use letters, digits, and dashes.`;
     case "forbidden":
-      return `RIKAI AI Harness manages the "${headerName}" header and cannot send a custom value for it.`;
+      return `Kujira AI Harness manages the "${headerName}" header and cannot send a custom value for it.`;
     case "value_too_long":
       return `The value for "${headerName}" is too long.`;
     case "value_control_characters":

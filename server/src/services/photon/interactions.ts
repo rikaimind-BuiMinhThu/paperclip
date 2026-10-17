@@ -249,7 +249,7 @@ export async function publishPhotonPrompt(input: {
     interaction.payload.questions.length > 1
       ? `Answers are saved for you. Finish with /submit ${binding.reference}.`
       : "",
-    input.taskUrl ? `Open this RIKAI AI Harness task: ${input.taskUrl}` : "",
+    input.taskUrl ? `Open this Kujira AI Harness task: ${input.taskUrl}` : "",
   ]
     .filter(Boolean)
     .join("\n\n");

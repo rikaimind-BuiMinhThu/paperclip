@@ -245,7 +245,7 @@ export function SidebarAccountMenu({
               ) : null}
               <MenuAction
                 label={t("account.documentation")}
-                description="Open RIKAI AI Harness docs in a new tab."
+                description="Open Kujira AI Harness docs in a new tab."
                 icon={BookOpen}
                 href={DOCS_URL}
                 external

@@ -1784,7 +1784,7 @@ describe("rebindNativeSessionCheckpoint", () => {
       );
       expect(result.execution.task.prompt).toContain("Full task instructions");
       expect(result.execution.task.prompt).not.toContain(
-        "RIKAI AI Harness Resume Delta",
+        "Kujira AI Harness Resume Delta",
       );
       expect(result.execution.task.prompt).not.toContain("Compact context");
     },
@@ -2397,7 +2397,7 @@ describe("buildNativeExecutionInput wake projection", () => {
         workMode: "standard",
       },
       taskPrompt: [
-        "RIKAI AI Harness task context:",
+        "Kujira AI Harness task context:",
         `- Title: ${JSON.stringify(staleRootTitle)}`,
         "Latest wake comment:",
         "```text",

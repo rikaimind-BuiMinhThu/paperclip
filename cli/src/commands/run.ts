@@ -109,7 +109,7 @@ export async function runCommand(opts: RunOptions): Promise<void> {
     process.exit(1);
   }
 
-  p.log.step("Starting RIKAI AI Harness server...");
+  p.log.step("Starting Kujira AI Harness server...");
   const startedServer = await importServerEntry();
   writeRuntimeInfo({
     schemaVersion: 1,
@@ -208,13 +208,13 @@ function ensureDevWorkspaceBuildDeps(projectRoot: string): void {
 
   if (result.error) {
     throw new Error(
-      `Failed to prepare workspace build artifacts before starting the RIKAI AI Harness dev server.\n${formatError(result.error)}`,
+      `Failed to prepare workspace build artifacts before starting the Kujira AI Harness dev server.\n${formatError(result.error)}`,
     );
   }
 
   if ((result.status ?? 1) !== 0) {
     throw new Error(
-      "Failed to prepare workspace build artifacts before starting the RIKAI AI Harness dev server.",
+      "Failed to prepare workspace build artifacts before starting the Kujira AI Harness dev server.",
     );
   }
 }
@@ -239,13 +239,13 @@ async function importServerEntry(): Promise<StartedServer> {
     const missingServerEntrypoint = !missingSpecifier || missingSpecifier === "@paperclipai/server";
     if (isModuleNotFoundError(err) && missingServerEntrypoint) {
       throw new Error(
-        `Could not locate a RIKAI AI Harness server entrypoint.\n` +
+        `Could not locate a Kujira AI Harness server entrypoint.\n` +
           `Tried: ${devEntry}, @paperclipai/server\n` +
           `${formatError(err)}`,
       );
     }
     throw new Error(
-      `RIKAI AI Harness server failed to start.\n` +
+      `Kujira AI Harness server failed to start.\n` +
         `${formatError(err)}`,
     );
   }
@@ -258,7 +258,7 @@ function shouldGenerateBootstrapInviteAfterStart(config: PaperclipConfig): boole
 async function startServerFromModule(mod: unknown, label: string): Promise<StartedServer> {
   const startServer = (mod as { startServer?: () => Promise<StartedServer> }).startServer;
   if (typeof startServer !== "function") {
-    throw new Error(`RIKAI AI Harness server entrypoint did not export startServer(): ${label}`);
+    throw new Error(`Kujira AI Harness server entrypoint did not export startServer(): ${label}`);
   }
   return await startServer();
 }

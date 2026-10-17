@@ -221,7 +221,7 @@ export function GitHubPolicyEditor({
           }
         />
         <p className="text-xs text-muted-foreground">
-          RIKAI AI Harness supplies repository, PR, base and head commits, sender, and
+          Kujira AI Harness supplies repository, PR, base and head commits, sender, and
           prior head as typed context. Saved revisions remain attached to review
           activity.
         </p>
@@ -295,7 +295,7 @@ export function GitHubPolicyEditor({
         />
       </div>
       <div className="space-y-2">
-        <Label htmlFor="github-rating">RIKAI AI Harness Review check</Label>
+        <Label htmlFor="github-rating">Kujira AI Harness Review check</Label>
         <select
           id="github-rating"
           className={githubSelectClass}
@@ -317,9 +317,9 @@ export function GitHubPolicyEditor({
           <option value="report">Report only</option>
         </select>
         <p className="text-xs text-muted-foreground">
-          RIKAI AI Harness computes the result for the exact reviewed commit.
+          Kujira AI Harness computes the result for the exact reviewed commit.
           Incomplete reviews cannot pass. To require it before merging, select
-          “RIKAI AI Harness Review” in your GitHub branch protection or ruleset
+          “Kujira AI Harness Review” in your GitHub branch protection or ruleset
           settings and choose this bot’s GitHub App as the expected source. Run
           a review first so the check appears in GitHub’s selector.
         </p>

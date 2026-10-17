@@ -949,7 +949,7 @@ function legacyProvisionedIssuePrefix(stackId: string): string {
 }
 
 /** The placeholder description that pre-name-derivation builds wrote. */
-const LEGACY_PROVISIONED_DESCRIPTION_PREFIX = "Provisioned by RIKAI AI Harness Cloud for stack ";
+const LEGACY_PROVISIONED_DESCRIPTION_PREFIX = "Provisioned by Kujira AI Harness Cloud for stack ";
 
 /**
  * One-time repair for companies claimed by a pre-name-derivation build.

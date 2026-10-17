@@ -138,7 +138,7 @@ const PENDING_LIVENESS_COPY: LivenessCopy = {
 const RETRY_PENDING_LIVENESS_COPY: LivenessCopy = {
   label: "Retry pending",
   tone: "border-blue-500/30 bg-blue-500/10 text-blue-700 dark:text-blue-300",
-  description: "RIKAI AI Harness queued an automatic retry that has not started yet.",
+  description: "Kujira AI Harness queued an automatic retry that has not started yet.",
 };
 
 const MISSING_LIVENESS_COPY: LivenessCopy = {
@@ -426,7 +426,7 @@ function watchdogDecisionErrorMessage(error: unknown) {
   }
   return error instanceof Error && error.message.trim().length > 0
     ? error.message
-    : "RIKAI AI Harness could not record the watchdog decision.";
+    : "Kujira AI Harness could not record the watchdog decision.";
 }
 
 export function IssueRunLedger({
@@ -555,7 +555,7 @@ export function IssueRunLedger({
         body:
           error instanceof Error
             ? error.message
-            : "RIKAI AI Harness could not start the trace re-run.",
+            : "Kujira AI Harness could not start the trace re-run.",
         tone: "error",
         dedupeKey: `provider-trace-rerun:${issueId}`,
       }),
@@ -760,8 +760,8 @@ export function IssueRunLedgerContent({
           </p>
           <p className="mt-1">
             {latestSilentRun.outputSilence.evaluationIssueIdentifier
-              ? "This signal is informational. RIKAI AI Harness did not create new delegated recovery work."
-              : "This signal is informational. RIKAI AI Harness did not create or assign a recovery task."}
+              ? "This signal is informational. Kujira AI Harness did not create new delegated recovery work."
+              : "This signal is informational. Kujira AI Harness did not create or assign a recovery task."}
           </p>
           {onWatchdogDecision && canRecordWatchdogDecisions ? (
             <div className="mt-2 flex flex-wrap gap-1.5">

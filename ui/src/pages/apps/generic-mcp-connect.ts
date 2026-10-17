@@ -97,7 +97,7 @@ export function genericConnectGuidance(
   code: string | null | undefined,
   message: string | null | undefined,
 ): GenericConnectGuidance {
-  const fallback = message?.trim() || "RIKAI AI Harness couldn't connect to that address. Check it and try again.";
+  const fallback = message?.trim() || "Kujira AI Harness couldn't connect to that address. Check it and try again.";
   switch (code) {
     case "mcp_remote_url_missing":
     case "mcp_remote_url_invalid":
@@ -109,7 +109,7 @@ export function genericConnectGuidance(
     case "remote_http_private_endpoint":
       return {
         title: "That address is inside a private network",
-        body: "This RIKAI AI Harness is reachable from the internet, so it won't call addresses on your local network. Use the server's public address instead.",
+        body: "This Kujira AI Harness is reachable from the internet, so it won't call addresses on your local network. Use the server's public address instead.",
         focus: "url",
       };
     case "remote_http_dns_failed":
@@ -120,34 +120,34 @@ export function genericConnectGuidance(
       };
     case "mcp_header_rejected":
       return {
-        title: "RIKAI AI Harness can't send that header",
+        title: "Kujira AI Harness can't send that header",
         body: fallback,
         focus: "credentials",
       };
     case "tool_access_name_conflict":
       return {
-        title: "RIKAI AI Harness couldn’t name this connection",
+        title: "Kujira AI Harness couldn’t name this connection",
         body: "Try connecting again.",
         focus: "none",
       };
     case "oauth_challenge":
       return {
         title: "This server wants a credential",
-        body: "It asked us to authenticate but didn't offer a sign-in RIKAI AI Harness can complete on its own. Add the key or headers its docs list under Advanced authentication.",
+        body: "It asked us to authenticate but didn't offer a sign-in Kujira AI Harness can complete on its own. Add the key or headers its docs list under Advanced authentication.",
         focus: "credentials",
       };
     case "oauth_manual_client_required":
     case "oauth_manual_client_rebinding_required":
       return {
         title: "This server needs sign-in details you create yourself",
-        body: "Register RIKAI AI Harness in the provider's settings, then add the client ID and secret it gives you under Advanced authentication.",
+        body: "Register Kujira AI Harness in the provider's settings, then add the client ID and secret it gives you under Advanced authentication.",
         focus: "credentials",
       };
     case "oauth_redirect_origin_unsupported":
     case "oauth_redirect_uri_invalid":
       return {
-        title: "This RIKAI AI Harness needs a public HTTPS address first",
-        body: "Sign-in sends the operator back to RIKAI AI Harness, so this instance has to be reachable over HTTPS. Ask your RIKAI AI Harness admin to configure it.",
+        title: "This Kujira AI Harness needs a public HTTPS address first",
+        body: "Sign-in sends the operator back to Kujira AI Harness, so this instance has to be reachable over HTTPS. Ask your Kujira AI Harness admin to configure it.",
         focus: "deployment",
       };
     case "runtime_error":
@@ -158,7 +158,7 @@ export function genericConnectGuidance(
       };
     default:
       return {
-        title: "RIKAI AI Harness couldn't connect",
+        title: "Kujira AI Harness couldn't connect",
         body: fallback,
         focus: "none",
       };

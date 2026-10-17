@@ -28,7 +28,7 @@ describe("external chat task link context", () => {
           const markdown = buildPaperclipTaskMarkdown({ issue, externalChatProvider, nativeRunner, includeDescription });
           expect(markdown).toContain("Public task URL: https://vanity.example/issues/task-123");
           expect(markdown).toContain("use this exact URL");
-          expect(markdown).toContain("Opening it still requires RIKAI AI Harness access");
+          expect(markdown).toContain("Opening it still requires Kujira AI Harness access");
           expect(markdown).not.toContain("https://pool.example");
           expect(markdown).not.toContain("http://localhost:3100");
         }

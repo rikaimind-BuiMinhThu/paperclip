@@ -118,7 +118,7 @@ export function resolveNativeRuntimeMode(input: {
   if (!input.enabled) {
     throw ineligible(
       "paperclip_runner_rollout_disabled",
-      "RIKAI AI Harness Runner is experimental and disabled on this instance.",
+      "Kujira AI Harness Runner is experimental and disabled on this instance.",
     );
   }
   let runnerProfile: PaperclipRunnerProviderProfile;
@@ -136,14 +136,14 @@ export function resolveNativeRuntimeMode(input: {
   ) {
     throw ineligible(
       "paperclip_runner_agent_ineligible",
-      "RIKAI AI Harness Runner requires an active agent.",
+      "Kujira AI Harness Runner requires an active agent.",
     );
   }
   const allowedWorkModes = ["standard", "planning", "ask"];
   if (!input.issue || !allowedWorkModes.includes(input.issue.workMode)) {
     throw ineligible(
       "paperclip_runner_issue_ineligible",
-      "RIKAI AI Harness Runner requires a standard, planning, or ask task.",
+      "Kujira AI Harness Runner requires a standard, planning, or ask task.",
     );
   }
   const rollout = resolveNativeMigrationStatus({
@@ -273,7 +273,7 @@ export function resolveHeartbeatNativeRuntimeMode(input: {
       if (input.agent.adapterType !== "paperclip_runner") {
         throw ineligible(
           "paperclip_runner_adapter_binding_mismatch",
-          "A persisted native run must remain bound to the RIKAI AI Harness Runner adapter.",
+          "A persisted native run must remain bound to the Kujira AI Harness Runner adapter.",
         );
       }
       if (
@@ -282,7 +282,7 @@ export function resolveHeartbeatNativeRuntimeMode(input: {
       ) {
         throw ineligible(
           "paperclip_runner_agent_ineligible",
-          "A persisted RIKAI AI Harness Runner run cannot recover through a non-invokable agent.",
+          "A persisted Kujira AI Harness Runner run cannot recover through a non-invokable agent.",
         );
       }
       const driverKind = input.persisted.driverKind;
@@ -303,7 +303,7 @@ export function resolveHeartbeatNativeRuntimeMode(input: {
       if (backend === null) {
         throw ineligible(
           "paperclip_runner_driver_unsupported",
-          `Persisted RIKAI AI Harness Runner driver is unsupported: ${driverKind}`,
+          `Persisted Kujira AI Harness Runner driver is unsupported: ${driverKind}`,
         );
       }
       return {

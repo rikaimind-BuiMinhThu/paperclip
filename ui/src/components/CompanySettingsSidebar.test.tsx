@@ -150,7 +150,7 @@ describe("CompanySettingsSidebar", () => {
     });
     await flushReact();
 
-    expect(container.textContent).not.toContain("RIKAI AI Harness");
+    expect(container.textContent).not.toContain("Kujira AI Harness");
     expect(container.textContent).not.toContain("Settings");
     expect(container.querySelector('[aria-label="Back from Settings"]')).toBeNull();
     const settingsSurface = container.querySelector('[data-contextual-sidebar="settings"]');

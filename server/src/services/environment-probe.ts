@@ -38,7 +38,7 @@ export async function probeEnvironment(
     return {
       ok: true,
       driver: "local",
-      summary: "Local environment is available on this RIKAI AI Harness host.",
+      summary: "Local environment is available on this Kujira AI Harness host.",
       details: {
         hostname: os.hostname(),
         cwd: process.cwd(),

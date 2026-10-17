@@ -134,7 +134,7 @@ export type ChatQuestionFormValidationResult =
     };
 
 const CHAT_QUESTION_FORM_DENIAL_MESSAGE =
-  "This form is no longer authorized. Close it and open the linked RIKAI AI Harness task.";
+  "This form is no longer authorized. Close it and open the linked Kujira AI Harness task.";
 
 /**
  * Provider callbacks must be acknowledged after Paperclip has durably denied a

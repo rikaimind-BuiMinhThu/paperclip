@@ -5,7 +5,7 @@
       "description": "組織を作成して始めましょう。",
       "newCompany": "新しい組織"
     },
-    "cloudCreateUnavailable": "組織は RIKAI AI Harness Cloud で作成します。今はこのインスタンスから接続できないので、Cloud のポートフォリオからやり直してください。",
+    "cloudCreateUnavailable": "組織は Kujira AI Harness Cloud で作成します。今はこのインスタンスから接続できないので、Cloud のポートフォリオからやり直してください。",
     "onboarding": {
       "addAgentTo": "{{name}} にエージェントを追加",
       "createAnotherOrganization": "別の組織を作成",
@@ -355,7 +355,7 @@
       "configDiscarded": "変更を破棄しました",
       "keys": {
         "createTitle": "API キーを作成",
-        "createDescription": "API キーにより、このエージェントは RIKAI AI Harness サーバーへの呼び出しを認証できます。",
+        "createDescription": "API キーにより、このエージェントは Kujira AI Harness サーバーへの呼び出しを認証できます。",
         "namePlaceholder": "キー名（例: production）",
         "defaultName": "デフォルト",
         "create": "作成",
@@ -408,11 +408,11 @@
         "saveNotice": "保存した指示は次の実行に反映されます。実行中のランは開始時の指示のままです。指示を変更すると新しいアダプターセッションが始まる場合があります。",
         "advanced": "詳細設定",
         "mode": "モード",
-        "modeTooltip": "管理: RIKAI AI Harness が指示バンドルを保存・配信します。外部: 指示が置かれたディスク上のパスを指定します。",
+        "modeTooltip": "管理: Kujira AI Harness が指示バンドルを保存・配信します。外部: 指示が置かれたディスク上のパスを指定します。",
         "managed": "管理",
         "external": "外部",
         "rootPath": "ルートパス",
-        "rootPathTooltip": "指示バンドルが置かれるディスク上の絶対ディレクトリ。管理モードでは RIKAI AI Harness が自動設定します。",
+        "rootPathTooltip": "指示バンドルが置かれるディスク上の絶対ディレクトリ。管理モードでは Kujira AI Harness が自動設定します。",
         "managedRootPlaceholder": "(管理)",
         "rootPathInputPlaceholder": "/absolute/path/to/agent/prompts",
         "entryFile": "エントリファイル",
@@ -693,7 +693,7 @@
         },
         "tokens": {
           "intro": "外部クライアント向けに再利用可能なトークンを発行します。名前はクライアントラベルにも使われます。",
-          "runtimeNote": "RIKAI AI Harness はエージェント実行開始時に 1 時間有効のランタイムトークンを新規発行し、実行終了時に取り消します。Codex はアプリ接続と管理ゲートウェイ経路の両方で同じゲートウェイを受け取れるため、1 回の実行で取り消し行が 2 件残ることがあります。これらは監査履歴であり、手動トークンの繰り返しではありません。",
+          "runtimeNote": "Kujira AI Harness はエージェント実行開始時に 1 時間有効のランタイムトークンを新規発行し、実行終了時に取り消します。Codex はアプリ接続と管理ゲートウェイ経路の両方で同じゲートウェイを受け取れるため、1 回の実行で取り消し行が 2 件残ることがあります。これらは監査履歴であり、手動トークンの繰り返しではありません。",
           "issueToken": "トークンを発行",
           "tokenName": "トークン名",
           "clientLabelHint": "クライアントラベルにも使用されます。",
@@ -852,7 +852,7 @@
         "permissionAskDescription": "実行のたびに人の承認が必要です。",
         "permissionAllowed": "許可",
         "permissionAllowedDescription": "承認なしで実行できます。",
-        "classifiedAs": "RIKAI AI Harness はこのアクションを {{risk}} と分類しました",
+        "classifiedAs": "Kujira AI Harness はこのアクションを {{risk}} と分類しました",
         "permissionAria": "{{title}} の権限",
         "permissionOptionAria": "{{title}}: {{label}}",
         "test": "テスト"
@@ -893,12 +893,12 @@
       "signInFailedTitle": "サインインを続行できませんでした",
       "preparingTitle": "安全なサインインを準備中",
       "tryAgain": "再試行",
-      "returnToPaperclip": "RIKAI AI Harness に戻る",
-      "expiredError": "このサインインは期限切れです。RIKAI AI Harness に戻り、接続を最初からやり直してください。",
-      "refreshFailed": "RIKAI AI Harness はこのサインインを更新できませんでした。続行するには再試行してください。",
-      "prepareFailed": "RIKAI AI Harness はプロバイダーのサインインを準備できませんでした。再試行してください。",
-      "reauthenticating": "RIKAI AI Harness のサインインを更新しています。",
-      "openingProvider": "RIKAI AI Harness がプロバイダーを安全に開いています。"
+      "returnToPaperclip": "Kujira AI Harness に戻る",
+      "expiredError": "このサインインは期限切れです。Kujira AI Harness に戻り、接続を最初からやり直してください。",
+      "refreshFailed": "Kujira AI Harness はこのサインインを更新できませんでした。続行するには再試行してください。",
+      "prepareFailed": "Kujira AI Harness はプロバイダーのサインインを準備できませんでした。再試行してください。",
+      "reauthenticating": "Kujira AI Harness のサインインを更新しています。",
+      "openingProvider": "Kujira AI Harness がプロバイダーを安全に開いています。"
     },
     "chat": {
       "photon": {
@@ -916,8 +916,8 @@
         "sharedDmsIn": "{{projectName}} の共有 DM",
         "dedicatedNumbersIn": "{{projectName}} の専用番号",
         "sharedProjectTaken": "この共有プロジェクトは別チャンネルに属しています。エージェントごとに別の Photon プロジェクトを使ってください。",
-        "noDedicatedNumber": "利用可能な専用番号がありません。Photon のライン割り当てと既存の RIKAI AI Harness チャンネルを確認してください。",
-        "sharedEligibleBody": "DM のみです。Photon プロジェクトの Users ページで各テスト送信者を登録し、Photon が割り当てた番号を使ってください。RIKAI AI Harness の ID リンクは引き続き必要です。このチャンネルではグループは有効にできません。",
+        "noDedicatedNumber": "利用可能な専用番号がありません。Photon のライン割り当てと既存の Kujira AI Harness チャンネルを確認してください。",
+        "sharedEligibleBody": "DM のみです。Photon プロジェクトの Users ページで各テスト送信者を登録し、Photon が割り当てた番号を使ってください。Kujira AI Harness の ID リンクは引き続き必要です。このチャンネルではグループは有効にできません。",
         "connectSharedDms": "共有 DM を接続",
         "connectSelectedNumber": "選択した番号を接続",
         "reconnectPhoton": "Photon を再接続"
@@ -925,31 +925,31 @@
       "identity": {
         "loadAccountFailed": "アカウントを読み込めませんでした。更新して再試行してください。",
         "unavailableTitle": "この ID リンクは利用できません",
-        "unavailableBody": "リンクが無効、期限切れ、使用済み、または別の RIKAI AI Harness 組織のものです。",
+        "unavailableBody": "リンクが無効、期限切れ、使用済み、または別の Kujira AI Harness 組織のものです。",
         "checkingLink": "ID リンクを確認中…",
         "linkedTitle": "ID をリンクしました",
-        "linkedBody": "{{externalLabel}} からの今後のメッセージは、{{companyName}} における現在の RIKAI AI Harness 権限が適用されます。",
+        "linkedBody": "{{externalLabel}} からの今後のメッセージは、{{companyName}} における現在の Kujira AI Harness 権限が適用されます。",
         "returnToSlack": "Slack に戻る",
         "linkTitle": "外部 ID をリンク",
         "provider": "プロバイダー",
         "externalIdentity": "外部 ID",
-        "paperclipAccount": "RIKAI AI Harness アカウント",
+        "paperclipAccount": "Kujira AI Harness アカウント",
         "localBoard": "ローカルボード",
         "signedInAccount": "サインイン中のアカウント",
         "agent": "エージェント",
-        "defaultAgent": "RIKAI AI Harness エージェント",
-        "confirmBody": "これがあなたの {{provider}} ID である場合のみ確認してください。RIKAI AI Harness は各アクションで組織メンバーシップを確認します。",
+        "defaultAgent": "Kujira AI Harness エージェント",
+        "confirmBody": "これがあなたの {{provider}} ID である場合のみ確認してください。Kujira AI Harness は各アクションで組織メンバーシップを確認します。",
         "confirmFailed": "このリンクは確認できませんでした。期限切れまたは取り消された可能性があります。",
         "needMembership": "このアカウントをリンクするには {{companyName}} のメンバーである必要があります。",
-        "accessRequested": "アクセスをリクエストしました。管理者が RIKAI AI Harness で承認できます。承認後、ここに戻って確認してください。リンクの期限が切れた場合は Slack で connect コマンドを再送してください。",
+        "accessRequested": "アクセスをリクエストしました。管理者が Kujira AI Harness で承認できます。承認後、ここに戻って確認してください。リンクの期限が切れた場合は Slack で connect コマンドを再送してください。",
         "requestAccess": "アクセスをリクエスト",
         "requestAccessFailed": "アクセスをリクエストできませんでした。リンクの期限が切れた可能性があります。connect コマンドを再送して再試行してください。",
         "confirmIdentity": "ID を確認",
         "statusUpdate": "ステータス更新"
       },
       "setupPrompt": {
-        "instanceConfigured": "RIKAI AI Harness インスタンス URL: {{origin}}\nセットアップにはこのインスタンスを使ってください。利用できない場合か、別インスタンスを指定するまで、URL を再度聞かないでください。",
-        "instanceUnavailable": "RIKAI AI Harness インスタンス URL が利用できません。セットアップを始める前に URL を確認してください。"
+        "instanceConfigured": "Kujira AI Harness インスタンス URL: {{origin}}\nセットアップにはこのインスタンスを使ってください。利用できない場合か、別インスタンスを指定するまで、URL を再度聞かないでください。",
+        "instanceUnavailable": "Kujira AI Harness インスタンス URL が利用できません。セットアップを始める前に URL を確認してください。"
       }
     }
   },
@@ -1177,8 +1177,8 @@
     "additionalResults": "件"
   },
   "auth": {
-    "signInTitle": "RIKAI AI Harnessにサインイン",
-    "signUpTitle": "RIKAI AI Harnessアカウントを作成",
+    "signInTitle": "Kujira AI Harnessにサインイン",
+    "signUpTitle": "Kujira AI Harnessアカウントを作成",
     "signInDescription": "メールアドレスとパスワードで、このインスタンスにアクセスします。",
     "signUpDescription": "このインスタンス用のアカウントを作成します。v1ではメール確認は不要です。",
     "name": "名前",
@@ -1201,7 +1201,7 @@
     "existingAccount": "{{email}}のアカウントはすでにあります。下からサインインして、この招待を続けてください。",
     "adminRequired": "この確認にはインスタンス管理者の権限が必要です。管理者アカウントでサインインして承認してください。",
     "failed": "認証に失敗しました",
-    "welcomeTitle": "RIKAI AI Harnessへようこそ",
+    "welcomeTitle": "Kujira AI Harnessへようこそ",
     "welcomeDescription": "AIワークフォースを、ひとつの場所で管理します。",
     "continueWithGoogle": "Googleで続ける",
     "connectingGoogle": "Googleに接続しています…",
@@ -1224,7 +1224,7 @@
   },
   "dashboard": {
     "title": "ダッシュボード",
-    "welcome": "RIKAI AI Harnessへようこそ。最初の組織とエージェントを作成して始めましょう。",
+    "welcome": "Kujira AI Harnessへようこそ。最初の組織とエージェントを作成して始めましょう。",
     "getStarted": "始める",
     "selectOrganization": "ダッシュボードを表示するには、組織を作成または選択してください。",
     "agentsEnabled": "有効なエージェント",
@@ -1301,7 +1301,7 @@
   },
   "locale": {
     "label": "言語",
-    "description": "RIKAI AI Harnessの表示言語を選びます。",
+    "description": "Kujira AI Harnessの表示言語を選びます。",
     "current": "現在の言語",
     "switchToEnglish": "英語に切り替え",
     "switchToJapanese": "日本語に切り替え",
@@ -1372,7 +1372,7 @@
         },
         "connect": {
           "title": "モデルを接続",
-          "lede": "RIKAI AI Harness はサブスクリプションまたは API キーで動作します。",
+          "lede": "Kujira AI Harness はサブスクリプションまたは API キーで動作します。",
           "modelSource": "モデルソース",
           "savedApiKeysOne": "保存済み API キーが {{count}} 件あります",
           "savedApiKeysOther": "保存済み API キーが {{count}} 件あります",
@@ -1451,7 +1451,7 @@
         "createAgentFailed": "エージェントの作成に失敗しました",
         "launchTaskFailed": "最初のタスクの起動に失敗しました",
         "storeApiKeyFailed": "API キーを保存できませんでした。",
-        "runnerUnavailable": "オンボーディング中は RIKAI AI Harness Runner を利用できません。レガシーアダプターを選んでください。",
+        "runnerUnavailable": "オンボーディング中は Kujira AI Harness Runner を利用できません。レガシーアダプターを選んでください。",
         "opencodeModelRequired": "OpenCode には provider/model 形式の明示的なモデルが必要です。",
         "opencodeModelsLoadFailed": "OpenCode モデルの読み込みに失敗しました。",
         "opencodeModelsLoading": "OpenCode モデルを読み込み中です。しばらく待ってからもう一度お試しください。",
@@ -1503,8 +1503,8 @@
         "checking": "ローカルの {{cliName}} サインインを確認中…",
         "signedInConnect": "{{cliName}} にサインイン済みです。「接続」でこのアカウントを使います。",
         "useDifferentAccount": "別のアカウントを使う",
-        "isolatedSignIn": "RIKAI AI Harness が動いているマシンで、この接続用に {{cliName}} にサインインしてください。既存のターミナルログインはそのままです。",
-        "sharedAccount": "接続には、RIKAI AI Harness が動いているマシン上のローカル {{cliName}} アカウントを使います。",
+        "isolatedSignIn": "Kujira AI Harness が動いているマシンで、この接続用に {{cliName}} にサインインしてください。既存のターミナルログインはそのままです。",
+        "sharedAccount": "接続には、Kujira AI Harness が動いているマシン上のローカル {{cliName}} アカウントを使います。",
         "runInTerminal": "そのマシンのターミナルでこれを実行し、ブラウザでサインインを完了してください。戻ると自動で確認します。",
         "startSignInAgain": "サインインを再開",
         "checkAgain": "再確認"
@@ -1642,7 +1642,7 @@
         "description": "この値はあなた専用です。実行の責任ユーザーがあなたで、{{key}} が必要な実行で使用されます。",
         "externalRefLabel": "外部参照",
         "externalRefPlaceholder": "プロバイダー参照または ARN",
-        "externalRefHint": "設定済みプロバイダー内のあなた自身の認証情報を指します。RIKAI AI Harness は参照のみを保存し、値は保存しません。",
+        "externalRefHint": "設定済みプロバイダー内のあなた自身の認証情報を指します。Kujira AI Harness は参照のみを保存し、値は保存しません。",
         "valueLabel": "あなたの値",
         "valuePlaceholder": "トークンまたは認証情報を貼り付け",
         "valueHint": "暗号化して保存されます。管理者を含め、誰にも再表示されません。",
@@ -1661,7 +1661,7 @@
       },
       "importFromVault": {
         "title": "AWS Secrets Manager からインポート",
-        "description": "AWS 管理のシークレットを外部参照として RIKAI AI Harness に取り込みます。",
+        "description": "AWS 管理のシークレットを外部参照として Kujira AI Harness に取り込みます。",
         "closeAria": "インポートダイアログを閉じる",
         "stepSelect": "選択",
         "stepReview": "確認",
@@ -1711,7 +1711,7 @@
         "reviewEmpty": "シークレットが選択されていません。戻ってインポートするリモートシークレットを選んでください。",
         "reviewReadyCount": "インポート準備完了 {{count}} 件",
         "reviewBlockedCount": "インポート前に要対応 {{count}} 件",
-        "paperclipName": "RIKAI AI Harness 名",
+        "paperclipName": "Kujira AI Harness 名",
         "keyLabel": "キー",
         "descriptionOptional": "説明（任意）",
         "removeRowAria": "{{name}} を削除",
@@ -1757,8 +1757,8 @@
           "keyPattern": "キーは小文字、数字、ドット、アンダースコア、ハイフンのみ使用できます。",
           "keyMaxLength": "キーは 120 文字以内にしてください。",
           "descriptionMaxLength": "説明は 500 文字以内にしてください。",
-          "nameExists": "この名前の RIKAI AI Harness シークレットが既に存在します。",
-          "keyExists": "このキーの RIKAI AI Harness シークレットが既に存在します。",
+          "nameExists": "この名前の Kujira AI Harness シークレットが既に存在します。",
+          "keyExists": "このキーの Kujira AI Harness シークレットが既に存在します。",
           "batchNameDuplicate": "このバッチの別行ですでにこの名前が使われています。",
           "batchKeyDuplicate": "このバッチの別行ですでにこのキーが使われています。"
         }
@@ -1910,14 +1910,14 @@
       "accessHeading": "アクセス"
     },
     "agentSkills": {
-      "materializationNote": "有効なスキルは、次回実行時に安定した RIKAI AI Harness 管理のプロンプトバンドルに反映されます。",
+      "materializationNote": "有効なスキルは、次回実行時に安定した Kujira AI Harness 管理のプロンプトバンドルに反映されます。",
       "enabledOfTotal": "{{total}} 件中 {{enabled}} 件を有効",
       "keptInWorkspace": "ワークスペースに保持",
       "appliedOnNextRun": "次回実行時に適用",
       "trackedOnly": "追跡のみ",
-      "unsupportedCustomAcp": "カスタム ACP コマンドのスキルは RIKAI AI Harness ではまだ管理できません。",
+      "unsupportedCustomAcp": "カスタム ACP コマンドのスキルは Kujira AI Harness ではまだ管理できません。",
       "unsupportedOpenClaw": "OpenClaw のスキルはここでは管理できません。OpenClaw インスタンスでこのエージェントのスキルを管理してください。",
-      "unsupportedDefault": "このアダプターのスキルは RIKAI AI Harness ではまだ管理できません。アダプター側で直接管理してください。",
+      "unsupportedDefault": "このアダプターのスキルは Kujira AI Harness ではまだ管理できません。アダプター側で直接管理してください。",
       "searchPlaceholder": "スキルを検索",
       "searchAriaLabel": "スキルを検索",
       "browseStore": "スキルストアを見る",
@@ -1933,7 +1933,7 @@
       "allEnabled": "ライブラリのスキルはすべてこのエージェントで有効です。",
       "noDetectedSearch": "検索に一致する検出スキルはありません。",
       "adapterLabel": "アダプター: {{adapter}}",
-      "legacyPaperclipBlocked": "RIKAI AI Harness Runner はネイティブの意味的調整を使用し、レガシーの RIKAI AI Harness 運用スキルを添付できません。",
+      "legacyPaperclipBlocked": "Kujira AI Harness Runner はネイティブの意味的調整を使用し、レガシーの Kujira AI Harness 運用スキルを添付できません。",
       "emptyLibraryTitle": "組織ライブラリにスキルがありません",
       "emptyLibraryBody": "組織にスキルをインストールし、このエージェントで有効にしてください。",
       "row": {
@@ -1957,7 +1957,7 @@
       "dedicatedGitHubAccount": "専用 GitHub アカウント",
       "dedicatedGitHubBody": "{{agentName}} のみが使用します。この専用接続は、担当者の GitHub より優先されます。",
       "useResponsibleGitHub": "担当者の GitHub を使用",
-      "useResponsibleGitHubBody": "実行開始時、RIKAI AI Harness はタスク担当者の個人 GitHub 接続を使用します。",
+      "useResponsibleGitHubBody": "実行開始時、Kujira AI Harness はタスク担当者の個人 GitHub 接続を使用します。",
       "yourAccountConnected": "アカウントは接続済みです{{login}}。",
       "manageGitHubIdentity": "GitHub ID を管理",
       "manageMyGitHub": "自分の GitHub を管理",
@@ -1979,7 +1979,7 @@
       "saved": "保存済み",
       "resolvingAccess": "実効アクセスを解決中…",
       "effectiveAccessTitle": "実効アクセス",
-      "effectiveAccessBody": "これは RIKAI AI Harness が {{agentName}} に対して受け入れるツール集合です。プロファイルとポリシーの変更は約 5 秒以内に反映されます。エージェントのプロンプトはこの一覧を狭めることはできますが、広げることはできません — それ以外は既定でブロックされます。",
+      "effectiveAccessBody": "これは Kujira AI Harness が {{agentName}} に対して受け入れるツール集合です。プロファイルとポリシーの変更は約 5 秒以内に反映されます。エージェントのプロンプトはこの一覧を狭めることはできますが、広げることはできません — それ以外は既定でブロックされます。",
       "allowedTools": "許可されたツール",
       "toolOne": "ツール",
       "toolOther": "ツール",
@@ -2012,7 +2012,7 @@
         "promptLabel": "送信するプロンプト",
         "agentLabel": "エージェントで設定を取得",
         "agentTitle": "MCP 設定",
-        "agentDescription": "エージェントに貼り付けて MCP 設定を作成し、返ってきた JSON を RIKAI AI Harness に貼り付けます。"
+        "agentDescription": "エージェントに貼り付けて MCP 設定を作成し、返ってきた JSON を Kujira AI Harness に貼り付けます。"
       },
       "auditTab": {
         "title": "アクティビティ",
@@ -2199,12 +2199,12 @@
       "openPermissionsAria": "{{name}} の権限を開く",
       "manageConnectionAria": "{{name}} の接続を管理",
       "manageChatConnectionAria": "{{agentName}} の {{connectorName}} 接続を管理",
-      "removeChatToastBody": "{{providerName}} との接続を解除しました。既存の RIKAI AI Harness タスクは引き続き利用できます。",
+      "removeChatToastBody": "{{providerName}} との接続を解除しました。既存の Kujira AI Harness タスクは引き続き利用できます。",
       "removeWithRemainingToastBody": "{{providerName}} にはエージェントが利用できる有効な {{connectionsLabel}} があと {{count}} 件あります。",
       "removeLastToastBody": "{{providerName}} はこの接続経由ではエージェントから利用できなくなりました。保存されていた認証情報は削除されました。",
       "connectionLabelOne": "接続",
       "connectionLabelOther": "接続",
-      "removeChatDialogBody": "この接続は {{providerName}} からの新しい作業を受け取らなくなります。既存の RIKAI AI Harness タスクと会話履歴は引き続き利用できます。{{providerName}} 側のアプリ、ボット、アカウントは削除されません。",
+      "removeChatDialogBody": "この接続は {{providerName}} からの新しい作業を受け取らなくなります。既存の Kujira AI Harness タスクと会話履歴は引き続き利用できます。{{providerName}} 側のアプリ、ボット、アカウントは削除されません。",
       "removeWithRemainingDialogBody": "この接続の保存認証情報は削除され、エージェントは直ちにこの経路でのアクセスを失います。{{providerName}} には他に {{count}} 件の有効な {{connectionsLabel}} があり、引き続き利用できます。",
       "removeLastDialogBody": "保存されていた認証情報は削除され、エージェントは直ちにアクセスを失います。後から再接続するには、新しいサインインまたはキーが必要です。"
     },
@@ -2298,7 +2298,7 @@
           "document": "ドキュメント"
         },
         "upsell": {
-          "title": "エージェント監査は RIKAI AI Harness Enterprise の機能です",
+          "title": "エージェント監査は Kujira AI Harness Enterprise の機能です",
           "permission": "audit:view_agent_actions",
           "bodyIntro": "エージェント監査ログでは、コメント、タスク変更、承認、実行などエージェントのすべての操作を、責任者とともに検索・エクスポートできます。表示するには管理者に",
           "bodyOutro": "権限の付与を依頼してください。"
@@ -2333,7 +2333,7 @@
         "emptyAgentsBody": "エージェントが操作を始めると、ここに表示されます。",
         "emptyAllBody": "組織内で何かが行われると、ここに表示されます。",
         "loadMore": "さらに読み込む",
-        "footer": "RIKAI AI Harness により記録 — エントリは編集できません。機密値は保存されません。",
+        "footer": "Kujira AI Harness により記録 — エントリは編集できません。機密値は保存されません。",
         "listAria": "監査アクティビティ"
       }
     },
@@ -2885,7 +2885,7 @@
       "companyFallback": "会社",
       "selectOrganization": "インポート先の組織を選択してください。",
       "selectFilePreview": "プレビューするファイルを選択してください。",
-      "localZipHelp": "RIKAI AI Harness から直接エクスポートした .zip をアップロードしてください。Finder、エクスプローラーなどで再圧縮したアーカイブは正しくインポートされない場合があります。"
+      "localZipHelp": "Kujira AI Harness から直接エクスポートした .zip をアップロードしてください。Finder、エクスプローラーなどで再圧縮したアーカイブは正しくインポートされない場合があります。"
     },
     "companies": {
       "title": "組織",
@@ -2926,30 +2926,30 @@
       "routineChangedTitle": "ルーティンが変更されました",
       "routineChangedBody": "他のユーザーがこのルーティンを更新しました。最新のリビジョンを表示するには再読み込みしてください。",
       "saveFailedTitle": "ルーティンの保存に失敗しました",
-      "saveFailedBody": "RIKAI AI Harness はルーティンを保存できませんでした。",
+      "saveFailedBody": "Kujira AI Harness はルーティンを保存できませんでした。",
       "runStartedTitle": "ルーティン実行を開始しました",
       "runFailedTitle": "ルーティン実行に失敗しました",
-      "runFailedBody": "RIKAI AI Harness はルーティン実行を開始できませんでした。",
+      "runFailedBody": "Kujira AI Harness はルーティン実行を開始できませんでした。",
       "savedTitle": "ルーティンを保存しました",
       "automationPausedBody": "自動化を一時停止しました。",
       "automationEnabledBody": "自動化を有効にしました。",
       "updateFailedTitle": "ルーティンの更新に失敗しました",
-      "updateFailedBody": "RIKAI AI Harness はルーティンを更新できませんでした。",
+      "updateFailedBody": "Kujira AI Harness はルーティンを更新できませんでした。",
       "webhookTriggerCreatedTitle": "Webhook トリガーを作成しました",
       "triggerAddedTitle": "トリガーを追加しました",
       "triggerAddedBody": "ルーティンスケジュールを保存しました。",
       "addTriggerFailedTitle": "トリガーの追加に失敗しました",
-      "addTriggerFailedBody": "RIKAI AI Harness はトリガーを作成できませんでした。",
+      "addTriggerFailedBody": "Kujira AI Harness はトリガーを作成できませんでした。",
       "triggerSavedTitle": "トリガーを保存しました",
       "triggerSavedBody": "ルーティンの実行間隔の更新を保存しました。",
       "updateTriggerFailedTitle": "トリガーの更新に失敗しました",
-      "updateTriggerFailedBody": "RIKAI AI Harness はトリガーを更新できませんでした。",
+      "updateTriggerFailedBody": "Kujira AI Harness はトリガーを更新できませんでした。",
       "triggerDeletedTitle": "トリガーを削除しました",
       "deleteTriggerFailedTitle": "トリガーの削除に失敗しました",
-      "deleteTriggerFailedBody": "RIKAI AI Harness はトリガーを削除できませんでした。",
+      "deleteTriggerFailedBody": "Kujira AI Harness はトリガーを削除できませんでした。",
       "webhookSecretRotatedTitle": "Webhook シークレットをローテーションしました",
       "rotateSecretFailedTitle": "Webhook シークレットのローテーションに失敗しました",
-      "rotateSecretFailedBody": "RIKAI AI Harness は Webhook シークレットをローテーションできませんでした。",
+      "rotateSecretFailedBody": "Kujira AI Harness は Webhook シークレットをローテーションできませんでした。",
       "webhookTriggerRestoredTitle": "Webhook トリガーを復元しました",
       "webhookTriggersRestoredTitle": "Webhook トリガーを {{count}} 件復元しました"
     },
@@ -3021,7 +3021,7 @@
       "requestToJoinTitle": "{{company}} への参加をリクエスト",
       "bootstrapCompleteTitle": "ブートストラップ完了",
       "joinedTitle": "組織に参加しました",
-      "setupPaperclip": "RIKAI AI Harness をセットアップ",
+      "setupPaperclip": "Kujira AI Harness をセットアップ",
       "joinCompany": "{{company}} に参加",
       "createAccount": "アカウントを作成",
       "signInToContinue": "続行するにはサインイン"
@@ -3050,13 +3050,13 @@
       "invalidOrExpired": "チャレンジが無効または期限切れです。",
       "unavailable": "CLI 認証チャレンジを利用できません。",
       "approvedTitle": "CLI アクセスを承認しました",
-      "approvedBody": "RIKAI AI Harness CLI は要求元マシンで認証を完了できます。",
+      "approvedBody": "Kujira AI Harness CLI は要求元マシンで認証を完了できます。",
       "commandLabel": "コマンド",
       "expiredTitle": "CLI 認証チャレンジの期限切れ",
       "cancelledTitle": "CLI 認証チャレンジをキャンセルしました",
       "restartFlowBody": "ターミナルから CLI 認証フローを再度開始し、新しい承認リクエストを生成してください。",
-      "approveTitle": "RIKAI AI Harness CLI アクセスを承認",
-      "approveBody": "ローカルの RIKAI AI Harness CLI プロセスがこのインスタンスへのボードアクセスを要求しています。",
+      "approveTitle": "Kujira AI Harness CLI アクセスを承認",
+      "approveBody": "ローカルの Kujira AI Harness CLI プロセスがこのインスタンスへのボードアクセスを要求しています。",
       "clientLabel": "クライアント",
       "defaultClientName": "paperclipai cli",
       "requestedAccessLabel": "要求されたアクセス",
@@ -3121,7 +3121,7 @@
       "advancedPermissions": "高度な権限",
       "advancedPermissionsDescription": "高度なアクセス、スコープ付き割り当て、明示的な付与制御は、インストール済みの組織設定拡張機能が提供します。",
       "advancedUnavailable": "高度な権限は利用できません",
-      "advancedUnavailableDescription": "RIKAI AI Harness 本体は組織境界と既存の制限ポリシーデータを引き続き適用しますが、高度な権限の編集には拡張機能のインストールが必要です。",
+      "advancedUnavailableDescription": "Kujira AI Harness 本体は組織境界と既存の制限ポリシーデータを引き続き適用しますが、高度な権限の編集には拡張機能のインストールが必要です。",
       "pluginsUnavailable": "プラグイン拡張を利用できません: {{message}}",
       "openMembers": "メンバーを開く",
       "openInvites": "招待を開く",
@@ -3132,7 +3132,7 @@
     }
   },
   "landing": {
-    "brand": "RIKAI AI Harness",
+    "brand": "Kujira AI Harness",
     "nav": {
       "main": "メイン",
       "product": "プロダクト",
@@ -3142,7 +3142,7 @@
     },
     "hero": {
       "title": "一人ひとりに、エージェントのチームを。",
-      "lede": "RIKAI AI Harness は、仕事のための AI エージェントを管理するアプリです。",
+      "lede": "Kujira AI Harness は、仕事のための AI エージェントを管理するアプリです。",
       "ctaPrimary": "はじめる",
       "ctaSecondary": "プロダクトを見る"
     },
@@ -3257,7 +3257,7 @@
       "extensible": {
         "eyebrow": "プラットフォーム",
         "title": "拡張でき、適応でき、オープンソース。",
-        "body": "RIKAI AI Harness は拡張前提で設計されています。拡張で能力を足し、スタックに合わせ、AI 労働力を動かすコードを自分で所有できます。",
+        "body": "Kujira AI Harness は拡張前提で設計されています。拡張で能力を足し、スタックに合わせ、AI 労働力を動かすコードを自分で所有できます。",
         "panel": "ドロップイン拡張、任意の LLM、MIT ライセンスのセルフホスト。",
         "b1": "コアを触らずに能力を足せるドロップイン拡張。",
         "b2": "任意の LLM・ツール・デプロイ先で動作。",
@@ -3274,7 +3274,7 @@
       "title": "よくある質問。",
       "different": {
         "q": "OpenClaw や Claude Code などのエージェントと何が違うのですか？",
-        "a": "RIKAI AI Harness はそれらのエージェントを使います。組織図・予算・目標・ガバナンス・説明責任を持つチームとしてオーケストレーションします。"
+        "a": "Kujira AI Harness はそれらのエージェントを使います。組織図・予算・目標・ガバナンス・説明責任を持つチームとしてオーケストレーションします。"
       },
       "existing": {
         "q": "既存のエージェントを使えますか？",
@@ -3294,7 +3294,7 @@
       },
       "vsTickets": {
         "q": "なぜ Asana や Trello にエージェントをつなぐだけでは不十分ですか？",
-        "a": "オーケストレーションにはチェックアウト調整、セッション継続、コスト監視、ガバナンスが必要です。RIKAI AI Harness がそれを担います。"
+        "a": "オーケストレーションにはチェックアウト調整、セッション継続、コスト監視、ガバナンスが必要です。Kujira AI Harness がそれを担います。"
       },
       "setup": {
         "q": "典型的なセットアップは？",
@@ -3312,11 +3312,11 @@
     "cta": {
       "title": "このインスタンスでエージェントチームを雇う。",
       "body": "サインインして開始。エージェントは自動インストールされません — 必要なチームをあなたが雇います。",
-      "button": "RIKAI AI Harness にサインイン"
+      "button": "Kujira AI Harness にサインイン"
     },
     "footer": {
       "tagline": "AI エージェント企業のためのコントロールプレーン。",
-      "copyright": "© RIKAI. RIKAI AI Harness."
+      "copyright": "© RIKAI. Kujira AI Harness."
     }
   }
 }

@@ -144,7 +144,7 @@ describe("service health doctor checks", () => {
       expect.objectContaining({
         name: "Service runtime",
         status: "fail",
-        message: expect.stringContaining("another RIKAI AI Harness process"),
+        message: expect.stringContaining("another Kujira AI Harness process"),
       }),
     );
   });
@@ -231,7 +231,7 @@ describe("service runtime shim awareness", () => {
     expect(healthResult?.status).toBe("warn");
     expect(healthResult?.message).toContain("but not from ing.paperclip.paperclipai");
     const runtime = results.find((r) => r.name === "Service runtime");
-    expect(runtime?.message).toContain("serving another RIKAI AI Harness process");
+    expect(runtime?.message).toContain("serving another Kujira AI Harness process");
   });
 });
 

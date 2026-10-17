@@ -15,7 +15,7 @@ function assertOwnedByCurrentUser(stats: Stats, description: string) {
 
   const currentUserId = process.getuid?.();
   if (currentUserId !== undefined && stats.uid !== currentUserId) {
-    throw new Error(`${description} must be owned by the RIKAI AI Harness process user`);
+    throw new Error(`${description} must be owned by the Kujira AI Harness process user`);
   }
 }
 

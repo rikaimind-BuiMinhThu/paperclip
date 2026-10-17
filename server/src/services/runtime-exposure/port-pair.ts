@@ -42,7 +42,7 @@ export interface AllocateExposurePortPairInput {
    *
    * Only honored when it is genuinely safe: the port must be an allowlisted app
    * port, unreserved, and free together with its HMR companion. A legacy pinned
-   * port outside the dedicated range (the RIKAI AI Harness App template's 45439) can
+   * port outside the dedicated range (the Kujira AI Harness App template's 45439) can
    * never be published by the broker, so it is ignored here rather than making
    * the caller special-case it.
    */

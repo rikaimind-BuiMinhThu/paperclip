@@ -438,7 +438,7 @@ describe("AppsConnect — Connect with a link (M4 frame)", () => {
     await vi.waitFor(() => expect(startOAuthMock).toHaveBeenCalledWith(connection.id, { asCurrentUser: true, interactionId: "intent-inline" }));
     expect(popup.location.assign).toHaveBeenCalled();
     popup.closed = true;
-    expect(container.textContent).toContain("RIKAI AI Harness is waiting for confirmation");
+    expect(container.textContent).toContain("Kujira AI Harness is waiting for confirmation");
     expect(container.querySelector('a[target="_blank"]')?.getAttribute("href")).toBe("https://mcp.notion.com/authorize?state=resumed");
     expect(navigateTopLevelMock).not.toHaveBeenCalled();
     expect(putConnectionInstallsMock).not.toHaveBeenCalled();
@@ -994,7 +994,7 @@ describe("AppsConnect — Connect with a link (M4 frame)", () => {
     getCloudConnectorEnrollmentMock.mockResolvedValue({ configured: false, status: "not_configured", origins: [] });
     await render();
     await passAccessStep();
-    expect(container.textContent).toContain("Connect with RIKAI AI Harness");
+    expect(container.textContent).toContain("Connect with Kujira AI Harness");
     await act(async () => { buttonByText("Use your own Asana OAuth app")!.click(); });
     await flushReact();
     expect(container.textContent).toContain("Your OAuth app");
@@ -1035,9 +1035,9 @@ describe("AppsConnect — Connect with a link (M4 frame)", () => {
     expect(container.textContent).toContain("Open Box app settings");
     // The extra work reads as the provider's limitation, not as Box's normal path.
     expect(container.textContent).toContain(
-      "does not let RIKAI AI Harness register itself automatically",
+      "does not let Kujira AI Harness register itself automatically",
     );
-    expect(container.textContent).toContain("RIKAI AI Harness callback URL");
+    expect(container.textContent).toContain("Kujira AI Harness callback URL");
     expect(container.textContent).toContain(
       "http://localhost:3000/api/tools/oauth/callback",
     );
@@ -1238,7 +1238,7 @@ describe("AppsConnect — Connect with a link (M4 frame)", () => {
     await render();
     await passAccessStep();
 
-    expect(container.textContent).toContain("Connect with RIKAI AI Harness");
+    expect(container.textContent).toContain("Connect with Kujira AI Harness");
     expect(container.textContent).toContain(
       "You must connect this instance to Paperclip to connect to Gmail (you only need to do this once).",
     );
@@ -1292,7 +1292,7 @@ describe("AppsConnect — Connect with a link (M4 frame)", () => {
     await flushReact();
     if (!popupBlocked) expect(popup.close).toHaveBeenCalled();
     await openAccessAdvanced();
-    expect(container.textContent).toContain("What should RIKAI AI Harness be able to do?");
+    expect(container.textContent).toContain("What should Kujira AI Harness be able to do?");
     connectAppMock.mockResolvedValue({ connectionId: "gmail-1", connection: { id: "gmail-1", credentialPolicy: "per_user" }, auth: { kind: "oauth", startUrl: "https://example.test/unbound" } });
     await act(async () => buttonByText("Continue to sign in")?.click());
     await flushReact();
@@ -1440,7 +1440,7 @@ describe("AppsConnect — Connect with a link (M4 frame)", () => {
 
     await passAccessStep();
 
-    expect(container.textContent).toContain("Connect with RIKAI AI Harness");
+    expect(container.textContent).toContain("Connect with Kujira AI Harness");
     expect(container.textContent).not.toContain("GitHub token");
   });
 
@@ -1452,7 +1452,7 @@ describe("AppsConnect — Connect with a link (M4 frame)", () => {
 
     expect(container.textContent).toContain("Continue to GitHub");
     expect(container.textContent).not.toContain("Connect GitHub as");
-    expect(container.textContent).not.toContain("Connect with RIKAI AI Harness");
+    expect(container.textContent).not.toContain("Connect with Kujira AI Harness");
   });
 
   it("explains unavailable GitHub sign-in without silently switching to a PAT", async () => {
@@ -1504,7 +1504,7 @@ describe("AppsConnect — Connect with a link (M4 frame)", () => {
 
     await render(queryClient);
 
-    expect(container.textContent).toContain("RIKAI AI Harness couldn’t check Cloud registration. Try again.");
+    expect(container.textContent).toContain("Kujira AI Harness couldn’t check Cloud registration. Try again.");
     expect(container.textContent).not.toContain("Your GitHub key");
 
     await act(async () => {
@@ -1655,7 +1655,7 @@ describe("AppsConnect — Connect with a link (M4 frame)", () => {
       }
       await flushReact();
       // Change auth methods too, including apps with only one capability.
-      expect(container.textContent).not.toContain("Connect with RIKAI AI Harness");
+      expect(container.textContent).not.toContain("Connect with Kujira AI Harness");
       expect(container.textContent).not.toContain("needs its own OAuth app");
       expect(buttonByText("Continue to sign in")?.disabled).toBe(false);
       const customerAuth = buttonByText("Use your own Google OAuth app");
@@ -1700,8 +1700,8 @@ describe("AppsConnect — Connect with a link (M4 frame)", () => {
 
     await render();
 
-    expect(container.textContent).not.toContain("You must connect this instance to RIKAI AI Harness");
-    expect(container.textContent).not.toContain("Connect with RIKAI AI Harness");
+    expect(container.textContent).not.toContain("You must connect this instance to Kujira AI Harness");
+    expect(container.textContent).not.toContain("Connect with Kujira AI Harness");
   });
 
   it("keeps Google Drive prerequisites off access and defaults to its write-capable method", async () => {
@@ -1739,7 +1739,7 @@ describe("AppsConnect — Connect with a link (M4 frame)", () => {
     );
     expect(duplicateHeadings).toHaveLength(1);
     await openAccessAdvanced();
-    expect(container.textContent).toContain("What should RIKAI AI Harness be able to do?");
+    expect(container.textContent).toContain("What should Kujira AI Harness be able to do?");
     expect(container.textContent).toContain("Review requirements");
     expect(container.textContent).not.toContain("Connect Google Calendar to read and manage events.");
     expect(container.textContent).not.toContain("All event mutations require approval.");
@@ -2024,7 +2024,7 @@ describe("AppsConnect — Connect with a link (M4 frame)", () => {
 
     expect(container.textContent).toContain("Use your own OAuth app");
     expect(container.querySelector("#curated-oauth-client-id")).toBeTruthy();
-    expect(container.textContent).toContain("RIKAI AI Harness callback URL");
+    expect(container.textContent).toContain("Kujira AI Harness callback URL");
   });
 
   it("shows unavailable Vercel configuration only inside the isolated Vercel entry point", async () => {
@@ -2419,8 +2419,8 @@ describe("AppsConnect — Connect with a link (M4 frame)", () => {
     }] });
     await render();
     await flushReact();
-    expect(container.textContent).toContain("Install RIKAI AI Harness and grant at least one repository");
-    expect(container.querySelector('a[href="https://github.com/apps/paperclip-for-github/installations/new"]')?.textContent).toBe("Install RIKAI AI Harness on GitHub");
+    expect(container.textContent).toContain("Install Kujira AI Harness and grant at least one repository");
+    expect(container.querySelector('a[href="https://github.com/apps/paperclip-for-github/installations/new"]')?.textContent).toBe("Install Kujira AI Harness on GitHub");
     expect(container.textContent).not.toContain("Your GitHub key");
     await act(async () => buttonByText("Try again")!.click());
     await flushReact();
@@ -2657,7 +2657,7 @@ describe("AppsConnect — Connect with a link (M4 frame)", () => {
       expect(listConnectionsMock).toHaveBeenCalledTimes(2);
       expect(listApplicationsMock).toHaveBeenCalledTimes(2);
       expect(container.textContent).not.toContain("Couldn’t load connection setup");
-      expect(container.textContent).toContain("Connect Notion to RIKAI AI Harness");
+      expect(container.textContent).toContain("Connect Notion to Kujira AI Harness");
     },
   );
 
@@ -3642,7 +3642,7 @@ describe("AppsConnect — guided generic MCP flow (PAP-17087)", () => {
     await gotoLinkFrame(container, "https://mcp.zapier.com/api/v1/connect?token=t");
 
     // Both routes are present: the branded shortcut and the generic form itself.
-    expect(container.textContent).toContain("RIKAI AI Harness has a guided setup for Zapier.");
+    expect(container.textContent).toContain("Kujira AI Harness has a guided setup for Zapier.");
     expect(container.textContent).toContain("Connect your own MCP server");
     expect(buttonByText("Check link")).toBeTruthy();
   });
@@ -3691,7 +3691,7 @@ describe("AppsConnect — guided generic MCP flow (PAP-17087)", () => {
     await flushReact();
     await flushReact();
 
-    expect(container.textContent).toContain("This RIKAI AI Harness needs a public HTTPS address first");
+    expect(container.textContent).toContain("This Kujira AI Harness needs a public HTTPS address first");
     expect(container.textContent).not.toContain("PAPERCLIP_PUBLIC_URL");
   });
 
@@ -3709,7 +3709,7 @@ describe("AppsConnect — guided generic MCP flow (PAP-17087)", () => {
     await flushReact();
     await flushReact();
 
-    expect(container.textContent).toContain("RIKAI AI Harness couldn’t name this connection");
+    expect(container.textContent).toContain("Kujira AI Harness couldn’t name this connection");
     expect(container.textContent).not.toContain("Choose a different name");
     expect(container.querySelector("#generic-mcp-name")).toBeNull();
   });
@@ -3970,7 +3970,7 @@ describe("AppsConnect — guided generic MCP flow (PAP-17087)", () => {
     await act(async () => setInputValue(valueInput, "evil.example"));
     await flushReact();
 
-    expect(container.textContent).toContain('RIKAI AI Harness manages the "Host" header');
+    expect(container.textContent).toContain('Kujira AI Harness manages the "Host" header');
     expect(buttonByText("Check link")?.disabled).toBe(true);
     expect(connectAppMock).not.toHaveBeenCalled();
   });

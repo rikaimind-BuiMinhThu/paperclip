@@ -296,11 +296,11 @@ const OAUTH_REFRESH_LEASE_POLL_MS = 25;
  *
  * A generic remote MCP connection points at an arbitrary authorization server,
  * so everything that server says about a failure is attacker-chosen: `error`,
- * `error_description`, `error_uri`, and the response body. RIKAI AI Harness surfaces
+ * `error_description`, `error_uri`, and the response body. Kujira AI Harness surfaces
  * connection failures to the operator through API responses, board UI copy,
  * audit rows and logs, so reflecting any of that text would let a hostile
  * provider plant secrets, ANSI escapes, or instructions ("paste your recovery
- * key here") into RIKAI AI Harness's own voice.
+ * key here") into Kujira AI Harness's own voice.
  *
  * The rule is therefore: the operator only ever reads text Paperclip authored.
  * The provider's `error` code survives — as a *label* in structured `details`,
@@ -345,7 +345,7 @@ const OAUTH_PROVIDER_ERROR_PATTERN = /^[a-z0-9_-]+$/;
 /**
  * Stable, Paperclip-authored operator copy for each allowlisted provider error.
  * Deliberately keyed on the code alone: the calling context is already carried
- * by the RIKAI AI Harness `code` in `details`, so one table serves the callback,
+ * by the Kujira AI Harness `code` in `details`, so one table serves the callback,
  * token-exchange and registration paths without any of them composing a message
  * out of provider text.
  */
@@ -357,18 +357,18 @@ const OAUTH_PROVIDER_ERROR_MESSAGES: Record<string, string> = {
     "The authorization server needs consent to be granted. Try connecting again.",
   interaction_required:
     "The authorization server needs to be signed in to interactively. Try connecting again.",
-  invalid_client: "The authorization server rejected RIKAI AI Harness's OAuth client.",
+  invalid_client: "The authorization server rejected Kujira AI Harness's OAuth client.",
   invalid_client_metadata:
-    "The authorization server rejected RIKAI AI Harness's client registration details.",
+    "The authorization server rejected Kujira AI Harness's client registration details.",
   invalid_grant:
     "The authorization server rejected the authorization code or refresh token.",
   invalid_redirect_uri:
-    "The authorization server rejected RIKAI AI Harness's callback URL.",
+    "The authorization server rejected Kujira AI Harness's callback URL.",
   invalid_request:
     "The authorization server rejected the request as malformed.",
   invalid_scope: "The authorization server rejected the requested permissions.",
   invalid_software_statement:
-    "The authorization server rejected RIKAI AI Harness's client registration details.",
+    "The authorization server rejected Kujira AI Harness's client registration details.",
   login_required:
     "The authorization server needs to be signed in to. Try connecting again.",
   server_error:
@@ -376,20 +376,20 @@ const OAUTH_PROVIDER_ERROR_MESSAGES: Record<string, string> = {
   temporarily_unavailable:
     "The authorization server is temporarily unavailable. Try again shortly.",
   unapproved_software_statement:
-    "The authorization server rejected RIKAI AI Harness's client registration details.",
+    "The authorization server rejected Kujira AI Harness's client registration details.",
   unauthorized_client:
-    "The authorization server refused to authorize RIKAI AI Harness's OAuth client.",
+    "The authorization server refused to authorize Kujira AI Harness's OAuth client.",
   unsupported_grant_type:
-    "The authorization server does not support the grant RIKAI AI Harness uses.",
+    "The authorization server does not support the grant Kujira AI Harness uses.",
   unsupported_response_type:
-    "The authorization server does not support the sign-in flow RIKAI AI Harness uses.",
+    "The authorization server does not support the sign-in flow Kujira AI Harness uses.",
 };
 
 /**
  * Reduce a provider-supplied `error` to a bounded, allowlisted label safe to
  * keep in structured `details`. Returns `null` only when the provider sent no
  * `error` at all, so the caller can tell "silent failure" from "said something
- * RIKAI AI Harness does not recognize".
+ * Kujira AI Harness does not recognize".
  */
 function normalizeOAuthProviderError(value: unknown): string | null {
   if (typeof value !== "string" || value.length === 0) return null;
@@ -405,7 +405,7 @@ function normalizeOAuthProviderError(value: unknown): string | null {
     : UNRECOGNIZED_OAUTH_PROVIDER_ERROR;
 }
 
-/** RIKAI AI Harness's own message for a provider failure, never the provider's. */
+/** Kujira AI Harness's own message for a provider failure, never the provider's. */
 function oauthProviderErrorMessage(
   providerError: string | null,
   fallback: string,
@@ -416,7 +416,7 @@ function oauthProviderErrorMessage(
 
 /**
  * Where this deployment publishes its Client ID Metadata Document. The document's
- * own URL is the `client_id` RIKAI AI Harness presents, so this path is a stable part of
+ * own URL is the `client_id` Kujira AI Harness presents, so this path is a stable part of
  * the deployment's public contract with every authorization server that has seen
  * it — changing it invalidates existing CIMD registrations.
  */
@@ -427,7 +427,7 @@ export const OAUTH_CLIENT_ID_METADATA_DOCUMENT_PATH =
  * Resolve the URL Paperclip would use as a CIMD client id, but only when its
  * hostname is not known to resolve into a private network.
  *
- * An authorization server fetches this URL from outside RIKAI AI Harness's network and
+ * An authorization server fetches this URL from outside Kujira AI Harness's network and
  * will normally apply an SSRF guard. Tailscale/MagicDNS names are HTTPS but
  * resolve into 100.64.0.0/10, so presenting one as a client id can only produce
  * an `invalid_client` response. A local DNS failure remains inconclusive because
@@ -473,7 +473,7 @@ export async function resolveOAuthClientIdMetadataDocumentUrl(
 }
 
 /**
- * RIKAI AI Harness's client metadata for CIMD (RFC 7591 metadata, served rather than
+ * Kujira AI Harness's client metadata for CIMD (RFC 7591 metadata, served rather than
  * registered). Only the callback for this deployment appears in it, so an
  * authorization server that fetches it can see exactly one legal redirect target.
  */
@@ -483,7 +483,7 @@ export function oauthClientIdMetadataDocument(input: {
 }): Record<string, unknown> {
   return {
     client_id: input.clientId,
-    client_name: `RIKAI AI Harness (${new URL(input.redirectUri).host})`,
+    client_name: `Kujira AI Harness (${new URL(input.redirectUri).host})`,
     client_uri: new URL("/", input.clientId).toString(),
     redirect_uris: [input.redirectUri],
     grant_types: ["authorization_code", "refresh_token"],
@@ -751,7 +751,7 @@ const APPROVED_STDIO_TEMPLATES: Record<
   }
 > = {
   "paperclip.echo-calculator-time": {
-    name: "RIKAI AI Harness Echo / Calculator / Time fixture",
+    name: "Kujira AI Harness Echo / Calculator / Time fixture",
     tools: [
       {
         name: "echo",
@@ -792,7 +792,7 @@ const APPROVED_STDIO_TEMPLATES: Record<
     ],
   },
   "paperclip.synthetic-todo-kv": {
-    name: "RIKAI AI Harness Synthetic Todo / KV fixture",
+    name: "Kujira AI Harness Synthetic Todo / KV fixture",
     tools: [
       {
         name: "list_items",
@@ -957,15 +957,15 @@ const TOOL_EXAMPLES: ToolExampleDefinition[] = [
     description:
       "Installs a deterministic local MCP fixture and grants only its read-only catalog entries.",
     applicationKey: "paperclip.examples.safe-read-only-todo-kv",
-    applicationName: "RIKAI AI Harness example: Safe read-only Todo / KV",
+    applicationName: "Kujira AI Harness example: Safe read-only Todo / KV",
     applicationDescription:
       "Deterministic MCP fixture for first-run tool governance checks.",
-    connectionName: "RIKAI AI Harness example: Safe read-only Todo / KV",
+    connectionName: "Kujira AI Harness example: Safe read-only Todo / KV",
     templateId: "paperclip.synthetic-todo-kv",
     profileKey: "paperclip.examples.safe-read-only-todo-kv.profile",
     profileName: "Example safe read-only tools",
     profileDescription:
-      "Allows only the read-only tools from the RIKAI AI Harness Todo / KV example fixture.",
+      "Allows only the read-only tools from the Kujira AI Harness Todo / KV example fixture.",
   },
 ];
 
@@ -2538,7 +2538,7 @@ export async function loadGitHubTokenRepositories(
         headers: {
           ...headers,
           accept: "application/vnd.github+json",
-          "user-agent": "RIKAI AI Harness",
+          "user-agent": "Kujira AI Harness",
           "x-github-api-version": "2022-11-28",
         },
         signal: AbortSignal.timeout(15_000),
@@ -2609,7 +2609,7 @@ export async function loadGitHubGrantMetadata(
       headers: {
         accept: "application/vnd.github+json",
         authorization: `Bearer ${accessToken}`,
-        "user-agent": "RIKAI AI Harness",
+        "user-agent": "Kujira AI Harness",
         "x-github-api-version": "2022-11-28",
       },
       signal: AbortSignal.timeout(15_000),
@@ -2734,7 +2734,7 @@ export async function loadGitHubGrantMetadata(
       ? `https://github.com/apps/${resolvedAppSlug}/installations/new`
       : "https://github.com/settings/installations";
     throw unprocessable(
-      "GitHub access is required. Install RIKAI AI Harness and grant at least one repository before refreshing access.",
+      "GitHub access is required. Install Kujira AI Harness and grant at least one repository before refreshing access.",
       {
         code: "github_installation_required",
         installationUrl,
@@ -2819,7 +2819,7 @@ function descriptorHash(
 
 /**
  * Did this error come from the OAuth endpoint gate (PAP-17099)? Such a refusal
- * is RIKAI AI Harness's own decision about an unsafe address, so it must keep its code
+ * is Kujira AI Harness's own decision about an unsafe address, so it must keep its code
  * and its 422 instead of being folded into a generic upstream failure.
  */
 function originOf(value: string | null | undefined): string | null {
@@ -3456,7 +3456,7 @@ export function toolAccessService(
    * would run in the board's origin. `checkOAuthEndpointUrl` is the single place
    * that decides; loopback `http:` is accepted only under the same
    * local-development policy that governs private remote endpoints, and
-   * RIKAI AI Harness's own origin is exempt from the transport rule because a
+   * Kujira AI Harness's own origin is exempt from the transport rule because a
    * first-party endpoint (the smoke-lab fixture) is served exactly as the board
    * itself is.
    */
@@ -3471,7 +3471,7 @@ export function toolAccessService(
   }
 
   /**
-   * Origins that are RIKAI AI Harness itself: this deployment's configured public URL,
+   * Origins that are Kujira AI Harness itself: this deployment's configured public URL,
    * plus the callback origin of the request in hand when there is one. Only the
    * plaintext-transport rule is relaxed for these.
    */
@@ -3506,7 +3506,7 @@ export function toolAccessService(
     return origins;
   }
 
-  /** Throws unless `value` is an endpoint RIKAI AI Harness may use (and navigate to). */
+  /** Throws unless `value` is an endpoint Kujira AI Harness may use (and navigate to). */
   function assertOAuthEndpointUrl(
     kind: OAuthEndpointKind,
     value: unknown,
@@ -4573,7 +4573,7 @@ export function toolAccessService(
         description:
           "Tool gateway calls are timing out or being runtime-deferred at an elevated rate.",
         firstResponderAction:
-          "Check upstream MCP health, RIKAI AI Harness runtime capacity, and recent gateway audit failures before retrying workloads.",
+          "Check upstream MCP health, Kujira AI Harness runtime capacity, and recent gateway audit failures before retrying workloads.",
         runbookSection,
       }),
       runtimeAlert({
@@ -6902,7 +6902,7 @@ export function toolAccessService(
     }
     if (!isRailwayConnection(connection)) return descriptors;
     if (descriptors.some((tool) => normalizeRailwayToolName(tool.name).startsWith(RAILWAY_TOOL_PREFIX))) {
-      throw unprocessable("Railway advertised a reserved RIKAI AI Harness action name. Refresh is blocked pending review.", { code: "railway_tool_name_collision" });
+      throw unprocessable("Railway advertised a reserved Kujira AI Harness action name. Refresh is blocked pending review.", { code: "railway_tool_name_collision" });
     }
     let apiStatus = "available";
     let apiMessage = "Direct Railway service, log, and deployment tools are available.";
@@ -9054,7 +9054,7 @@ export function toolAccessService(
         "OAuth provider endpoints are not configured for this app",
       );
     }
-    // A gallery default is RIKAI AI Harness's own data, but it is still a URL that ends
+    // A gallery default is Kujira AI Harness's own data, but it is still a URL that ends
     // up as a browser navigation, and the metadata branch above reads the same
     // untrusted document a generic connection does. Both go through the gate.
     return {
@@ -9432,7 +9432,7 @@ export function toolAccessService(
 
     const host = new URL(input.redirectUri).host;
     const requestedMetadata = {
-      client_name: `RIKAI AI Harness (${host})`,
+      client_name: `Kujira AI Harness (${host})`,
       redirect_uris: [input.redirectUri],
       grant_types: [
         "authorization_code",
@@ -9443,7 +9443,7 @@ export function toolAccessService(
       ],
       response_types: ["code"],
       token_endpoint_auth_method: tokenEndpointAuthMethod,
-      // RFC 7591: RIKAI AI Harness's callback is a server-side HTTPS endpoint, so this
+      // RFC 7591: Kujira AI Harness's callback is a server-side HTTPS endpoint, so this
       // is a `web` client, not a `native` one. Some authorization servers reject
       // an https redirect URI when the default (`web`) is left implicit, and
       // others apply native-client redirect rules without it.
@@ -9484,7 +9484,7 @@ export function toolAccessService(
       maxLength: MAX_OAUTH_DCR_CLIENT_SECRET_LENGTH,
     });
     // Some authorization servers add provider-owned metadata to the registered
-    // client. RIKAI AI Harness still uses only the exact redirect, grant and response
+    // client. Kujira AI Harness still uses only the exact redirect, grant and response
     // types it requested, so accept bounded supersets while requiring every
     // requested value to remain present. Hugging Face, for example, adds the
     // device-code grant to an otherwise valid authorization-code registration.
@@ -9497,8 +9497,8 @@ export function toolAccessService(
     // RFC 7591 registration responses do not consistently echo every accepted
     // request field. Supabase, for example, returns only the client material and
     // redirect URIs. Redirect binding remains mandatory; omitted grant/response
-    // metadata inherits the values RIKAI AI Harness requested. Additional provider-owned
-    // values do not widen RIKAI AI Harness's behavior because they are never persisted as
+    // metadata inherits the values Kujira AI Harness requested. Additional provider-owned
+    // values do not widen Kujira AI Harness's behavior because they are never persisted as
     // a flow choice or sent in authorization/token requests.
     assertOAuthDcrArray(record, "grant_types", requestedMetadata.grant_types, {
       allowAdditional: true,
@@ -9630,7 +9630,7 @@ export function toolAccessService(
 
   /**
    * Adopt a Client ID Metadata Document as this connection's client: the
-   * `client_id` *is* the https URL of RIKAI AI Harness's published client metadata, so
+   * `client_id` *is* the https URL of Kujira AI Harness's published client metadata, so
    * there is nothing to register with the authorization server. Still recorded on
    * the connection so the issuer/resource/callback binding is enforced on reuse
    * exactly like a dynamically registered client.
@@ -9701,7 +9701,7 @@ export function toolAccessService(
   /**
    * How the client already stored on this connection was obtained. Anything
    * unrecognised (including connections written before this field existed) reads
-   * as `manual`, which is the conservative answer: RIKAI AI Harness will not silently
+   * as `manual`, which is the conservative answer: Kujira AI Harness will not silently
    * re-register over client material it cannot prove it minted.
    */
   function storedOAuthClientRegistrationSource(
@@ -12096,7 +12096,7 @@ export function toolAccessService(
       const integration = vercelConnectIntegrationStatus();
       if (!integration.enabled || !integration.configured || !vercelConnect) {
         throw unprocessable(
-          "Vercel Connect setup is not available on this RIKAI AI Harness instance",
+          "Vercel Connect setup is not available on this Kujira AI Harness instance",
           {
             code: "vercel_connect_unavailable",
           },
@@ -12174,7 +12174,7 @@ export function toolAccessService(
           .limit(1);
         if (connectorInUse) {
           throw conflict(
-            "App-subject Vercel connectors are dedicated to one RIKAI AI Harness connection. Create or attach a separate connector in Vercel.",
+            "App-subject Vercel connectors are dedicated to one Kujira AI Harness connection. Create or attach a separate connector in Vercel.",
             {
               code: "vercel_connect_app_connector_in_use",
             },
@@ -12566,7 +12566,7 @@ export function toolAccessService(
         }
         if (!applicationRow) {
           throw conflict(
-            "RIKAI AI Harness could not allocate a unique connection name",
+            "Kujira AI Harness could not allocate a unique connection name",
             {
               code: "tool_access_name_allocation_exhausted",
             },
@@ -13817,7 +13817,7 @@ export function toolAccessService(
       throw conflict("Archived app connections cannot be reconnected");
     if (connection.credentialSource === "vercel_connect") {
       throw conflict(
-        "Manage this connector in Vercel Connect, then run a RIKAI AI Harness health check to verify it.",
+        "Manage this connector in Vercel Connect, then run a Kujira AI Harness health check to verify it.",
         {
           code: "vercel_connect_managed_externally",
           manageUrl: vercelConnectIntegrationStatus().manageUrl,
@@ -14177,7 +14177,7 @@ export function toolAccessService(
       const cloudConnector = currentCloudConnector();
       if (!cloudConnector) {
         throw unprocessable(
-          `${providerName} connections through RIKAI AI Harness are not available on this instance yet`,
+          `${providerName} connections through Kujira AI Harness are not available on this instance yet`,
           {
             code: "paperclip_cloud_connector_unavailable",
           },
@@ -14873,7 +14873,7 @@ export function toolAccessService(
     const cloudConnector = currentCloudConnector();
     if (!cloudConnector) {
       throw unprocessable(
-        `${providerName} connections through RIKAI AI Harness are not available on this instance yet`,
+        `${providerName} connections through Kujira AI Harness are not available on this instance yet`,
         {
           code: "paperclip_cloud_connector_unavailable",
         },
@@ -20254,7 +20254,7 @@ export function toolAccessService(
             .sort()
             .map((key) => {
               warnings.push(
-                `Header ${key} will be stored as a RIKAI AI Harness secret before activation.`,
+                `Header ${key} will be stored as a Kujira AI Harness secret before activation.`,
               );
               return {
                 configPath: `headers.${key}`,
@@ -20277,7 +20277,7 @@ export function toolAccessService(
         }
         if (typeof server.command === "string") {
           warnings.push(
-            "Imported stdio commands stay draft-only unless mapped to an approved RIKAI AI Harness template.",
+            "Imported stdio commands stay draft-only unless mapped to an approved Kujira AI Harness template.",
           );
           return {
             name,

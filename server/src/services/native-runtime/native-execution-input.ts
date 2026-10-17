@@ -25,8 +25,8 @@ import {
 
 const NATIVE_GITHUB_ATTACHMENT_RECOVERY_GUIDANCE = [
   "## GitHub attachment recovery navigation",
-  "RIKAI AI Harness owns recovery navigation for unavailable GitHub attachments. It may append an authenticated task link after an accepted response, only when the current source remains authorized and a safe configured Board URL is available. The model does not select or authorize that link.",
-  "A task URL missing from your prompt or tool results is not evidence that no task link can be provided; do not claim that a link is unavailable merely because you cannot see its URL. Do not invent a URL or promise that a link will appear. Briefly explain the unavailable input and ask the user to attach it directly to this RIKAI AI Harness task or paste the needed text. Never infer the file's contents or substitute an older file.",
+  "Kujira AI Harness owns recovery navigation for unavailable GitHub attachments. It may append an authenticated task link after an accepted response, only when the current source remains authorized and a safe configured Board URL is available. The model does not select or authorize that link.",
+  "A task URL missing from your prompt or tool results is not evidence that no task link can be provided; do not claim that a link is unavailable merely because you cannot see its URL. Do not invent a URL or promise that a link will appear. Briefly explain the unavailable input and ask the user to attach it directly to this Kujira AI Harness task or paste the needed text. Never infer the file's contents or substitute an older file.",
 ].join("\n");
 
 /** Closed constructor: callers cannot spread legacy context or environment data. */
@@ -175,7 +175,7 @@ export function buildNativeExecutionInput(input: {
     wakePrompt,
     // Durable task questions must survive the current provider turn.
     // Keep routing visible before deferred tool discovery; usage belongs in the tool schema.
-    "Use RIKAI AI Harness's request_human_input for durable task questions.",
+    "Use Kujira AI Harness's request_human_input for durable task questions.",
     externalChatTurn && wake?.externalChatProvider === "github"
       ? NATIVE_GITHUB_ATTACHMENT_RECOVERY_GUIDANCE
       : "",

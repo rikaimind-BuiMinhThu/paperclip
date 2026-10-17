@@ -39,8 +39,8 @@ function CliFallback({ hasActiveInvite }: { hasActiveInvite: boolean }) {
       </div>
       <p className="mt-2 text-sm text-muted-foreground">
         {hasActiveInvite
-          ? "A bootstrap invite is already active. Check your RIKAI AI Harness startup logs for the first‑admin URL, or run this command on the host to rotate it:"
-          : "Run this command on the host that runs RIKAI AI Harness to print a one‑time first‑admin invite URL:"}
+          ? "A bootstrap invite is already active. Check your Kujira AI Harness startup logs for the first‑admin URL, or run this command on the host to rotate it:"
+          : "Run this command on the host that runs Kujira AI Harness to print a one‑time first‑admin invite URL:"}
       </p>
       <pre className="mt-3 overflow-x-auto rounded-md border border-border bg-muted/30 p-3 font-mono text-xs">
 {BOOTSTRAP_FALLBACK_COMMAND}
@@ -60,9 +60,9 @@ function StateChrome({ children }: { children: ReactNode }) {
 function SignedOutPrivate() {
   return (
     <StateChrome>
-      <h1 className="text-xl font-semibold">Finish setting up this RIKAI AI Harness</h1>
+      <h1 className="text-xl font-semibold">Finish setting up this Kujira AI Harness</h1>
       <p className="mt-2 text-sm text-muted-foreground">
-        No admin has claimed this instance yet. Sign in or create your RIKAI AI Harness account to become the first
+        No admin has claimed this instance yet. Sign in or create your Kujira AI Harness account to become the first
         admin from this browser.
       </p>
       <div className="mt-5">
@@ -78,7 +78,7 @@ function SignedOutPrivate() {
 function SignedInPrivate() {
   return (
     <StateChrome>
-      <h1 className="text-xl font-semibold">Finish setting up this RIKAI AI Harness</h1>
+      <h1 className="text-xl font-semibold">Finish setting up this Kujira AI Harness</h1>
       <p className="mt-2 text-sm text-muted-foreground">
         No admin has claimed this instance yet. Claim it now to become the first admin and start onboarding.
       </p>
@@ -103,7 +103,7 @@ function SignedInPrivate() {
 function ClaimingPrivate() {
   return (
     <StateChrome>
-      <h1 className="text-xl font-semibold">Finish setting up this RIKAI AI Harness</h1>
+      <h1 className="text-xl font-semibold">Finish setting up this Kujira AI Harness</h1>
       <p className="mt-2 text-sm text-muted-foreground">
         No admin has claimed this instance yet. Claim it now to become the first admin and start onboarding.
       </p>
@@ -124,7 +124,7 @@ function ClaimingPrivate() {
 function ClaimErrorPrivate() {
   return (
     <StateChrome>
-      <h1 className="text-xl font-semibold">Finish setting up this RIKAI AI Harness</h1>
+      <h1 className="text-xl font-semibold">Finish setting up this Kujira AI Harness</h1>
       <p className="mt-2 text-sm text-muted-foreground">
         No admin has claimed this instance yet. Claim it now to become the first admin and start onboarding.
       </p>
@@ -182,7 +182,7 @@ function ClaimSuccess() {
 function PublicInviteOnly() {
   return (
     <StateChrome>
-      <h1 className="text-xl font-semibold">This RIKAI AI Harness is waiting on its first admin</h1>
+      <h1 className="text-xl font-semibold">This Kujira AI Harness is waiting on its first admin</h1>
       <p className="mt-2 text-sm text-muted-foreground">
         This instance runs in invite‑only mode. The operator must generate a one‑time first‑admin invite URL
         from the host. Once you have the link, open it from this browser to finish setup.

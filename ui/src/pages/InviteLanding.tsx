@@ -87,7 +87,7 @@ function mapInviteAuthFeedback(
     return {
       tone: "error",
       message:
-        "That email and password did not match an existing RIKAI AI Harness account. Check both fields, or create an account first if you are new here.",
+        "That email and password did not match an existing Kujira AI Harness account. Check both fields, or create an account first if you are new here.",
     };
   }
 
@@ -95,7 +95,7 @@ function mapInviteAuthFeedback(
     return {
       tone: "error",
       message:
-        "That email and password did not match an existing RIKAI AI Harness account. Check both fields, or create an account first if you are new here.",
+        "That email and password did not match an existing Kujira AI Harness account. Check both fields, or create an account first if you are new here.",
     };
   }
 
@@ -297,7 +297,7 @@ export function InviteLandingPage() {
     Boolean(invite?.companyId) &&
     companyList.some((company) => company.id === invite?.companyId);
   const companyName = invite?.companyName?.trim() || null;
-  const companyDisplayName = companyName || "this RIKAI AI Harness company";
+  const companyDisplayName = companyName || "this Kujira AI Harness company";
   const companyLogoUrl = invite?.companyLogoUrl?.trim() || null;
   const invitedByUserName = invite?.invitedByUserName?.trim() || null;
   const inviteMessage = invite?.inviteMessage?.trim() || null;
@@ -567,7 +567,7 @@ export function InviteLandingPage() {
               />
               <div className="min-w-0">
                 <p className="text-xs uppercase tracking-(--tracking-caps) text-zinc-500">
-                  You&apos;ve been invited to join RIKAI AI Harness
+                  You&apos;ve been invited to join Kujira AI Harness
                 </p>
                 <h1 className="mt-2 text-2xl font-semibold">
                   {invite.inviteType === "bootstrap_ceo"
@@ -578,7 +578,7 @@ export function InviteLandingPage() {
                   {showsAgentForm
                     ? "Review the invite details, then submit the agent information below to start the join request."
                     : requiresHumanAccount
-                      ? "Create your RIKAI AI Harness account first. If you already have one, switch to sign in and continue the invite with the same email."
+                      ? "Create your Kujira AI Harness account first. If you already have one, switch to sign in and continue the invite with the same email."
                       : "Your account is ready. Review the invite details, then accept it to continue."}
                 </p>
               </div>
@@ -591,7 +591,7 @@ export function InviteLandingPage() {
               </div>
               <div className="border border-zinc-800 p-3">
                 <div className="text-xs uppercase tracking-(--tracking-caps) text-zinc-500">Invited by</div>
-                <div className="mt-1 text-sm text-zinc-100">{invitedByUserName ?? "RIKAI AI Harness board"}</div>
+                <div className="mt-1 text-sm text-zinc-100">{invitedByUserName ?? "Kujira AI Harness board"}</div>
               </div>
               <div className="border border-zinc-800 p-3">
                 <div className="text-xs uppercase tracking-(--tracking-caps) text-zinc-500">Requested access</div>
@@ -676,8 +676,8 @@ export function InviteLandingPage() {
                   </h2>
                   <p className="mt-1 text-sm text-zinc-400">
                     {authMode === "sign_up"
-                      ? `Start with a RIKAI AI Harness account. After that, you'll come right back here to accept the invite for ${companyDisplayName}.`
-                      : "Use the RIKAI AI Harness account that already matches this invite. If you do not have one yet, switch back to create account."}
+                      ? `Start with a Kujira AI Harness account. After that, you'll come right back here to accept the invite for ${companyDisplayName}.`
+                      : "Use the Kujira AI Harness account that already matches this invite. If you do not have one yet, switch back to create account."}
                   </p>
                 </div>
 
@@ -814,7 +814,7 @@ export function InviteLandingPage() {
 
                 <p className="text-xs leading-5 text-zinc-500">
                   {authMode === "sign_up"
-                    ? "Already signed up before? Use the existing-account option instead so the invite lands on the right RIKAI AI Harness user."
+                    ? "Already signed up before? Use the existing-account option instead so the invite lands on the right Kujira AI Harness user."
                     : "No account yet? Switch back to create account so you can accept the invite with a new login."}
                 </p>
               </div>
@@ -836,7 +836,7 @@ export function InviteLandingPage() {
                       : isCurrentMember
                       ? `This account already belongs to ${companyDisplayName}.`
                       : `This will ${
-                          invite.inviteType === "bootstrap_ceo" ? "finish setting up RIKAI AI Harness" : `grant or complete your access to ${companyDisplayName}`
+                          invite.inviteType === "bootstrap_ceo" ? "finish setting up Kujira AI Harness" : `grant or complete your access to ${companyDisplayName}`
                         }.`}
                   </p>
                 </div>

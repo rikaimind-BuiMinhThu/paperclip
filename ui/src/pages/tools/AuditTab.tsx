@@ -124,7 +124,7 @@ function plainReason(event: ToolGatewayActivityEvent): string {
     case "failed":
       return "The app was allowed to run it, but returned an error.";
     default:
-      return "Recorded by RIKAI AI Harness.";
+      return "Recorded by Kujira AI Harness.";
   }
 }
 

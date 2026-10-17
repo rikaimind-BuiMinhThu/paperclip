@@ -92,14 +92,14 @@ describe("genericConnectGuidance", () => {
 
   it("does not ask the operator to resolve an internal name conflict", () => {
     const guidance = genericConnectGuidance("tool_access_name_conflict", null);
-    expect(guidance).toMatchObject({ title: "RIKAI AI Harness couldn’t name this connection", focus: "none" });
+    expect(guidance).toMatchObject({ title: "Kujira AI Harness couldn’t name this connection", focus: "none" });
     expect(guidance.body).not.toContain("different name");
   });
 
   it("passes a rejected header's own message through", () => {
     const guidance = genericConnectGuidance(
       "mcp_header_rejected",
-      'RIKAI AI Harness manages the "Host" header and cannot send a custom value for it.',
+      'Kujira AI Harness manages the "Host" header and cannot send a custom value for it.',
     );
     expect(guidance.body).toContain('"Host"');
     expect(guidance.focus).toBe("credentials");
@@ -121,7 +121,7 @@ describe("customHeaderError", () => {
 
   it("rejects headers Paperclip refuses to send", () => {
     expect(customHeaderError([{ id: "a", name: "Host", value: "evil.example" }]))
-      .toContain('RIKAI AI Harness manages the "Host" header');
+      .toContain('Kujira AI Harness manages the "Host" header');
   });
 
   it("rejects a value that would split the request", () => {

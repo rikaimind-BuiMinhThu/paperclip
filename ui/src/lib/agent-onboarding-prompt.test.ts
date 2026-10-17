@@ -12,7 +12,7 @@ describe("buildAgentOnboardingPrompt", () => {
     expect(prompt).toContain("API_SERVER_ENABLED=true");
     expect(prompt).toContain("API_SERVER_KEY");
     expect(prompt).toContain("exact same value as `API_SERVER_KEY`");
-    expect(prompt).toContain("not the RIKAI AI Harness API key");
+    expect(prompt).toContain("not the Kujira AI Harness API key");
     expect(prompt).toContain("hermes gateway run --replace --accept-hooks");
     expect(prompt).toContain("default Hermes API server port is `8642`");
     expect(prompt).toContain("agentDefaultsPayload.apiBaseUrl");
@@ -28,8 +28,8 @@ describe("buildAgentOnboardingPrompt", () => {
     expect(prompt).toContain("http://host.docker.internal:8642");
     expect(prompt).toContain("https://hermes-gateway.example");
     expect(prompt).toContain("`hermes_local` runs Hermes on the Paperclip host");
-    expect(prompt).toContain("Hermes-originated RIKAI AI Harness API calls");
-    expect(prompt).toContain("Do not rotate or invent a RIKAI AI Harness key manually");
+    expect(prompt).toContain("Hermes-originated Kujira AI Harness API calls");
+    expect(prompt).toContain("Do not rotate or invent a Kujira AI Harness key manually");
     expect(prompt).toContain("parsed `token` field from the raw HTTP JSON response");
     expect(prompt).toContain("A token value containing literal `...` or `[redacted]`");
     expect(prompt).toContain("never persist a displayed preview that contains `...`");

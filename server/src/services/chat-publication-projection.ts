@@ -236,7 +236,7 @@ function truncateByCodePoint(input: string, limit: number): string {
 }
 
 /**
- * The only text projection allowed to cross from RIKAI AI Harness into a provider.
+ * The only text projection allowed to cross from Kujira AI Harness into a provider.
  * It strips internal reasoning/tool/log content, redacts credentials, removes
  * dangerous or token-bearing links, and neutralizes provider-wide mentions.
  */
@@ -261,7 +261,7 @@ export function projectSafeChatPublicationText(input: string): string {
     .replace(/\n{3,}/g, "\n\n")
     .trim();
 
-  if (!output) return "Update available in RIKAI AI Harness.";
+  if (!output) return "Update available in Kujira AI Harness.";
   if (output.length > MAX_TEXT_OUTPUT_LENGTH) {
     throw new UnsafeChatPublicationError(
       "External chat text exceeds its projected processing limit",

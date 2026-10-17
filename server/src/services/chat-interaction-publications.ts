@@ -44,12 +44,12 @@ function terminalNativeInteractionCopy(
       const outcome = interaction.result?.outcome;
       const body =
         outcome === "skipped"
-          ? "Skipped in RIKAI AI Harness"
+          ? "Skipped in Kujira AI Harness"
           : outcome === "withdrawn"
-            ? "Withdrawn in RIKAI AI Harness"
+            ? "Withdrawn in Kujira AI Harness"
             : outcome === "addressee_deleted"
               ? "Cancelled: addressed agent was removed"
-              : "Cancelled in RIKAI AI Harness";
+              : "Cancelled in Kujira AI Harness";
       return { body, text: `${body}.` };
     }
     if (interaction.status === "expired") {
@@ -62,7 +62,7 @@ function terminalNativeInteractionCopy(
               ? "Expired: target is no longer current"
               : interaction.result?.outcome === "issue_closed"
                 ? "Expired: task is closed"
-                : "Expired in RIKAI AI Harness";
+                : "Expired in Kujira AI Harness";
       return { body, text: `${body}.` };
     }
     return null;
@@ -88,10 +88,10 @@ function terminalNativeInteractionCopy(
     const outcome = interaction.result?.outcome;
     const body =
       outcome === "skipped"
-        ? "Skipped in RIKAI AI Harness."
+        ? "Skipped in Kujira AI Harness."
         : outcome === "withdrawn"
-          ? "Withdrawn in RIKAI AI Harness."
-          : "Cancelled in RIKAI AI Harness.";
+          ? "Withdrawn in Kujira AI Harness."
+          : "Cancelled in Kujira AI Harness.";
     return { body, text: body };
   }
   if (interaction.status === "expired") {
@@ -103,7 +103,7 @@ function terminalNativeInteractionCopy(
           ? "Expired: replaced by a newer request"
           : interaction.result?.outcome === "issue_closed"
             ? "Expired: task is closed"
-            : "Expired in RIKAI AI Harness";
+            : "Expired in Kujira AI Harness";
     return { body, text: `${body}.` };
   }
   return null;
@@ -199,18 +199,18 @@ function textForQuestionInteraction(
   }
   lines.push(
     taskUrl
-      ? `Open the task in RIKAI AI Harness to respond: ${taskUrl}`
-      : "Open the task in RIKAI AI Harness to respond.",
+      ? `Open the task in Kujira AI Harness to respond: ${taskUrl}`
+      : "Open the task in Kujira AI Harness to respond.",
   );
   return lines.join("\n");
 }
 
 function genericInteractionText(taskUrl: string | null): string {
   return [
-    "This task needs an authorized response in RIKAI AI Harness.",
+    "This task needs an authorized response in Kujira AI Harness.",
     taskUrl
-      ? `Open the task in RIKAI AI Harness to respond: ${taskUrl}`
-      : "Open the task in RIKAI AI Harness to respond.",
+      ? `Open the task in Kujira AI Harness to respond: ${taskUrl}`
+      : "Open the task in Kujira AI Harness to respond.",
   ]
     .filter((value): value is string => Boolean(value))
     .join("\n\n");
@@ -366,7 +366,7 @@ export async function enqueueIssueInteractionChatPublications(
             ? [
                 {
                   type: "link" as const,
-                  label: "Open in RIKAI AI Harness",
+                  label: "Open in Kujira AI Harness",
                   url: taskUrl,
                 },
               ]
@@ -397,13 +397,13 @@ export async function enqueueIssueInteractionChatPublications(
                 "Input needed")
               : interaction.kind === "request_confirmation"
                 ? interaction.payload.prompt
-                : "Response needed in RIKAI AI Harness",
+                : "Response needed in Kujira AI Harness",
           body:
             interaction.kind === "ask_user_questions"
               ? (question?.helpText ?? undefined)
               : interaction.kind === "request_confirmation"
                 ? (interaction.payload.detailsMarkdown ?? undefined)
-                : "Open the task in RIKAI AI Harness to review and respond.",
+                : "Open the task in Kujira AI Harness to review and respond.",
           actions,
         },
       },
@@ -493,7 +493,7 @@ export async function enqueueIssueInteractionChatPublications(
 /**
  * Settles every delivered question or confirmation card. Providers without a
  * native callback receive the same actionless terminal edit/follow-up as
- * providers with buttons, so an "Open in RIKAI AI Harness" prompt never remains
+ * providers with buttons, so an "Open in Kujira AI Harness" prompt never remains
  * visibly pending after the authoritative board decision.
  *
  * The terminal publication shares the provider callback idempotency key. If a

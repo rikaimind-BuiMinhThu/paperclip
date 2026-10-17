@@ -1189,7 +1189,7 @@ export function agentRoutes(
     if ((await instanceSettings.getExperimental()).enableManagedSandboxOnly === true) {
       const managed = await environmentsSvc.findManagedSandboxEnvironment(companyId);
       if (!managed) {
-        throw unprocessable("The managed sandbox is unavailable. Restore RIKAI AI Harness Computer and retry.", {
+        throw unprocessable("The managed sandbox is unavailable. Restore Kujira AI Harness Computer and retry.", {
           code: "managed_sandbox_unavailable",
         });
       }
@@ -2198,7 +2198,7 @@ export function agentRoutes(
       const experimental = await instanceSettings.getExperimental();
       if (experimental.enableNativeRunner !== true) {
         throw unprocessable(
-          "RIKAI AI Harness Runner is experimental and disabled on this instance.",
+          "Kujira AI Harness Runner is experimental and disabled on this instance.",
           { code: "paperclip_runner_rollout_disabled" },
         );
       }
@@ -2259,7 +2259,7 @@ export function agentRoutes(
     const defaults = paperclipRunnerTransitionConfig(input.previousAdapterType, input.previousAdapterConfig.model, input.nextAdapterConfig.provider);
     if (!["claude_local", "codex_local", "opencode_local"].includes(input.previousAdapterType)
       && !isPaperclipRunnerProvider(input.nextAdapterConfig.provider)) {
-      throw unprocessable("Select a RIKAI AI Harness Runner provider before converting this agent.");
+      throw unprocessable("Select a Kujira AI Harness Runner provider before converting this agent.");
     }
     const next = { ...defaults, ...input.nextAdapterConfig };
     if (!asNonEmptyString(next.model)) next.model = defaults.model;
@@ -3256,7 +3256,7 @@ export function agentRoutes(
       return;
     }
     if (type === "paperclip_runner" && provider && !isPaperclipRunnerProvider(provider)) {
-      throw unprocessable("Unknown RIKAI AI Harness Runner provider");
+      throw unprocessable("Unknown Kujira AI Harness Runner provider");
     }
     const modelAdapterType = type === "paperclip_runner"
       ? provider === "acpx" || provider === "claude_managed" ? "claude_local"

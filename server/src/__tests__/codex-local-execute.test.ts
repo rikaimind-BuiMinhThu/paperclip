@@ -1066,7 +1066,7 @@ process.exit(1);
       expect(capture.argv).not.toContain("resume");
       expect(capture.argv).not.toContain('service_tier="fast"');
       expect(capture.argv).not.toContain("features.fast_mode=true");
-      expect(capture.prompt).toContain("RIKAI AI Harness session handoff:");
+      expect(capture.prompt).toContain("Kujira AI Harness session handoff:");
       expect(capture.prompt).toContain("Issue continuation summary for the next fresh session.");
       expect(commandNotes).toContain("Codex transient fallback requested safer invocation settings for this retry.");
       expect(commandNotes).toContain("Codex transient fallback forced a fresh session with a continuation handoff.");

@@ -212,7 +212,7 @@ describe("execute", () => {
   it("sends the task brief once on fresh runs and compacts it on stable-session resumes", async () => {
     const description = "Update launch-card.svg and change the CTA to Try Team free.";
     const fullTaskMarkdown = [
-      "RIKAI AI Harness task context:",
+      "Kujira AI Harness task context:",
       '- Issue: "PAP-1"',
       "",
       "Issue description:",
@@ -273,7 +273,7 @@ describe("execute", () => {
     // Fresh run: brief exactly once (task markdown only; wake-prompt copy suppressed).
     expect(runBodies[0]!.input.split(description)).toHaveLength(2);
     // Stable-session resume: compact task markdown, no re-sent brief.
-    expect(runBodies[1]!.input).toContain("RIKAI AI Harness task context:");
+    expect(runBodies[1]!.input).toContain("Kujira AI Harness task context:");
     expect(runBodies[1]!.input).not.toContain(description);
   });
 
@@ -388,7 +388,7 @@ describe("execute", () => {
     ctx.context = {
       issueId: "issue-1",
       paperclipTaskMarkdown: [
-        "RIKAI AI Harness task context:",
+        "Kujira AI Harness task context:",
         '- Issue: "PAP-1"',
       ].join("\n"),
       paperclipTurnContext: {

@@ -1,21 +1,21 @@
 ---
 name: paperclip
 description: >
-  Use for RIKAI AI Harness-managed tasks and heartbeats: reading task context, delivering
+  Use for Kujira AI Harness-managed tasks and heartbeats: reading task context, delivering
   task documents, updating completion or blockers, coordinating or
   delegating work, and following company governance. Includes control plane API
   operations for assignments, comments, approvals, and routines.
 ---
 
-# RIKAI AI Harness Skill
+# Kujira AI Harness Skill
 
-You run in **heartbeats** — short execution windows triggered by RIKAI AI Harness. Each heartbeat, you wake up, check your work, do something useful, and exit. You do not run continuously.
+You run in **heartbeats** — short execution windows triggered by Kujira AI Harness. Each heartbeat, you wake up, check your work, do something useful, and exit. You do not run continuously.
 
 ## Terminology
 
-In RIKAI AI Harness, **task** and **issue** refer to the same work item. The UI may use "task" while APIs, database fields, route names, and older docs may still say "issue"; treat them as the same entity unless a local context explicitly distinguishes them.
+In Kujira AI Harness, **task** and **issue** refer to the same work item. The UI may use "task" while APIs, database fields, route names, and older docs may still say "issue"; treat them as the same entity unless a local context explicitly distinguishes them.
 
-**Task documents (API runtimes).** When asked for a task document, save it on the RIKAI AI Harness issue with `PUT /api/issues/{issueId}/documents/{key}`, unless the requester specifies another destination. Confirm the returned document's saved revision and add a clickable Markdown link before reporting completion; read [references/issue-documents.md](references/issue-documents.md) for the payload and revision-safe updates. Downloadable files follow [Generated Artifacts and Work Products](#generated-artifacts-and-work-products).
+**Task documents (API runtimes).** When asked for a task document, save it on the Kujira AI Harness issue with `PUT /api/issues/{issueId}/documents/{key}`, unless the requester specifies another destination. Confirm the returned document's saved revision and add a clickable Markdown link before reporting completion; read [references/issue-documents.md](references/issue-documents.md) for the payload and revision-safe updates. Downloadable files follow [Generated Artifacts and Work Products](#generated-artifacts-and-work-products).
 
 ## Authentication
 
@@ -23,9 +23,9 @@ Env vars auto-injected: `PAPERCLIP_AGENT_ID`, `PAPERCLIP_COMPANY_ID`, `PAPERCLIP
 
 Adapters deliver the wake payload in the run prompt. It contains the compact issue summary and the ordered batch of new comment payloads for this wake. Read that prompt section first. For comment wakes, treat that batch as the highest-priority new context in the heartbeat: in your first task update or response, acknowledge the latest comment and say how it changes your next action before broad repo exploration or generic wake boilerplate. Only fetch the thread/comments API immediately when `fallbackFetchNeeded` is true or you need broader context than the inline batch provides.
 
-Manual local CLI mode (outside heartbeat runs): use `paperclipai agent local-cli <agent-id-or-shortname> --company-id <company-id>` to install RIKAI AI Harness skills for Claude/Codex and print/export the required `PAPERCLIP_*` environment variables for that agent identity.
+Manual local CLI mode (outside heartbeat runs): use `paperclipai agent local-cli <agent-id-or-shortname> --company-id <company-id>` to install Kujira AI Harness skills for Claude/Codex and print/export the required `PAPERCLIP_*` environment variables for that agent identity.
 
-**CLI safety — use `npx paperclipai` for content-bearing arguments.** When you run the RIKAI AI Harness CLI, use `npx paperclipai` for any argument that can hold untrusted content. Untrusted content includes issue text, comment bodies, Markdown, pasted snippets, and model output. `npx paperclipai` runs the CLI binary directly and passes the argument as an inert `argv` value; it does not run a shell over the value. Do not use `pnpm paperclipai` for such an argument. `pnpm paperclipai` is a `package.json` script; `pnpm` appends the argument to a `/bin/sh` command string, so the shell reads it first and interprets a backtick pair, `$( )`, or `$NAME` before the CLI starts. A crafted value can run an arbitrary command as the invoking user, or expand an environment variable into the stored argument. This risk stays even when the argument comes from a quoted shell variable, because `pnpm` re-evaluates the value in its own shell. Do not use `pnpm exec paperclipai` either; the root workspace does not link that binary, so the command fails with `Command "paperclipai" not found`. To run local `cli/src` changes with a content-bearing argument, use `node cli/node_modules/tsx/dist/cli.mjs cli/src/index.ts <command> <args>`. See `doc/CLI.md` for the full safe/unsafe matrix.
+**CLI safety — use `npx paperclipai` for content-bearing arguments.** When you run the Kujira AI Harness CLI, use `npx paperclipai` for any argument that can hold untrusted content. Untrusted content includes issue text, comment bodies, Markdown, pasted snippets, and model output. `npx paperclipai` runs the CLI binary directly and passes the argument as an inert `argv` value; it does not run a shell over the value. Do not use `pnpm paperclipai` for such an argument. `pnpm paperclipai` is a `package.json` script; `pnpm` appends the argument to a `/bin/sh` command string, so the shell reads it first and interprets a backtick pair, `$( )`, or `$NAME` before the CLI starts. A crafted value can run an arbitrary command as the invoking user, or expand an environment variable into the stored argument. This risk stays even when the argument comes from a quoted shell variable, because `pnpm` re-evaluates the value in its own shell. Do not use `pnpm exec paperclipai` either; the root workspace does not link that binary, so the command fails with `Command "paperclipai" not found`. To run local `cli/src` changes with a content-bearing argument, use `node cli/node_modules/tsx/dist/cli.mjs cli/src/index.ts <command> <args>`. See `doc/CLI.md` for the full safe/unsafe matrix.
 
 **Run audit trail:** You MUST include `-H 'X-Paperclip-Run-Id: $PAPERCLIP_RUN_ID'` on ALL API requests that modify issues (checkout, update, comment, create subtask, release). This links your actions to the current heartbeat run for traceability.
 
@@ -48,7 +48,7 @@ execution tasks; they do not override chat mode.
 
 ## Server-Verified External Chat Turns
 
-RIKAI AI Harness may identify an ordinary external-chat turn as already checked out and
+Kujira AI Harness may identify an ordinary external-chat turn as already checked out and
 fully framed by its server-side harness. Use this shortcut only when the supplied
 wake context explicitly marks the turn as server verified, includes
 `checkedOutByHarness: true`, names a concrete issue, and provides
@@ -91,7 +91,7 @@ they mention a chat provider.
 Follow these steps every time you wake up unless the server-verified external
 chat shortcut above applies:
 
-**Scoped-wake fast path.** If the user message includes a **"RIKAI AI Harness Resume Delta"** or **"RIKAI AI Harness Wake Payload"** section that names a specific issue, **skip Steps 1–4 entirely**. Go straight to **Step 5 (Checkout)** for that issue, then continue with Steps 6–9. The scoped wake already tells you which issue to work on — do NOT call `/api/agents/me`, do NOT fetch your inbox, do NOT pick work. Just checkout, read the wake context, do the work, and update.
+**Scoped-wake fast path.** If the user message includes a **"Kujira AI Harness Resume Delta"** or **"Kujira AI Harness Wake Payload"** section that names a specific issue, **skip Steps 1–4 entirely**. Go straight to **Step 5 (Checkout)** for that issue, then continue with Steps 6–9. The scoped wake already tells you which issue to work on — do NOT call `/api/agents/me`, do NOT fetch your inbox, do NOT pick work. Just checkout, read the wake context, do the work, and update.
 
 **Step 1 — Identity.** If not already in context, `GET /api/agents/me` to get your id, companyId, role, chainOfCommand, and budget.
 
@@ -131,7 +131,7 @@ If already checked out by you, returns normally. If owned by another agent: `409
 
 **Step 6 — Understand context.** Prefer `GET /api/issues/{issueId}/heartbeat-context` first. It gives you compact issue state, ancestor summaries, goal/project info, and comment cursor metadata without forcing a full thread replay.
 
-If the run prompt includes a RIKAI AI Harness wake payload, inspect that section before calling the API. It is the fastest path for comment wakes and may already include the exact new comments that triggered this run. For comment-driven wakes, reflect the new comment context first, then fetch broader history only if needed.
+If the run prompt includes a Kujira AI Harness wake payload, inspect that section before calling the API. It is the fastest path for comment wakes and may already include the exact new comments that triggered this run. For comment-driven wakes, reflect the new comment context first, then fetch broader history only if needed.
 
 Use comments incrementally:
 
@@ -145,10 +145,10 @@ Read enough ancestor/comment context to understand _why_ the task exists and wha
 
 If `currentParticipant` matches you, submit your decision via the normal update route — there is no separate execution-decision endpoint:
 
-- Approve: `PATCH /api/issues/{issueId}` with `{ "status": "done", "comment": "Approved: …" }`. If more stages remain, RIKAI AI Harness keeps the issue in `in_review` and reassigns it to the next participant automatically.
-- Request changes: `PATCH` with `{ "status": "in_progress", "comment": "Changes requested: …" }`. RIKAI AI Harness converts this into a changes-requested decision and reassigns to `returnAssignee`.
+- Approve: `PATCH /api/issues/{issueId}` with `{ "status": "done", "comment": "Approved: …" }`. If more stages remain, Kujira AI Harness keeps the issue in `in_review` and reassigns it to the next participant automatically.
+- Request changes: `PATCH` with `{ "status": "in_progress", "comment": "Changes requested: …" }`. Kujira AI Harness converts this into a changes-requested decision and reassigns to `returnAssignee`.
 
-If `currentParticipant` does not match you, do not try to advance the stage — RIKAI AI Harness will reject other actors with `422`.
+If `currentParticipant` does not match you, do not try to advance the stage — Kujira AI Harness will reject other actors with `422`.
 
 **Step 7 — Do the work.** Use your tools and capabilities. Execution contract:
 
@@ -165,10 +165,10 @@ If `currentParticipant` does not match you, do not try to advance the stage — 
 
 **Human input questions.**
 
-For an open answer, use a text field. Use a confirmation for a concrete yes/no decision, not to ask someone to write a comment and then confirm they wrote it. POST `/api/issues/{issueId}/interactions` with the following complete payload (replace `detail`, the prompt, and the idempotency key for your question). Put every text and choice question in one complete `questionSet`. RIKAI AI Harness generates the compatibility `questions` entries. Legacy choice-only payloads remain supported; if you send both representations, they must describe the same complete form.
+For an open answer, use a text field. Use a confirmation for a concrete yes/no decision, not to ask someone to write a comment and then confirm they wrote it. POST `/api/issues/{issueId}/interactions` with the following complete payload (replace `detail`, the prompt, and the idempotency key for your question). Put every text and choice question in one complete `questionSet`. Kujira AI Harness generates the compatibility `questions` entries. Legacy choice-only payloads remain supported; if you send both representations, they must describe the same complete form.
 
 Omit `addresseeUserId` for ordinary questions.
-In Agent Chat, RIKAI AI Harness addresses the question to the conversation owner automatically. On a task, leave the recipient open unless a particular person must answer. For that case, explicitly address their exact RIKAI AI Harness user ID, including any prefix. The server rejects unknown or unauthorized recipients. Do not guess IDs or infer authority from a title. Agent-directed questions use `addresseeAgentId` and omit `resolverPolicy`.
+In Agent Chat, Kujira AI Harness addresses the question to the conversation owner automatically. On a task, leave the recipient open unless a particular person must answer. For that case, explicitly address their exact Kujira AI Harness user ID, including any prefix. The server rejects unknown or unauthorized recipients. Do not guess IDs or infer authority from a title. Agent-directed questions use `addresseeAgentId` and omit `resolverPolicy`.
 
 ```json
 {
@@ -255,7 +255,7 @@ Status values: `backlog`, `todo`, `in_progress`, `in_review`, `done`, `blocked`,
 
 ### Monitors and Watchers (say only what you actually scheduled)
 
-A "watcher" or "monitor" is not something that lives inside a run. A run/heartbeat is an ephemeral execution window; nothing keeps watching after it exits. The only thing that can auto-resume an issue on its own is a persisted **issue monitor**: durable state on the issue (`monitorNextCheckAt`, `monitorScheduledBy`, plus an execution-policy `monitor` block with `kind`, `serviceName`, `externalRef`, `timeoutAt`, `maxAttempts`). A server scheduler (`tickDueIssueMonitors`) polls for **eligible** issues whose `monitorNextCheckAt` has passed and re-wakes the assignee agent with `PAPERCLIP_WAKE_REASON=issue_monitor_due`. Eligibility is enforced: the issue must be assigned to an agent (`assigneeAgentId` set) with **no** user assignee (`assigneeUserId` null) and be in `in_progress` or `in_review`. The on-demand `monitor/check-now` trigger enforces the same conditions, so a monitor stored on a user-assigned, `backlog`, `blocked`, or closed issue never fires — the timestamp is necessary but not sufficient. It is timer-based polling, not an event subscription — RIKAI AI Harness is not notified the instant CI/Greptile/an external check finishes; the monitor just wakes you on a schedule so you can look again.
+A "watcher" or "monitor" is not something that lives inside a run. A run/heartbeat is an ephemeral execution window; nothing keeps watching after it exits. The only thing that can auto-resume an issue on its own is a persisted **issue monitor**: durable state on the issue (`monitorNextCheckAt`, `monitorScheduledBy`, plus an execution-policy `monitor` block with `kind`, `serviceName`, `externalRef`, `timeoutAt`, `maxAttempts`). A server scheduler (`tickDueIssueMonitors`) polls for **eligible** issues whose `monitorNextCheckAt` has passed and re-wakes the assignee agent with `PAPERCLIP_WAKE_REASON=issue_monitor_due`. Eligibility is enforced: the issue must be assigned to an agent (`assigneeAgentId` set) with **no** user assignee (`assigneeUserId` null) and be in `in_progress` or `in_review`. The on-demand `monitor/check-now` trigger enforces the same conditions, so a monitor stored on a user-assigned, `backlog`, `blocked`, or closed issue never fires — the timestamp is necessary but not sufficient. It is timer-based polling, not an event subscription — Kujira AI Harness is not notified the instant CI/Greptile/an external check finishes; the monitor just wakes you on a schedule so you can look again.
 
 Because of that, follow these rules:
 
@@ -279,7 +279,7 @@ Run-scoped writes are subtree-scoped: the delegate's run can write to its own is
 
 ## Managing A User's Inbox
 
-Agents may archive an issue from a user's Mine inbox with `POST /api/issues/{issueId}/inbox-archive` and reverse it with `DELETE /api/issues/{issueId}/inbox-archive`. Omit `userId` for the normal case: RIKAI AI Harness resolves the responsible user from the agent's run context. An explicit `userId` targets another user and requires either that user's saved opt-in policy (`open` or an allowlist containing the agent) or a matching `inbox:manage` grant. The implicit default-open policy for a user who has never saved the control does not authorize explicit cross-user targeting.
+Agents may archive an issue from a user's Mine inbox with `POST /api/issues/{issueId}/inbox-archive` and reverse it with `DELETE /api/issues/{issueId}/inbox-archive`. Omit `userId` for the normal case: Kujira AI Harness resolves the responsible user from the agent's run context. An explicit `userId` targets another user and requires either that user's saved opt-in policy (`open` or an allowlist containing the agent) or a matching `inbox:manage` grant. The implicit default-open policy for a user who has never saved the control does not authorize explicit cross-user targeting.
 
 Archive only when the issue is truly resolved for that user, such as after a pull request is confirmed merged at its current head and the result is verified. Never archive an issue while the user is still expected to review, approve, answer, choose, or otherwise decide something. Archiving is reversible and audited, and later issue activity can resurface the item, but those safeguards do not make premature cleanup acceptable.
 
@@ -329,7 +329,7 @@ POST /api/companies/{companyId}/approvals
 }
 ```
 
-`issueIds` links the approval into the issue thread. When approved, RIKAI AI Harness wakes the requester with `PAPERCLIP_APPROVAL_ID`/`PAPERCLIP_APPROVAL_STATUS`. Keep the payload concise and decision-ready.
+`issueIds` links the approval into the issue thread. When approved, Kujira AI Harness wakes the requester with `PAPERCLIP_APPROVAL_ID`/`PAPERCLIP_APPROVAL_STATUS`. Keep the payload concise and decision-ready.
 
 ## Issue-Thread Interactions
 
@@ -354,7 +354,7 @@ Key shared semantics:
 
 - **Resolver audience.** Every kind defaults to `anyone`: the board or any agent in the company, including you and your own run. **Omit `resolverPolicy` for normal coordination** — that is the open default, and it is what lets a teammate or a watchdog unblock the thread instead of stranding it on one human. Ask for a restriction only when the restriction is the point: `"resolverPolicy": "not_creator"` when the answer must come from someone other than you, `"human_only"` when a person genuinely has to decide (public commitments, spend, anything legal or security-sensitive), or `addresseeAgentId` when one named agent owns the response. Restrictions never widen: a company cap and a governed-action clamp can narrow your request, and the card reports the `effectiveResolverPolicy` it will enforce.
 - **Continuation policy.** `request_checkbox_confirmation` and `request_item_verdicts` default to `wake_assignee`, which wakes you after the card is resolved or newly resolved item verdicts are submitted. `request_confirmation` defaults to `none`, so set `wake_assignee` or `wake_assignee_on_accept` when you need to resume after a yes/no decision. `none` never wakes you — only use it when you truly do not need to resume.
-- **Target binding and staleness.** `request_confirmation`, `request_checkbox_confirmation`, and `request_item_verdicts` accept a `target` (typically `{ type: "issue_document", key, revisionId, … }`). When a newer revision lands, RIKAI AI Harness expires the pending interaction with `outcome: "stale_target"`. Rebuild against the latest revision and create a fresh interaction.
+- **Target binding and staleness.** `request_confirmation`, `request_checkbox_confirmation`, and `request_item_verdicts` accept a `target` (typically `{ type: "issue_document", key, revisionId, … }`). When a newer revision lands, Kujira AI Harness expires the pending interaction with `outcome: "stale_target"`. Rebuild against the latest revision and create a fresh interaction.
 - **Supersede on user comment.** Target-bound request kinds default `supersedeOnUserComment: true`, so a later board/user comment cancels the pending request with `outcome: "superseded_by_comment"`. On the wake, address the comment and create a new interaction if approval is still required.
 - **Withdraw and terminal expiry.** The interaction creator agent, current issue assignee agent, or a board user can withdraw any pending interaction with `POST /api/issues/:issueId/interactions/:interactionId/withdraw` and optional `{ "reason": string }`; the result is `outcome: "withdrawn"`. Closing an issue as `done` or `cancelled` expires all remaining pending interactions with `outcome: "issue_closed"` and never wakes the closed issue.
 - **Idempotency.** Use a deterministic `idempotencyKey` such as `confirmation:${issueId}:plan:${revisionId}` or `checkbox:${issueId}:${decisionKey}:${revisionId}` so retries do not stack duplicate cards.
@@ -468,14 +468,14 @@ For full payload schemas, validation limits (option count, label lengths, min/ma
 
 Some MCP tools are configured as **ask first**. Their `tools/list` description says that human approval is required. When you call one:
 
-1. RIKAI AI Harness posts one approval card on your checked-out task and returns `approval_required` with instructions. Do not retry the call while the card is pending. Finish any other useful work, note that you are waiting for tool approval, move the task to `in_review`, and end the run.
-2. RIKAI AI Harness wakes the assignee after either approval or rejection. The wake includes the decision and, for an approved action, the execution outcome.
-3. Approval means **approve and run**: RIKAI AI Harness executes the stored, signed call arguments exactly once. If the wake says it executed, use that result and do not call the tool again. If execution failed, adjust your approach; a fresh call may open a new approval.
+1. Kujira AI Harness posts one approval card on your checked-out task and returns `approval_required` with instructions. Do not retry the call while the card is pending. Finish any other useful work, note that you are waiting for tool approval, move the task to `in_review`, and end the run.
+2. Kujira AI Harness wakes the assignee after either approval or rejection. The wake includes the decision and, for an approved action, the execution outcome.
+3. Approval means **approve and run**: Kujira AI Harness executes the stored, signed call arguments exactly once. If the wake says it executed, use that result and do not call the tool again. If execution failed, adjust your approach; a fresh call may open a new approval.
 4. Rejection means the action did not run. Do not retry the same call; follow the decline reason and change your approach or task disposition.
 
 Approval requests expire after 60 minutes. After expiry, call the tool again to request a fresh approval. Re-calling a tool with identical arguments is idempotent and never stacks approval cards: a pending request is reused, an already executed request returns its stored outcome, and an expired request opens one fresh card.
 
-If the gateway returns `approval_path_missing`, the MCP session is not attached to a checked-out task, so RIKAI AI Harness has nowhere to post the card. Re-run the action from a run that has the task checked out.
+If the gateway returns `approval_path_missing`, the MCP session is not attached to a checked-out task, so Kujira AI Harness has nowhere to post the card. Re-run the action from a run that has the task checked out.
 
 Create `request_item_verdicts` when each known item needs its own verdict:
 
@@ -545,14 +545,14 @@ If you are asked to create or manage routines you MUST read:
 
 ## Issue Workspace Runtime Controls
 
-When an issue needs browser/manual QA or a preview server, inspect its current execution workspace and use RIKAI AI Harness's workspace runtime controls instead of starting unmanaged background servers yourself.
+When an issue needs browser/manual QA or a preview server, inspect its current execution workspace and use Kujira AI Harness's workspace runtime controls instead of starting unmanaged background servers yourself.
 
 For commands, response fields, and MCP tools, read:
 `skills/paperclip/references/issue-workspaces.md`
 
 ## Proposing Credentials Safely
 
-**When you receive a credential, propose it as a RIKAI AI Harness secret immediately with `POST /api/agents/me/secret-proposals`. NEVER paste the credential into an issue comment, document, file, plan, task description, or transcript.** This applies whether the value was pasted by a user, returned by an OAuth flow, delivered by email, or obtained from another secure source.
+**When you receive a credential, propose it as a Kujira AI Harness secret immediately with `POST /api/agents/me/secret-proposals`. NEVER paste the credential into an issue comment, document, file, plan, task description, or transcript.** This applies whether the value was pasted by a user, returned by an OAuth flow, delivered by email, or obtained from another secure source.
 
 Before proposing a credential you MUST read the "Agent secret proposals" section in:
 `skills/paperclip/references/api-reference.md`
@@ -591,7 +591,7 @@ Exact response fields are documented in `skills/paperclip/references/api-referen
 - **Honor "send it back to me" requests from board users.** If a board/user asks for review handoff (e.g. "let me review it", "assign it back to me"), reassign to them with `assigneeAgentId: null` and `assigneeUserId: "<requesting-user-id>"`, typically setting status to `in_review` instead of `done`. Resolve the user id from the triggering comment's `authorUserId` when available, else the issue's `createdByUserId` if it matches the requester context.
 - **Start actionable work before planning-only closure.** Do concrete work in the same heartbeat unless the task asks for a plan or review only.
 - **Leave a next action.** Every progress comment should make clear what is complete, what remains, and who owns the next step.
-- **Prefer child issues over polling.** Create bounded child issues for long or parallel delegated work and rely on RIKAI AI Harness wake events or comments for completion.
+- **Prefer child issues over polling.** Create bounded child issues for long or parallel delegated work and rely on Kujira AI Harness wake events or comments for completion.
 - **Preserve workspace continuity for follow-ups.** Child issues inherit execution workspace from `parentId` server-side. For non-child follow-ups on the same checkout/worktree, send `inheritExecutionWorkspaceFromIssueId` explicitly.
 - **Never cancel cross-team tasks.** If you question the task, follow the requester-directed decision flow in [Receiving cross-team work](references/api-reference.md#receiving-cross-team-work). Keep the task assigned to yourself; do not automatically hand it to a manager.
 - **Use first-class blockers** (`blockedByIssueIds`) rather than free-text "blocked by X" comments.
@@ -602,7 +602,7 @@ Exact response fields are documented in `skills/paperclip/references/api-referen
 - **Handle blockers directly.** Identify the exact missing capability or authority. Do not reassign blocked work or create a task for a manager or another agent merely because you are stuck. A title or reporting line does not grant access or authority. For a human-only action, use the connection/approval flow when available; otherwise save an interaction with `resolverPolicy: "human_only"` and `continuationPolicy: "wake_assignee"` on the current task, keep yourself assigned, and leave it `in_review`. Use the complete [human-input payload](#asking-for-human-input). Verify the recipient's actual capability and permission before offering delegation as an option or creating a bounded task for them. Never delegate to bypass a permission denial; a human answer also does not grant a missing permission.
 - **Keep scope decisions on the current task.** Save a human-input interaction with `resolverPolicy: "human_only"` and `continuationPolicy: "wake_assignee"`. Keep the task assigned to yourself and `in_review` while waiting. If the decision requires a particular person's answer, explicitly address that person; otherwise leave the recipient open to eligible humans. For an agent-directed question, set `addresseeAgentId` and omit `resolverPolicy`. Do not substitute a manager or invent an identity.
 - **Hiring**: use the `paperclip-create-agent` skill for new agent creation workflows (links to reusable `AGENTS.md` templates like `Coder` and `QA`).
-- **Commit Co-author**: if you make a git commit you MUST add EXACTLY `Co-Authored-By: RIKAI AI Harness <noreply@paperclip.ing>` to the end of each commit message. Do not put in your agent name, put `Co-Authored-By: RIKAI AI Harness <noreply@paperclip.ing>`.
+- **Commit Co-author**: if you make a git commit you MUST add EXACTLY `Co-Authored-By: Kujira AI Harness <noreply@paperclip.ing>` to the end of each commit message. Do not put in your agent name, put `Co-Authored-By: Kujira AI Harness <noreply@paperclip.ing>`.
 
 ## Comment Style (Required)
 
@@ -661,9 +661,9 @@ If you're asked to make a plan, _do not mark the issue as done_. When the plan i
 
 If the plan needs explicit approval before implementation, update the `plan` document, create a `request_confirmation` issue-thread interaction bound to the latest plan revision, then update the source issue to `in_review` with a comment that links the plan and names the pending confirmation. This is a deliberate waiting path, not an abandoned productive run. Wait for acceptance before creating implementation subtasks. See `references/api-reference.md` for the interaction payload.
 
-When asked to convert a plan into executable RIKAI AI Harness tasks — depth, assignment, dependencies, parallelization — use the companion skill `paperclip-converting-plans-to-tasks`.
+When asked to convert a plan into executable Kujira AI Harness tasks — depth, assignment, dependencies, parallelization — use the companion skill `paperclip-converting-plans-to-tasks`.
 
-When asked to convert a plan into executable RIKAI AI Harness tasks — depth, assignment, dependencies, parallelization — use the companion skill `paperclip-converting-plans-to-tasks`.
+When asked to convert a plan into executable Kujira AI Harness tasks — depth, assignment, dependencies, parallelization — use the companion skill `paperclip-converting-plans-to-tasks`.
 
 Recommended API flow:
 

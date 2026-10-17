@@ -517,7 +517,7 @@ export const runnerApiReference: Record<string, { section: string; description?:
       },
       {
         "body": {
-          "name": "RIKAI AI Harness Mobile App",
+          "name": "Kujira AI Harness Mobile App",
           "description": "Ship iOS + Android client",
           "status": "planned",
           "goalIds": [
@@ -534,7 +534,7 @@ export const runnerApiReference: Record<string, { section: string; description?:
       },
       {
         "body": {
-          "name": "RIKAI AI Harness Mobile App",
+          "name": "Kujira AI Harness Mobile App",
           "description": "Ship iOS + Android client",
           "status": "planned"
         }
@@ -692,7 +692,7 @@ export const runnerApiReference: Record<string, { section: string; description?:
           "instructionsBundle": {
             "entryFile": "AGENTS.md",
             "files": {
-              "AGENTS.md": "# Marketing Analyst\nResearch markets and competitors. Report findings with sources to your manager. Follow the RIKAI AI Harness operational skill.\n"
+              "AGENTS.md": "# Marketing Analyst\nResearch markets and competitors. Report findings with sources to your manager. Follow the Kujira AI Harness operational skill.\n"
             }
           },
           "runtimeConfig": {

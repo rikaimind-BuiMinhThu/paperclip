@@ -356,7 +356,7 @@ describe("POST /invites/:token/accept", () => {
 
     expect(res.status).toBe(400);
     expect(res.body.error).toBe(
-      "RIKAI AI Harness Runner is not available through agent invite onboarding.",
+      "Kujira AI Harness Runner is not available through agent invite onboarding.",
     );
     expect(insert).not.toHaveBeenCalled();
     expect(update).not.toHaveBeenCalled();

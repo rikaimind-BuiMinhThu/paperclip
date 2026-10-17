@@ -334,7 +334,7 @@ describe("InstanceExperimentalSettings — Conference Room Chat card (PAP-11233)
   it("keeps Paperclip Runner default-off and exposes an explicit opt-in", async () => {
     await renderPage();
 
-    expect(container.textContent).toContain("RIKAI AI Harness Runner");
+    expect(container.textContent).toContain("Kujira AI Harness Runner");
     expect(container.textContent).toContain("Onboarding continues to use legacy adapters");
     const toggle = container.querySelector<HTMLButtonElement>(
       PAPERCLIP_RUNNER_TOGGLE_SELECTOR,
@@ -619,7 +619,7 @@ describe("InstanceExperimentalSettings — Conference Room Chat card (PAP-11233)
     await renderPage();
 
     expect(container.textContent).toContain("Built-in Agents");
-    expect(container.textContent).toContain("Show RIKAI AI Harness-managed built-in agent surfaces");
+    expect(container.textContent).toContain("Show Kujira AI Harness-managed built-in agent surfaces");
 
     const toggle = container.querySelector<HTMLButtonElement>(BUILT_IN_AGENTS_TOGGLE_SELECTOR);
     expect(toggle?.getAttribute("aria-checked")).toBe("false");
@@ -639,7 +639,7 @@ describe("InstanceExperimentalSettings — Conference Room Chat card (PAP-11233)
     await renderPage();
 
     expect(container.textContent).toContain("Beta skills");
-    expect(container.textContent).toContain("pin beta releases of the RIKAI AI Harness core skill");
+    expect(container.textContent).toContain("pin beta releases of the Kujira AI Harness core skill");
 
     const toggle = container.querySelector<HTMLButtonElement>(BETA_SKILLS_TOGGLE_SELECTOR);
     expect(toggle?.getAttribute("aria-checked")).toBe("false");
@@ -748,7 +748,7 @@ describe("InstanceExperimentalSettings — Conference Room Chat card (PAP-11233)
   it("renders and patches Paperclip Developer Mode", async () => {
     await renderPage();
 
-    expect(container.textContent).toContain("RIKAI AI Harness Developer Mode");
+    expect(container.textContent).toContain("Kujira AI Harness Developer Mode");
     expect(container.textContent).toContain("including Honeycomb trace queries on run pages");
 
     const toggle = container.querySelector<HTMLButtonElement>(
@@ -1099,7 +1099,7 @@ describe("InstanceExperimentalSettings — operator-hidden cards", () => {
   it("retains a section when one of its controls is visible", async () => {
     const visible = new Set(["enablePaperclipDeveloperMode", "enableGoalsSidebarLink"]);
     await renderPage(INSTANCE_FEATURE_KEYS.filter((key) => !visible.has(key)).map((key) => `instance.experimental.${key}`));
-    expect(container.querySelector('[aria-labelledby="developer-mode-heading"] h3')?.textContent).toBe("RIKAI AI Harness Developer Mode");
+    expect(container.querySelector('[aria-labelledby="developer-mode-heading"] h3')?.textContent).toBe("Kujira AI Harness Developer Mode");
     expect(container.querySelector('[aria-labelledby="legacy-heading"] h3')?.textContent).toBe("Goals Sidebar Link");
   });
 

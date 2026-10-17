@@ -1,4 +1,4 @@
-# RIKAI AI Harness Create Agent API Reference
+# Kujira AI Harness Create Agent API Reference
 
 ## Core Endpoints
 

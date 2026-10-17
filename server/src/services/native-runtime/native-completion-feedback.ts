@@ -83,7 +83,7 @@ export async function nativeCompletionFeedback(
       throw new Error("Resolve your assigned review with resolve_review before finishing. If you cannot review the work, report the concrete blocker with paperclip_block.");
     }
     return review?.interaction.status === "pending"
-      ? "Review blocker recorded. RIKAI AI Harness will preserve the task and record the reviewer recovery action."
+      ? "Review blocker recorded. Kujira AI Harness will preserve the task and record the reviewer recovery action."
       : "Review report accepted. The recorded review decision controls task completion; this report cannot override it.";
   }
   // Bind feedback to this run, not the first contract from a reused session or
@@ -219,7 +219,7 @@ export async function nativeCompletionFeedback(
     signals.actionableAttentionRequests.length === 0
   ) {
     throw new Error(
-      "needs_review requires a concrete decision and a named reviewer in attentionRequests. Continue unfinished work or checks; report done when complete. RIKAI AI Harness will not create an automatic completion approval.",
+      "needs_review requires a concrete decision and a named reviewer in attentionRequests. Continue unfinished work or checks; report done when complete. Kujira AI Harness will not create an automatic completion approval.",
     );
   }
   for (const request of signals.actionableAttentionRequests) {

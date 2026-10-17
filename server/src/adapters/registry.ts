@@ -194,7 +194,7 @@ The standalone ACPX adapter has been retired. Use:
 - claude_local with adapterConfig.engine="acp" for Claude ACP execution.
 - codex_local with adapterConfig.engine="acp" for Codex ACP execution.
 
-RIKAI AI Harness keeps this tombstone registered so stale acpx_local rows fail clearly instead of falling back to the process adapter.
+Kujira AI Harness keeps this tombstone registered so stale acpx_local rows fail clearly instead of falling back to the process adapter.
 `;
 
 // The Claude interactive login capability. Claude runs `claude setup-token` on a
@@ -392,7 +392,7 @@ const paperclipRunnerAdapter: ServerAdapterModule = {
         ? error
         : new PaperclipRunnerProviderProfileError(
             "paperclip_runner_provider_unsupported",
-            "RIKAI AI Harness Runner provider configuration is invalid.",
+            "Kujira AI Harness Runner provider configuration is invalid.",
           );
       return {
         adapterType: "paperclip_runner",
@@ -521,7 +521,7 @@ const paperclipRunnerAdapter: ServerAdapterModule = {
         )
       : buildNpmRuntimeCommandSpec(config, "codex", "@openai/codex@0.156.0"),
   agentConfigurationDoc:
-    "# RIKAI AI Harness Runner\n\nAdapter: paperclip_runner\n\nRuns Codex, OpenCode, Claude Managed, AWS AgentCore, or ACPX Claude/Grok Build through the Rust RIKAI AI Harness runner and authenticated PRP transport. Cursor, GitHub Copilot, and Pi are awaiting local and Daytona qualification and are not enabled for production runs. Managed providers use company-scoped qualified profiles, explicit retention acknowledgement, and spend limits.\n",
+    "# Kujira AI Harness Runner\n\nAdapter: paperclip_runner\n\nRuns Codex, OpenCode, Claude Managed, AWS AgentCore, or ACPX Claude/Grok Build through the Rust Kujira AI Harness runner and authenticated PRP transport. Cursor, GitHub Copilot, and Pi are awaiting local and Daytona qualification and are not enabled for production runs. Managed providers use company-scoped qualified profiles, explicit retention acknowledgement, and spend limits.\n",
   getConfigSchema: () => ({
     fields: [
       {
@@ -622,7 +622,7 @@ const paperclipRunnerAdapter: ServerAdapterModule = {
         label: "Estimated session ceiling (USD)",
         type: "number" as const,
         default: 1,
-        hint: "RIKAI AI Harness estimate; AWS does not provide a per-session currency hard stop.",
+        hint: "Kujira AI Harness estimate; AWS does not provide a per-session currency hard stop.",
         meta: { visibleWhen: { key: "provider", value: "aws_agentcore" } },
       },
       {

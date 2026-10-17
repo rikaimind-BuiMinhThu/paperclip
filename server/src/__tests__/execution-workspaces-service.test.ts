@@ -1082,7 +1082,7 @@ describeEmbeddedPostgres("executionWorkspaceService.getCloseReadiness", () => {
     expect(readiness?.git).toMatchObject({ hasUntrackedFiles: true, untrackedEntryCount: 5_000 });
     expect(readiness?.warnings).toContain("The workspace has 5000 untracked files.");
     expect(readiness?.blockingReasons).not.toContain(
-      "RIKAI AI Harness could not verify the workspace git status. Retry before destructive cleanup.",
+      "Kujira AI Harness could not verify the workspace git status. Retry before destructive cleanup.",
     );
     expect(await svc.sweepTerminalWorkspaces()).toMatchObject({ archived: 0, skippedUndelivered: 1 });
     await expect(fs.access(seeded.worktreePath)).resolves.toBeUndefined();

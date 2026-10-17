@@ -1029,7 +1029,7 @@ describe("AgentConfigForm environment selector", () => {
     const selector = result.container.querySelector("select");
 
     expect(selector?.textContent).toContain("Default: Paperclip Computer");
-    expect(selector?.textContent).toContain("RIKAI AI Harness Computer");
+    expect(selector?.textContent).toContain("Kujira AI Harness Computer");
     expect(selector?.textContent).not.toContain("(sandbox)");
     expect(selector?.textContent).not.toContain("· sandbox");
   });

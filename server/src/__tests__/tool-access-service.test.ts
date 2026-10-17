@@ -10577,7 +10577,7 @@ describeEmbeddedPostgres("tool access service", () => {
     expect(connectRes.body).toMatchObject({
       code: "oauth_redirect_origin_unsupported",
       error:
-        "This RIKAI AI Harness needs a browser-reachable HTTPS address (or loopback HTTP) before browser sign-in can start.",
+        "This Kujira AI Harness needs a browser-reachable HTTPS address (or loopback HTTP) before browser sign-in can start.",
     });
   });
 
@@ -17795,7 +17795,7 @@ describeEmbeddedPostgres("tool access service", () => {
           transport: "mcp_remote",
           status: "draft",
           config: { url: "https://mcp.example/github" },
-          warnings: [expect.stringContaining("RIKAI AI Harness secret")],
+          warnings: [expect.stringContaining("Kujira AI Harness secret")],
         }),
         expect.objectContaining({
           name: "local",
@@ -17805,7 +17805,7 @@ describeEmbeddedPostgres("tool access service", () => {
             importedCommand: "npx",
             importedArgs: ["-y", "@example/local-mcp"],
           },
-          warnings: [expect.stringContaining("approved RIKAI AI Harness template")],
+          warnings: [expect.stringContaining("approved Kujira AI Harness template")],
         }),
       ]),
     );

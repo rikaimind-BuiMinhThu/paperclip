@@ -371,7 +371,7 @@ export function setWorkspaceRuntimeExposureDepsForTests(deps: WorkspaceRuntimeEx
 /**
  * Deployment-level switch for the automatic default (PAP-17158).
  *
- *  - `auto` (default): eligible RIKAI AI Harness-managed worktree runtimes get
+ *  - `auto` (default): eligible Kujira AI Harness-managed worktree runtimes get
  *    `tailscale_https` without any project template or UI caller supplying an
  *    exposure block, provided the host broker is available.
  *  - `off`: no automatic default. Explicit opt-ins still work.
@@ -1341,7 +1341,7 @@ function explainGitWorktreeBranchIncoherence(input: {
 }) {
   const actualBranch = formatBranchForMessage(input.actualBranchName);
   if (!input.expectedHeadSha || !input.actualHeadSha) {
-    return `RIKAI AI Harness could not determine branch ancestry because the recorded branch "${input.expectedBranchName}" or checked-out branch "${actualBranch}" is missing a resolvable HEAD commit.`;
+    return `Kujira AI Harness could not determine branch ancestry because the recorded branch "${input.expectedBranchName}" or checked-out branch "${actualBranch}" is missing a resolvable HEAD commit.`;
   }
   if (input.sameHead) {
     return `The recorded branch "${input.expectedBranchName}" and checked-out branch "${actualBranch}" resolve to the same commit, so the mismatch is branch metadata rather than commit divergence.`;
@@ -1350,9 +1350,9 @@ function explainGitWorktreeBranchIncoherence(input: {
     return `The recorded branch "${input.expectedBranchName}" is an ancestor of the checked-out branch "${actualBranch}", so the checked-out branch is forward of the recorded branch.`;
   }
   if (input.ancestryVerdict === "diverged") {
-    return `The recorded branch "${input.expectedBranchName}" is not an ancestor of the checked-out branch "${actualBranch}", so RIKAI AI Harness cannot prove a forward-only reconciliation.`;
+    return `The recorded branch "${input.expectedBranchName}" is not an ancestor of the checked-out branch "${actualBranch}", so Kujira AI Harness cannot prove a forward-only reconciliation.`;
   }
-  return `RIKAI AI Harness could not determine whether the checked-out branch "${actualBranch}" is forward of the recorded branch "${input.expectedBranchName}".`;
+  return `Kujira AI Harness could not determine whether the checked-out branch "${actualBranch}" is forward of the recorded branch "${input.expectedBranchName}".`;
 }
 
 async function inspectGitWorktreeBranchIncoherence(input: {
@@ -1788,7 +1788,7 @@ async function quarantineDirtyWorktreeBranchIncoherence(input: {
       args: [
         "commit",
         "-m",
-        "RIKAI AI Harness dirty workspace rescue",
+        "Kujira AI Harness dirty workspace rescue",
         "-m",
         [
           `Source-Issue: ${input.evidence.sourceIdentifier ?? input.evidence.sourceIssueId ?? "unknown"}`,
@@ -2180,7 +2180,7 @@ export async function ensureGitWorktreeBranchCoherent(input: {
   ) {
     const reason = evidence.provenance.expectedBranchExists
       ? "Automatic forward reconciliation: recorded branch is an ancestor of the checked-out branch."
-      : "Automatic forward reconciliation: the recorded branch no longer exists, so RIKAI AI Harness adopted the clean checked-out branch.";
+      : "Automatic forward reconciliation: the recorded branch no longer exists, so Kujira AI Harness adopted the clean checked-out branch.";
     if (input.executionWorkspaceId && input.persistForwardReconcile !== false) {
       if (!input.db) {
         evidence.safeRepair.reason = "forward reconciliation requires database access to update the execution workspace record";
@@ -2279,7 +2279,7 @@ export async function ensureGitWorktreeBranchCoherent(input: {
       branchName: currentBranch,
       reconciledForward: false,
       warnings: [
-        `${warningPrefix} The checked-out branch contains the recorded branch plus newer commits, so RIKAI AI Harness adopted it for subsequent runs.`,
+        `${warningPrefix} The checked-out branch contains the recorded branch plus newer commits, so Kujira AI Harness adopted it for subsequent runs.`,
       ],
     };
   }
@@ -2329,7 +2329,7 @@ export async function ensureGitWorktreeBranchCoherent(input: {
       branchName: expectedBranchName,
       reconciledForward: false,
       warnings: [
-        `${warningPrefix} The detached HEAD contained the recorded branch plus newer commits, so RIKAI AI Harness moved the recorded branch to that HEAD.`,
+        `${warningPrefix} The detached HEAD contained the recorded branch plus newer commits, so Kujira AI Harness moved the recorded branch to that HEAD.`,
       ],
     };
   }
@@ -4376,7 +4376,7 @@ async function buildCompanyExposureReservationLedger(input: {
 }
 
 /**
- * Rows RIKAI AI Harness reports stopped/removed whose reserved pair is still live on
+ * Rows Kujira AI Harness reports stopped/removed whose reserved pair is still live on
  * the host or still mapped to someone else (PAP-17419 regression #3).
  *
  * The point is visibility. A false `stopped`/`removed` row used to be
@@ -4435,7 +4435,7 @@ async function detectPersistedExposureReservationDrift(input: {
   });
 }
 
-/** RIKAI AI Harness-owned Serve mappings, or null when the broker cannot be read. */
+/** Kujira AI Harness-owned Serve mappings, or null when the broker cannot be read. */
 async function readBrokerExposureMappings(): Promise<BrokerMappingSnapshot[] | null> {
   try {
     const owned = await workspaceRuntimeExposureDeps.broker.list();
@@ -5267,7 +5267,7 @@ function trustedRuntimeHostnameBoundary(
 }
 
 /**
- * Resolve the low-priority public URL hint injected into a managed RIKAI AI Harness dev
+ * Resolve the low-priority public URL hint injected into a managed Kujira AI Harness dev
  * service. Explicit operator origin settings are deliberately left untouched.
  */
 export function resolveManagedPaperclipRuntimePublicOrigin(input: {
@@ -8611,7 +8611,7 @@ export async function restartDesiredRuntimeServicesOnStartup(db: Db) {
     try {
       const refs = await startRuntimeServicesForWorkspaceControl({
         db,
-        actor: { id: null, name: "RIKAI AI Harness", companyId: row.companyId },
+        actor: { id: null, name: "Kujira AI Harness", companyId: row.companyId },
         issue: null,
         workspace: {
           baseCwd: row.cwd,
@@ -8660,7 +8660,7 @@ export async function restartDesiredRuntimeServicesOnStartup(db: Db) {
     try {
       const refs = await startRuntimeServicesForWorkspaceControl({
         db,
-        actor: { id: null, name: "RIKAI AI Harness", companyId: row.companyId },
+        actor: { id: null, name: "Kujira AI Harness", companyId: row.companyId },
         issue: row.sourceIssueId
           ? {
               id: row.sourceIssueId,

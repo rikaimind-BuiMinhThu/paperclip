@@ -675,7 +675,7 @@ export function AppDetail({ renderActions, onReconnect }: {
                 onReplaceAudience={(grant, memberUserIds) =>
                   replaceAudience.mutate({ grantId: grant.id, memberUserIds })}
               />
-              {isRemoteMcpConnectorMethod(connection.config?.sourceTemplateKey, connection.config?.connectionMethodKey) && <p className="text-sm text-muted-foreground">RIKAI AI Harness controls access to the tools listed here. App and action permissions inside these tools are managed in {baseAppName}.</p>}
+              {isRemoteMcpConnectorMethod(connection.config?.sourceTemplateKey, connection.config?.connectionMethodKey) && <p className="text-sm text-muted-foreground">Kujira AI Harness controls access to the tools listed here. App and action permissions inside these tools are managed in {baseAppName}.</p>}
               {connection.authKind === "oauth" && (
                 <div className="space-y-2">
                   <p className="text-sm text-muted-foreground">

@@ -1,6 +1,6 @@
 ---
 name: paperclip-capsules
-description: Generate, implement, or review RIKAI AI Harness capsule visuals. Use for capsule art, agent capsules, heartbeat status capsules, identicons, capsule banks, or brand-usage validation.
+description: Generate, implement, or review Kujira AI Harness capsule visuals. Use for capsule art, agent capsules, heartbeat status capsules, identicons, capsule banks, or brand-usage validation.
 key: paperclipai/bundled/product/paperclip-capsules
 recommendedForRoles:
   - designer
@@ -16,18 +16,18 @@ tags:
   - hyperframes
 ---
 
-# RIKAI AI Harness Capsules
+# Kujira AI Harness Capsules
 
-Use this skill when creating or checking RIKAI AI Harness capsule visuals. The central rule is simple: **the capsule is the agent**. A capsule is not generic chrome, a button shape, a random status pill, or background decoration.
+Use this skill when creating or checking Kujira AI Harness capsule visuals. The central rule is simple: **the capsule is the agent**. A capsule is not generic chrome, a button shape, a random status pill, or background decoration.
 
-The one approved decorative exception is the canonical hero capsule bank. Treat it as a specific RIKAI AI Harness brand surface, not a license to make arbitrary capsule wallpaper.
+The one approved decorative exception is the canonical hero capsule bank. Treat it as a specific Kujira AI Harness brand surface, not a license to make arbitrary capsule wallpaper.
 
 ## When to Use
 
-- Generating RIKAI AI Harness capsule art, agent avatars, capsule fields, hero capsule banks, or seeded capsule identicons.
+- Generating Kujira AI Harness capsule art, agent avatars, capsule fields, hero capsule banks, or seeded capsule identicons.
 - Implementing an individual agent capsule in product UI.
 - Rendering heartbeat status capsules for agent status.
-- Building RIKAI AI Harness feature videos or marketing graphics that use the capsule motif.
+- Building Kujira AI Harness feature videos or marketing graphics that use the capsule motif.
 - Reviewing a design for capsule brand correctness.
 
 ## When Not to Use
@@ -65,7 +65,7 @@ Use **seeded identicons/profile pills** when an agent needs a reproducible perso
 3. Prefer existing source implementations:
    - Product UI: `ui/src/components/AgentCapsule.tsx`, `ui/src/index.css`, and `ui/src/lib/status-colors.ts`.
    - Hero bank: canonical spec in `references/hero-capsule-bank.md`.
-   - Video work: pair this skill with the RIKAI AI Harness feature-video HyperFrames skill when available.
+   - Video work: pair this skill with the Kujira AI Harness feature-video HyperFrames skill when available.
 4. If generating an artifact, choose a reproducible workflow and write down the seed/config.
 5. Verify that the result still reads as agent-related. Remove capsules if they became decoration.
 6. Attach or otherwise expose generated deliverables when doing issue work, and name the exact workflow used.
@@ -78,7 +78,7 @@ For any generated capsule asset, include:
 - Source workflow or implementation path.
 - Seed and config where available.
 - Dimensions, format, and renderer.
-- Any divergence from canonical RIKAI AI Harness rendering.
+- Any divergence from canonical Kujira AI Harness rendering.
 
 For code changes, include targeted checks that exercise the edited surface. For visuals, include screenshots or inspectable SVG/PNG/HTML when possible.
 

@@ -19,7 +19,7 @@
  * set even though its `port` column still names the pair the lease owns. That
  * is exactly how the pair leased to workspace `b7ce28b4` (`42001/52001`) was
  * handed to the unrelated workspace `PAP-16986-add-posthog-mcp`, while
- * RIKAI AI Harness went on reporting the leased lane `stopped` and its exposure
+ * Kujira AI Harness went on reporting the leased lane `stopped` and its exposure
  * `removed`.
  *
  * ## The mediation this module centralizes
@@ -129,7 +129,7 @@ export interface InMemoryExposureSnapshot {
   ports: ReadonlyArray<number>;
 }
 
-/** One RIKAI AI Harness-owned listener as reported by the broker's `list()`. */
+/** One Kujira AI Harness-owned listener as reported by the broker's `list()`. */
 export interface BrokerMappingSnapshot {
   runtimeId: string;
   port: number;

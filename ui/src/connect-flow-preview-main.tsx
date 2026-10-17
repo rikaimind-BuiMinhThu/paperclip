@@ -312,7 +312,7 @@ function ConnectFlowPreview({
             lede={
               done
                 ? "The step advances straight to Review — there is no success screen."
-                : "RIKAI AI Harness works with your existing subscription or API keys."
+                : "Kujira AI Harness works with your existing subscription or API keys."
             }
           />
         </div>

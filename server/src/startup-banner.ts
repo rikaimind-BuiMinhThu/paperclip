@@ -136,13 +136,13 @@ export function printStartupBanner(opts: StartupBannerOptions): void {
     : color("disabled", "yellow");
 
   const art = [
-    color("██████╗ ██╗██╗  ██╗ █████╗ ██╗", "cyan"),
-    color("██╔══██╗██║██║ ██╔╝██╔══██╗██║", "cyan"),
-    color("██████╔╝██║█████╔╝ ███████║██║", "cyan"),
-    color("██╔══██╗██║██╔═██╗ ██╔══██║██║", "cyan"),
-    color("██║  ██║██║██║  ██╗██║  ██║██║", "cyan"),
-    color("╚═╝  ╚═╝╚═╝╚═╝  ╚═╝╚═╝  ╚═╝╚═╝", "cyan"),
-    color("  RIKAI AI Harness", "white"),
+    color("██╗  ██╗██╗   ██╗     ██╗██╗██████╗  █████╗ ", "cyan"),
+    color("██║ ██╔╝██║   ██║     ██║██║██╔══██╗██╔══██╗", "cyan"),
+    color("█████╔╝ ██║   ██║     ██║██║██████╔╝███████║", "cyan"),
+    color("██╔═██╗ ██║   ██║██   ██║██║██╔══██╗██╔══██║", "cyan"),
+    color("██║  ██╗╚██████╔╝╚█████╔╝██║██║  ██║██║  ██║", "cyan"),
+    color("╚═╝  ╚═╝ ╚═════╝  ╚════╝ ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝", "cyan"),
+    color("  Kujira AI Harness", "white"),
   ];
 
   const lines = [

@@ -243,7 +243,7 @@ export interface RunnerPrpOutboundHandle {
 }
 
 /**
- * Keep a RIKAI AI Harness-originated provider-ingress WebSocket attached to one PRP
+ * Keep a Kujira AI Harness-originated provider-ingress WebSocket attached to one PRP
  * authority. Authentication is the readiness signal; HTTP success alone is not.
  */
 export function connectRunnerPrpIngress(input: {

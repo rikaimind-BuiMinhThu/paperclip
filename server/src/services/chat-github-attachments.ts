@@ -270,7 +270,7 @@ export function rehydrateGitHubPublicAttachment(
   return attachment;
 }
 
-/** Parse references only; network I/O happens later, after RIKAI AI Harness's admission fence. */
+/** Parse references only; network I/O happens later, after Kujira AI Harness's admission fence. */
 export function githubPublicAttachmentsFromMessage(
   message: Message,
 ): Attachment[] {
@@ -714,7 +714,7 @@ export async function prepareGitHubPublicAttachment(
           redirect: "manual",
           credentials: "omit",
           signal,
-          headers: { accept: "*/*", "user-agent": "RIKAI AI Harness/ChatAttachments" },
+          headers: { accept: "*/*", "user-agent": "Kujira AI Harness/ChatAttachments" },
         },
         {
           allowPrivateNetwork: false,

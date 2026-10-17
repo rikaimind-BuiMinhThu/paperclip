@@ -151,7 +151,7 @@ export function breakdownSummarySentence(
   }
   const noun = config.pieceNoun;
   const parts: string[] = [
-    `RIKAI AI Harness will create one ${noun} per item in ${names.targetPipelineName} → ${names.entryStageName}`,
+    `Kujira AI Harness will create one ${noun} per item in ${names.targetPipelineName} → ${names.entryStageName}`,
   ];
   if (names.inheritedFieldLabels.length > 0) {
     parts.push(`carry over ${joinWithAnd(names.inheritedFieldLabels)}`);
@@ -167,7 +167,7 @@ export function breakdownSummarySentence(
 }
 
 /**
- * The read-only "RIKAI AI Harness handles this" mechanics bullets, composed from the
+ * The read-only "Kujira AI Harness handles this" mechanics bullets, composed from the
  * config. Bullets 5 and 6 only appear when the wait gate is on.
  */
 export function breakdownMechanicsBullets(

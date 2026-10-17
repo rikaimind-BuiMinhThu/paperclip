@@ -57,11 +57,11 @@ function CredentialSettings({
           min="0"
           step="0.01"
           value={limit}
-          placeholder="Use the remaining RIKAI AI Harness budget"
+          placeholder="Use the remaining Kujira AI Harness budget"
           onChange={(e) => setLimit(e.target.value)}
         />
         <p className="text-sm text-muted-foreground">
-          The agent can choose a lower limit. RIKAI AI Harness also applies any
+          The agent can choose a lower limit. Kujira AI Harness also applies any
           remaining hard budget limit.
         </p>
       </div>

@@ -563,7 +563,7 @@ describe("secret routes", () => {
         requiredCapability: "secretsmanager:ListSecrets",
       },
     });
-    expect(res.body.details.actionableMessage).toContain("RIKAI AI Harness server runtime/provider credential path");
+    expect(res.body.details.actionableMessage).toContain("Kujira AI Harness server runtime/provider credential path");
     expect(res.body.details.safeAlternative).toContain("paste/link that ARN");
     expect(JSON.stringify(res.body)).not.toContain("arn:aws");
     expect(JSON.stringify(res.body)).not.toContain("123456789012");

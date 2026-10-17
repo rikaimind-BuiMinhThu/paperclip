@@ -309,7 +309,7 @@ export function OpenClawGatewayConfigFields({
         mark={mark}
       />
 
-      <Field label="RIKAI AI Harness API URL override">
+      <Field label="Kujira AI Harness API URL override">
         <DraftInput
           value={
             isCreate
@@ -450,7 +450,7 @@ export function OpenClawGatewayConfigFields({
 
       <Field label="Device auth">
         <div className="text-xs text-muted-foreground leading-relaxed">
-          When enabled, RIKAI AI Harness persists a device key during onboarding so pairing approvals
+          When enabled, Kujira AI Harness persists a device key during onboarding so pairing approvals
           remain stable across runs.
         </div>
       </Field>

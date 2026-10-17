@@ -1294,7 +1294,7 @@ export function pluginLoader(
         ? formatLocalPluginManualBuildHint(resolvedPackagePath, pkgJson)
         : "";
       throw new Error(
-        `Package ${resolvedPackageName} at ${resolvedPackagePath} does not appear to be a RIKAI AI Harness plugin (no manifest found).${manualBuildHint}`,
+        `Package ${resolvedPackageName} at ${resolvedPackagePath} does not appear to be a Kujira AI Harness plugin (no manifest found).${manualBuildHint}`,
       );
     }
 
@@ -1387,7 +1387,7 @@ export function pluginLoader(
   ): Promise<PluginRecord> {
     const manifest = await loadManifestFromPackageRoot(packageRoot);
     if (!manifest) {
-      throw new Error(`Plugin package ${plugin.packageName} no longer exposes a RIKAI AI Harness manifest`);
+      throw new Error(`Plugin package ${plugin.packageName} no longer exposes a Kujira AI Harness manifest`);
     }
     if (manifest.id !== plugin.pluginKey) {
       throw new Error(

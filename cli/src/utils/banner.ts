@@ -1,12 +1,12 @@
 import pc from "picocolors";
 
-const RIKAI_ART = [
-  "██████╗ ██╗██╗  ██╗ █████╗ ██╗",
-  "██╔══██╗██║██║ ██╔╝██╔══██╗██║",
-  "██████╔╝██║█████╔╝ ███████║██║",
-  "██╔══██╗██║██╔═██╗ ██╔══██║██║",
-  "██║  ██║██║██║  ██╗██║  ██║██║",
-  "╚═╝  ╚═╝╚═╝╚═╝  ╚═╝╚═╝  ╚═╝╚═╝",
+const KUJIRA_ART = [
+  "██╗  ██╗██╗   ██╗     ██╗██╗██████╗  █████╗ ",
+  "██║ ██╔╝██║   ██║     ██║██║██╔══██╗██╔══██╗",
+  "█████╔╝ ██║   ██║     ██║██║██████╔╝███████║",
+  "██╔═██╗ ██║   ██║██   ██║██║██╔══██╗██╔══██║",
+  "██║  ██╗╚██████╔╝╚█████╔╝██║██║  ██║██║  ██║",
+  "╚═╝  ╚═╝ ╚═════╝  ╚════╝ ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝",
 ] as const;
 
 const TAGLINE = "The app people use to manage AI agents for work";
@@ -14,8 +14,8 @@ const TAGLINE = "The app people use to manage AI agents for work";
 export function printPaperclipCliBanner(): void {
   const lines = [
     "",
-    ...RIKAI_ART.map((line) => pc.cyan(line)),
-    pc.bold(pc.white("  RIKAI AI Harness")),
+    ...KUJIRA_ART.map((line) => pc.cyan(line)),
+    pc.bold(pc.white("  Kujira AI Harness")),
     pc.blue("  ───────────────────────────────────────────────────────"),
     pc.bold(pc.white(`  ${TAGLINE}`)),
     "",

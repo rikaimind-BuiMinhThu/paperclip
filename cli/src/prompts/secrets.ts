@@ -87,7 +87,7 @@ export async function promptSecrets(current?: SecretsConfig): Promise<SecretsCon
   if (provider !== "local_encrypted") {
     p.note(
       provider === "aws_secrets_manager"
-        ? "AWS credentials must come from the RIKAI AI Harness server runtime (IAM role/workload identity, AWS_PROFILE/SSO/shared credentials, or short-lived shell env), not from RIKAI AI Harness company secrets."
+        ? "AWS credentials must come from the Kujira AI Harness server runtime (IAM role/workload identity, AWS_PROFILE/SSO/shared credentials, or short-lived shell env), not from Kujira AI Harness company secrets."
         : `${provider} is not fully wired in this build yet. Keep local_encrypted unless you are actively implementing that adapter.`,
       "Heads up",
     );
