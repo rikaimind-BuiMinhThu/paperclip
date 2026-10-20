@@ -3014,7 +3014,8 @@
       "emptyAgents": "No agents in the organization. Create agents to build your org chart.",
       "zoomIn": "Zoom in",
       "zoomOut": "Zoom out",
-      "fitToScreen": "Fit to screen"
+      "fitToScreen": "Fit to screen",
+      "workFlow": "Work flow"
     },
     "inviteLanding": {
       "inviteUnavailableTitle": "Invite not available",

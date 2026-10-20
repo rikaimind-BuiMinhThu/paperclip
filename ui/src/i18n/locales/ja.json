@@ -3014,7 +3014,8 @@
       "emptyAgents": "組織にエージェントがありません。組織図を作るにはエージェントを作成してください。",
       "zoomIn": "ズームイン",
       "zoomOut": "ズームアウト",
-      "fitToScreen": "画面に合わせる"
+      "fitToScreen": "画面に合わせる",
+      "workFlow": "ワークフロー"
     },
     "inviteLanding": {
       "inviteUnavailableTitle": "招待を利用できません",

@@ -3518,3 +3518,29 @@ span.paperclip-mention-chip[data-mention-kind="external-object"] {
 @media (max-height: 420px) {
   .agent-setup-popover { overflow-y: auto; }
 }
+
+/* Org chart Work flow mode — pulse busy agents and dash along reporting edges. */
+@keyframes org-work-flow-edge {
+  to { stroke-dashoffset: -24; }
+}
+
+@keyframes org-work-flow-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 color-mix(in oklab, var(--color-primary) 35%, transparent); }
+  50% { box-shadow: 0 0 0 calc(var(--spacing) * 1) color-mix(in oklab, var(--color-primary) 20%, transparent); }
+}
+
+.org-work-flow-edge {
+  stroke-dasharray: 6 10;
+  animation: org-work-flow-edge 1.2s linear infinite;
+}
+
+.org-work-flow-pulse {
+  animation: org-work-flow-pulse 1.6s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .org-work-flow-edge,
+  .org-work-flow-pulse {
+    animation: none;
+  }
+}

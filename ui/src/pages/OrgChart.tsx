@@ -1,12 +1,14 @@
 import { AgentAvatar } from "@/components/AgentAvatar";
 import { useEffect, useRef, useState, useMemo, useCallback } from "react";
-import { Link, useNavigate } from "@/lib/router";
+import { Link, useNavigate, useSearchParams } from "@/lib/router";
 import { useQuery } from "@tanstack/react-query";
 import { agentsApi, type OrgNode } from "../api/agents";
+import { heartbeatsApi } from "../api/heartbeats";
+import { issuesApi } from "../api/issues";
 import { useCompany } from "../context/CompanyContext";
 import { useBreadcrumbs } from "../context/BreadcrumbContext";
 import { queryKeys } from "../lib/queryKeys";
-import { agentUrl } from "../lib/utils";
+import { agentUrl, cn } from "../lib/utils";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { EmptyState } from "../components/EmptyState";
@@ -16,6 +18,7 @@ import { AGENT_ROLE_LABELS, type Agent } from "@paperclipai/shared";
 import { useCloudInstance } from "@/hooks/useCloudInstance";
 import { useHiddenSettings } from "@/hooks/useHiddenSettings";
 import { useTranslation } from "@/i18n";
+import { buildOrgWorkFlowStats, resolveWorkRootIssueId } from "./org-chart-work-flow";
 
 // Layout constants
 const CARD_W = 200;
@@ -211,6 +214,9 @@ export function OrgChart({ orgTree: providedOrgTree, agents: providedAgents, emb
   const { selectedCompanyId } = useCompany();
   const { setBreadcrumbs } = useBreadcrumbs();
   const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const workIssueFromUrl = searchParams.get("workIssue");
+  const [workFlowEnabled, setWorkFlowEnabled] = useState(Boolean(workIssueFromUrl));
   // Import is floored server-side on cloud-managed instances (403 cloud_managed), so the
   // button is hidden rather than dead-ending. Export stays available. Both
   // buttons also respect the operator-hidden settings registry.
@@ -218,6 +224,10 @@ export function OrgChart({ orgTree: providedOrgTree, agents: providedAgents, emb
   const { hidden: hiddenSettings } = useHiddenSettings();
   const showImport = !isCloud && !hiddenSettings.has("company.import");
   const showExport = !hiddenSettings.has("company.export");
+
+  useEffect(() => {
+    if (workIssueFromUrl) setWorkFlowEnabled(true);
+  }, [workIssueFromUrl]);
 
   const { data: queriedOrgTree, isLoading } = useQuery({
     queryKey: queryKeys.org(selectedCompanyId!),
@@ -232,6 +242,49 @@ export function OrgChart({ orgTree: providedOrgTree, agents: providedAgents, emb
   });
   const orgTree = providedOrgTree ?? queriedOrgTree;
   const agents = providedAgents ?? queriedAgents;
+
+  const { data: workIssues } = useQuery({
+    queryKey: [...queryKeys.issues.list(selectedCompanyId!), "org-work-flow"],
+    queryFn: () => issuesApi.list(selectedCompanyId!, { limit: 500 }),
+    enabled: !!selectedCompanyId && workFlowEnabled,
+  });
+
+  const { data: liveRuns } = useQuery({
+    queryKey: queryKeys.liveRuns(selectedCompanyId!),
+    queryFn: () => heartbeatsApi.liveRunsForCompany(selectedCompanyId!, { limit: 50, distinctTasks: true }),
+    enabled: !!selectedCompanyId && workFlowEnabled,
+    refetchInterval: workFlowEnabled ? 5_000 : false,
+  });
+
+  const workRootIssueId = useMemo(
+    () => resolveWorkRootIssueId(workIssues ?? [], workIssueFromUrl),
+    [workIssues, workIssueFromUrl],
+  );
+
+  const workStats = useMemo(
+    () => buildOrgWorkFlowStats(workIssues ?? [], workRootIssueId),
+    [workIssues, workRootIssueId],
+  );
+
+  const runningAgentIds = useMemo(() => {
+    const ids = new Set<string>();
+    for (const run of liveRuns ?? []) {
+      if (run.agentId) ids.add(run.agentId);
+    }
+    return ids;
+  }, [liveRuns]);
+
+  const toggleWorkFlow = useCallback(() => {
+    setWorkFlowEnabled((prev) => {
+      const next = !prev;
+      if (!next && workIssueFromUrl) {
+        const nextParams = new URLSearchParams(searchParams);
+        nextParams.delete("workIssue");
+        setSearchParams(nextParams, { replace: true });
+      }
+      return next;
+    });
+  }, [searchParams, setSearchParams, workIssueFromUrl]);
 
   const agentMap = useMemo(() => {
     const m = new Map<string, Agent>();
@@ -484,26 +537,36 @@ export function OrgChart({ orgTree: providedOrgTree, agents: providedAgents, emb
         ? "flex min-h-(--sz-420px) flex-1 flex-col md:min-h-0"
         : "flex h-(--sz-calc-38) min-h-(--sz-420px) flex-col md:h-full md:min-h-0"}
     >
-      {!embedded && (showImport || showExport) ? (
-        <div className="mb-2 flex shrink-0 flex-wrap items-center justify-start gap-2">
-        {showImport ? (
-          <Link to="/company/import">
-            <Button variant="outline" size="sm">
-              <Upload className="mr-1.5 h-3.5 w-3.5" />
-              Import organization
-            </Button>
-          </Link>
-        ) : null}
-        {showExport ? (
-          <Link to="/company/export">
-            <Button variant="outline" size="sm">
-              <Download className="mr-1.5 h-3.5 w-3.5" />
-              Export organization
-            </Button>
-          </Link>
-        ) : null}
+      <div className="mb-2 flex shrink-0 flex-wrap items-center justify-between gap-2">
+        <div className="flex flex-wrap items-center gap-2">
+          {!embedded && showImport ? (
+            <Link to="/company/import">
+              <Button variant="outline" size="sm">
+                <Upload className="mr-1.5 h-3.5 w-3.5" />
+                Import organization
+              </Button>
+            </Link>
+          ) : null}
+          {!embedded && showExport ? (
+            <Link to="/company/export">
+              <Button variant="outline" size="sm">
+                <Download className="mr-1.5 h-3.5 w-3.5" />
+                Export organization
+              </Button>
+            </Link>
+          ) : null}
         </div>
-      ) : null}
+        <Button
+          type="button"
+          variant={workFlowEnabled ? "default" : "outline"}
+          size="sm"
+          data-testid="org-work-flow-toggle"
+          aria-pressed={workFlowEnabled}
+          onClick={toggleWorkFlow}
+        >
+          {t("pages.org.workFlow")}
+        </Button>
+      </div>
       <div
         ref={containerRef}
         data-testid="org-chart-viewport"
@@ -582,15 +645,29 @@ export function OrgChart({ orgTree: providedOrgTree, agents: providedAgents, emb
               const x2 = child.x + CARD_W / 2;
               const y2 = child.y;
               const midY = (y1 + y2) / 2;
+              const path = `M ${x1} ${y1} L ${x1} ${midY} L ${x2} ${midY} L ${x2} ${y2}`;
+              const flowing = workFlowEnabled && workStats.activeChildAgentIds.has(child.id);
 
               return (
-                <path
-                  key={`${parent.id}-${child.id}`}
-                  d={`M ${x1} ${y1} L ${x1} ${midY} L ${x2} ${midY} L ${x2} ${y2}`}
-                  fill="none"
-                  stroke="var(--border)"
-                  strokeWidth={1.5}
-                />
+                <g key={`${parent.id}-${child.id}`}>
+                  <path
+                    d={path}
+                    fill="none"
+                    stroke="var(--border)"
+                    strokeWidth={1.5}
+                  />
+                  {flowing ? (
+                    <path
+                      d={path}
+                      fill="none"
+                      className="org-work-flow-edge"
+                      stroke="var(--color-primary)"
+                      strokeWidth={2}
+                      strokeLinecap="round"
+                      data-testid={`org-work-flow-edge-${child.id}`}
+                    />
+                  ) : null}
+                </g>
               );
             })}
           </g>
@@ -608,12 +685,23 @@ export function OrgChart({ orgTree: providedOrgTree, agents: providedAgents, emb
           {allNodes.map((node) => {
             const agent = agentMap.get(node.id);
             const dotColor = statusDotColor[node.status] ?? defaultDotColor;
+            const openCount = workFlowEnabled ? (workStats.openByAgent.get(node.id) ?? 0) : 0;
+            const pulsing = workFlowEnabled && (
+              runningAgentIds.has(node.id)
+              || (workStats.inProgressByAgent.get(node.id) ?? 0) > 0
+            );
 
             return (
               <Card
                 key={node.id}
                 data-org-card
-                className="block absolute py-0 hover:shadow-md hover:border-foreground/20 transition-(--tp-box-shadow-border-color) duration-150 cursor-pointer select-none"
+                data-testid={`org-card-${node.id}`}
+                data-work-open={openCount > 0 ? String(openCount) : undefined}
+                data-work-pulse={pulsing ? "true" : undefined}
+                className={cn(
+                  "block absolute py-0 hover:shadow-md hover:border-foreground/20 transition-(--tp-box-shadow-border-color) duration-150 cursor-pointer select-none",
+                  pulsing && "org-work-flow-pulse",
+                )}
                 style={{
                   left: node.x,
                   top: node.y,
@@ -641,9 +729,19 @@ export function OrgChart({ orgTree: providedOrgTree, agents: providedAgents, emb
                   </div>
                   {/* Name + role + adapter type */}
                   <div className="flex flex-col items-start min-w-0 flex-1">
-                    <span className="text-sm font-semibold text-foreground leading-tight">
-                      {node.name}
-                    </span>
+                    <div className="flex w-full items-start justify-between gap-2">
+                      <span className="text-sm font-semibold text-foreground leading-tight">
+                        {node.name}
+                      </span>
+                      {openCount > 0 ? (
+                        <span
+                          data-testid={`org-work-badge-${node.id}`}
+                          className="inline-flex h-5 min-w-5 shrink-0 items-center justify-center rounded-full bg-primary px-1.5 text-(length:--text-nano) font-medium text-primary-foreground"
+                        >
+                          {openCount}
+                        </span>
+                      ) : null}
+                    </div>
                     <span className="text-(length:--text-micro) text-muted-foreground leading-tight mt-0.5">
                       {agent?.title ?? roleLabel(node.role)}
                     </span>

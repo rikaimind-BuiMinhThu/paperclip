@@ -10,10 +10,19 @@ import { OrgChart } from "./OrgChart";
 const navigateMock = vi.fn();
 const orgMock = vi.fn();
 const listMock = vi.fn();
+const issuesListMock = vi.fn();
+const liveRunsMock = vi.fn();
+const searchParamsState = { current: new URLSearchParams() };
 
 vi.mock("@/lib/router", () => ({
   Link: ({ to, children }: { to: string; children: React.ReactNode }) => <a href={to}>{children}</a>,
   useNavigate: () => navigateMock,
+  useSearchParams: () => [
+    searchParamsState.current,
+    (next: URLSearchParams) => {
+      searchParamsState.current = next;
+    },
+  ],
 }));
 
 vi.mock("../context/CompanyContext", () => ({
@@ -29,6 +38,35 @@ vi.mock("../api/agents", () => ({
     org: () => orgMock(),
     list: () => listMock(),
   },
+}));
+
+vi.mock("../api/issues", () => ({
+  issuesApi: {
+    list: (...args: unknown[]) => issuesListMock(...args),
+  },
+}));
+
+vi.mock("../api/heartbeats", () => ({
+  heartbeatsApi: {
+    liveRunsForCompany: (...args: unknown[]) => liveRunsMock(...args),
+  },
+}));
+
+vi.mock("@/i18n", () => ({
+  useTranslation: () => ({
+    t: (key: string) => {
+      const labels: Record<string, string> = {
+        "pages.org.title": "Org Chart",
+        "pages.org.selectOrganizationChart": "Select an organization to view the org chart.",
+        "pages.org.emptyHierarchy": "No organizational hierarchy defined.",
+        "pages.org.zoomIn": "Zoom in",
+        "pages.org.zoomOut": "Zoom out",
+        "pages.org.fitToScreen": "Fit chart to screen",
+        "pages.org.workFlow": "Work flow",
+      };
+      return labels[key] ?? key;
+    },
+  }),
 }));
 
 vi.mock("../components/AgentIconPicker", () => ({
@@ -140,8 +178,34 @@ describe("OrgChart mobile gestures", () => {
     });
     viewportWidth = 360;
     viewportHeight = 520;
+    searchParamsState.current = new URLSearchParams();
     orgMock.mockResolvedValue(orgTree);
     listMock.mockResolvedValue(agents);
+    issuesListMock.mockResolvedValue([
+      {
+        id: "campaign-1",
+        companyId: "company-1",
+        title: "Campaign",
+        status: "todo",
+        parentId: null,
+        assigneeAgentId: "agent-1",
+        createdAt: "2026-10-20T00:00:00.000Z",
+        updatedAt: "2026-10-21T00:00:00.000Z",
+      },
+      {
+        id: "child-1",
+        companyId: "company-1",
+        title: "Write copy",
+        status: "todo",
+        parentId: "campaign-1",
+        assigneeAgentId: "agent-2",
+        createdAt: "2026-10-20T00:00:00.000Z",
+        updatedAt: "2026-10-21T00:00:00.000Z",
+      },
+    ]);
+    liveRunsMock.mockResolvedValue([
+      { id: "run-1", agentId: "agent-2", issueId: "child-1", status: "running" },
+    ]);
 
     Object.defineProperty(HTMLElement.prototype, "clientWidth", {
       configurable: true,
@@ -294,5 +358,16 @@ describe("OrgChart mobile gestures", () => {
 
     expect(container.textContent).not.toContain("Import organization");
     expect(container.textContent).toContain("Export organization");
+  });
+
+  it("shows work-flow badges and pulse when Work flow is enabled", async () => {
+    searchParamsState.current = new URLSearchParams("workIssue=campaign-1");
+    await renderOrgChart();
+    await flushReact();
+    await flushReact();
+
+    expect(container.querySelector('[data-testid="org-work-badge-agent-2"]')?.textContent).toBe("1");
+    expect(container.querySelector('[data-testid="org-card-agent-2"]')?.getAttribute("data-work-pulse")).toBe("true");
+    expect(container.querySelector('[data-testid="org-work-flow-edge-agent-2"]')).toBeTruthy();
   });
 });

@@ -12,16 +12,17 @@ import { resolveCatalogSkillRef } from "@paperclipai/skills-catalog";
 import {
   writePaperclipSkillSyncPreference,
 } from "@paperclipai/adapter-utils/server-utils";
-import type {
-  CreateMasterAgent,
-  CreateMasterTeam,
-  DefaultModelStatus,
-  MasterAgentRecord,
-  MasterTeamRecord,
-  OnboardingHireRequest,
-  PutDefaultModel,
-  UpdateMasterAgent,
-  UpdateMasterTeam,
+import {
+  IMPLICIT_PLATFORM_DEFAULT_MODEL,
+  type CreateMasterAgent,
+  type CreateMasterTeam,
+  type DefaultModelStatus,
+  type MasterAgentRecord,
+  type MasterTeamRecord,
+  type OnboardingHireRequest,
+  type PutDefaultModel,
+  type UpdateMasterAgent,
+  type UpdateMasterTeam,
 } from "@paperclipai/shared";
 import { conflict, notFound, unprocessable } from "../errors.js";
 import { getSecretProvider } from "../secrets/provider-registry.js";
@@ -80,9 +81,96 @@ export function masterAgentService(db: Db) {
   const secrets = secretService(db);
   const settings = instanceSettingsService(db);
 
+  async function ensureKujiraTemplates() {
+    const slugs = new Set(["sachi-sales", "ikura-back-office", "kujira-engineer"]);
+    for (const seed of MASTER_AGENT_SEEDS) {
+      if (!slugs.has(seed.slug)) continue;
+      const [existing] = await db.select({ id: masterAgents.id }).from(masterAgents).where(eq(masterAgents.slug, seed.slug));
+      if (existing) continue;
+      await db.insert(masterAgents).values({
+        slug: seed.slug,
+        title: seed.title,
+        department: seed.department,
+        role: seed.role,
+        description: seed.description,
+        instructions: seed.instructions,
+        icon: seed.icon,
+        skillKeys: seed.skillKeys,
+        canCreateAgents: seed.canCreateAgents,
+        enabled: true,
+        recommended: false,
+        sortOrder: seed.sortOrder,
+      });
+    }
+  }
+
+  async function ensureCmoPlanFirstTemplate() {
+    const seed = MASTER_AGENT_SEEDS.find((row) => row.slug === "cmo");
+    if (!seed) return;
+    const [existing] = await db.select().from(masterAgents).where(eq(masterAgents.slug, "cmo")).limit(1);
+    if (!existing) return;
+    const keys = Array.isArray(existing.skillKeys) ? existing.skillKeys : [];
+    const missingSkill = seed.skillKeys.some((key) => !keys.includes(key));
+    if (
+      !missingSkill
+      && existing.description === seed.description
+      && existing.instructions === seed.instructions
+    ) {
+      return;
+    }
+    await db.update(masterAgents).set({
+      description: seed.description,
+      instructions: seed.instructions,
+      skillKeys: seed.skillKeys,
+      updatedAt: new Date(),
+    }).where(eq(masterAgents.id, existing.id));
+  }
+
+  async function ensureMarketingTeamMembership() {
+    const seed = MASTER_TEAM_SEEDS.find((row) => row.slug === "marketing-team");
+    if (!seed) return;
+    const [team] = await db.select().from(masterTeams).where(eq(masterTeams.slug, "marketing-team")).limit(1);
+    if (!team) return;
+    if (team.description !== seed.description) {
+      await db.update(masterTeams).set({
+        description: seed.description,
+        updatedAt: new Date(),
+      }).where(eq(masterTeams.id, team.id));
+    }
+    const [social] = await db.select({ id: masterAgents.id })
+      .from(masterAgents)
+      .where(eq(masterAgents.slug, "social-media-manager"))
+      .limit(1);
+    if (!social) return;
+    const [member] = await db.select({ id: masterTeamMembers.id })
+      .from(masterTeamMembers)
+      .where(and(
+        eq(masterTeamMembers.teamId, team.id),
+        eq(masterTeamMembers.masterAgentId, social.id),
+      ))
+      .limit(1);
+    if (member) return;
+    const sortOrder = seed.memberSlugs.indexOf("social-media-manager");
+    await db.insert(masterTeamMembers).values({
+      teamId: team.id,
+      masterAgentId: social.id,
+      isManager: false,
+      sortOrder: sortOrder >= 0 ? sortOrder : 3,
+    });
+  }
+
+  async function ensureMarketingTemplates() {
+    await ensureCmoPlanFirstTemplate();
+    await ensureMarketingTeamMembership();
+  }
+
   async function ensureSeed() {
     const [existing] = await db.select({ id: masterAgents.id }).from(masterAgents).limit(1);
-    if (existing) return;
+    if (existing) {
+      await ensureKujiraTemplates();
+      await ensureMarketingTemplates();
+      return;
+    }
     await db.transaction(async (tx) => {
       const [again] = await tx.select({ id: masterAgents.id }).from(masterAgents).limit(1);
       if (again) return;
@@ -131,6 +219,8 @@ export function masterAgentService(db: Db) {
         });
       }));
     });
+    await ensureKujiraTemplates();
+    await ensureMarketingTemplates();
   }
 
   async function listAgents(includeDisabled: boolean): Promise<MasterAgentRecord[]> {
@@ -339,7 +429,7 @@ export function masterAgentService(db: Db) {
   async function defaultModelStatus(): Promise<DefaultModelStatus> {
     const [row] = await db.select().from(instanceDefaultModels).limit(1);
     if (!row) {
-      return { configured: false, adapterType: null, model: null, credentialKind: null };
+      return { configured: true, ...IMPLICIT_PLATFORM_DEFAULT_MODEL };
     }
     return {
       configured: true,
@@ -451,8 +541,14 @@ export function masterAgentService(db: Db) {
     actor: { actorType: "user" | "agent" | "system"; actorId: string; userId: string | null },
   ) {
     await ensureSeed();
-    const [modelRow] = await db.select().from(instanceDefaultModels).limit(1);
-    if (!modelRow) throw unprocessable("Set the platform default model before hiring");
+    const [storedModel] = await db.select().from(instanceDefaultModels).limit(1);
+    const modelRow = storedModel ?? {
+      adapterType: IMPLICIT_PLATFORM_DEFAULT_MODEL.adapterType,
+      model: IMPLICIT_PLATFORM_DEFAULT_MODEL.model,
+      credentialKind: IMPLICIT_PLATFORM_DEFAULT_MODEL.credentialKind,
+      ownerUserId: null,
+      apiKeyMaterial: null,
+    };
     const [company] = await db.select().from(companies).where(eq(companies.id, companyId));
     if (!company) throw notFound("Company not found");
 
