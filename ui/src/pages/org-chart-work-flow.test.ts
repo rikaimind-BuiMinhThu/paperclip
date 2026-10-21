@@ -1,6 +1,10 @@
 import { describe, expect, it } from "vitest";
 import type { Issue } from "@paperclipai/shared";
-import { buildOrgWorkFlowStats, resolveWorkRootIssueId } from "./org-chart-work-flow";
+import {
+  buildOrgWorkFlowStats,
+  resolveWorkRootFromIssue,
+  resolveWorkRootIssueId,
+} from "./org-chart-work-flow";
 
 function issue(partial: Partial<Issue> & Pick<Issue, "id" | "status">): Issue {
   return {
@@ -45,5 +49,33 @@ describe("org-chart-work-flow", () => {
     expect(stats.openByAgent.has("social")).toBe(false);
     expect(stats.inProgressByAgent.get("editor")).toBe(1);
     expect([...stats.activeChildAgentIds].sort()).toEqual(["editor", "writer"]);
+    expect(stats.openIssuesByAgent.get("writer")?.[0]?.transfer).toBe("down");
+    expect(stats.openIssuesByAgent.get("editor")?.[0]?.transfer).toBe("both");
+    expect(stats.upTransferAgentIds.has("editor")).toBe(true);
+    expect(stats.upTransferAgentIds.has("writer")).toBe(false);
+  });
+
+  it("marks both transfer when the assignee has a live run", () => {
+    const issues = [
+      issue({ id: "campaign", status: "todo", assigneeAgentId: "cmo" }),
+      issue({
+        id: "copy",
+        title: "Write copy",
+        status: "todo",
+        parentId: "campaign",
+        assigneeAgentId: "writer",
+      }),
+    ];
+    const stats = buildOrgWorkFlowStats(issues, "campaign", new Set(["writer"]));
+    expect(stats.openIssuesByAgent.get("writer")?.[0]?.transfer).toBe("both");
+    expect(stats.upTransferAgentIds.has("writer")).toBe(true);
+  });
+
+  it("walks ancestors to the work root", () => {
+    expect(resolveWorkRootFromIssue({ id: "child", parentId: "mid", ancestors: [{ id: "mid" }, { id: "root" }] })).toBe(
+      "root",
+    );
+    expect(resolveWorkRootFromIssue({ id: "root", parentId: null })).toBe("root");
+    expect(resolveWorkRootFromIssue({ id: "child", parentId: "root" })).toBe("root");
   });
 });

@@ -307,6 +307,7 @@ import {
   shouldRenderRichSubIssuesSection,
 } from "../lib/issue-detail-subissues";
 import { filterIssueDescendants } from "../lib/issue-tree";
+import { resolveWorkRootFromIssue } from "./org-chart-work-flow";
 import { buildSubIssueDefaultsForViewer } from "../lib/subIssueDefaults";
 import {
   SUCCESSFUL_RUN_HANDOFF_ESCALATED_ACTION,
@@ -330,6 +331,7 @@ import {
   MessageSquare,
   MoreHorizontal,
   MoreVertical,
+  Network,
   Paperclip,
   Plus,
   Repeat,
@@ -7298,6 +7300,23 @@ export function TaskDetailSurface({ conversation, tasksTab }: { tasksTab?: TaskS
               <FileCode2 className="h-4 w-4" />
             </Button>
           ) : null}
+          {issue && (childIssues.length > 0 || Boolean(issue.parentId) || Boolean(issue.assigneeAgentId)) ? (
+            <Button
+              variant="outline"
+              size="sm"
+              data-testid="issue-view-on-org-chart"
+              className="h-7 gap-1.5 px-2 text-(length:--text-nano)"
+              onClick={() => {
+                const rootId = resolveWorkRootFromIssue(issue);
+                const prefix = companyPrefix ?? loadedIssueCompany?.issuePrefix;
+                navigate(prefix ? `/${prefix}/agents/all?workIssue=${rootId}` : `/agents/all?workIssue=${rootId}`);
+              }}
+              title={t("issues.detail.viewOnOrgChart")}
+            >
+              <Network className="h-3.5 w-3.5" />
+              {t("issues.detail.viewOnOrgChart")}
+            </Button>
+          ) : null}
           {!streamlinedTaskDetailEnabled ? (
             <Button
               variant="ghost"
@@ -7350,6 +7369,21 @@ export function TaskDetailSurface({ conversation, tasksTab }: { tasksTab?: TaskS
                 </Button>
               </PopoverTrigger>
               <PopoverContent className="w-52 p-1" align="end">
+                {issue && (childIssues.length > 0 || Boolean(issue.parentId) || Boolean(issue.assigneeAgentId)) ? (
+                  <button
+                    data-testid="issue-view-on-org-chart-menu"
+                    className="flex w-full items-center gap-2 rounded px-2 py-1.5 text-xs hover:bg-accent/50"
+                    onClick={() => {
+                      const rootId = resolveWorkRootFromIssue(issue);
+                      const prefix = companyPrefix ?? loadedIssueCompany?.issuePrefix;
+                      navigate(prefix ? `/${prefix}/agents/all?workIssue=${rootId}` : `/agents/all?workIssue=${rootId}`);
+                      setMoreOpen(false);
+                    }}
+                  >
+                    <Network className="h-3 w-3" />
+                    {t("issues.detail.viewOnOrgChart")}
+                  </button>
+                ) : null}
                 {streamlinedTaskDetailEnabled ? (
                   <>
                     <button

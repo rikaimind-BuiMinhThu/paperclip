@@ -2,7 +2,7 @@ import { AgentAvatar } from "@/components/AgentAvatar";
 import { useTranslation } from "@/i18n";
 import { useAgentChatEnabled } from "../hooks/useAgentChatEnabled";
 import { useState, useEffect, useMemo, lazy, Suspense } from "react";
-import { Link, useNavigate, useLocation } from "@/lib/router";
+import { Link, useNavigate, useLocation, useSearchParams } from "@/lib/router";
 import { useQuery } from "@tanstack/react-query";
 import { agentsApi, type OrgNode } from "../api/agents";
 import { builtInAgentsApi, type BuiltInAgentState } from "../api/builtInAgents";
@@ -202,17 +202,26 @@ export function Agents({ initialView = "list" }: { initialView?: AgentsView } = 
   const { setBreadcrumbs } = useBreadcrumbs();
   const navigate = useNavigate();
   const location = useLocation();
+  const [searchParams] = useSearchParams();
+  const workIssueFromUrl = searchParams.get("workIssue");
   const { isMobile } = useSidebar();
   const { enabled: streamlinedUiEnabled } = useStreamlinedUiEnabled();
   const pathSegment = location.pathname.split("/").pop() ?? "all";
   const requestedTab: FilterTab = isFilterTab(pathSegment) ? pathSegment : "all";
-  const [view, setView] = useState<AgentsView>(() => streamlinedUiEnabled ? initialView : "org");
-  const forceListView = !streamlinedUiEnabled && isMobile;
+  const [view, setView] = useState<AgentsView>(() => {
+    if (workIssueFromUrl) return "org";
+    return streamlinedUiEnabled ? initialView : "org";
+  });
+  const forceListView = !streamlinedUiEnabled && isMobile && !workIssueFromUrl;
   const effectiveView: AgentsView = forceListView ? "list" : view;
 
   useEffect(() => {
+    if (workIssueFromUrl) {
+      setView("org");
+      return;
+    }
     setView(streamlinedUiEnabled ? initialView : "org");
-  }, [initialView, streamlinedUiEnabled]);
+  }, [initialView, streamlinedUiEnabled, workIssueFromUrl]);
 
   const { data: instanceSettings } = useQuery({
     queryKey: queryKeys.instance.settings,

@@ -54,7 +54,7 @@ vi.mock("../api/heartbeats", () => ({
 
 vi.mock("@/i18n", () => ({
   useTranslation: () => ({
-    t: (key: string) => {
+    t: (key: string, options?: { title?: string }) => {
       const labels: Record<string, string> = {
         "pages.org.title": "Org Chart",
         "pages.org.selectOrganizationChart": "Select an organization to view the org chart.",
@@ -63,10 +63,21 @@ vi.mock("@/i18n", () => ({
         "pages.org.zoomOut": "Zoom out",
         "pages.org.fitToScreen": "Fit chart to screen",
         "pages.org.workFlow": "Work flow",
+        "pages.org.workFlowClearRoot": "Clear campaign root",
+        "pages.org.workFlowEmpty": "No open campaign work",
+        "pages.org.workFlowLegendEdge": "Open work on report",
+        "pages.org.workFlowLegendPulse": "In progress / live run",
+        "pages.org.workFlowLegendTransfer": "Data transfer",
+        "pages.org.workFlowPacketDown": `${options?.title ?? ""} · assign`,
+        "pages.org.workFlowPacketUp": `${options?.title ?? ""} · report`,
       };
       return labels[key] ?? key;
     },
   }),
+}));
+
+vi.mock("@/hooks/usePrefersReducedMotion", () => ({
+  usePrefersReducedMotion: () => false,
 }));
 
 vi.mock("../components/AgentIconPicker", () => ({
@@ -369,5 +380,11 @@ describe("OrgChart mobile gestures", () => {
     expect(container.querySelector('[data-testid="org-work-badge-agent-2"]')?.textContent).toBe("1");
     expect(container.querySelector('[data-testid="org-card-agent-2"]')?.getAttribute("data-work-pulse")).toBe("true");
     expect(container.querySelector('[data-testid="org-work-flow-edge-agent-2"]')).toBeTruthy();
+    expect(container.querySelector('[data-testid="org-work-flow-legend"]')).toBeTruthy();
+    expect(container.querySelector('[data-testid="org-work-flow-root"]')?.textContent).toContain("Campaign");
+    expect(container.querySelector('[data-testid="org-work-flow-packet-child-1-down"]')).toBeTruthy();
+    // Live run forces up transfer as well
+    expect(container.querySelector('[data-testid="org-work-flow-packet-child-1-up"]')).toBeTruthy();
+    expect(container.querySelector('[data-testid="org-work-flow-edge-up-agent-2"]')).toBeTruthy();
   });
 });

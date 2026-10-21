@@ -8,17 +8,176 @@ import { issuesApi } from "../api/issues";
 import { useCompany } from "../context/CompanyContext";
 import { useBreadcrumbs } from "../context/BreadcrumbContext";
 import { queryKeys } from "../lib/queryKeys";
-import { agentUrl, cn } from "../lib/utils";
+import { agentUrl, cn, issueUrl } from "../lib/utils";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { EmptyState } from "../components/EmptyState";
 import { PageSkeleton } from "../components/PageSkeleton";
-import { Download, Maximize2, Minus, Network, Plus, Upload } from "lucide-react";
-import { AGENT_ROLE_LABELS, type Agent } from "@paperclipai/shared";
+import { Download, Maximize2, Minus, Network, Plus, Upload, X } from "lucide-react";
+import { AGENT_ROLE_LABELS, type Agent, type IssueStatus } from "@paperclipai/shared";
 import { useCloudInstance } from "@/hooks/useCloudInstance";
 import { useHiddenSettings } from "@/hooks/useHiddenSettings";
+import { usePrefersReducedMotion } from "@/hooks/usePrefersReducedMotion";
 import { useTranslation } from "@/i18n";
-import { buildOrgWorkFlowStats, resolveWorkRootIssueId } from "./org-chart-work-flow";
+import {
+  buildOrgWorkFlowStats,
+  resolveWorkRootIssueId,
+  type OrgWorkFlowOpenIssue,
+} from "./org-chart-work-flow";
+
+const PACKET_DOWN_CAP = 3;
+const PACKET_UP_CAP = 2;
+
+function packetPointOnEdge(
+  x1: number,
+  y1: number,
+  x2: number,
+  y2: number,
+  midY: number,
+  t: number,
+): { x: number; y: number } {
+  const clamped = Math.min(1, Math.max(0, t));
+  const leg1 = Math.abs(midY - y1);
+  const leg2 = Math.abs(x2 - x1);
+  const leg3 = Math.abs(y2 - midY);
+  const total = leg1 + leg2 + leg3 || 1;
+  let dist = clamped * total;
+  if (dist <= leg1) {
+    const u = leg1 === 0 ? 0 : dist / leg1;
+    return { x: x1, y: y1 + (midY - y1) * u };
+  }
+  dist -= leg1;
+  if (dist <= leg2) {
+    const u = leg2 === 0 ? 0 : dist / leg2;
+    return { x: x1 + (x2 - x1) * u, y: midY };
+  }
+  dist -= leg2;
+  const u = leg3 === 0 ? 0 : dist / leg3;
+  return { x: x2, y: midY + (y2 - midY) * u };
+}
+
+function packetClassForStatus(status: IssueStatus, dir: "down" | "up"): string {
+  if (dir === "down") {
+    if (status === "in_review") return "org-work-flow-packet-down org-work-flow-packet-dim";
+    if (status === "blocked") return "org-work-flow-packet-down org-work-flow-packet-blocked";
+    if (status === "in_progress") return "org-work-flow-packet-down org-work-flow-packet-glow";
+    return "org-work-flow-packet-down";
+  }
+  if (status === "in_review") return "org-work-flow-packet-up org-work-flow-packet-review";
+  if (status === "in_progress") return "org-work-flow-packet-up org-work-flow-packet-glow";
+  return "org-work-flow-packet-up";
+}
+
+function packetDuration(status: IssueStatus, dir: "down" | "up"): string {
+  if (dir === "up") return "2s";
+  if (status === "blocked") return "3.2s";
+  if (status === "in_progress") return "2.4s";
+  return "2.4s";
+}
+
+function WorkFlowPackets({
+  path,
+  x1,
+  y1,
+  x2,
+  y2,
+  midY,
+  issues,
+  reducedMotion,
+  downLabel,
+  upLabel,
+}: {
+  path: string;
+  x1: number;
+  y1: number;
+  x2: number;
+  y2: number;
+  midY: number;
+  issues: OrgWorkFlowOpenIssue[];
+  reducedMotion: boolean;
+  downLabel: (title: string) => string;
+  upLabel: (title: string) => string;
+}) {
+  const downIssues = issues.slice(0, PACKET_DOWN_CAP);
+  const upIssues = issues.filter((issue) => issue.transfer === "both").slice(0, PACKET_UP_CAP);
+
+  return (
+    <>
+      {downIssues.map((issue, index) => {
+        const label = downLabel(issue.title);
+        const className = cn("org-work-flow-packet", packetClassForStatus(issue.status, "down"));
+        if (reducedMotion) {
+          const point = packetPointOnEdge(x1, y1, x2, y2, midY, 0.35 + index * 0.08);
+          return (
+            <rect
+              key={`${issue.id}-down`}
+              data-testid={`org-work-flow-packet-${issue.id}-down`}
+              className={className}
+              x={point.x - 4}
+              y={point.y - 2}
+              width={8}
+              height={4}
+              rx={2}
+            >
+              <title>{label}</title>
+            </rect>
+          );
+        }
+        return (
+          <g key={`${issue.id}-down`} data-testid={`org-work-flow-packet-${issue.id}-down`}>
+            <title>{label}</title>
+            <animateMotion
+              path={path}
+              dur={packetDuration(issue.status, "down")}
+              begin={`${index * 0.35}s`}
+              repeatCount="indefinite"
+              keyPoints="0;1"
+              keyTimes="0;1"
+              calcMode="linear"
+            />
+            <rect className={className} x={-4} y={-2} width={8} height={4} rx={2} />
+          </g>
+        );
+      })}
+      {upIssues.map((issue, index) => {
+        const label = upLabel(issue.title);
+        const className = cn("org-work-flow-packet", packetClassForStatus(issue.status, "up"));
+        if (reducedMotion) {
+          const point = packetPointOnEdge(x1, y1, x2, y2, midY, 0.65 - index * 0.08);
+          return (
+            <rect
+              key={`${issue.id}-up`}
+              data-testid={`org-work-flow-packet-${issue.id}-up`}
+              className={className}
+              x={point.x - 4}
+              y={point.y - 2}
+              width={8}
+              height={4}
+              rx={2}
+            >
+              <title>{label}</title>
+            </rect>
+          );
+        }
+        return (
+          <g key={`${issue.id}-up`} data-testid={`org-work-flow-packet-${issue.id}-up`}>
+            <title>{label}</title>
+            <animateMotion
+              path={path}
+              dur={packetDuration(issue.status, "up")}
+              begin={`${0.6 + index * 0.45}s`}
+              repeatCount="indefinite"
+              keyPoints="1;0"
+              keyTimes="0;1"
+              calcMode="linear"
+            />
+            <rect className={className} x={-4} y={-2} width={8} height={4} rx={2} />
+          </g>
+        );
+      })}
+    </>
+  );
+}
 
 // Layout constants
 const CARD_W = 200;
@@ -217,6 +376,7 @@ export function OrgChart({ orgTree: providedOrgTree, agents: providedAgents, emb
   const [searchParams, setSearchParams] = useSearchParams();
   const workIssueFromUrl = searchParams.get("workIssue");
   const [workFlowEnabled, setWorkFlowEnabled] = useState(Boolean(workIssueFromUrl));
+  const reducedMotion = usePrefersReducedMotion();
   // Import is floored server-side on cloud-managed instances (403 cloud_managed), so the
   // button is hidden rather than dead-ending. Export stays available. Both
   // buttons also respect the operator-hidden settings registry.
@@ -256,16 +416,6 @@ export function OrgChart({ orgTree: providedOrgTree, agents: providedAgents, emb
     refetchInterval: workFlowEnabled ? 5_000 : false,
   });
 
-  const workRootIssueId = useMemo(
-    () => resolveWorkRootIssueId(workIssues ?? [], workIssueFromUrl),
-    [workIssues, workIssueFromUrl],
-  );
-
-  const workStats = useMemo(
-    () => buildOrgWorkFlowStats(workIssues ?? [], workRootIssueId),
-    [workIssues, workRootIssueId],
-  );
-
   const runningAgentIds = useMemo(() => {
     const ids = new Set<string>();
     for (const run of liveRuns ?? []) {
@@ -274,17 +424,45 @@ export function OrgChart({ orgTree: providedOrgTree, agents: providedAgents, emb
     return ids;
   }, [liveRuns]);
 
+  const workRootIssueId = useMemo(
+    () => resolveWorkRootIssueId(workIssues ?? [], workIssueFromUrl),
+    [workIssues, workIssueFromUrl],
+  );
+
+  const workStats = useMemo(
+    () => buildOrgWorkFlowStats(workIssues ?? [], workRootIssueId, runningAgentIds),
+    [workIssues, workRootIssueId, runningAgentIds],
+  );
+
+  const workRootIssue = useMemo(
+    () => (workIssues ?? []).find((issue) => issue.id === workRootIssueId) ?? null,
+    [workIssues, workRootIssueId],
+  );
+
+  const clearWorkIssueParam = useCallback(() => {
+    if (!workIssueFromUrl) return;
+    const nextParams = new URLSearchParams(searchParams);
+    nextParams.delete("workIssue");
+    setSearchParams(nextParams, { replace: true });
+  }, [searchParams, setSearchParams, workIssueFromUrl]);
+
   const toggleWorkFlow = useCallback(() => {
     setWorkFlowEnabled((prev) => {
       const next = !prev;
       if (!next && workIssueFromUrl) {
-        const nextParams = new URLSearchParams(searchParams);
-        nextParams.delete("workIssue");
-        setSearchParams(nextParams, { replace: true });
+        clearWorkIssueParam();
       }
       return next;
     });
-  }, [searchParams, setSearchParams, workIssueFromUrl]);
+  }, [clearWorkIssueParam, workIssueFromUrl]);
+
+  const cardWorkTitle = useCallback((agentId: string) => {
+    const openIssues = workStats.openIssuesByAgent.get(agentId) ?? [];
+    if (openIssues.length === 0) return undefined;
+    const lines = openIssues.slice(0, 3).map((issue) => `${issue.status} · ${issue.title}`);
+    if (openIssues.length > 3) lines.push(`+${openIssues.length - 3} more`);
+    return lines.join("\n");
+  }, [workStats.openIssuesByAgent]);
 
   const agentMap = useMemo(() => {
     const m = new Map<string, Agent>();
@@ -556,17 +734,50 @@ export function OrgChart({ orgTree: providedOrgTree, agents: providedAgents, emb
             </Link>
           ) : null}
         </div>
-        <Button
-          type="button"
-          variant={workFlowEnabled ? "default" : "outline"}
-          size="sm"
-          data-testid="org-work-flow-toggle"
-          aria-pressed={workFlowEnabled}
-          onClick={toggleWorkFlow}
-        >
-          {t("pages.org.workFlow")}
-        </Button>
+        <div className="flex flex-wrap items-center justify-end gap-2">
+          {workFlowEnabled && workRootIssue ? (
+            <div
+              data-testid="org-work-flow-root"
+              className="inline-flex max-w-56 items-center gap-1 rounded-full border border-border bg-background px-2 py-1 text-(length:--text-nano) text-foreground transition-opacity duration-150"
+            >
+              <button
+                type="button"
+                className="min-w-0 truncate hover:underline"
+                title={workRootIssue.title}
+                onClick={() => navigate(issueUrl(workRootIssue))}
+              >
+                {workRootIssue.identifier ? `${workRootIssue.identifier} · ` : ""}
+                {workRootIssue.title}
+              </button>
+              {workIssueFromUrl ? (
+                <button
+                  type="button"
+                  className="inline-flex size-4 shrink-0 items-center justify-center rounded-full text-muted-foreground hover:bg-accent hover:text-foreground"
+                  aria-label={t("pages.org.workFlowClearRoot")}
+                  onClick={clearWorkIssueParam}
+                >
+                  <X className="size-3" />
+                </button>
+              ) : null}
+            </div>
+          ) : null}
+          <Button
+            type="button"
+            variant={workFlowEnabled ? "default" : "outline"}
+            size="sm"
+            data-testid="org-work-flow-toggle"
+            aria-pressed={workFlowEnabled}
+            onClick={toggleWorkFlow}
+          >
+            {t("pages.org.workFlow")}
+          </Button>
+        </div>
       </div>
+      {workFlowEnabled && workRootIssueId && workStats.activeChildAgentIds.size === 0 ? (
+        <p className="mb-2 text-(length:--text-nano) text-muted-foreground" data-testid="org-work-flow-empty">
+          {t("pages.org.workFlowEmpty")}
+        </p>
+      ) : null}
       <div
         ref={containerRef}
         data-testid="org-chart-viewport"
@@ -586,6 +797,28 @@ export function OrgChart({ orgTree: providedOrgTree, agents: providedAgents, emb
         onTouchEnd={handleTouchEnd}
         onTouchCancel={handleTouchEnd}
       >
+        {workFlowEnabled ? (
+          <div
+            data-testid="org-work-flow-legend"
+            className="org-work-flow-legend absolute top-3 left-3 z-10 flex max-w-56 flex-col gap-1 rounded border border-border bg-background/90 p-2 text-(length:--text-nano) text-muted-foreground transition-opacity duration-150"
+          >
+            <div className="flex items-center gap-2">
+              <svg width="16" height="8" aria-hidden="true">
+                <path d="M0 4 H16" className="org-work-flow-edge" stroke="var(--color-primary)" strokeWidth="2" fill="none" />
+              </svg>
+              <span>{t("pages.org.workFlowLegendEdge")}</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="inline-block size-2.5 rounded-full border border-primary bg-primary/20" />
+              <span>{t("pages.org.workFlowLegendPulse")}</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="inline-block h-1.5 w-3 rounded-full bg-primary" />
+              <span>{t("pages.org.workFlowLegendTransfer")}</span>
+            </div>
+          </div>
+        ) : null}
+
         {/* Zoom controls */}
         <div className="absolute top-3 right-3 z-10 flex flex-col gap-1.5">
           <button
@@ -647,6 +880,10 @@ export function OrgChart({ orgTree: providedOrgTree, agents: providedAgents, emb
               const midY = (y1 + y2) / 2;
               const path = `M ${x1} ${y1} L ${x1} ${midY} L ${x2} ${midY} L ${x2} ${y2}`;
               const flowing = workFlowEnabled && workStats.activeChildAgentIds.has(child.id);
+              const edgeIssues = flowing
+                ? (workStats.openIssuesByAgent.get(child.id) ?? [])
+                : [];
+              const hasUp = flowing && workStats.upTransferAgentIds.has(child.id);
 
               return (
                 <g key={`${parent.id}-${child.id}`}>
@@ -665,6 +902,30 @@ export function OrgChart({ orgTree: providedOrgTree, agents: providedAgents, emb
                       strokeWidth={2}
                       strokeLinecap="round"
                       data-testid={`org-work-flow-edge-${child.id}`}
+                    />
+                  ) : null}
+                  {hasUp ? (
+                    <path
+                      d={path}
+                      fill="none"
+                      className="org-work-flow-edge-up"
+                      strokeWidth={1.5}
+                      strokeLinecap="round"
+                      data-testid={`org-work-flow-edge-up-${child.id}`}
+                    />
+                  ) : null}
+                  {flowing && edgeIssues.length > 0 ? (
+                    <WorkFlowPackets
+                      path={path}
+                      x1={x1}
+                      y1={y1}
+                      x2={x2}
+                      y2={y2}
+                      midY={midY}
+                      issues={edgeIssues}
+                      reducedMotion={reducedMotion}
+                      downLabel={(title) => t("pages.org.workFlowPacketDown", { title })}
+                      upLabel={(title) => t("pages.org.workFlowPacketUp", { title })}
                     />
                   ) : null}
                 </g>
@@ -690,6 +951,7 @@ export function OrgChart({ orgTree: providedOrgTree, agents: providedAgents, emb
               runningAgentIds.has(node.id)
               || (workStats.inProgressByAgent.get(node.id) ?? 0) > 0
             );
+            const workTitle = workFlowEnabled ? cardWorkTitle(node.id) : undefined;
 
             return (
               <Card
@@ -698,6 +960,7 @@ export function OrgChart({ orgTree: providedOrgTree, agents: providedAgents, emb
                 data-testid={`org-card-${node.id}`}
                 data-work-open={openCount > 0 ? String(openCount) : undefined}
                 data-work-pulse={pulsing ? "true" : undefined}
+                title={workTitle}
                 className={cn(
                   "block absolute py-0 hover:shadow-md hover:border-foreground/20 transition-(--tp-box-shadow-border-color) duration-150 cursor-pointer select-none",
                   pulsing && "org-work-flow-pulse",
