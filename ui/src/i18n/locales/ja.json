@@ -541,6 +541,7 @@
       "properties": "プロパティ",
       "hideTask": "このタスクを非表示",
       "moreTaskActions": "その他のタスク操作",
+      "viewOnOrgChart": "組織図で見る",
       "addSubtask": "サブタスクを追加",
       "copiedToClipboard": "クリップボードにコピーしました",
       "copyFailed": "コピーに失敗しました",
@@ -3014,7 +3015,17 @@
       "emptyAgents": "組織にエージェントがありません。組織図を作るにはエージェントを作成してください。",
       "zoomIn": "ズームイン",
       "zoomOut": "ズームアウト",
-      "fitToScreen": "画面に合わせる"
+      "fitToScreen": "画面に合わせる",
+      "workFlow": "ワークフロー",
+      "workFlowClearRoot": "キャンペーンルートをクリア",
+      "workFlowEmpty": "オープン中のキャンペーン作業はありません",
+      "workFlowLegendEdge": "レポートへのオープン作業",
+      "workFlowLegendPulse": "進行中 / ライブ実行",
+      "workFlowLegendMarker": "転送中のタスク",
+      "workFlowLegendTransfer": "データ転送",
+      "workFlowPacketDown": "{{title}} · 割当",
+      "workFlowPacketUp": "{{title}} · 報告",
+      "viewOnOrgChart": "組織図で見る"
     },
     "inviteLanding": {
       "inviteUnavailableTitle": "招待を利用できません",

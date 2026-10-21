@@ -54,15 +54,28 @@ describeEmbeddedPostgres("master agent gallery", () => {
     expect(model.status).toBe(403);
   });
 
-  it("returns 422 when the platform model is missing", async () => {
-    const seeded = await seedCompanyWithBoardAccess(ctx.db, "Gallery missing model");
+  it("hires with Cursor auto when no platform model is saved", async () => {
+    const seeded = await seedCompanyWithBoardAccess(ctx.db, "Gallery implicit model");
     const board = appFor(seeded.actor);
+    const status = await request(board).get("/api/instance/default-model");
+    expect(status.status).toBe(200);
+    expect(status.body).toEqual({
+      configured: true,
+      adapterType: "cursor",
+      model: "auto",
+      credentialKind: "stored_login",
+    });
+    const stored = await ctx.db.select().from(instanceDefaultModels);
+    expect(stored).toHaveLength(0);
+
     const catalog = await request(board).get("/api/instance/master-agents");
-    const chief = catalog.body.find((row: { slug: string }) => row.slug === "chief-of-staff");
+    const starter = catalog.body.find((row: { slug: string }) => row.slug === "customer-success-manager");
     const hired = await request(board)
       .post(`/api/companies/${seeded.companyId}/onboarding/hires`)
-      .send({ masterAgentId: chief.id });
-    expect(hired.status).toBe(422);
+      .send({ masterAgentId: starter.id });
+    expect(hired.status).toBe(201);
+    expect(hired.body.agents[0].adapterType).toBe("cursor");
+    expect(hired.body.agents[0].adapterConfig.model).toBe("auto");
   });
 
   it("hires with the platform default and ignores a client adapter", async () => {
@@ -115,20 +128,32 @@ describeEmbeddedPostgres("master agent gallery", () => {
       credential: { kind: "stored_login" },
     });
 
+    const catalog = await request(board).get("/api/instance/master-agents");
+    const cmo = catalog.body.find((row: { slug: string }) => row.slug === "cmo");
+    expect(cmo.skillKeys).toEqual(expect.arrayContaining([
+      "paperclipai/bundled/paperclip-operations/task-planning",
+      "paperclipai/bundled/paperclip-operations/issue-triage",
+    ]));
+
     const teams = await request(board).get("/api/instance/master-teams");
     const marketing = teams.body.find((row: { slug: string }) => row.slug === "marketing-team");
-    expect(marketing.members.length).toBeGreaterThan(1);
+    expect(marketing.members).toHaveLength(4);
+    expect(marketing.members.map((row: { title: string }) => row.title)).toEqual(
+      expect.arrayContaining(["CMO", "Content Writer", "Video Editor", "Social Media Manager"]),
+    );
 
     const hired = await request(board)
       .post(`/api/companies/${seeded.companyId}/onboarding/hires`)
       .send({ masterTeamId: marketing.id });
     expect(hired.status).toBe(201);
+    expect(hired.body.agents).toHaveLength(4);
 
     const rows = await ctx.db.select().from(agents).where(eq(agents.companyId, seeded.companyId));
     const manager = rows.find((row) => row.id === hired.body.managerAgentId);
     expect(manager?.reportsTo).toBeNull();
+    expect(manager?.name).toBe("CMO");
     const reports = rows.filter((row) => row.id !== manager?.id);
-    expect(reports.length).toBeGreaterThan(0);
+    expect(reports).toHaveLength(3);
     expect(reports.every((row) => row.reportsTo === manager?.id)).toBe(true);
     expect(rows.every((row) => row.adapterType === "codex_local")).toBe(true);
     expect(rows.every((row) => (row.adapterConfig as { model?: string }).model === "gpt-platform")).toBe(true);

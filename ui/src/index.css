@@ -3518,3 +3518,82 @@ span.paperclip-mention-chip[data-mention-kind="external-object"] {
 @media (max-height: 420px) {
   .agent-setup-popover { overflow-y: auto; }
 }
+
+/* Org chart Work flow mode — pulse busy agents, dash edges, data-transfer packets. */
+@keyframes org-work-flow-edge {
+  to { stroke-dashoffset: -24; }
+}
+
+@keyframes org-work-flow-edge-up {
+  to { stroke-dashoffset: 24; }
+}
+
+@keyframes org-work-flow-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 color-mix(in oklab, var(--color-primary) 35%, transparent); }
+  50% { box-shadow: 0 0 0 calc(var(--spacing) * 1) color-mix(in oklab, var(--color-primary) 20%, transparent); }
+}
+
+.org-work-flow-edge {
+  stroke-dasharray: 6 10;
+  animation: org-work-flow-edge 1.2s linear infinite;
+}
+
+.org-work-flow-edge-up {
+  stroke-dasharray: 4 12;
+  stroke: color-mix(in oklab, var(--color-primary) 50%, transparent);
+  animation: org-work-flow-edge-up 1.2s linear infinite;
+}
+
+.org-work-flow-pulse {
+  animation: org-work-flow-pulse 1.6s ease-in-out infinite;
+}
+
+.org-work-flow-packet {
+  pointer-events: auto;
+}
+
+.org-work-flow-packet-down {
+  fill: var(--color-primary);
+}
+
+.org-work-flow-packet-up {
+  fill: color-mix(in oklab, var(--color-primary) 55%, var(--background));
+  stroke: var(--color-primary);
+  stroke-width: 1;
+}
+
+.org-work-flow-packet-down.org-work-flow-packet-dim {
+  opacity: 0.45;
+}
+
+.org-work-flow-packet-down.org-work-flow-packet-blocked {
+  fill: transparent;
+  stroke: var(--color-primary);
+  stroke-width: 1;
+}
+
+.org-work-flow-packet-up.org-work-flow-packet-review {
+  fill: transparent;
+  stroke: var(--color-primary);
+  stroke-width: 1.25;
+}
+
+.org-work-flow-packet-glow {
+  filter: drop-shadow(0 0 calc(var(--spacing) * 0.5) color-mix(in oklab, var(--color-primary) 40%, transparent));
+}
+
+.org-work-flow-legend {
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .org-work-flow-edge,
+  .org-work-flow-edge-up,
+  .org-work-flow-pulse {
+    animation: none;
+  }
+
+  .org-work-flow-pulse {
+    box-shadow: 0 0 0 calc(var(--spacing) * 0.5) color-mix(in oklab, var(--color-primary) 25%, transparent);
+  }
+}

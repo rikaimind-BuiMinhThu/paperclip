@@ -67,32 +67,42 @@ export default defineConfig({
     // service-worker-intercepted requests, before React can even start.
     // Build the server's first-choice static directory so a prior package build
     // cannot shadow the UI under test with stale server/ui-dist assets.
-    command: "pnpm --filter @paperclipai/ui build --outDir ../server/ui-dist --emptyOutDir && node cli/node_modules/tsx/dist/cli.mjs cli/src/index.ts onboard --yes --run",
+    // Use a free embedded-Postgres port so a local `pnpm dev` on 54329 does not
+    // block the throwaway e2e instance. Keep the chat fixture --import only on
+    // `run` (see start-e2e-server.sh).
+    command: "bash tests/e2e/fixtures/start-e2e-server.sh",
     url: `${BASE_URL}/api/health`,
     // Always boot a dedicated throwaway instance for e2e so browser tests
     // never attach to the developer's active Paperclip home/server.
     reuseExistingServer: false,
-    timeout: 120_000,
+    timeout: 240_000,
     stdout: "pipe",
     stderr: "pipe",
-    env: {
-      ...process.env,
-      NODE_ENV: "test",
-      PAPERCLIP_UI_DEV_MIDDLEWARE: "false",
-      NODE_OPTIONS: `${process.env.NODE_OPTIONS ?? ""} --import=${path.resolve(import.meta.dirname, "fixtures/agent-chat-github.mjs")}`,
-      PORT: String(PORT),
-      PAPERCLIP_OPEN_ON_LISTEN: "false",
-      PAPERCLIP_API_URL: BASE_URL,
-      PAPERCLIP_HOME,
-      PAPERCLIP_INSTANCE_ID,
-      PAPERCLIP_CONFIG,
-      PAPERCLIP_AGENT_JWT_SECRET,
-      PAPERCLIP_DECISION_SIGNING_SECRET,
-      PAPERCLIP_TOOL_ACTION_SIGNING_SECRET,
-      PAPERCLIP_BIND: "loopback",
-      PAPERCLIP_DEPLOYMENT_MODE: "local_trusted",
-      PAPERCLIP_DEPLOYMENT_EXPOSURE: "private",
-    },
+    env: (() => {
+      const env = {
+        ...process.env,
+        NODE_ENV: "test",
+        PAPERCLIP_UI_DEV_MIDDLEWARE: "false",
+        PORT: String(PORT),
+        PAPERCLIP_OPEN_ON_LISTEN: "false",
+        PAPERCLIP_API_URL: BASE_URL,
+        PAPERCLIP_HOME,
+        PAPERCLIP_INSTANCE_ID,
+        PAPERCLIP_CONFIG,
+        PAPERCLIP_AGENT_JWT_SECRET,
+        PAPERCLIP_DECISION_SIGNING_SECRET,
+        PAPERCLIP_TOOL_ACTION_SIGNING_SECRET,
+        PAPERCLIP_BIND: "loopback",
+        PAPERCLIP_DEPLOYMENT_MODE: "local_trusted",
+        PAPERCLIP_DEPLOYMENT_EXPOSURE: "private",
+        PAPERCLIP_E2E_DB_PORT: process.env.PAPERCLIP_E2E_DB_PORT ?? "54339",
+        // Prevent repo-root `.env` DATABASE_URL from stealing the throwaway DB.
+        PAPERCLIP_DISABLE_CWD_ENV_FILE: "true",
+      };
+      delete env.DATABASE_URL;
+      delete env.DATABASE_MIGRATION_URL;
+      return env;
+    })(),
   },
   outputDir: "./test-results",
   reporter: [["list"], ["html", { open: "never", outputFolder: "./playwright-report" }]],

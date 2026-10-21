@@ -50,6 +50,17 @@ export const DEFAULT_MODEL_ADAPTER_TYPES = ["claude_local", "codex_local", "curs
 
 export type DefaultModelAdapterType = (typeof DEFAULT_MODEL_ADAPTER_TYPES)[number];
 
+/** Used when instance_default_models has no row. Cursor reads the login on this machine. */
+export const IMPLICIT_PLATFORM_DEFAULT_MODEL = {
+  adapterType: "cursor",
+  model: "auto",
+  credentialKind: "stored_login",
+} as const satisfies {
+  adapterType: DefaultModelAdapterType;
+  model: string;
+  credentialKind: "stored_login" | "api_key";
+};
+
 const departmentSchema = z.enum(MASTER_AGENT_DEPARTMENTS);
 const iconSchema = z.enum(MASTER_AGENT_ICONS);
 const roleSchema = z.enum(AGENT_ROLES);

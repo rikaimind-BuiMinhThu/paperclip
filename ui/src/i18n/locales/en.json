@@ -541,6 +541,7 @@
       "properties": "Properties",
       "hideTask": "Hide this task",
       "moreTaskActions": "More task actions",
+      "viewOnOrgChart": "View on org chart",
       "addSubtask": "Add subtask",
       "copiedToClipboard": "Copied to clipboard",
       "copyFailed": "Copy failed",
@@ -3014,7 +3015,17 @@
       "emptyAgents": "No agents in the organization. Create agents to build your org chart.",
       "zoomIn": "Zoom in",
       "zoomOut": "Zoom out",
-      "fitToScreen": "Fit to screen"
+      "fitToScreen": "Fit to screen",
+      "workFlow": "Work flow",
+      "workFlowClearRoot": "Clear campaign root",
+      "workFlowEmpty": "No open campaign work",
+      "workFlowLegendEdge": "Open work on report",
+      "workFlowLegendPulse": "In progress / live run",
+      "workFlowLegendMarker": "Task in transit",
+      "workFlowLegendTransfer": "Data transfer",
+      "workFlowPacketDown": "{{title}} · assign",
+      "workFlowPacketUp": "{{title}} · report",
+      "viewOnOrgChart": "View on org chart"
     },
     "inviteLanding": {
       "inviteUnavailableTitle": "Invite not available",
