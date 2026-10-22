@@ -3,19 +3,31 @@ import { z } from "zod";
 export const AGENT_PALETTE_IDS = ["bubblegum-sky", "pink-lemonade", "orchid-peach", "coral-mint", "lime-lagoon", "arctic-blue", "solar-flare", "violet-ember", "deep-tide", "coral-current", "golden-hour", "tangerine-cobalt", "electric-grove", "flamingo-jade", "cherry-pop", "turquoise-cherry", "ultraviolet-tide", "rikai-blue"] as const;
 export type AgentPaletteId = typeof AGENT_PALETTE_IDS[number];
 export type CharacterPaletteId = AgentPaletteId | "muted-dream";
+export const AGENT_CHARACTER_VERSIONS = ["cap-v1", "photo-v1"] as const;
+export type AgentCharacterVersion = typeof AGENT_CHARACTER_VERSIONS[number];
+/** Current default face style for new and backfilled agents. */
+export const DEFAULT_AGENT_CHARACTER_VERSION: AgentCharacterVersion = "photo-v1";
+/**
+ * Bump when bundled portrait pixels change so browsers discard year-long
+ * immutable avatar responses that would otherwise keep stale PNGs.
+ */
+export const AGENT_AVATAR_ASSET_REVISION = "2";
 export const AGENT_AVATAR_SIZES = [16, 20, 24, 32, 40, 48, 64, 96, 128, 256, 512] as const;
 export type AgentAvatarSize = typeof AGENT_AVATAR_SIZES[number];
 export const CHARACTER_STATES = ["rest", "idle", "listening", "thinking", "working", "success", "confused", "sleepy", "loading"] as const;
 export type CharacterState = typeof CHARACTER_STATES[number];
 export const agentAppearanceSchema = z.object({
   schemaVersion: z.literal(1),
-  characterVersion: z.literal("cap-v1"),
+  characterVersion: z.enum(AGENT_CHARACTER_VERSIONS),
   paletteId: z.enum(AGENT_PALETTE_IDS),
 }).strict();
 export type AgentAppearance = z.infer<typeof agentAppearanceSchema>;
 
-export function appearanceForPalette(paletteId: AgentPaletteId): AgentAppearance {
-  return { schemaVersion: 1, characterVersion: "cap-v1", paletteId };
+export function appearanceForPalette(
+  paletteId: AgentPaletteId,
+  characterVersion: AgentCharacterVersion = DEFAULT_AGENT_CHARACTER_VERSION,
+): AgentAppearance {
+  return { schemaVersion: 1, characterVersion, paletteId };
 }
 /** A persisted choice, never randomize while rendering. */
 export function randomAgentAppearance(): AgentAppearance {
@@ -36,7 +48,7 @@ export function resolveAgentAppearance(appearance: unknown, id = "agent"): Agent
   return parsed.success ? parsed.data : legacyAgentAppearance(id);
 }
 export function agentAvatarUrl(appearance: AgentAppearance, size: AgentAvatarSize = 512, scale: 1 | 2 = 1, pose: CharacterState = "rest", muted = false): string {
-  return `/api/agent-avatars/${appearance.characterVersion}/${muted ? "muted-dream" : appearance.paletteId}/${pose}.png?size=${size}&scale=${scale}`;
+  return `/api/agent-avatars/${appearance.characterVersion}/${muted ? "muted-dream" : appearance.paletteId}/${pose}.png?size=${size}&scale=${scale}&v=${AGENT_AVATAR_ASSET_REVISION}`;
 }
 export function characterStateForAgent(status: string): CharacterState {
   if (status === "running") return "working";

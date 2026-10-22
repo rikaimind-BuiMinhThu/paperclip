@@ -18,10 +18,10 @@ export function storybookAgentAvatarAssets() {
       })();
       server.middlewares.use((req, res, next) => {
         const pathname = new URL(req.url ?? "/", "http://storybook.local").pathname;
-        const match = /^\/agent-avatar-images\/cap-v1\/([^/]+)\/([^/]+)-(\d+)-([12])\.png$/.exec(pathname);
+        const match = /^\/agent-avatar-images\/(cap-v1|photo-v1)\/([^/]+)\/([^/]+)-(\d+)-([12])\.png$/.exec(pathname);
         if (!match) return next();
         void (async () => {
-          const [, palette, pose, sizeText, scaleText] = match;
+          const [, version, palette, pose, sizeText, scaleText] = match;
           const { pool, AGENT_PALETTE_IDS, AGENT_AVATAR_SIZES, CHARACTER_STATES, appearanceForPalette } = await renderer();
           const size = Number(sizeText);
           const scale = Number(scaleText);
@@ -32,7 +32,7 @@ export function storybookAgentAvatarAssets() {
             return;
           }
           if (!images.has(pathname)) {
-            const appearance = appearanceForPalette(muted ? AGENT_PALETTE_IDS[0] : palette);
+            const appearance = appearanceForPalette(muted ? AGENT_PALETTE_IDS[0] : palette, version);
             images.set(pathname, pool.render({ appearance, size, scale, pose, muted }).catch((error) => {
               images.delete(pathname);
               throw error;

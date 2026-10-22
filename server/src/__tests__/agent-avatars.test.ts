@@ -29,7 +29,7 @@ async function serve(service: ReturnType<typeof createAgentAvatarService>) {
   const app = express(); app.use("/api", agentAvatarRoutes(service).router);
   const server = await new Promise<Server>(resolve => { const running = app.listen(0, "127.0.0.1", () => resolve(running)); });
   cleanups.push(() => new Promise<void>((resolve, reject) => server.close(error => error ? reject(error) : resolve())));
-  return `http://127.0.0.1:${(server.address() as { port: number }).port}/api/agent-avatars/cap-v1/arctic-blue/rest.png`;
+  return `http://127.0.0.1:${(server.address() as { port: number }).port}/api/agent-avatars/photo-v1/arctic-blue/rest.png`;
 }
 describe("on-demand agent avatars", () => {
   it("coalesces cold requests, survives restarts and regenerates deleted cache entries", async () => {
@@ -84,7 +84,7 @@ describe("on-demand agent avatars", () => {
     const send = vi.spyOn(S3Client.prototype, "send").mockImplementation(async (command: any) => {
       const key = command.input.Key as string;
       expect(command.input.Bucket).toBe("avatar-test");
-      expect(key).toMatch(/^paperclip\/generated-agent-avatars\/cap-v1\//);
+      expect(key).toMatch(/^paperclip\/generated-agent-avatars\/photo-v1\//);
       if (command instanceof PutObjectCommand) { objects.set(key, Buffer.from(command.input.Body as Uint8Array)); return {}; }
       if (command instanceof DeleteObjectCommand) { objects.delete(key); return {}; }
       const bytes = objects.get(key);

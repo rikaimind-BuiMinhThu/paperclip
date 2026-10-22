@@ -4,6 +4,10 @@
  * Pure SVG output — no browser/Playwright needed. PNG via sharp.
  */
 
+import { readFileSync } from "node:fs";
+import { AGENT_PALETTE_IDS, resolveAgentAppearance, type AgentPaletteId } from "@paperclipai/shared";
+import { agentPortraitPath } from "@paperclipai/shared/agent-portraits";
+
 export interface OrgNode {
   id: string;
   name: string;
@@ -12,6 +16,8 @@ export interface OrgNode {
   reports: OrgNode[];
   /** Populated by collapseTree: the flattened list of hidden descendants for avatar grid rendering. */
   collapsedReports?: OrgNode[];
+  /** When present, export faces use photo-v1 (or legacy) appearance; otherwise palette is derived from id. */
+  appearance?: unknown;
 }
 
 export type OrgChartStyle = "monochrome" | "nebula" | "circuit" | "warmth" | "schematic";
@@ -241,7 +247,7 @@ const THEMES: Record<OrgChartStyle, StyleTheme> = {
 
       return `<g>
         <rect x="${ln.x}" y="${ln.y}" width="${ln.width}" height="${ln.height}" rx="${theme.cardRadius}" fill="${bgColor}" stroke="${borderColor}" stroke-width="1"/>
-        ${renderEmojiAvatar(cx, avatarCY, 17, "rgba(99,102,241,0.08)", emojiSvg, "rgba(99,102,241,0.15)")}
+        ${renderNodeAvatar(cx, avatarCY, 17, ln.node, "rgba(99,102,241,0.08)", emojiSvg, "rgba(99,102,241,0.15)")}
         <text x="${cx}" y="${nameY}" text-anchor="middle" font-family="${theme.font}" font-size="13" font-weight="600" fill="${theme.nameColor}" letter-spacing="-0.005em">${escapeXml(ln.node.name)}</text>
         <text x="${cx}" y="${roleY}" text-anchor="middle" font-family="${theme.font}" font-size="10" font-weight="500" fill="${theme.roleColor}" letter-spacing="0.07em">${escapeXml(roleLabel).toUpperCase()}</text>
       </g>`;
@@ -306,7 +312,7 @@ const THEMES: Record<OrgChartStyle, StyleTheme> = {
       return `<g>
         <rect x="${ln.x}" y="${ln.y}" width="${ln.width}" height="${ln.height}" rx="${theme.cardRadius}" fill="${theme.cardBg}" stroke="${theme.cardBorder}" stroke-width="1"/>
         <rect x="${ln.x}" y="${ln.y}" width="${ln.width}" height="2" rx="${theme.cardRadius} ${theme.cardRadius} 0 0" fill="${accentColor}"/>
-        ${renderEmojiAvatar(cx, avatarCY, 17, "rgba(48,54,61,0.3)", emojiSvg, theme.cardBorder)}
+        ${renderNodeAvatar(cx, avatarCY, 17, ln.node, "rgba(48,54,61,0.3)", emojiSvg, theme.cardBorder)}
         <text x="${cx}" y="${nameY}" text-anchor="middle" font-family="${theme.font}" font-size="12" font-weight="600" fill="${theme.nameColor}">${escapeXml(ln.node.name)}</text>
         <text x="${cx}" y="${roleY}" text-anchor="middle" font-family="${theme.font}" font-size="10" fill="${theme.roleColor}" letter-spacing="0.02em">${escapeXml(roleText)}</text>
       </g>`;
@@ -433,6 +439,42 @@ function renderEmojiAvatar(cx: number, cy: number, radius: number, bgFill: strin
     <svg x="${emojiX}" y="${emojiY}" width="${emojiSize}" height="${emojiSize}" viewBox="0 0 36 36">${emojiSvg}</svg>`;
 }
 
+const portraitUriCache = new Map<string, string>();
+
+function portraitDataUri(paletteId: string): string | null {
+  if (!(AGENT_PALETTE_IDS as readonly string[]).includes(paletteId)) return null;
+  const cached = portraitUriCache.get(paletteId);
+  if (cached) return cached;
+  try {
+    const uri = `data:image/png;base64,${readFileSync(agentPortraitPath(paletteId as AgentPaletteId)).toString("base64")}`;
+    portraitUriCache.set(paletteId, uri);
+    return uri;
+  } catch {
+    return null;
+  }
+}
+
+/** Prefer bundled photo-v1 headshots; fall back to Twemoji role icons. */
+function renderNodeAvatar(
+  cx: number,
+  cy: number,
+  radius: number,
+  node: OrgNode,
+  bgFill: string,
+  emojiSvg: string,
+  bgStroke?: string,
+): string {
+  const resolved = resolveAgentAppearance(node.appearance, node.id);
+  const photoUri = portraitDataUri(resolved.paletteId);
+  if (!photoUri) return renderEmojiAvatar(cx, cy, radius, bgFill, emojiSvg, bgStroke);
+  const size = radius * 2;
+  const clipId = `face-${node.id.replace(/[^a-zA-Z0-9_-]/g, "")}-${Math.round(cx)}-${Math.round(cy)}`;
+  const stroke = bgStroke ? ` stroke="${bgStroke}" stroke-width="1"` : "";
+  return `<defs><clipPath id="${clipId}"><circle cx="${cx}" cy="${cy}" r="${radius}"/></clipPath></defs>
+    <circle cx="${cx}" cy="${cy}" r="${radius}" fill="${bgFill}"${stroke}/>
+    <image href="${photoUri}" x="${cx - radius}" y="${cy - radius}" width="${size}" height="${size}" clip-path="url(#${clipId})" preserveAspectRatio="xMidYMid slice"/>`;
+}
+
 function defaultRenderCard(ln: LayoutNode, theme: StyleTheme): string {
   // Overflow placeholder card: just shows "+N more" text, no avatar
   if (ln.node.role === "overflow") {
@@ -483,16 +525,16 @@ function defaultRenderCard(ln: LayoutNode, theme: StyleTheme): string {
       const row = Math.floor(i / MINI_AVATAR_MAX_COLS);
       const dotCx = gridStartX + col * (MINI_AVATAR_SIZE + MINI_AVATAR_GAP) + MINI_AVATAR_SIZE / 2;
       const dotCy = gridTop + row * (MINI_AVATAR_SIZE + MINI_AVATAR_GAP) + MINI_AVATAR_SIZE / 2;
-      const { bg: dotBg } = getRoleInfo(collapsed[i]);
+      const { bg: dotBg, emojiSvg: dotEmoji } = getRoleInfo(collapsed[i]);
       const dotFill = isLight ? dotBg : "rgba(255,255,255,0.1)";
-      avatarGridSvg += `<circle cx="${dotCx}" cy="${dotCy}" r="${MINI_AVATAR_SIZE / 2}" fill="${dotFill}" stroke="${theme.cardBorder}" stroke-width="0.5"/>`;
+      avatarGridSvg += renderNodeAvatar(dotCx, dotCy, MINI_AVATAR_SIZE / 2, collapsed[i], dotFill, dotEmoji, theme.cardBorder);
     }
   }
 
   return `<g>
     ${shadowDef}
     <rect x="${ln.x}" y="${ln.y}" width="${ln.width}" height="${ln.height}" rx="${theme.cardRadius}" fill="${theme.cardBg}" stroke="${theme.cardBorder}" stroke-width="1" ${shadowFilter}/>
-    ${renderEmojiAvatar(cx, avatarCY, AVATAR_SIZE / 2, avatarBg, emojiSvg, avatarStroke)}
+    ${renderNodeAvatar(cx, avatarCY, AVATAR_SIZE / 2, ln.node, avatarBg, emojiSvg, avatarStroke)}
     <text x="${cx}" y="${nameY}" text-anchor="middle" font-family="${theme.font}" font-size="14" font-weight="600" fill="${theme.nameColor}">${escapeXml(ln.node.name)}</text>
     <text x="${cx}" y="${roleY}" text-anchor="middle" font-family="${theme.font}" font-size="11" font-weight="500" fill="${theme.roleColor}">${escapeXml(roleLabel)}</text>
     ${avatarGridSvg}

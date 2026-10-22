@@ -16,11 +16,13 @@ export interface AgentCharacterProps extends Omit<AgentAvatarProps, "pose"> {
 }
 export function AgentCharacter({ agent, appearance, size = 256, state = "idle", muted = false, motion = "auto", trackingRegion, trackingScope = "region", followCursor = true, followRotation = true, className, label, name }: AgentCharacterProps) {
   const identity = useMemo(() => resolveAgentAppearance(appearance ?? agent?.appearance, agent?.id), [appearance, agent?.appearance, agent?.id]);
+  const photo = identity.characterVersion === "photo-v1";
   const root = useRef<HTMLSpanElement>(null), host = useRef<HTMLSpanElement>(null), player = useRef<Player | null>(null);
   const slotId = useRef(Symbol("agent-character"));
   const owner = useSyncExternalStore(characterSlot.subscribe, characterSlot.getSnapshot, () => null);
   const [visible, setVisible] = useState(false), [reduced, setReduced] = useState(true), [failed, setFailed] = useState(false), [ready, setReady] = useState(false);
-  const active = visible && !reduced && !failed && motion === "auto" && state !== "rest";
+  // photo-v1 has no ClipLab mesh — always the still headshot.
+  const active = !photo && visible && !reduced && !failed && motion === "auto" && state !== "rest";
   useEffect(() => {
     if (typeof matchMedia !== "function" || typeof IntersectionObserver !== "function") return;
     const media = matchMedia("(prefers-reduced-motion: reduce)");

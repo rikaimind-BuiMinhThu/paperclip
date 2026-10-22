@@ -185,8 +185,8 @@ describe("WorkTimelineChart", () => {
 
     const portraits = gutter?.querySelectorAll('image[data-testid="timeline-agent-icon"]');
     expect(portraits?.length).toBe(2);
-    expect(portraits?.[0].getAttribute("href")).toContain("/api/agent-avatars/cap-v1/");
-    expect(portraits?.[1].getAttribute("href")).toContain("/api/agent-avatars/cap-v1/");
+    expect(portraits?.[0].getAttribute("href")).toMatch(/\/api\/agent-avatars\/(cap-v1|photo-v1)\//);
+    expect(portraits?.[1].getAttribute("href")).toMatch(/\/api\/agent-avatars\/(cap-v1|photo-v1)\//);
     expect(gutter?.textContent).not.toContain("CC");
   });
 

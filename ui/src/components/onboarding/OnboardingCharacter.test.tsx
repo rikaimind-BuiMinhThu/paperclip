@@ -12,7 +12,8 @@ vi.mock("@paperclipai/shared/cliplab/runtime", () => ({ createCharacter }));
 
 let root: Root;
 let host: HTMLDivElement;
-const appearance = appearanceForPalette("arctic-blue");
+const appearance = appearanceForPalette("arctic-blue", "cap-v1");
+const photoAppearance = appearanceForPalette("arctic-blue", "photo-v1");
 function player() {
   return { destroy: vi.fn(), seek: vi.fn(), play: vi.fn(), pause: vi.fn(), setDefinition: vi.fn(), setAnimation: vi.fn() };
 }
@@ -97,11 +98,23 @@ it.each([false, true])("refreshes the sleeping twin when its palette changes (wa
   createCharacter.mockReturnValueOnce(gray).mockReturnValueOnce(twin)
     .mockReturnValueOnce(nextGray).mockReturnValueOnce(nextTwin);
   await render();
-  await render(awake, appearanceForPalette("coral-mint"));
+  await render(awake, appearanceForPalette("coral-mint", "cap-v1"));
   expect(gray.destroy).toHaveBeenCalledOnce();
   expect(twin.destroy).toHaveBeenCalledOnce();
   const definition = createCharacter.mock.calls[3][1];
   expect(definition.character.color).toBe(CAP_V1_COLORS["coral-mint"].a);
   expect(definition.character.color2).toBe(CAP_V1_COLORS["coral-mint"].b);
   if (awake) expect(nextTwin.play).toHaveBeenCalledOnce();
+});
+
+it("photo-v1 skips ClipLab and shows a still headshot", async () => {
+  await render(false, photoAppearance);
+  expect(createCharacter).not.toHaveBeenCalled();
+  const asleep = host.querySelector('[data-slot="agent-avatar"]');
+  expect(asleep?.querySelector("img")?.getAttribute("src")).toContain("/api/agent-avatars/photo-v1/muted-dream/");
+  expect(asleep?.className).toContain("grayscale");
+  await render(true, photoAppearance);
+  const awake = host.querySelector('[data-slot="agent-avatar"]');
+  expect(awake?.querySelector("img")?.getAttribute("src")).toContain("/api/agent-avatars/photo-v1/arctic-blue/");
+  expect(awake?.className).not.toContain("grayscale");
 });

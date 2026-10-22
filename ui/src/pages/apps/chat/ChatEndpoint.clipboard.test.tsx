@@ -488,7 +488,7 @@ describe("chat setup and identity-link clipboard actions", () => {
     await renderSlackIdentityStep();
     await click("5Add avatar");
     const download = container.querySelector<HTMLAnchorElement>('a[download]')!;
-    expect(download.getAttribute("href")).toBe("/api/agent-avatars/cap-v1/cherry-pop/rest.png?size=512&scale=1");
+    expect(download.getAttribute("href")).toBe("/api/agent-avatars/cap-v1/cherry-pop/rest.png?size=512&scale=1&v=2");
     expect(download.download).toBe("maya-paperclip-avatar.png");
     const endpoint = client.getQueryData<ChatEndpoint>(["chat-endpoint-setup-resume", "endpoint-a"])!;
     flushSync(() => client.setQueryData(["chat-endpoint-setup-resume", "endpoint-a"], {
@@ -516,7 +516,7 @@ describe("chat setup and identity-link clipboard actions", () => {
     mocks.getAgent.mockResolvedValue({ id: "agent-a", name: "Maya", status: "terminated", appearance: { schemaVersion: 1, characterVersion: "cap-v1", paletteId: "orchid-peach" } });
     await renderSlackIdentityStep();
     await click("5Add avatar");
-    expect(container.querySelector('a[download]')?.getAttribute("href")).toBe("/api/agent-avatars/cap-v1/orchid-peach/rest.png?size=512&scale=1");
+    expect(container.querySelector('a[download]')?.getAttribute("href")).toBe("/api/agent-avatars/cap-v1/orchid-peach/rest.png?size=512&scale=1&v=2");
     expect(mocks.getAgent).toHaveBeenCalledWith("agent-a", "company-a");
   });
 

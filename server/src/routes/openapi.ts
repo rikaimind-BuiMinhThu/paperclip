@@ -2988,7 +2988,7 @@ registry.registerPath({
   description: "On-demand PNG artwork; no agent or company lookup. Logical size determines face detail independently of density. Successful URLs are immutable for one year and return a content-derived ETag. Cache entries regenerate after deletion.",
   request: {
     params: z.object({
-      version: z.literal("cap-v1"),
+      version: z.enum(["cap-v1", "photo-v1"]),
       palette: z.enum([...AGENT_PALETTE_IDS, "muted-dream"]),
       file: z.enum(CHARACTER_STATES.map(pose => `${pose}.png`)),
     }),

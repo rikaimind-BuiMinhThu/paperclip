@@ -1,33 +1,45 @@
 # Agent personas
 
 Agents have a persisted visual identity independent of prompts and runtime
-configuration: `{ schemaVersion: 1, characterVersion: "cap-v1", paletteId }`.
-The cap-v1 library contains 17 permanent palettes and a presentation-only gray
-Muted dream palette. The character itself is one ClipLab studio export —
-`ui/src/assets/cliplab/onboarding.character.json` (end cap, custom idle,
-sleepy-to-wake) — mirrored into the shared package as
+configuration: `{ schemaVersion: 1, characterVersion, paletteId }`.
+
+**Current default:** `characterVersion: "photo-v1"` — synthetic photo-style
+headshots bundled under `packages/shared/assets/agent-portraits/photo-v1/`
+(one PNG per palette id; see that folder's `PROVENANCE.md`). New agents and
+the `0298_photo_v1_agent_avatars` backfill use photo-v1. `AgentAvatar` circle-
+crops these faces. `AgentCharacter` and onboarding skip ClipLab WebGL for
+photo-v1 and show the still portrait (muted → color on wake).
+
+**Legacy:** `characterVersion: "cap-v1"` remains served. The cap-v1 library
+contains the same permanent palettes plus a presentation-only gray Muted dream
+palette. The character itself is one ClipLab studio export —
+`ui/src/assets/cliplab/onboarding.character.json` — mirrored into
 `packages/shared/src/cliplab/character.ts` by
-`node scripts/sync-cliplab-character.mjs` (`--check` detects drift); every
-palette recolours its body. The onboarding hero and every avatar are the same
-character on the same engine (ClipLab v0.2.0, see PROVENANCE.md). New agents get one random assignment; existing rows are
-backfilled with the same ID-based mapping used by legacy clients. Duplicating
-an agent generates another assignment. Export/import preserves it.
+`node scripts/sync-cliplab-character.mjs` (`--check` detects drift). ClipLab
+v0.2.0 provenance lives next to that export. Duplicating an agent generates
+another palette assignment. Export/import preserves appearance.
 
 ## Rendering and URLs
 
-`GET /api/agent-avatars/cap-v1/bubblegum-sky/rest.png?size=24&scale=2`
+`GET /api/agent-avatars/photo-v1/bubblegum-sky/rest.png?size=24&scale=2`
 
-The endpoint is public preset artwork, contains no agent/company identifiers,
-and works without the UI. `Agent.avatarUrl` is the 512px resting portrait URL.
-Resolve relative URLs against the instance base URL for integrations.
+Legacy URLs (`…/cap-v1/…`) still work. The endpoint is public preset artwork,
+contains no agent/company identifiers, and works without the UI.
+`Agent.avatarUrl` is the 512px resting portrait URL. Resolve relative URLs
+against the instance base URL for integrations.
 
 Supported logical sizes: 16, 20, 24, 32, 40, 48, 64, 96, 128, 256, 512.
 Density is 1 or 2. Poses: rest, idle, listening, thinking, working, success,
-confused, sleepy, loading. Other inputs receive 400. Display size controls
-face detail separately from raster dimensions: 24px at 2× remains eyes-only.
+confused, sleepy, loading. Other inputs receive 400. For photo-v1 every pose
+returns the same headshot (pose kept for URL compatibility). For cap-v1,
+display size controls face detail separately from raster dimensions: 24px at
+2× remains eyes-only.
 
-A cold request samples ClipLab's deterministic scene, exports SVG using the
-same geometry and face code as the live renderer, and rasterizes it with sharp
+**photo-v1 cold path:** load the bundled PNG, resize with sharp, apply a
+circular alpha mask (and grayscale when muted), then cache.
+
+**cap-v1 cold path:** sample ClipLab's deterministic scene, export SVG using
+the same geometry and face code as the live renderer, and rasterize with sharp
 in a worker thread. No Chromium, GPU, pre-rendering command, or per-agent asset
 row is required. Two workers serve a bounded queue, coalesce identical requests
 within the process, time out failed rendering, and stop after an idle interval.
@@ -55,12 +67,15 @@ front-facing identity portraits minimize the difference from WebGL.
 ## Components
 
 - `AgentAvatar`: image only; pass the agent record or appearance and a semantic
-  size. No per-agent queries, live-renderer imports, or circle cropping.
+  size. No per-agent queries or live-renderer imports. photo-v1 faces use
+  `object-cover` and `rounded-full` (server also applies a circular mask).
 - `AgentIdentity`: agent avatar and name. Human identities keep `Identity`.
-- `AgentCharacter`: lazy live hero with state and optional tracking-region
-  props, plus an explicit `trackingScope="page"` for onboarding and agent headers. One live renderer per view; other instances keep their still image.
-  Reduced motion, offscreen content, renderer failure, and static states do
-  not run the animation loop. Pointer tracking defaults to its region and is off for touch.
+- `AgentCharacter`: for photo-v1, always the still headshot. For legacy cap-v1,
+  lazy live hero with state and optional tracking-region props, plus an
+  explicit `trackingScope="page"` for onboarding and agent headers. One live
+  renderer per view; other instances keep their still image. Reduced motion,
+  offscreen content, renderer failure, and static states do not run the
+  animation loop. Pointer tracking defaults to its region and is off for touch.
 
 Onboarding stores the eventual palette in its existing draft and presents gray
 until verified connection/hiring succeeds. Reconnect never randomizes identity.
@@ -75,11 +90,12 @@ the TS palette data; `--check` detects drift. This does not generate images.
 
 Storybook: **Agents / Personas**. Run with
 `PAPERCLIP_STORYBOOK_API_URL=http://localhost:<isolated-port> pnpm storybook`.
-`pnpm build-storybook` automatically packages all finite avatar presets (17
-palettes plus muted gray, nine poses, eleven logical sizes, both densities).
-The build uses the same bounded Node worker pool, SVG renderer, and Sharp pipeline
-as the API. Storybook-only URL resolution points to relative PNG paths under the
-published build, including branch-prefixed deployments. Production Paperclip
+`pnpm build-storybook` automatically packages all finite avatar presets (18
+palettes including rikai-blue, plus muted gray, nine poses, eleven logical
+sizes, both densities) for the default character version. The build uses the
+same bounded Node worker pool and Sharp pipeline as the API. Storybook-only
+URL resolution points to relative PNG paths under the published build,
+including branch-prefixed deployments. Production Paperclip
 continues to use its on-demand API; no image generation runs during agent creation.
 The generated files are build output, never committed. A manifest records image
 hashes and pixel dimensions; deployment verification fetches every image and checks

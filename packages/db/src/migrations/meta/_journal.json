@@ -2066,6 +2066,13 @@
       "when": 1792130476767,
       "tag": "0296_curious_goliath",
       "breakpoints": true
+    },
+    {
+      "idx": 297,
+      "version": "7",
+      "when": 1792657200000,
+      "tag": "0297_photo_v1_agent_avatars",
+      "breakpoints": true
     }
   ]
 }
