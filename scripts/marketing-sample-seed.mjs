@@ -10,6 +10,9 @@
  *   pnpm seed:marketing-sample
  *   BASE_URL=http://127.0.0.1:3100 COMPANY_ID=<uuid> pnpm seed:marketing-sample
  *   OPEN_ORG=1 pnpm seed:marketing-sample
+ *   # Authenticated / production:
+ *   BASE_URL=https://kujira-harness.nctt.tech COMPANY_ID=<uuid> \
+ *     PAPERCLIP_API_KEY=pcp_board_... pnpm seed:marketing-sample
  */
 
 import { randomUUID } from "node:crypto";
@@ -18,15 +21,28 @@ import { spawn } from "node:child_process";
 const BASE_URL = (process.env.BASE_URL ?? "http://127.0.0.1:3100").replace(/\/$/, "");
 const COMPANY_ID = process.env.COMPANY_ID?.trim() || null;
 const OPEN_ORG = process.env.OPEN_ORG === "1" || process.env.OPEN_ORG === "true";
+const API_KEY = (
+  process.env.PAPERCLIP_API_KEY?.trim()
+  || process.env.BOARD_API_TOKEN?.trim()
+  || ""
+);
 const LP_URL = "https://migration.rikai.technology/rikai-migration/";
+
+function authHeaders(body) {
+  const headers = {
+    Accept: "application/json",
+    ...(body !== undefined ? { "Content-Type": "application/json" } : {}),
+  };
+  if (API_KEY) {
+    headers.Authorization = `Bearer ${API_KEY}`;
+  }
+  return headers;
+}
 
 async function api(method, path, body) {
   const res = await fetch(`${BASE_URL}${path}`, {
     method,
-    headers: {
-      Accept: "application/json",
-      ...(body !== undefined ? { "Content-Type": "application/json" } : {}),
-    },
+    headers: authHeaders(body),
     body: body !== undefined ? JSON.stringify(body) : undefined,
   });
   const text = await res.text();
@@ -39,6 +55,12 @@ async function api(method, path, body) {
     }
   }
   if (!res.ok) {
+    if ((res.status === 401 || res.status === 403) && !API_KEY) {
+      throw new Error(
+        `${method} ${path} → ${res.status} (Board access required). ` +
+          `Set PAPERCLIP_API_KEY (or BOARD_API_TOKEN) for authenticated deployments.`,
+      );
+    }
     const detail = typeof data === "string" ? data : JSON.stringify(data, null, 2);
     throw new Error(`${method} ${path} → ${res.status}\n${detail}`);
   }
@@ -158,6 +180,7 @@ const IC_CHILDREN = [
 
 async function main() {
   console.log(`Seeding marketing sample against ${BASE_URL}`);
+  console.log(`Auth: ${API_KEY ? "Bearer PAPERCLIP_API_KEY/BOARD_API_TOKEN" : "none (local_trusted only)"}`);
 
   await api("GET", "/api/health");
 

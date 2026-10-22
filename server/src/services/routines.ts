@@ -28,6 +28,9 @@ import {
   routines,
   routineTriggers,
   routineWebhookTestReceipts,
+  workflowDefinitions,
+  workflowRuns,
+  workforceShifts,
 } from "@paperclipai/db";
 import type {
   CreateRoutine,
@@ -78,6 +81,7 @@ import {
   type WorktreeRunExecutionActivationState,
 } from "./instance-settings.js";
 import { queueIssueAssignmentWakeup, type IssueAssignmentWakeupDeps } from "./issue-assignment-wakeup.js";
+import { WorkforceError, workforceWorkflowService, type WorkforceStoreFile } from "./workforce/workflow-engine.js";
 import { logActivity } from "./activity-log.js";
 import type { PluginWorkerManager } from "./plugin-worker-manager.js";
 import { runtimePublicOrigin } from "./cloud-runtime-identity.js";
@@ -563,6 +567,7 @@ function routineRevisionSnapshotRoutine(routine: RoutineRow): RoutineRevisionSna
     title: routine.title,
     description: routine.description,
     assigneeAgentId: routine.assigneeAgentId,
+    workflowDefinitionId: routine.workflowDefinitionId ?? null,
     priority: routine.priority as RoutineRevisionSnapshotV1["routine"]["priority"],
     status: routine.status as RoutineRevisionSnapshotV1["routine"]["status"],
     concurrencyPolicy: routine.concurrencyPolicy as RoutineRevisionSnapshotV1["routine"]["concurrencyPolicy"],
@@ -671,6 +676,7 @@ export function routineService(
     heartbeat?: IssueAssignmentWakeupDeps;
     pluginWorkerManager?: PluginWorkerManager;
     runtimeEnv?: Record<string, string | undefined>;
+    storeFile?: WorkforceStoreFile;
   } = {},
 ) {
   const issueSvc = issueService(db);
@@ -1872,6 +1878,34 @@ export function routineService(
 
       let createdIssue: Awaited<ReturnType<typeof issueSvc.create>> | null = null;
       try {
+        if (input.routine.workflowDefinitionId) {
+          const openWorkflow = await txDb
+            .select({ id: workflowRuns.id })
+            .from(workflowRuns)
+            .where(and(
+              eq(workflowRuns.companyId, input.routine.companyId),
+              eq(workflowRuns.routineId, input.routine.id),
+              inArray(workflowRuns.status, ["running", "waiting_for_human"]),
+            ))
+            .limit(1)
+            .then((rows) => rows[0] ?? null);
+          if (openWorkflow) {
+            const status = input.routine.concurrencyPolicy === "skip_if_active" ? "skipped" : "coalesced";
+            const updated = await finalizeRun(createdRun.id, {
+              status,
+              completedAt: triggeredAt,
+            }, txDb);
+            await updateRoutineTouchedState({
+              routineId: input.routine.id,
+              triggerId: input.trigger?.id ?? null,
+              triggeredAt,
+              status,
+              nextRunAt,
+            }, txDb);
+            return updated ?? createdRun;
+          }
+        }
+
         const activeIssue = await findLiveExecutionIssue(input.routine, txDb, dispatchFingerprint, {
           kind: issueOriginKind,
           id: issueOriginId,
@@ -1970,6 +2004,29 @@ export function routineService(
           return updated ?? createdRun;
         }
 
+        if (input.routine.workflowDefinitionId) {
+          const [assignee] = await txDb
+            .select({ status: agents.status, metadata: agents.metadata })
+            .from(agents)
+            .where(and(eq(agents.companyId, input.routine.companyId), eq(agents.id, assigneeAgentId)));
+          const lifecycle = assignee?.metadata && typeof assignee.metadata === "object"
+            ? (assignee.metadata as { workforce?: { lifecycle?: unknown } }).workforce?.lifecycle
+            : null;
+          if (lifecycle === "draft") throw new Error("workforce_employee_draft");
+          if (!assignee || assignee.status === "pending_approval" || assignee.status === "paused" || assignee.status === "terminated") {
+            throw new Error("workforce_employee_not_invokable");
+          }
+          await workforceWorkflowService(txDb, { storeFile: deps.storeFile }).startRun(txDb, {
+            companyId: input.routine.companyId,
+            definitionId: input.routine.workflowDefinitionId,
+            agentId: assigneeAgentId,
+            issueId: createdIssue.id,
+            routineId: input.routine.id,
+            routineRunId: createdRun.id,
+            input: triggerPayload ?? {},
+          });
+        }
+
         // Keep the dispatch lock until the issue is linked to a queued heartbeat run.
         await queueIssueAssignmentWakeup({
           heartbeat,
@@ -1998,6 +2055,14 @@ export function routineService(
           await txDb.delete(issues).where(eq(issues.id, createdIssue.id));
         }
         const failureReason = error instanceof Error ? error.message : String(error);
+        if (
+          error instanceof WorkforceError
+          || failureReason === "workforce_employee_draft"
+          || failureReason === "workforce_employee_not_invokable"
+        ) {
+          await txDb.delete(workflowRuns).where(eq(workflowRuns.routineRunId, createdRun.id));
+          await txDb.delete(workforceShifts).where(eq(workforceShifts.routineRunId, createdRun.id));
+        }
         const failed = await finalizeRun(createdRun.id, {
           status: "failed",
           failureReason,
@@ -2201,6 +2266,17 @@ export function routineService(
       await assertRoutineFolder(companyId, input.folderId ?? null);
       await assertAssignableAgent(db, companyId, input.assigneeAgentId ?? null, { kind: "routine" });
       if (input.goalId) await assertGoal(companyId, input.goalId);
+      if (input.workflowDefinitionId) {
+        const definition = await db
+          .select({ id: workflowDefinitions.id })
+          .from(workflowDefinitions)
+          .where(and(
+            eq(workflowDefinitions.id, input.workflowDefinitionId),
+            eq(workflowDefinitions.companyId, companyId),
+          ))
+          .then((rows) => rows[0] ?? null);
+        if (!definition) throw unprocessable("Workflow must belong to the same company");
+      }
       if (input.parentIssueId) await assertParentIssue(companyId, input.parentIssueId);
       const env = input.env === undefined || input.env === null
         ? null
@@ -2231,6 +2307,7 @@ export function routineService(
             title: input.title,
             description: input.description ?? null,
             assigneeAgentId: input.assigneeAgentId ?? null,
+            workflowDefinitionId: input.workflowDefinitionId ?? null,
             priority: input.priority,
             status,
             concurrencyPolicy: input.concurrencyPolicy,
@@ -2295,6 +2372,17 @@ export function routineService(
         await assertAssignableAgent(db, existing.companyId, nextAssigneeAgentId, { kind: "routine" });
       }
       if (patch.goalId) await assertGoal(existing.companyId, patch.goalId);
+      if (patch.workflowDefinitionId) {
+        const definition = await db
+          .select({ id: workflowDefinitions.id })
+          .from(workflowDefinitions)
+          .where(and(
+            eq(workflowDefinitions.id, patch.workflowDefinitionId),
+            eq(workflowDefinitions.companyId, existing.companyId),
+          ))
+          .then((rows) => rows[0] ?? null);
+        if (!definition) throw unprocessable("Workflow must belong to the same company");
+      }
       if (patch.parentIssueId) await assertParentIssue(existing.companyId, patch.parentIssueId);
       assertRoutineVariableDefinitions(nextVariables);
       const enabledScheduleTriggers = await db
@@ -2347,6 +2435,7 @@ export function routineService(
           title: nextTitle,
           description: nextDescription,
           assigneeAgentId: nextAssigneeAgentId,
+          workflowDefinitionId: patch.workflowDefinitionId === undefined ? locked.workflowDefinitionId : patch.workflowDefinitionId,
           priority: patch.priority ?? locked.priority,
           status: nextStatus,
           concurrencyPolicy: patch.concurrencyPolicy ?? locked.concurrencyPolicy,
@@ -2412,6 +2501,7 @@ export function routineService(
             title: candidate.title,
             description: candidate.description,
             assigneeAgentId: candidate.assigneeAgentId,
+            workflowDefinitionId: candidate.workflowDefinitionId,
             priority: candidate.priority,
             status: candidate.status,
             concurrencyPolicy: candidate.concurrencyPolicy,
@@ -2754,6 +2844,9 @@ export function routineService(
             title: routineSnapshot.title,
             description: routineSnapshot.description,
             assigneeAgentId: routineSnapshot.assigneeAgentId,
+            workflowDefinitionId: routineSnapshot.workflowDefinitionId === undefined
+              ? locked.workflowDefinitionId
+              : routineSnapshot.workflowDefinitionId,
             priority: routineSnapshot.priority,
             status: routineSnapshot.status,
             concurrencyPolicy: routineSnapshot.concurrencyPolicy,

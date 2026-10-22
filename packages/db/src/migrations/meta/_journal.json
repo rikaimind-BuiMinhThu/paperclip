@@ -2073,6 +2073,13 @@
       "when": 1792657200000,
       "tag": "0297_photo_v1_agent_avatars",
       "breakpoints": true
+    },
+    {
+      "idx": 298,
+      "version": "7",
+      "when": 1792800000000,
+      "tag": "0298_condemned_quasimodo",
+      "breakpoints": true
     }
   ]
 }
