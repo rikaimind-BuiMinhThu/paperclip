@@ -546,7 +546,8 @@
       "copyFailed": "Copy failed",
       "copyTaskMarkdownFailed": "Unable to copy task markdown",
       "openFileInIssue": "Open file in this issue",
-      "openFileShortcut": "Open file... (g f)"
+      "openFileShortcut": "Open file... (g f)",
+      "viewOnOrgChart": "View on org chart"
     }
   },
   "projects": {
@@ -1482,7 +1483,8 @@
           "product": "Product",
           "customerSuccess": "Customer success",
           "backOffice": "Back office"
-        }
+        },
+        "hired": "Hired!"
       }
     },
     "login": {
@@ -3015,7 +3017,16 @@
       "zoomIn": "Zoom in",
       "zoomOut": "Zoom out",
       "fitToScreen": "Fit to screen",
-      "workFlow": "Work flow"
+      "workFlow": "Work flow",
+      "workFlowClearRoot": "Clear campaign root",
+      "workFlowEmpty": "No open campaign work",
+      "workFlowLegendEdge": "Open work on report",
+      "workFlowLegendPulse": "In progress / live run",
+      "workFlowLegendMarker": "Task in transit",
+      "workFlowLegendTransfer": "Data transfer",
+      "workFlowPacketDown": "{{title}} · assign",
+      "workFlowPacketUp": "{{title}} · report",
+      "viewOnOrgChart": "View on org chart"
     },
     "inviteLanding": {
       "inviteUnavailableTitle": "Invite not available",

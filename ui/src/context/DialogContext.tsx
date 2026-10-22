@@ -1,5 +1,6 @@
 import { createContext, useCallback, useContext, useMemo, useState, type ReactNode } from "react";
 import type { IssueWorkMode } from "@paperclipai/shared";
+import { useOptionalCompany } from "./CompanyContext";
 
 interface NewIssueDefaults {
   status?: string;
@@ -44,6 +45,9 @@ interface DialogContextValue {
   newAgentOpen: boolean;
   openNewAgent: () => void;
   closeNewAgent: () => void;
+  hireStarterOpen: boolean;
+  openHireStarter: () => void;
+  closeHireStarter: () => void;
   onboardingOpen: boolean;
   onboardingOptions: OnboardingOptions;
   openOnboarding: (options?: OnboardingOptions) => void;
@@ -63,6 +67,7 @@ type DialogStateValue = Pick<
   | "newGoalOpen"
   | "newGoalDefaults"
   | "newAgentOpen"
+  | "hireStarterOpen"
   | "onboardingOpen"
   | "onboardingOptions"
   | "onboardingRouteDismissed"
@@ -74,12 +79,14 @@ const DialogStateContext = createContext<DialogStateValue | null>(null);
 const DialogActionsContext = createContext<DialogActionsValue | null>(null);
 
 export function DialogProvider({ children }: { children: ReactNode }) {
+  const company = useOptionalCompany();
   const [newIssueOpen, setNewIssueOpen] = useState(false);
   const [newIssueDefaults, setNewIssueDefaults] = useState<NewIssueDefaults>({});
   const [newProjectOpen, setNewProjectOpen] = useState(false);
   const [newGoalOpen, setNewGoalOpen] = useState(false);
   const [newGoalDefaults, setNewGoalDefaults] = useState<NewGoalDefaults>({});
   const [newAgentOpen, setNewAgentOpen] = useState(false);
+  const [hireStarterOpen, setHireStarterOpen] = useState(false);
   const [onboardingOpen, setOnboardingOpen] = useState(false);
   const [onboardingOptions, setOnboardingOptions] = useState<OnboardingOptions>({});
   const [onboardingRouteDismissed, setOnboardingRouteDismissed] = useState(false);
@@ -112,14 +119,6 @@ export function DialogProvider({ children }: { children: ReactNode }) {
     setNewGoalDefaults({});
   }, []);
 
-  const openNewAgent = useCallback(() => {
-    setNewAgentOpen(true);
-  }, []);
-
-  const closeNewAgent = useCallback(() => {
-    setNewAgentOpen(false);
-  }, []);
-
   const openOnboarding = useCallback((options: OnboardingOptions = {}) => {
     setOnboardingOptions(options);
     setOnboardingOpen(true);
@@ -130,6 +129,30 @@ export function DialogProvider({ children }: { children: ReactNode }) {
     setOnboardingOptions({});
   }, []);
 
+  const openHireStarter = useCallback(() => {
+    setNewAgentOpen(false);
+    setHireStarterOpen(true);
+  }, []);
+
+  const closeHireStarter = useCallback(() => {
+    setHireStarterOpen(false);
+  }, []);
+
+  // Prefer the medium hire-starter gallery when a company is selected.
+  // The name→adapter NewAgentDialog remains only when no company is selected yet.
+  const openNewAgent = useCallback(() => {
+    const companyId = company?.selectedCompanyId ?? null;
+    if (companyId) {
+      openHireStarter();
+      return;
+    }
+    setNewAgentOpen(true);
+  }, [company?.selectedCompanyId, openHireStarter]);
+
+  const closeNewAgent = useCallback(() => {
+    setNewAgentOpen(false);
+  }, []);
+
   const stateValue = useMemo<DialogStateValue>(
     () => ({
       newIssueOpen,
@@ -138,6 +161,7 @@ export function DialogProvider({ children }: { children: ReactNode }) {
       newGoalOpen,
       newGoalDefaults,
       newAgentOpen,
+      hireStarterOpen,
       onboardingOpen,
       onboardingOptions,
       onboardingRouteDismissed,
@@ -149,6 +173,7 @@ export function DialogProvider({ children }: { children: ReactNode }) {
       newGoalOpen,
       newGoalDefaults,
       newAgentOpen,
+      hireStarterOpen,
       onboardingOpen,
       onboardingOptions,
       onboardingRouteDismissed,
@@ -165,6 +190,8 @@ export function DialogProvider({ children }: { children: ReactNode }) {
       closeNewGoal,
       openNewAgent,
       closeNewAgent,
+      openHireStarter,
+      closeHireStarter,
       openOnboarding,
       closeOnboarding,
       setOnboardingRouteDismissed,
@@ -178,6 +205,8 @@ export function DialogProvider({ children }: { children: ReactNode }) {
       closeNewGoal,
       openNewAgent,
       closeNewAgent,
+      openHireStarter,
+      closeHireStarter,
       openOnboarding,
       closeOnboarding,
       setOnboardingRouteDismissed,

@@ -28,6 +28,7 @@ import { CommandPalette } from "./CommandPalette";
 import { NewIssueDialog } from "./NewIssueDialog";
 import { NewProjectDialog } from "./NewProjectDialog";
 import { NewGoalDialog } from "./NewGoalDialog";
+import { HireStarterDialog } from "./HireStarterDialog";
 import { NewAgentDialog } from "./NewAgentDialog";
 import { KeyboardShortcutsCheatsheet } from "./KeyboardShortcutsCheatsheet";
 import { ToastViewport } from "./ToastViewport";
@@ -738,6 +739,7 @@ export function Layout() {
         <NewProjectDialog />
         <NewGoalDialog />
         <NewAgentDialog />
+        <HireStarterDialog />
         <KeyboardShortcutsCheatsheet
           open={shortcutsOpen}
           onOpenChange={setShortcutsOpen}

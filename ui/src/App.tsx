@@ -113,7 +113,6 @@ import { loadLastInboxTab } from "./lib/inbox";
 import { TASK_VIEW_PARAM, taskViewForInboxTab, type TaskViewKey } from "./lib/task-views";
 import {
   isOnboardingWizardActive,
-  onboardingStepForCompany,
   shouldRedirectCompanylessRouteToOnboarding,
 } from "./lib/onboarding-route";
 import { filterHiddenInstanceSettingsPath, normalizeRememberedInstanceSettingsPath } from "./lib/instance-settings";
@@ -614,11 +613,11 @@ function legacyToolsRedirectTarget(tab?: string) {
 
 export function OnboardingRoutePage() {
   const { companies } = useCompany();
-  const { openOnboarding } = useDialogActions();
+  const { openOnboarding, openHireStarter } = useDialogActions();
   const { t } = useTranslation();
   const cloudInstance = useCloudInstance();
   const createStackUrl = cloudStackCreateUrl(cloudInstance?.cloudBaseUrl ?? null);
-  const { onboardingOpen, onboardingRouteDismissed } = useDialogState();
+  const { onboardingOpen, onboardingRouteDismissed, hireStarterOpen } = useDialogState();
   const { companyPrefix } = useParams<{ companyPrefix?: string }>();
   const matchedCompany = companyPrefix
     ? companies.find((company) => company.issuePrefix.toUpperCase() === companyPrefix.toUpperCase()) ?? null
@@ -628,7 +627,11 @@ export function OnboardingRoutePage() {
   // launcher card below must not stay interactive behind it — otherwise users
   // can tab/click through to the form behind the modal (PAP-52). The launcher
   // only needs to render as a re-entry point once the wizard is dismissed.
-  if (isOnboardingWizardActive({ onboardingOpen, routeDismissed: onboardingRouteDismissed })) {
+  // The medium hire-starter dialog also covers the launcher while open.
+  if (
+    isOnboardingWizardActive({ onboardingOpen, routeDismissed: onboardingRouteDismissed }) ||
+    hireStarterOpen
+  ) {
     return null;
   }
 
@@ -661,16 +664,7 @@ export function OnboardingRoutePage() {
             <Button
               onClick={() =>
                 matchedCompany
-                  ? openOnboarding({
-                      // "Add another agent" to a company that already has its
-                      // mission must not stop to ask for the mission again. An
-                      // unsettled or failed lookup reads as "no mission" and
-                      // costs the step, which the customer can pass - and the
-                      // mission step now updates the existing goal rather than
-                      // adding a second one.
-                      initialStep: onboardingStepForCompany(),
-                      companyId: matchedCompany.id,
-                    })
+                  ? openHireStarter()
                   : cloudInstance && createStackUrl
                     ? navigateTopLevel(createStackUrl)
                     : openOnboarding()

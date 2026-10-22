@@ -1472,6 +1472,7 @@
         "selected": "Selected: {{name}}",
         "empty": "No starters are available.",
         "recommended": "Recommended",
+        "hired": "Hired!",
         "hireTeam": "Hire the {{department}} team",
         "agentCount": "{{count}} agents",
         "hireFailed": "Could not hire this starter.",

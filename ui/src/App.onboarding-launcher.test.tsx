@@ -4,18 +4,12 @@ import { act } from "react";
 import { createRoot, type Root } from "react-dom/client";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import {
-  ONBOARDING_AGENT_STEP,
-} from "./lib/onboarding-route";
+import { t } from "@/i18n";
 
 /**
- * The third way into onboarding for a company that already exists: the "Add
- * Agent" card on `/{prefix}/onboarding`, shown once the wizard is dismissed.
- *
- * The route resolver and the dashboard both choose the step from whether the
- * company already has its mission. This button hardcoded the mission step, so
- * the one entry point whose own copy says "add another agent" was the one that
- * stopped to ask for the mission again.
+ * The third way into hiring for a company that already exists: the "Add Agent"
+ * card on `/{prefix}/onboarding`, shown once the wizard is dismissed. It opens
+ * the medium hire-starter dialog (same gallery as onboarding step 3).
  */
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -51,7 +45,9 @@ const routeState = vi.hoisted(() => ({ companyPrefix: "PC1" as string | undefine
 const dialogState = vi.hoisted(() => ({
   onboardingOpen: false,
   onboardingRouteDismissed: true,
+  hireStarterOpen: false,
   openOnboarding: vi.fn(),
+  openHireStarter: vi.fn(),
 }));
 const mockGoalsApi = vi.hoisted(() => ({ list: vi.fn() }));
 
@@ -74,10 +70,14 @@ vi.mock("./context/CompanyContext", () => ({
 }));
 
 vi.mock("./context/DialogContext", () => ({
-  useDialogActions: () => ({ openOnboarding: dialogState.openOnboarding }),
+  useDialogActions: () => ({
+    openOnboarding: dialogState.openOnboarding,
+    openHireStarter: dialogState.openHireStarter,
+  }),
   useDialogState: () => ({
     onboardingOpen: dialogState.onboardingOpen,
     onboardingRouteDismissed: dialogState.onboardingRouteDismissed,
+    hireStarterOpen: dialogState.hireStarterOpen,
   }),
 }));
 
@@ -123,8 +123,9 @@ describe("the onboarding launcher's Add Agent button", () => {
   }
 
   function addAgentButton(): HTMLButtonElement {
+    const label = t("app.onboarding.addAgent");
     const button = [...container.querySelectorAll("button")].find((b) =>
-      b.textContent?.includes("Add Agent"),
+      b.textContent?.includes(label),
     );
     // Asserted rather than optional-chained: a lookup that silently matches
     // nothing turns the click below into a no-op and the test into decoration.
@@ -151,7 +152,7 @@ describe("the onboarding launcher's Add Agent button", () => {
     vi.clearAllMocks();
   });
 
-  it("opens on the agent step for a company that already has its mission", async () => {
+  it("opens the hire-starter dialog for a matched company", async () => {
     mockGoalsApi.list.mockResolvedValue([COMPANY_GOAL]);
     await render();
     await settle();
@@ -160,21 +161,16 @@ describe("the onboarding launcher's Add Agent button", () => {
       addAgentButton().dispatchEvent(new MouseEvent("click", { bubbles: true }));
     });
 
-    expect(dialogState.openOnboarding).toHaveBeenCalledWith({
-      initialStep: ONBOARDING_AGENT_STEP,
-      companyId: "company-1",
-    });
+    expect(dialogState.openHireStarter).toHaveBeenCalledTimes(1);
+    expect(dialogState.openOnboarding).not.toHaveBeenCalled();
   });
 
-  it("goes to the agent step whatever the goals lookup says", async () => {
-    // Two tests lived here — company with no mission, and a lookup that failed —
-    // and both sent "Add Agent" to the mission step first. Onboarding no longer
-    // asks for the mission, so neither goal state can divert a button whose
-    // whole purpose is adding an agent.
+  it("opens the hire-starter dialog whatever the goals lookup says", async () => {
     for (const goals of [
       () => mockGoalsApi.list.mockResolvedValue([]),
       () => mockGoalsApi.list.mockRejectedValue(new Error("goals unavailable")),
     ]) {
+      dialogState.openHireStarter.mockClear();
       dialogState.openOnboarding.mockClear();
       goals();
       await render();
@@ -184,10 +180,8 @@ describe("the onboarding launcher's Add Agent button", () => {
         addAgentButton().dispatchEvent(new MouseEvent("click", { bubbles: true }));
       });
 
-      expect(dialogState.openOnboarding).toHaveBeenCalledWith({
-        initialStep: ONBOARDING_AGENT_STEP,
-        companyId: "company-1",
-      });
+      expect(dialogState.openHireStarter).toHaveBeenCalledTimes(1);
+      expect(dialogState.openOnboarding).not.toHaveBeenCalled();
     }
   });
 
@@ -196,8 +190,9 @@ describe("the onboarding launcher's Add Agent button", () => {
     await render();
     await settle();
 
+    const startLabel = t("app.onboarding.start");
     const start = [...container.querySelectorAll("button")].find((b) =>
-      b.textContent?.includes("Start Onboarding"),
+      b.textContent?.includes(startLabel),
     );
     expect(start).toBeDefined();
     await act(async () => {

@@ -1483,7 +1483,8 @@
           "product": "プロダクト",
           "customerSuccess": "カスタマーサクセス",
           "backOffice": "バックオフィス"
-        }
+        },
+        "hired": "Hired!"
       }
     },
     "login": {

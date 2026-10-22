@@ -8,7 +8,12 @@ import { aiProviderForAdapter } from "./ai-connections/AiConnectionField";
 import type { AiConnectionBinding } from "@paperclipai/shared";
 import { storeProviderApiKey } from "../lib/provider-credential";
 import { SavedProviderKeySelect, useSavedProviderKeys } from "./onboarding/SavedProviderKeySelect";
-import { appearanceForPalette, resolveAgentAppearance, agentAppearanceSchema } from "@paperclipai/shared";
+import {
+  appearanceForPalette,
+  legacyAgentAppearance,
+  resolveAgentAppearance,
+  agentAppearanceSchema,
+} from "@paperclipai/shared";
 import { OnboardingCharacter } from "./onboarding/OnboardingCharacter";
 import { useEffect, useState, useMemo, useRef } from "react";
 import type { ComponentType, CSSProperties } from "react";
@@ -784,6 +789,7 @@ function OnboardingWizardInner({
     setGallerySelection({ kind: "agent", id: picked.id });
     setGalleryDepartment(picked.department);
     setAgentName(picked.title);
+    setAgentAppearance(legacyAgentAppearance(picked.id));
   }, [galleryAgentsQuery.data]);
   const [createdCompanyGoalId, setCreatedCompanyGoalId] = useState<string | null>(
     (saved?.createdCompanyGoalId as string) ?? null
@@ -2378,11 +2384,18 @@ function OnboardingWizardInner({
     setGalleryError(null);
     if (next.kind === "agent") {
       const agent = galleryAgentsQuery.data?.find((row) => row.id === next.id);
-      if (agent) setAgentName(agent.title);
+      if (agent) {
+        setAgentName(agent.title);
+        setAgentAppearance(legacyAgentAppearance(agent.id));
+      }
       return;
     }
     const team = galleryTeamsQuery.data?.find((row) => row.id === next.id);
-    if (team) setAgentName(team.name);
+    if (!team) return;
+    setAgentName(team.name);
+    const members = [...team.members].sort((left, right) => left.sortOrder - right.sortOrder);
+    const faceId = members.find((member) => member.isManager)?.masterAgentId ?? members[0]?.masterAgentId;
+    if (faceId) setAgentAppearance(legacyAgentAppearance(faceId));
   }
 
   async function hireFromGallery() {
@@ -2457,13 +2470,18 @@ function OnboardingWizardInner({
   }));
   const galleryTeams = (galleryTeamsQuery.data ?? [])
     .filter((team) => team.enabled)
-    .map((team) => ({
-      id: team.id,
-      name: team.name,
-      description: team.description,
-      department: team.department,
-      memberTitles: [...team.members].sort((left, right) => left.sortOrder - right.sortOrder).map((member) => member.title),
-    }));
+    .map((team) => {
+      const members = [...team.members].sort((left, right) => left.sortOrder - right.sortOrder);
+      return {
+        id: team.id,
+        name: team.name,
+        description: team.description,
+        department: team.department,
+        memberTitles: members.map((member) => member.title),
+        memberIds: members.map((member) => member.masterAgentId),
+        managerId: members.find((member) => member.isManager)?.masterAgentId ?? null,
+      };
+    });
   const galleryPreview = (() => {
     if (!gallerySelection) return { name: "", role: "" };
     if (gallerySelection.kind === "agent") {
