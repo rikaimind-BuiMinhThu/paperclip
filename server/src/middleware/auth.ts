@@ -251,7 +251,13 @@ export function actorMiddleware(db: Db, opts: ActorMiddlewareOptions): RequestHa
     const runIdHeader = req.header("x-paperclip-run-id");
 
     const authHeader = req.header("authorization");
+    const apiKeyHeader = req.header("x-api-key")?.trim() || "";
     const hasBearerCredentials = /^bearer(?:\s|$)/i.test(authHeader ?? "");
+    // DocuWorks partner clients may send X-API-Key: pcp_cust_… instead of Bearer.
+    const apiKeyAsBearer =
+      !hasBearerCredentials && apiKeyHeader.startsWith("pcp_cust_")
+        ? apiKeyHeader
+        : null;
 
     // Public MCP gateway protocol requests carry a pcgw_* bearer that is
     // validated by the gateway service itself. Do not interpret that bearer as
@@ -265,7 +271,7 @@ export function actorMiddleware(db: Db, opts: ActorMiddlewareOptions): RequestHa
       return;
     }
 
-    if (!hasBearerCredentials) {
+    if (!hasBearerCredentials && !apiKeyAsBearer) {
       if (opts.deploymentMode === "authenticated" && opts.resolveSession) {
         const cloudTenantActor = await resolveCloudTenantActor(db, req);
         if (cloudTenantActor) {
@@ -317,7 +323,9 @@ export function actorMiddleware(db: Db, opts: ActorMiddlewareOptions): RequestHa
       return;
     }
 
-    const token = authHeader!.slice("bearer".length).trim();
+    const token = apiKeyAsBearer
+      ? apiKeyAsBearer
+      : authHeader!.slice("bearer".length).trim();
     if (!token) {
       next(unauthorized("Empty bearer token; provide valid agent credentials and retry"));
       return;

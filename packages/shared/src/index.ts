@@ -2548,6 +2548,17 @@ export {
   type RecordBillingUnitMeter,
 } from "./validators/api-apps.js";
 
+export {
+  docuworksOcrHandwritingSchema,
+  docuworksConsumeQuotaSchema,
+  docuworksActivateLicenseSchema,
+  docuworksCreateLicenseTokenSchema,
+  type DocuworksOcrHandwriting,
+  type DocuworksConsumeQuota,
+  type DocuworksActivateLicense,
+  type DocuworksCreateLicenseToken,
+} from "./validators/docuworks-partner.js";
+
 export { API_PREFIX, API } from "./api.js";
 export { normalizeAgentUrlKey, deriveAgentUrlKey, isUuidLike } from "./agent-url-key.js";
 export { deriveProjectUrlKey, normalizeProjectUrlKey, hasNonAsciiContent } from "./project-url-key.js";

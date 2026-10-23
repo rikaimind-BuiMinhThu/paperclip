@@ -312,6 +312,10 @@ import {
   updateBillingUnitDefSchema,
   putCustomerUnitPricesSchema,
   recordBillingUnitMeterSchema,
+  docuworksOcrHandwritingSchema,
+  docuworksConsumeQuotaSchema,
+  docuworksActivateLicenseSchema,
+  docuworksCreateLicenseTokenSchema,
 } from "@paperclipai/shared";
 import {
   COMPANY_IMPORT_TRANSFERS_API_PATH,
@@ -1313,6 +1317,16 @@ const RUNTIME_TOOLS_SECURITY: Array<Record<string, string[]>> = [
 const API_CUSTOMER_OPERATIONS = new Set([
   "GET /api/api-app-customers/me/usage",
   "POST /api/api-app-customers/me/meter",
+  "GET /api/v1/license/current",
+  "GET /api/v1/license/status",
+  "GET /api/v1/license/quota",
+  "GET /api/v1/billing/pricing-summary",
+  "GET /api/v1/billing/summary",
+  "POST /api/v1/license/consume-quota",
+  "POST /api/v1/license/activate",
+  "POST /api/v1/license/topup",
+  "POST /api/v1/ocr/handwriting",
+  "GET /api/v1/ocr/jobs/{requestId}",
 ]);
 
 const BOARD_OR_API_CUSTOMER_OPERATIONS = new Set([
@@ -1331,6 +1345,7 @@ const PUBLIC_OPERATIONS = new Set([
   "GET /api/agent-avatars/{version}/{palette}/{file}",
   "GET /api/health",
   "GET /api/openapi.json",
+  "GET /api/auth/providers",
   "GET /api/board-claim/{token}",
   "POST /api/cli-auth/challenges",
   "GET /api/cli-auth/challenges/{id}",
@@ -6765,6 +6780,15 @@ registry.registerPath({
 
 registry.registerPath({
   method: "get",
+  path: "/api/auth/providers",
+  tags: ["auth"],
+  summary: "List configured auth providers for the login UI",
+  security: [],
+  responses: { 200: r.ok() },
+});
+
+registry.registerPath({
+  method: "get",
   path: "/api/auth/get-session",
   tags: ["auth"],
   summary: "Get current session",
@@ -11736,6 +11760,97 @@ registerCurrentRoute({
     404: r.notFound,
     422: r.badRequest,
   },
+});
+
+registerCurrentRoute({
+  method: "get",
+  path: "/api/v1/license/current",
+  tags: ["docuworks-partner"],
+  summary: "DocuWorks partner license status for the authenticated API customer",
+});
+
+registerCurrentRoute({
+  method: "get",
+  path: "/api/v1/license/status",
+  tags: ["docuworks-partner"],
+  summary: "Alias of /api/v1/license/current",
+});
+
+registerCurrentRoute({
+  method: "get",
+  path: "/api/v1/license/quota",
+  tags: ["docuworks-partner"],
+  summary: "DocuWorks page quota for the authenticated API customer",
+});
+
+registerCurrentRoute({
+  method: "get",
+  path: "/api/v1/billing/pricing-summary",
+  tags: ["docuworks-partner"],
+  summary: "DocuWorks pricing and refill package summary",
+});
+
+registerCurrentRoute({
+  method: "get",
+  path: "/api/v1/billing/summary",
+  tags: ["docuworks-partner"],
+  summary: "Alias of /api/v1/billing/pricing-summary",
+});
+
+registerCurrentRoute({
+  method: "post",
+  path: "/api/v1/license/consume-quota",
+  tags: ["docuworks-partner"],
+  summary: "Consume page quota (idempotent by job_id)",
+  body: docuworksConsumeQuotaSchema,
+});
+
+registerCurrentRoute({
+  method: "post",
+  path: "/api/v1/license/activate",
+  tags: ["docuworks-partner"],
+  summary: "Redeem a DocuWorks license / top-up token",
+  body: docuworksActivateLicenseSchema,
+});
+
+registerCurrentRoute({
+  method: "post",
+  path: "/api/v1/license/topup",
+  tags: ["docuworks-partner"],
+  summary: "Alias of /api/v1/license/activate",
+  body: docuworksActivateLicenseSchema,
+});
+
+registerCurrentRoute({
+  method: "post",
+  path: "/api/v1/ocr/handwriting",
+  tags: ["docuworks-partner"],
+  summary: "Japanese handwriting OCR via the bound default agent",
+  body: docuworksOcrHandwritingSchema,
+  responses: {
+    200: r.ok(),
+    202: r.ok(),
+    400: r.badRequest,
+    401: r.unauthorized,
+    402: r.badRequest,
+    403: r.forbidden,
+    409: r.conflict,
+  },
+});
+
+registerCurrentRoute({
+  method: "get",
+  path: "/api/v1/ocr/jobs/{requestId}",
+  tags: ["docuworks-partner"],
+  summary: "Poll a DocuWorks OCR job by request_id",
+});
+
+registerCurrentRoute({
+  method: "post",
+  path: "/api/api-apps/{apiAppId}/docuworks/license-tokens",
+  tags: ["docuworks-partner"],
+  summary: "Board: mint a redeemable DocuWorks license token",
+  body: docuworksCreateLicenseTokenSchema,
 });
 
 // Every experimental REST route remains discoverable while its runtime feature

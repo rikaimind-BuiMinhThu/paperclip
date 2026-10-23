@@ -29,6 +29,8 @@ export { apiAppCustomerKeys } from "./api_app_customer_keys.js";
 export { billingUnitDefs } from "./billing_unit_defs.js";
 export { apiAppCustomerUnitPrices } from "./api_app_customer_unit_prices.js";
 export { billingUnitMeterEvents } from "./billing_unit_meter_events.js";
+export { licenseRedeemTokens } from "./license_redeem_tokens.js";
+export { docuworksOcrJobs } from "./docuworks_ocr_jobs.js";
 export { agentRuntimeState } from "./agent_runtime_state.js";
 export { agentTaskSessions, agentSessionGoalActions } from "./agent_task_sessions.js";
 export { agentWakeupRequests } from "./agent_wakeup_requests.js";

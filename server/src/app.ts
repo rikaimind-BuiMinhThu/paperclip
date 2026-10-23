@@ -88,6 +88,7 @@ import {
 import { smokeLabRoutes } from "./routes/smoke-lab.js";
 import { costRoutes } from "./routes/costs.js";
 import { apiAppRoutes } from "./routes/api-apps.js";
+import { partnerDocuworksRoutes } from "./routes/partner-docuworks.js";
 import { activityRoutes } from "./routes/activity.js";
 import { dashboardRoutes } from "./routes/dashboard.js";
 import { attentionRoutes } from "./routes/attention.js";
@@ -793,6 +794,7 @@ export async function createApp(
     null;
   api.use(costRoutes(db, { pluginWorkerManager: workerManager }));
   api.use(apiAppRoutes(db));
+  api.use(partnerDocuworksRoutes(db));
   api.use(activityRoutes(db));
   api.use(dashboardRoutes(db));
   api.use(attentionRoutes(db));
