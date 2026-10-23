@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Database design</title>
+  <link rel="stylesheet" href="assets/doc.css">
+</head>
+<body>
+  <h1>Database design</h1>
+  <p class="status">Status: this slice</p>
+  <svg viewBox="0 0 680 90" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Workflow definition versions runs and shifts">
+    <text x="8" y="40" font-size="13">definition</text>
+    <text x="120" y="40" font-size="13">version</text>
+    <text x="220" y="40" font-size="13">run</text>
+    <text x="300" y="40" font-size="13">step</text>
+    <text x="380" y="40" font-size="13">shift</text>
+    <text x="470" y="40" font-size="13">memory</text>
+    <text x="570" y="40" font-size="13">delivery</text>
+    <line x1="70" y1="50" x2="640" y2="50" stroke="#44403c"/>
+  </svg>
+  <table>
+    <thead><tr><th>Table</th><th>Notes</th></tr></thead>
+    <tbody>
+      <tr><td><code>workflow_definitions</code></td><td>Company scoped. Points at one draft version and one published version.</td></tr>
+      <tr><td><code>workflow_versions</code></td><td>Published rows are not edited by the draft save path.</td></tr>
+      <tr><td><code>workflow_runs</code></td><td>Stores <code>graph_snapshot</code>. One open run per routine.</td></tr>
+      <tr><td><code>workflow_step_runs</code></td><td>Checkpoint per node. Unique on run and node.</td></tr>
+      <tr><td><code>workforce_shifts</code></td><td><code>context_snapshot</code> holds ids and titles.</td></tr>
+      <tr><td><code>workforce_memories</code></td><td><code>company</code> or <code>agent_private</code>. Kinds <code>shift_summary</code> and <code>note</code>.</td></tr>
+      <tr><td><code>workforce_outbound_deliveries</code></td><td>Unique on action request and on company plus idempotency key.</td></tr>
+      <tr><td><code>workforce_crm_records</code></td><td>Key <code>${runId}:crm</code>.</td></tr>
+      <tr><td><code>routines.workflow_definition_id</code></td><td>Nullable. Null keeps the issue-only path. On delete set null.</td></tr>
+    </tbody>
+  </table>
+</body>
+</html>

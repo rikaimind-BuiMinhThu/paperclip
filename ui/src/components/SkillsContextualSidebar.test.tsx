@@ -2,7 +2,9 @@
 
 import { act } from "react";
 import { createRoot } from "react-dom/client";
-import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
+import { i18n } from "@/i18n";
+import { DEFAULT_LOCALE } from "@/i18n/locales";
 import { SkillsContextualSidebar } from "./SkillsContextualSidebar";
 import { contextualSidebarStyles } from "./contextual-sidebar-styles";
 
@@ -32,6 +34,14 @@ vi.mock("./SidebarNavItem", () => ({
 
 describe("SkillsContextualSidebar", () => {
   let container: HTMLDivElement;
+
+  beforeAll(async () => {
+    await i18n.changeLanguage("en");
+  });
+
+  afterAll(async () => {
+    await i18n.changeLanguage(DEFAULT_LOCALE);
+  });
 
   beforeEach(() => {
     container = document.createElement("div");

@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Implementation report</title>
+  <link rel="stylesheet" href="assets/doc.css">
+</head>
+<body>
+  <h1>Implementation report</h1>
+  <p class="status">Status: this slice</p>
+  <svg viewBox="0 0 640 70" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Migration, server tests, and token gates passed">
+    <rect x="10" y="16" width="190" height="40" fill="#d6d3d1" stroke="#44403c"/>
+    <text x="105" y="40" text-anchor="middle" font-size="13">0297 generated</text>
+    <rect x="220" y="16" width="190" height="40" fill="#d6d3d1" stroke="#44403c"/>
+    <text x="315" y="40" text-anchor="middle" font-size="13">10 tests passed</text>
+    <rect x="430" y="16" width="190" height="40" fill="#d6d3d1" stroke="#44403c"/>
+    <text x="525" y="40" text-anchor="middle" font-size="13">token gates clean</text>
+  </svg>
+  <table>
+    <thead><tr><th>Command</th><th>Result</th></tr></thead>
+    <tbody>
+      <tr><td><code>pnpm db:generate</code></td><td>Passed. Wrote <code>packages/db/src/migrations/0297_condemned_quasimodo.sql</code>. Forward-only. Adds the workforce tables and <code>routines.workflow_definition_id</code>.</td></tr>
+      <tr><td><code>pnpm --filter @paperclipai/server exec vitest run src/__tests__/workforce-engine.test.ts src/__tests__/workforce-approval.test.ts src/__tests__/workforce-isolation.test.ts src/__tests__/workforce-routine-hook.test.ts src/__tests__/workforce-memory.test.ts</code></td><td>Passed. 5 files, 10 tests, 55.90s. Package name confirmed as <code>@paperclipai/server</code>.</td></tr>
+      <tr><td><code>pnpm check:token-gates</code></td><td>Passed. All four gates clean.</td></tr>
+      <tr><td><code>pnpm --filter @paperclipai/ui exec vitest run src/pages/workforce/WorkforcePages.test.tsx src/components/Sidebar.test.tsx</code></td><td>Passed. 2 files, 37 tests. Empty overview shows “No AI employees yet”. Approval card shows “Subject: Daily sales outreach”.</td></tr>
+      <tr><td>Browser pass</td><td>Not completed. <code>http://localhost:3100/api/companies/.../workforce/overview</code> returned 401, so the route is mounted. The open board tab was still on <code>/onboarding</code>, so create, approve, and the artifact sandbox header were not clicked through.</td></tr>
+    </tbody>
+  </table>
+  <p>The outbound send in this slice is a row in <code>workforce_outbound_deliveries</code>. Gmail send stays disabled. The employee node does not wait for the heartbeat to finish. The assignment wake still runs.</p>
+</body>
+</html>

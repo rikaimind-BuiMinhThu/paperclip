@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Memory design</title>
+  <link rel="stylesheet" href="assets/doc.css">
+</head>
+<body>
+  <h1>Memory design</h1>
+  <p class="status">Status: this slice</p>
+  <svg viewBox="0 0 560 90" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Company memory is shared, private memory stays with the owner">
+    <rect x="10" y="20" width="240" height="48" fill="#e7e5e4" stroke="#44403c"/>
+    <text x="130" y="48" text-anchor="middle" font-size="13">company</text>
+    <rect x="280" y="20" width="260" height="48" fill="#d6d3d1" stroke="#44403c"/>
+    <text x="410" y="48" text-anchor="middle" font-size="13">agent_private</text>
+  </svg>
+  <table>
+    <thead><tr><th>Reader</th><th>Sees</th></tr></thead>
+    <tbody>
+      <tr><td>Member or agent</td><td>Company-visible rows for that company.</td></tr>
+      <tr><td>Owner agent</td><td>Own private notes as well.</td></tr>
+      <tr><td>Human non-viewer</td><td>Private notes.</td></tr>
+      <tr><td>Another agent</td><td>Private rows omitted. No 403 that reveals the id.</td></tr>
+      <tr><td>Next shift</td><td>Active goal titles, open issue ids and titles, previous summary. Stored on the shift. Content is data, not system policy.</td></tr>
+    </tbody>
+  </table>
+  <p>pgvector is later. The dev database is embedded PGlite, and this slice does not add a vector index.</p>
+</body>
+</html>

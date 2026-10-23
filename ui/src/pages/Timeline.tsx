@@ -246,15 +246,16 @@ function Segmented<T extends string>({
 
 /** Encoding key for the "Signal" timeline: colour = how each run started. */
 function TimelineLegend() {
+  const { t } = useTranslation();
   return (
     <div className="flex flex-wrap items-center gap-x-4 gap-y-2 border-b border-border px-3.5 py-2 text-xs text-muted-foreground">
       <span className="flex items-center gap-1.5">
         <span className="h-2.5 w-4 rounded-sm" style={{ backgroundColor: TIMELINE_COLORS.delegated }} />
-        Delegated
+        {t("pages.timeline.delegated")}
       </span>
       <span className="flex items-center gap-1.5">
         <span className="h-2.5 w-4 rounded-sm" style={{ backgroundColor: TIMELINE_COLORS.automation }} />
-        Automation
+        {t("pages.timeline.automation")}
       </span>
       <span className="flex items-center gap-1.5">
         <span
@@ -276,13 +277,14 @@ function TimelineSummaryStats({
 }: {
   summary: ReturnType<typeof timelineSummary>;
 }) {
+  const { t } = useTranslation();
   const stats: { label: string; value: string; icon: LucideIcon }[] = [
-    { label: "Runs", value: formatInteger(summary.runs), icon: GanttChartSquare },
-    { label: "Agents", value: formatInteger(summary.agents), icon: Bot },
-    { label: "Run time", value: formatDuration(0, summary.activeMs), icon: Clock3 },
+    { label: t("pages.timeline.runs"), value: formatInteger(summary.runs), icon: GanttChartSquare },
+    { label: t("pages.timeline.agents"), value: formatInteger(summary.agents), icon: Bot },
+    { label: t("pages.timeline.runTime"), value: formatDuration(0, summary.activeMs), icon: Clock3 },
     {
-      label: "Tokens used",
-      value: summary.totalTokens > 0 ? formatCompactInteger(summary.totalTokens) : "Not tracked",
+      label: t("pages.timeline.tokensUsed"),
+      value: summary.totalTokens > 0 ? formatCompactInteger(summary.totalTokens) : t("pages.timeline.notTracked"),
       icon: Coins,
     },
   ];

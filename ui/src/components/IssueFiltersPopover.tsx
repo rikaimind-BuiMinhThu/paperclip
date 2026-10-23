@@ -26,6 +26,7 @@ import { externalObjectStatusIcon } from "../lib/status-colors";
 import { formatAssigneeUserLabel } from "../lib/assignees";
 import type { InboxApprovalFilter, InboxCategoryFilter } from "../lib/inbox";
 import { cn } from "../lib/utils";
+import { useTranslation } from "@/i18n";
 
 type AgentOption = {
   id: string;
@@ -137,7 +138,14 @@ export function IssueFiltersPopover({
   presentation?: "legacy" | "streamlined";
   inboxScopeFilters?: InboxScopeFilters;
 }) {
+  const { t } = useTranslation();
   const streamlined = presentation === "streamlined";
+  const filterButtonTitle = activeFilterCount > 0
+    ? t("issues.list.filtersCount", { count: activeFilterCount })
+    : t("issues.list.filter");
+  const filterButtonLabel = activeFilterCount > 0
+    ? t("issues.list.filtersCount", { count: activeFilterCount })
+    : t("issues.list.filter");
   const [creatorSearch, setCreatorSearch] = useState("");
   const [assigneeSearch, setAssigneeSearch] = useState("");
   const [projectSearch, setProjectSearch] = useState("");
@@ -196,9 +204,9 @@ export function IssueFiltersPopover({
   return (
     <Popover>
       <PopoverTrigger asChild>
-        <Button variant={buttonVariant} size={iconOnly ? "icon" : "sm"} className={`text-xs ${iconOnly ? "relative h-8 w-8 shrink-0" : ""} ${activeFilterCount > 0 ? "text-blue-600 dark:text-blue-400" : ""}`} title={iconOnly ? (activeFilterCount > 0 ? `Filters: ${activeFilterCount}` : "Filter") : undefined}>
+        <Button variant={buttonVariant} size={iconOnly ? "icon" : "sm"} className={`text-xs ${iconOnly ? "relative h-8 w-8 shrink-0" : ""} ${activeFilterCount > 0 ? "text-blue-600 dark:text-blue-400" : ""}`} title={iconOnly ? filterButtonTitle : undefined}>
           <Filter className={iconOnly ? "h-3.5 w-3.5" : "h-3.5 w-3.5 sm:h-3 sm:w-3 sm:mr-1"} />
-          {!iconOnly && <span className="hidden sm:inline">{activeFilterCount > 0 ? `Filters: ${activeFilterCount}` : "Filter"}</span>}
+          {!iconOnly && <span className="hidden sm:inline">{filterButtonLabel}</span>}
           {!iconOnly && activeFilterCount > 0 ? <span className="ml-0.5 text-(length:--text-nano) font-medium sm:hidden">{activeFilterCount}</span> : null}
           {iconOnly && activeFilterCount > 0 ? <span className="absolute -right-1 -top-1 flex h-3.5 w-3.5 items-center justify-center rounded-full bg-blue-600 text-(length:--text-nano) font-bold text-white">{activeFilterCount}</span> : null}
           {!iconOnly && activeFilterCount > 0 ? (
@@ -220,7 +228,7 @@ export function IssueFiltersPopover({
       >
         <div className="space-y-3 p-3">
           <div className="flex items-center justify-between">
-            <span className="text-sm font-medium">Filters</span>
+            <span className="text-sm font-medium">{t("issues.list.filters")}</span>
             {activeFilterCount > 0 ? (
               <button
                 type="button"

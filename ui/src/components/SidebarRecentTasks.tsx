@@ -258,8 +258,8 @@ function RecentTasksList({
               to={`/issues/${entry.id}`}
               label={entry.title}
               trailing={entry.status === "in_review" && entry.externalConversationState === "waiting"
-                ? <span className="text-xs text-muted-foreground">Idle</span> : undefined}
-              trailingLabel={entry.status === "in_review" && entry.externalConversationState === "waiting" ? "Idle" : undefined}
+                ? <span className="text-xs text-muted-foreground">{t("status.idle")}</span> : undefined}
+              trailingLabel={entry.status === "in_review" && entry.externalConversationState === "waiting" ? t("status.idle") : undefined}
               className={rail ? undefined : "sidebar-action-link pointer-coarse:pr-8"}
               liveCount={liveIssueIds.has(entry.id) ? 1 : undefined}
             />
@@ -270,7 +270,7 @@ function RecentTasksList({
                     type="button"
                     variant="ghost"
                     size="icon-xs"
-                    aria-label={`More actions for ${entry.title}`}
+                    aria-label={t("a11y.moreActionsFor", { name: entry.title })}
                     className="sidebar-action-menu absolute right-2 top-(--pct-50) z-10 -translate-y-(--pct-50) text-muted-foreground pointer-events-none opacity-0 transition-opacity hover:bg-sidebar-accent dark:hover:bg-sidebar-accent hover:text-foreground focus-visible:pointer-events-auto focus-visible:opacity-100 pointer-coarse:pointer-events-auto pointer-coarse:opacity-100 pointer-coarse:before:hidden group-hover/recent-task:pointer-events-auto group-hover/recent-task:opacity-100 group-focus-within/recent-task:pointer-events-auto group-focus-within/recent-task:opacity-100 data-[state=open]:pointer-events-auto data-[state=open]:bg-sidebar-accent data-[state=open]:text-foreground data-[state=open]:opacity-100"
                   >
                     <MoreHorizontal aria-hidden="true" />
@@ -286,7 +286,7 @@ function RecentTasksList({
                     onSelect={() => beginRename(entry)}
                   >
                     <Pencil aria-hidden="true" />
-                    Rename
+                    {t("common.rename")}
                   </DropdownMenuItem>
                   <DropdownMenuItem
                     className={RECENT_TASK_MENU_ITEM_CLASS}
@@ -294,7 +294,7 @@ function RecentTasksList({
                     onSelect={() => void archiveTask(entry)}
                   >
                     <Archive aria-hidden="true" />
-                    Archive
+                    {t("common.archive")}
                   </DropdownMenuItem>
                   <DropdownMenuItem
                     className={RECENT_TASK_MENU_ITEM_CLASS}
@@ -302,7 +302,7 @@ function RecentTasksList({
                     onSelect={() => void toggleTaskPause(entry)}
                   >
                     <RefreshCw aria-hidden="true" />
-                    Pause/Restart
+                    {t("sidebar.recentTasks.pauseRestart")}
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
@@ -320,12 +320,12 @@ function RecentTasksList({
         <DialogContent className="sm:max-w-md">
           <form className="grid gap-4" onSubmit={(event) => void submitRename(event)}>
             <DialogHeader>
-              <DialogTitle>Rename task</DialogTitle>
-              <DialogDescription>Choose a short, clear name for this task.</DialogDescription>
+              <DialogTitle>{t("sidebar.recentTasks.renameTitle")}</DialogTitle>
+              <DialogDescription>{t("sidebar.recentTasks.renameDescription")}</DialogDescription>
             </DialogHeader>
             <Input
               autoFocus
-              aria-label="Task name"
+              aria-label={t("sidebar.recentTasks.taskNameAria")}
               value={renameValue}
               disabled={pendingAction === "rename"}
               onChange={(event) => setRenameValue(event.target.value)}

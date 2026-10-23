@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Testing strategy</title>
+  <link rel="stylesheet" href="assets/doc.css">
+</head>
+<body>
+  <h1>Testing strategy</h1>
+  <p class="status">Status: this slice</p>
+  <svg viewBox="0 0 560 70" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Server tests and one UI render test">
+    <rect x="10" y="16" width="250" height="40" fill="#e7e5e4" stroke="#44403c"/>
+    <text x="135" y="40" text-anchor="middle" font-size="13">Vitest server</text>
+    <rect x="280" y="16" width="250" height="40" fill="#e7e5e4" stroke="#44403c"/>
+    <text x="405" y="40" text-anchor="middle" font-size="13">UI render</text>
+  </svg>
+  <table>
+    <thead><tr><th>File</th><th>Proves</th></tr></thead>
+    <tbody>
+      <tr><td><code>workforce-isolation.test.ts</code></td><td>Another company's shift, run, memory, and approval are 404.</td></tr>
+      <tr><td><code>workforce-engine.test.ts</code></td><td>Publish freezes the graph. A second advance skips succeeded steps. An unsupported node fails publish.</td></tr>
+      <tr><td><code>workforce-approval.test.ts</code></td><td>One delivery. Reject, expire, and a changed hash add none.</td></tr>
+      <tr><td><code>workforce-routine-hook.test.ts</code></td><td>Null workflow stays issue-only. A linked routine opens one shift. A second fire skips. A draft assignee leaves no shift.</td></tr>
+      <tr><td><code>workforce-memory.test.ts</code></td><td>The next shift sees the previous summary. Another agent does not see private notes.</td></tr>
+      <tr><td><code>WorkforcePages.test.tsx</code></td><td>Empty overview and the approval subject.</td></tr>
+    </tbody>
+  </table>
+  <p>No live email and no live invoice. The signing secret in tests is ephemeral.</p>
+</body>
+</html>

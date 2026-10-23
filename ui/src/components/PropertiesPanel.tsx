@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef, useState, type ReactNode } from "react";
 import { X } from "lucide-react";
+import { useTranslation } from "@/i18n";
 import { usePanel } from "../context/PanelContext";
 import { useClassicTaskInterfaceEnabled } from "../hooks/useClassicTaskInterfaceEnabled";
 import { useStreamlinedUiEnabled } from "../hooks/useStreamlinedUiEnabled";
@@ -9,6 +10,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { SidePanelFrame, SidePanelWindowControls } from "@/components/side-panel";
 
 export function PropertiesPanel({ taskDetailLayout = false }: { taskDetailLayout?: boolean }) {
+  const { t } = useTranslation();
   const {
     panelContent,
     panelContentMode,
@@ -31,7 +33,7 @@ export function PropertiesPanel({ taskDetailLayout = false }: { taskDetailLayout
       >
         <div className="w-80 flex-1 flex flex-col min-w-(--sz-320px) min-h-0">
           <div className="flex items-center justify-between px-4 py-2 border-b border-border">
-            <span className="text-sm font-medium">Properties</span>
+            <span className="text-sm font-medium">{t("issues.sidePanel.properties")}</span>
             <Button variant="ghost" size="icon-xs" onClick={() => setPanelVisible(false)}>
               <X className="h-4 w-4" />
             </Button>

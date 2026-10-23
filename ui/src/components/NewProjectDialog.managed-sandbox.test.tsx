@@ -3,7 +3,9 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { flushSync } from "react-dom";
 import { createRoot, type Root } from "react-dom/client";
-import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
+import { i18n } from "@/i18n";
+import { DEFAULT_LOCALE } from "@/i18n/locales";
 import { NewProjectDialog } from "./NewProjectDialog";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { queryKeys } from "../lib/queryKeys";
@@ -43,6 +45,14 @@ vi.mock("./MarkdownEditor", () => ({
 
 let container: HTMLDivElement;
 let root: Root;
+
+beforeAll(async () => {
+  await i18n.changeLanguage("en");
+});
+
+afterAll(async () => {
+  await i18n.changeLanguage(DEFAULT_LOCALE);
+});
 
 beforeEach(() => {
   container = document.createElement("div");

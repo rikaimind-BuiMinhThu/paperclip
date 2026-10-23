@@ -23,6 +23,7 @@ import { CaseDetail } from "./pages/CaseDetail";
 import { OnboardingWizardVariant } from "./components/OnboardingWizardVariant";
 import { CloudAccessGate } from "./components/CloudAccessGate";
 import { PaperclipLoading } from "./components/AnimatedPaperclipIcon";
+import { MarketingLandingPage } from "./pages/marketing/MarketingLandingPage";
 import { PublicHome } from "./pages/marketing/PublicHome";
 import { Dashboard } from "./pages/Dashboard";
 import { DashboardLive } from "./pages/DashboardLive";
@@ -821,6 +822,16 @@ export function App() {
           element={
             streamlinedUiLoaded ? (
               <PublicHome appEntry={<CompanyRootRedirect />} />
+            ) : (
+              <PaperclipLoading />
+            )
+          }
+        />
+        <Route
+          path="home"
+          element={
+            streamlinedUiLoaded ? (
+              <MarketingLandingPage />
             ) : (
               <PaperclipLoading />
             )

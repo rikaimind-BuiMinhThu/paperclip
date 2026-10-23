@@ -702,6 +702,7 @@ export function IssuesList({
   onSearchChange,
   onUpdateIssue,
 }: IssuesListProps) {
+  const { t } = useTranslation();
   const rootRef = useRef<HTMLDivElement | null>(null);
   const navigate = useNavigate();
   const queryClient = useQueryClient();
@@ -2179,7 +2180,7 @@ export function IssuesList({
                             />
                           </>
                         )}
-                        mobileMeta={issueActivityText(issue).toLowerCase()}
+                        mobileMeta={issueActivityText(issue, t).toLowerCase()}
                         desktopTrailing={(
                           visibleTrailingIssueColumns.length > 0 ? (
                             <InboxIssueTrailingColumns

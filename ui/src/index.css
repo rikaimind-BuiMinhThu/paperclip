@@ -1543,6 +1543,10 @@ select:where(:not([multiple]):not(.appearance-none)):where(:not([size]), [size="
   background-image: var(--landing-hero-glow);
 }
 
+.landing-hero-org {
+  min-height: calc(var(--spacing) * 44);
+}
+
 @keyframes landing-hero-enter {
   from {
     opacity: 0;

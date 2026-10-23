@@ -443,6 +443,7 @@ function StudioNewSkillPanel({
   forkLoading: boolean;
   forkError: boolean;
 }) {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const toast = useOptionalToastActions();
@@ -493,7 +494,7 @@ function StudioNewSkillPanel({
   });
 
   if (forkFromSkillId && forkLoading) {
-    return <StudioMessage message="Loading fork source..." />;
+    return <StudioMessage message={t("pages.skills.studio.loadingForkSource")} />;
   }
 
   const previewCard: DiscoveryCard = {
@@ -543,12 +544,12 @@ function StudioNewSkillPanel({
 
       <section className="space-y-3">
         <div>
-          <h2 className="text-sm font-medium text-foreground">Basics</h2>
-          <p className="text-xs text-muted-foreground">Name the skill and set the route-safe slug.</p>
+          <h2 className="text-sm font-medium text-foreground">{t("pages.skills.studio.basics")}</h2>
+          <p className="text-xs text-muted-foreground">{t("pages.skills.studio.basicsHint")}</p>
         </div>
         <div className="grid gap-3 md:grid-cols-2">
           <div className="space-y-1.5">
-            <Label htmlFor="skill-name">Name</Label>
+            <Label htmlFor="skill-name">{t("pages.skills.studio.name")}</Label>
             <Input
               id="skill-name"
               value={draft.name}
@@ -562,11 +563,11 @@ function StudioNewSkillPanel({
                     : draft.markdown,
                 });
               }}
-              placeholder="Code review"
+              placeholder={t("pages.skills.studio.namePlaceholder")}
             />
           </div>
           <div className="space-y-1.5">
-            <Label htmlFor="skill-slug">Slug</Label>
+            <Label htmlFor="skill-slug">{t("pages.skills.studio.slug")}</Label>
             <Input
               id="skill-slug"
               value={draft.slug}
@@ -575,13 +576,13 @@ function StudioNewSkillPanel({
                 setSlugDirty(nextSlug.length > 0);
                 patchDraft({ slug: nextSlug });
               }}
-              placeholder="code-review"
+              placeholder={t("pages.skills.studio.slugPlaceholder")}
               className="font-mono"
             />
           </div>
         </div>
         <div className="space-y-1.5">
-          <Label htmlFor="skill-tagline">Tagline</Label>
+          <Label htmlFor="skill-tagline">{t("pages.skills.studio.tagline")}</Label>
           <Textarea
             id="skill-tagline"
             value={draft.tagline}
@@ -595,7 +596,7 @@ function StudioNewSkillPanel({
                   : draft.markdown,
               });
             }}
-            placeholder="Review repository changes for correctness, tests, and maintainability."
+            placeholder={t("pages.skills.studio.taglinePlaceholder")}
             className="min-h-20"
           />
         </div>
@@ -603,18 +604,20 @@ function StudioNewSkillPanel({
 
       <section className="space-y-3">
         <div>
-          <h2 className="text-sm font-medium text-foreground">Appearance</h2>
-          <p className="text-xs text-muted-foreground">Tune how the skill appears in the store and Studio switcher.</p>
+          <h2 className="text-sm font-medium text-foreground">{t("pages.skills.studio.appearance")}</h2>
+          <p className="text-xs text-muted-foreground">{t("pages.skills.studio.appearanceHint")}</p>
         </div>
         <div className="flex items-center gap-3">
           <SkillCardIcon card={previewCard} size={48} />
           <div className="min-w-0">
             <div className="truncate text-sm font-medium">{previewCard.name}</div>
-            <div className="truncate text-xs text-muted-foreground">{draft.tagline || "No tagline yet."}</div>
+            <div className="truncate text-xs text-muted-foreground">
+              {draft.tagline || t("pages.skills.studio.noTaglineYet")}
+            </div>
           </div>
         </div>
         <div className="space-y-2">
-          <Label>Color</Label>
+          <Label>{t("pages.skills.studio.color")}</Label>
           <div className="flex flex-wrap items-center gap-2">
             {SKILL_CREATE_ACCENTS.map((color) => (
               <button
@@ -626,11 +629,11 @@ function StudioNewSkillPanel({
                   draft.color === color ? "border-foreground" : "border-border",
                 )}
                 style={{ backgroundColor: color }}
-                aria-label={`Use ${color}`}
+                aria-label={t("pages.skills.studio.useColorAria", { color })}
               />
             ))}
             <Input
-              aria-label="Hex color"
+              aria-label={t("pages.skills.studio.hexColor")}
               value={draft.color}
               onChange={(event) => patchDraft({ color: event.target.value })}
               className="h-7 w-28 font-mono text-xs"
@@ -638,20 +641,20 @@ function StudioNewSkillPanel({
           </div>
         </div>
         <div className="space-y-1.5">
-          <Label htmlFor="skill-categories">Categories</Label>
+          <Label htmlFor="skill-categories">{t("pages.skills.studio.categories")}</Label>
           <Input
             id="skill-categories"
             value={categoryDraft}
             onChange={(event) => setCategoryDraft(event.target.value)}
-            placeholder="engineering, review, memory"
+            placeholder={t("pages.skills.studio.categoriesPlaceholder")}
           />
         </div>
       </section>
 
       <section className="space-y-3">
         <div>
-          <h2 className="text-sm font-medium text-foreground">Sharing</h2>
-          <p className="text-xs text-muted-foreground">Choose who can discover this skill inside Kujira AI Harness.</p>
+          <h2 className="text-sm font-medium text-foreground">{t("pages.skills.studio.sharing")}</h2>
+          <p className="text-xs text-muted-foreground">{t("pages.skills.studio.sharingHint")}</p>
         </div>
         <div className="grid gap-2 sm:grid-cols-3">
           {(["company", "private"] as const).map((scope) => (
@@ -664,9 +667,15 @@ function StudioNewSkillPanel({
                 draft.sharingScope === scope ? "border-foreground bg-accent/50" : "border-border",
               )}
             >
-              <span className="block font-medium">{scope === "company" ? "Organization" : "Private"}</span>
+              <span className="block font-medium">
+                {scope === "company"
+                  ? t("pages.skills.studio.organization")
+                  : t("pages.skills.studio.private")}
+              </span>
               <span className="mt-1 block text-xs text-muted-foreground">
-                {scope === "company" ? "Visible inside this organization." : "Only visible in your library."}
+                {scope === "company"
+                  ? t("pages.skills.studio.organizationHint")
+                  : t("pages.skills.studio.privateHint")}
               </span>
             </button>
           ))}
@@ -675,14 +684,16 @@ function StudioNewSkillPanel({
             disabled
             className="rounded-md border border-dashed border-border px-3 py-2 text-left text-sm text-muted-foreground"
           >
-            <span className="block font-medium">Public</span>
-            <span className="mt-1 block text-xs">Coming later.</span>
+            <span className="block font-medium">{t("pages.skills.studio.public")}</span>
+            <span className="mt-1 block text-xs">{t("pages.skills.studio.comingLater")}</span>
           </button>
         </div>
       </section>
 
       <details className="rounded-md border border-border px-3 py-2">
-        <summary className="cursor-pointer text-sm font-medium text-foreground">Starter content</summary>
+        <summary className="cursor-pointer text-sm font-medium text-foreground">
+          {t("pages.skills.studio.starterContent")}
+        </summary>
         <Textarea
           value={draft.markdown}
           onChange={(event) => patchDraft({ markdown: event.target.value })}
@@ -692,11 +703,15 @@ function StudioNewSkillPanel({
 
       <div className="flex items-center justify-end gap-2 border-t border-border pt-4">
         <Button variant="ghost" onClick={() => navigate("/skills/studio")} disabled={createSkill.isPending}>
-          Cancel
+          {t("common.cancel")}
         </Button>
         <Button onClick={() => createSkill.mutate()} disabled={createSkill.isPending || !nameValid}>
           <FilePlus className="h-4 w-4" />
-          {createSkill.isPending ? "Creating..." : draft.forkedFromSkillId ? "Create fork" : "Create skill"}
+          {createSkill.isPending
+            ? t("pages.skills.studio.creating")
+            : draft.forkedFromSkillId
+              ? t("pages.skills.studio.createFork")
+              : t("pages.skills.studio.createSkill")}
         </Button>
       </div>
     </div>
@@ -722,6 +737,7 @@ function StudioEmptyState({
   onSelectSkill: (skillId: string) => void;
   onCreateNew: () => void;
 }) {
+  const { t } = useTranslation();
   return (
     <TooltipProvider delayDuration={200}>
       <div className="flex h-full min-h-0 flex-col">
@@ -737,7 +753,7 @@ function StudioEmptyState({
         <div className="flex flex-1 items-center justify-center">
           <EmptyState
             icon={FileCode}
-            message={skillsLoading ? "Loading skills..." : "Select a skill to open Studio."}
+            message={skillsLoading ? t("pages.skills.studio.loadingSkills") : t("pages.skills.studio.selectSkillToOpen")}
             action="Create a new skill"
             onAction={onCreateNew}
           />
@@ -1136,6 +1152,7 @@ function StudioHeader({
   onSelectSkill: (skillId: string) => void;
   onOpenVersions: () => void;
 }) {
+  const { t } = useTranslation();
   const version = skill.currentVersion?.revisionNumber ?? null;
   const toast = useOptionalToastActions();
   const copyShareLink = useCallback(() => {
@@ -1161,7 +1178,7 @@ function StudioHeader({
         <span className="font-mono text-xs text-muted-foreground">v{version}</span>
       )}
       {skillDirty ? (
-        <Badge variant="secondary">Unsaved edits</Badge>
+        <Badge variant="secondary">{t("pages.skills.studio.unsavedEdits")}</Badge>
       ) : null}
       {!skill.editable ? (
         <Badge variant="secondary">Read-only</Badge>
@@ -1212,6 +1229,7 @@ function SkillSwitcher({
   onSelectSkill: (skillId: string) => void;
   emptyLabel?: string;
 }) {
+  const { t } = useTranslation();
   const groups = useMemo<readonly SearchableSelectGroup<string, SkillSwitcherOption>[]>(() => {
     const options: SkillSwitcherOption[] = withCurrentSkill(skills, skill).map((item) => ({
       key: item.id,
@@ -1229,7 +1247,7 @@ function SkillSwitcher({
       value={skill?.id ?? ""}
       groups={groups}
       loading={loading}
-      loadingMessage="Loading skills..."
+      loadingMessage={t("pages.skills.studio.loadingSkills")}
       placeholder={emptyLabel}
       searchPlaceholder="Search skills..."
       emptyMessage="No matching skills."
@@ -1275,6 +1293,7 @@ function SkillPane({
   onDirtyChange: (dirty: boolean) => void;
   onEditACopy: () => void;
 }) {
+  const { t } = useTranslation();
   const skillId = skill.id;
   const queryClient = useQueryClient();
   const onError = useMutationErrorToast();
@@ -1419,7 +1438,7 @@ function SkillPane({
           />
         }
       >
-        <EmptyState icon={FileCode} message="This skill has no files yet." />
+        <EmptyState icon={FileCode} message={t("pages.skills.studio.noFilesYet")} />
         <SkillPathDialog
           mode={createDialog}
           open={createDialog !== null}
@@ -1731,6 +1750,7 @@ function SkillPathDialog({
   pending: boolean;
   onSubmit: (path: string, content: string) => void;
 }) {
+  const { t } = useTranslation();
   const [pathValue, setPathValue] = useState("");
   const [error, setError] = useState<string | null>(null);
 
@@ -1787,7 +1807,7 @@ function SkillPathDialog({
               setPathValue(event.target.value);
               setError(null);
             }}
-            placeholder={mode === "folder" ? "references/examples" : "references/examples.md"}
+            placeholder={mode === "folder" ? t("pages.skills.studio.pathPlaceholderFolder") : t("pages.skills.studio.pathPlaceholderFile")}
           />
           {mode === "folder" ? (
             <p className="text-xs text-muted-foreground">A README.md seed file is created so the folder appears in the file tree.</p>
@@ -1796,10 +1816,10 @@ function SkillPathDialog({
         </div>
         <DialogFooter>
           <Button variant="ghost" onClick={() => onOpenChange(false)}>
-            Cancel
+            {t("pages.common.cancel")}
           </Button>
           <Button disabled={pending} onClick={submit}>
-            Create
+            {t("pages.common.create")}
           </Button>
         </DialogFooter>
       </DialogContent>
@@ -1822,6 +1842,7 @@ function DeleteFolderDialog({
   pending: boolean;
   onSubmit: (path: string) => void;
 }) {
+  const { t } = useTranslation();
   const [pathValue, setPathValue] = useState("");
   const [error, setError] = useState<string | null>(null);
 
@@ -1853,13 +1874,11 @@ function DeleteFolderDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Delete folder</DialogTitle>
-          <DialogDescription>
-            This removes every skill file under the folder and saves the result as the next version.
-          </DialogDescription>
+          <DialogTitle>{t("pages.skills.studio.deleteFolderTitle")}</DialogTitle>
+          <DialogDescription>{t("pages.skills.studio.deleteFolderDescription")}</DialogDescription>
         </DialogHeader>
         <div className="space-y-2">
-          <Label htmlFor="skill-folder-delete">Folder path</Label>
+          <Label htmlFor="skill-folder-delete">{t("pages.skills.studio.folderPathLabel")}</Label>
           <Input
             id="skill-folder-delete"
             value={pathValue}
@@ -1867,16 +1886,16 @@ function DeleteFolderDialog({
               setPathValue(event.target.value);
               setError(null);
             }}
-            placeholder="references/examples"
+            placeholder={t("pages.skills.studio.folderPathPlaceholder")}
           />
           {error ? <p className="text-xs text-destructive">{error}</p> : null}
         </div>
         <DialogFooter>
           <Button variant="ghost" onClick={() => onOpenChange(false)}>
-            Cancel
+            {t("pages.common.cancel")}
           </Button>
           <Button variant="destructive" disabled={pending} onClick={submit}>
-            Delete
+            {t("pages.common.delete")}
           </Button>
         </DialogFooter>
       </DialogContent>
@@ -1911,6 +1930,7 @@ function InputPane({
   onSelectInput: (id: string) => void;
   onSelectAdHoc: () => void;
 }) {
+  const { t } = useTranslation();
   const queryClient = useQueryClient();
   const onError = useMutationErrorToast();
   // The row's menu closes on click, so its copy confirmation goes to a toast.
@@ -2064,7 +2084,7 @@ function InputPane({
           {loading || inputs.length > 0 ? (
             <div className="max-h-(--sz-11_75rem) overflow-auto border-b border-border p-1">
               {loading ? (
-                <div className="p-3 text-xs text-muted-foreground">Loading inputs…</div>
+                <div className="p-3 text-xs text-muted-foreground">{t("pages.skills.studio.loadingInputs")}</div>
               ) : (
                 <>
                   {adHocMode && (
@@ -2133,7 +2153,7 @@ function InputPane({
             <textarea
               value={draft}
               onChange={(event) => setDraft(event.target.value)}
-              placeholder="Paste text - treated as a new issue description."
+              placeholder={t("pages.skills.studio.pasteInputPlaceholder")}
               aria-label="Skill test input"
               className="min-h-0 flex-1 resize-none border-0 bg-transparent px-3 py-3 text-sm leading-6 outline-none placeholder:text-muted-foreground focus-visible:ring-0"
             />
@@ -2209,6 +2229,7 @@ function SaveInputDialog({
   initialContent: string;
   onSaved: (input: CompanySkillTestInput) => void;
 }) {
+  const { t } = useTranslation();
   const queryClient = useQueryClient();
   const [name, setName] = useState("");
   const [content, setContent] = useState(initialContent);
@@ -2243,7 +2264,7 @@ function SaveInputDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Save test input</DialogTitle>
+          <DialogTitle>{t("pages.skills.studio.saveTestInputTitle")}</DialogTitle>
           <DialogDescription>
             Runs snapshot input at run time — editing later won't change past runs.
           </DialogDescription>
@@ -2255,7 +2276,7 @@ function SaveInputDialog({
               id="input-name"
               value={name}
               onChange={(e) => setName(e.target.value)}
-              placeholder="onboarding/happy-path"
+              placeholder={t("pages.skills.studio.saveTestInputPathPlaceholder")}
             />
             <p className="text-xs text-muted-foreground">Use “/” for folders, e.g. onboarding/happy-path</p>
           </div>
@@ -2271,13 +2292,13 @@ function SaveInputDialog({
         </div>
         <DialogFooter>
           <Button variant="ghost" onClick={() => onOpenChange(false)}>
-            Cancel
+            {t("pages.common.cancel")}
           </Button>
           <Button
             disabled={!name.trim() || !content.trim() || createMutation.isPending}
             onClick={() => createMutation.mutate()}
           >
-            Save
+            {t("pages.common.save")}
           </Button>
         </DialogFooter>
       </DialogContent>
@@ -2323,6 +2344,7 @@ function RunsPane({
   filterInput: CompanySkillTestInput | null;
   onClearFilter: () => void;
 }) {
+  const { t } = useTranslation();
   const skillId = skill.id;
   const queryClient = useQueryClient();
   const onError = useMutationErrorToast();
@@ -2398,7 +2420,7 @@ function RunsPane({
     hasUnsavedSkillEdits: skillDirty,
   });
   const templateGateReason = templatesQuery.isLoading
-    ? "Loading run templates"
+    ? t("pages.skills.studio.loadingRunTemplates")
     : templatesQuery.isError
       ? "Run templates couldn't load"
       : null;
@@ -2509,7 +2531,7 @@ function RunsPane({
 
   return (
     <PaneScaffold
-      title="Test runs"
+      title={t("pages.skills.studio.testRuns")}
       action={
         <div className="flex items-center gap-2">
           <AgentPicker
@@ -2576,9 +2598,9 @@ function RunsPane({
         )}
         <div className="min-h-0 flex-1 overflow-auto p-3">
           {runsQuery.isLoading ? (
-            <div className="text-xs text-muted-foreground">Loading runs…</div>
+            <div className="text-xs text-muted-foreground">{t("pages.skills.studio.loadingRuns")}</div>
           ) : runs.length === 0 ? (
-            <EmptyState icon={FlaskConical} message="No test runs yet. Pick an agent and Run." />
+            <EmptyState icon={FlaskConical} message={t("pages.skills.studio.noTestRunsYet")} />
           ) : (
             <div className="space-y-1 rounded-md border border-border p-1">
               {runs.map((run) => (
@@ -2657,6 +2679,7 @@ function RunTemplateAdvancedPanel({
   deletingTemplateId: string | null;
   actionPending: boolean;
 }) {
+  const { t } = useTranslation();
   const templateGroups = useMemo<readonly SearchableSelectGroup<string, RunTemplateOption>[]>(() => {
     const noTemplateOption: RunTemplateOption = {
       key: "no-template",
@@ -2715,8 +2738,8 @@ function RunTemplateAdvancedPanel({
                 groups={templateGroups}
                 loading={templatesLoading}
                 disabled={templatesLoading || templatesError}
-                loadingMessage="Loading templates..."
-                placeholder="Select template"
+                loadingMessage={t("pages.skills.studio.loadingTemplates")}
+                placeholder={t("pages.skills.studio.selectTemplate")}
                 searchPlaceholder="Search templates..."
                 emptyMessage="No templates."
                 contentClassName="w-(--sz-320px)"
@@ -2819,7 +2842,7 @@ function RunTemplateAdvancedPanel({
               </pre>
             </div>
           ) : (
-            <p className="text-xs text-muted-foreground">Loading template...</p>
+            <p className="text-xs text-muted-foreground">{t("pages.skills.studio.loadingTemplate")}</p>
           )}
         </div>
       ) : null}
@@ -2838,6 +2861,7 @@ function RunTemplateDialog({
   onOpenChange: (open: boolean) => void;
   onSubmit: (payload: CompanySkillTestRunTemplateCreateRequest) => void;
 }) {
+  const { t } = useTranslation();
   const source = state?.source ?? null;
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
@@ -2873,7 +2897,7 @@ function RunTemplateDialog({
               id="run-template-name"
               value={name}
               onChange={(event) => setName(event.target.value)}
-              placeholder="Focused smoke"
+              placeholder={t("pages.skills.studio.runTemplateNamePlaceholder")}
             />
           </div>
           <div className="space-y-1">
@@ -2882,7 +2906,7 @@ function RunTemplateDialog({
               id="run-template-description"
               value={description}
               onChange={(event) => setDescription(event.target.value)}
-              placeholder="Short instructions for common skill checks"
+              placeholder={t("pages.skills.studio.runTemplateInstructionsPlaceholder")}
             />
           </div>
           <div className="space-y-1">
@@ -2900,7 +2924,7 @@ function RunTemplateDialog({
         </div>
         <DialogFooter>
           <Button variant="ghost" onClick={() => onOpenChange(false)}>
-            Cancel
+            {t("pages.common.cancel")}
           </Button>
           <Button
             disabled={!name.trim() || !body.trim() || pending}
@@ -2959,6 +2983,7 @@ function AgentPicker({
   selectedAgent: Agent | null;
   onSelect: (id: string) => void;
 }) {
+  const { t } = useTranslation();
   const [open, setOpen] = useState(false);
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -2973,9 +2998,9 @@ function AgentPicker({
       </PopoverTrigger>
       <PopoverContent align="end" className="w-64 p-0">
         <Command>
-          <CommandInput placeholder="Search agents…" />
+          <CommandInput placeholder={t("pages.skills.studio.searchAgents")} />
           <CommandList>
-            <CommandEmpty>No agents.</CommandEmpty>
+            <CommandEmpty>{t("pages.skills.studio.noAgents")}</CommandEmpty>
             <CommandGroup>
               {agents.map((agent) => {
                 const selectable = isAgentSelectable(agent);
@@ -3034,6 +3059,7 @@ function RunDetailView({
   onBack: () => void;
   onSelectRun: (id: string | null) => void;
 }) {
+  const { t } = useTranslation();
   const skillId = skill.id;
   const queryClient = useQueryClient();
   const onError = useMutationErrorToast();
@@ -3100,7 +3126,7 @@ function RunDetailView({
   if (detailQuery.isLoading) {
     return (
       <PaneScaffold title="Run" action={<BackButton onBack={onBack} />}>
-        <div className="p-3 text-xs text-muted-foreground">Loading run…</div>
+        <div className="p-3 text-xs text-muted-foreground">{t("pages.skills.studio.loadingRun")}</div>
       </PaneScaffold>
     );
   }
@@ -3236,7 +3262,7 @@ function RunDetailView({
               disabled={cancelMutation.isPending}
               onClick={() => cancelMutation.mutate()}
             >
-              Cancel
+              {t("pages.common.cancel")}
             </Button>
           ) : (
             <Button
@@ -3246,7 +3272,7 @@ function RunDetailView({
               disabled={deleteMutation.isPending}
               onClick={() => deleteMutation.mutate()}
             >
-              <Trash2 className="mr-1.5 h-3.5 w-3.5" /> Delete
+              <Trash2 className="mr-1.5 h-3.5 w-3.5" /> {t("pages.common.delete")}
             </Button>
           )}
           {taskLink.enabled && detail.harnessIssue ? (
@@ -3434,6 +3460,7 @@ function VersionHistorySheet({
   onRestored: () => void;
   onFilterRuns: (inputId: string) => void;
 }) {
+  const { t } = useTranslation();
   const skillId = skill.id;
   const queryClient = useQueryClient();
   const versionsQuery = useQuery({
@@ -3477,9 +3504,9 @@ function VersionHistorySheet({
         </SheetHeader>
         <div className="mt-3 space-y-2 overflow-auto">
           {versionsQuery.isLoading ? (
-            <div className="text-xs text-muted-foreground">Loading versions…</div>
+            <div className="text-xs text-muted-foreground">{t("pages.skills.studio.loadingVersions")}</div>
           ) : versions.length === 0 ? (
-            <EmptyState icon={History} message="No versions yet. Save changes to create the first." />
+            <EmptyState icon={History} message={t("pages.skills.studio.noVersionsYet")} />
           ) : (
             <div className="space-y-1 rounded-md border border-border p-1">
               {versions.map((v) => (

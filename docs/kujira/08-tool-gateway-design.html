@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Tool gateway design</title>
+  <link rel="stylesheet" href="assets/doc.css">
+</head>
+<body>
+  <h1>Tool gateway design</h1>
+  <p class="status">Status: this slice</p>
+  <svg viewBox="0 0 640 80" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Draft hash is checked before the delivery insert">
+    <text x="8" y="40" font-size="13">draft payload</text>
+    <text x="140" y="40" font-size="13">HMAC</text>
+    <text x="230" y="40" font-size="13">approve stored hash</text>
+    <text x="430" y="40" font-size="13">one delivery</text>
+    <line x1="100" y1="48" x2="560" y2="48" stroke="#44403c"/>
+  </svg>
+  <table>
+    <thead><tr><th>Piece</th><th>Choice</th></tr></thead>
+    <tbody>
+      <tr><td>Approval row</td><td>Existing <code>tool_action_requests</code>. Secret <code>PAPERCLIP_TOOL_ACTION_SIGNING_SECRET</code>.</td></tr>
+      <tr><td>Risk label</td><td><code>EXTERNAL_COMMUNICATION</code> on the approval list.</td></tr>
+      <tr><td>Send</td><td><code>workforce.outbound_message</code> inserts <code>workforce_outbound_deliveries</code>. Idempotency key is the action request id.</td></tr>
+      <tr><td>CRM</td><td><code>workforce.crm_record</code>.</td></tr>
+      <tr><td>Gmail</td><td><code>gmail.json</code> still disables send. This slice does not open it.</td></tr>
+      <tr><td>Reject or expire</td><td>No delivery. Codes <code>approval_rejected</code> and <code>approval_expired</code>. TTL 24h.</td></tr>
+    </tbody>
+  </table>
+</body>
+</html>

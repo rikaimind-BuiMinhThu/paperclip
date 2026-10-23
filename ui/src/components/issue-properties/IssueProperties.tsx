@@ -25,6 +25,7 @@ import { issuesApi } from "../../api/issues";
 import { useIssuePlanDocument } from "@/hooks/useIssuePlanDocument";
 import { useIssueDocuments } from "@/hooks/useIssueDocuments";
 import { useStreamlinedUiEnabled } from "@/hooks/useStreamlinedUiEnabled";
+import { useTranslation } from "@/i18n";
 import { selectAgentArtifactAttachments } from "@/lib/issue-artifacts";
 import { projectsApi } from "../../api/projects";
 import { useCompany } from "../../context/CompanyContext";
@@ -138,6 +139,7 @@ function splitMiddleTruncation(value: string): { prefix: string; suffix: string 
 }
 
 function TruncatedCopyable({ value, icon: Icon }: { value: string; icon: ComponentType<{ className?: string }> }) {
+  const { t } = useTranslation();
   const [copied, setCopied] = useState(false);
   const timerRef = useRef<ReturnType<typeof setTimeout>>(undefined);
   useEffect(() => () => clearTimeout(timerRef.current), []);
@@ -163,7 +165,7 @@ function TruncatedCopyable({ value, icon: Icon }: { value: string; icon: Compone
         )}
         onClick={handleCopy}
         title={value}
-        aria-label={`Copy ${value} to clipboard`}
+        aria-label={t("issues.propertiesPanel.copyToClipboardAria", { value })}
       >
         {!streamlinedUiEnabled ? value : middle ? (
           <span className="flex min-w-0" data-middle-truncate="true">
@@ -242,6 +244,7 @@ export function IssueProperties({
   documentDeepLink,
   sidePanelContentOnly = false,
 }: IssuePropertiesProps) {
+  const { t } = useTranslation();
   const { selectedCompanyId } = useCompany();
   const { isMobile } = useSidebar();
   const queryClient = useQueryClient();
@@ -877,11 +880,11 @@ export function IssueProperties({
             <InlineEntitySelector
               value={assigneeOverrideModel}
               options={modelOverrideOptions}
-              placeholder="Default model"
+              placeholder={t("issues.dialog.defaultModel")}
               disablePortal
-              noneLabel="Default model"
-              searchPlaceholder="Search models..."
-              emptyMessage="No models found."
+              noneLabel={t("issues.dialog.defaultModel")}
+              searchPlaceholder={t("issues.propertiesPanel.searchModels")}
+              emptyMessage={t("issues.propertiesPanel.noModelsFound")}
               onChange={updateAssigneeOverrideModel}
             />
           </div>
@@ -1164,8 +1167,8 @@ export function IssueProperties({
       type="button"
       className="inline-flex items-center gap-1 rounded-full border border-border px-2 py-0.5 text-xs text-muted-foreground transition-colors hover:bg-accent/50 hover:text-foreground"
       onClick={() => setLabelsOpen(true)}
-      aria-label="Add label"
-      title="Add label"
+      aria-label={t("issues.propertiesPanel.addLabel")}
+      title={t("issues.propertiesPanel.addLabel")}
     >
       <Plus className="h-3 w-3" />
       Add label
@@ -1178,13 +1181,13 @@ export function IssueProperties({
         <InlineEntitySelector
           value={watchdogAgentInput}
           options={watchdogAgentOptions}
-          placeholder="Select agent"
-          noneLabel="No watchdog agent"
-          searchPlaceholder="Search agents..."
-          emptyMessage="No agents found."
+          placeholder={t("issues.dialog.selectAgent")}
+          noneLabel={t("issues.propertiesPanel.noWatchdogAgent")}
+          searchPlaceholder={t("issues.propertiesPanel.searchAgents")}
+          emptyMessage={t("issues.propertiesPanel.noAgentsFound")}
           onChange={setWatchdogAgentInput}
           renderTriggerValue={(option) => {
-            if (!option) return <span className="text-muted-foreground">Select agent</span>;
+            if (!option) return <span className="text-muted-foreground">{t("issues.dialog.selectAgent")}</span>;
             const agent = (agents ?? []).find((candidate) => candidate.id === option.id);
             return (
               <>
@@ -1211,7 +1214,7 @@ export function IssueProperties({
         <Textarea
           value={watchdogInstructionsInput}
           onChange={(event) => setWatchdogInstructionsInput(event.target.value)}
-          placeholder="What should the watchdog watch for and how should it keep work moving?"
+          placeholder={t("issues.propertiesPanel.watchdogInstructionsPlaceholder")}
           rows={4}
           className="text-xs"
         />
@@ -1556,7 +1559,7 @@ export function IssueProperties({
         <input
           type="text"
           className="min-w-0 flex-1 rounded-md border border-border bg-transparent px-2 py-1 text-xs"
-          placeholder="What should the agent re-check?"
+          placeholder={t("issues.propertiesPanel.monitorRecheckPlaceholder")}
           value={monitorNotesInput}
           onChange={(e) => setMonitorNotesInput(e.target.value)}
         />
@@ -1565,7 +1568,7 @@ export function IssueProperties({
         <input
           type="text"
           className="min-w-0 flex-1 rounded-md border border-border bg-transparent px-2 py-1 text-xs"
-          placeholder="External service"
+          placeholder={t("issues.propertiesPanel.externalServicePlaceholder")}
           value={monitorServiceInput}
           onChange={(e) => setMonitorServiceInput(e.target.value)}
         />
@@ -1632,7 +1635,7 @@ export function IssueProperties({
     <>
       <input
         className="w-full px-2 py-1.5 text-xs bg-transparent outline-none border-b border-border mb-1 placeholder:text-muted-foreground/50"
-        placeholder="Search labels..."
+        placeholder={t("issues.propertiesPanel.searchLabels")}
         value={labelSearch}
         onChange={(e) => setLabelSearch(e.target.value)}
         autoFocus={!inline}
@@ -1671,7 +1674,7 @@ export function IssueProperties({
           />
           <input
             className="flex-1 px-2 py-1.5 text-xs bg-transparent outline-none rounded placeholder:text-muted-foreground/50"
-            placeholder="New label"
+            placeholder={t("issues.propertiesPanel.newLabel")}
             value={newLabelName}
             onChange={(e) => setNewLabelName(e.target.value)}
           />
@@ -1713,7 +1716,7 @@ export function IssueProperties({
           kind: "user" as const,
           value: `user:${currentUserId}`,
           userId: currentUserId,
-          label: "Assign to me",
+          label: t("issues.assignToMe"),
           searchText: userLabel(currentUserId) ?? "",
         }]
       : []),
@@ -1722,7 +1725,7 @@ export function IssueProperties({
           kind: "user" as const,
           value: `user:${issue.createdByUserId}`,
           userId: issue.createdByUserId,
-          label: creatorUserLabel ? `Assign to ${creatorUserLabel}` : "Assign to requester",
+          label: creatorUserLabel ? `Assign to ${creatorUserLabel}` : t("issues.propertiesPanel.assignToRequester"),
           searchText: creatorUserLabel ?? "requester",
         }]
       : []),
@@ -1822,29 +1825,29 @@ export function IssueProperties({
       ) : null}
       <input
         className="w-full px-2 py-1.5 text-xs bg-transparent outline-none border-b border-border mb-1 placeholder:text-muted-foreground/50"
-        placeholder="Search assignees..."
+        placeholder={t("issues.dialog.searchAssignees")}
         value={assigneeSearch}
         onChange={(e) => setAssigneeSearch(e.target.value)}
         autoFocus={!inline}
       />
       <div className="max-h-56 overflow-y-auto overscroll-contain">
         {showNoAssigneeOption
-          ? renderAssigneeOption({ kind: "none", value: "", label: "No assignee", searchText: "" })
+          ? renderAssigneeOption({ kind: "none", value: "", label: t("issues.dialog.noAssignee"), searchText: "" })
           : null}
         {visibleAgentOptions.length > 0 ? (
           <>
-            {sectionHeader("Agents")}
+            {sectionHeader(t("issues.propertiesPanel.agentsSection"))}
             {visibleAgentOptions.map((option) => renderAssigneeOption(option))}
           </>
         ) : null}
         {visibleUserOptions.length > 0 ? (
           <>
-            {sectionHeader("Board users")}
+            {sectionHeader(t("issues.propertiesPanel.boardUsersSection"))}
             {visibleUserOptions.map((option) => renderAssigneeOption(option))}
           </>
         ) : null}
         {!showNoAssigneeOption && visibleAgentOptions.length === 0 && visibleUserOptions.length === 0 ? (
-          <div className="px-2 py-2 text-xs text-muted-foreground">No matches.</div>
+          <div className="px-2 py-2 text-xs text-muted-foreground">{t("issues.propertiesPanel.noMatches")}</div>
         ) : null}
       </div>
     </>
@@ -1860,7 +1863,7 @@ export function IssueProperties({
     <>
       <input
         className="w-full px-2 py-1.5 text-xs bg-transparent outline-none border-b border-border mb-1 placeholder:text-muted-foreground/50"
-        placeholder={`Search ${stageType === "review" ? "reviewers" : "approvers"}...`}
+        placeholder={stageType === "review" ? t("issues.propertiesPanel.searchReviewers") : t("issues.propertiesPanel.searchApprovers")}
         value={search}
         onChange={(e) => setSearch(e.target.value)}
         autoFocus={!inline}
@@ -1873,7 +1876,7 @@ export function IssueProperties({
           )}
           onClick={onClear}
         >
-          No {stageType === "review" ? "reviewers" : "approvers"}
+          {stageType === "review" ? t("issues.propertiesPanel.noReviewers") : t("issues.propertiesPanel.noApprovers")}
         </button>
         {currentUserId && (
           <button
@@ -1973,7 +1976,7 @@ export function IssueProperties({
     <>
       <input
         className="w-full px-2 py-1.5 text-xs bg-transparent outline-none border-b border-border mb-1 placeholder:text-muted-foreground/50"
-        placeholder="Search projects..."
+        placeholder={t("issues.dialog.searchProjects")}
         value={projectSearch}
         onChange={(e) => setProjectSearch(e.target.value)}
         autoFocus={!inline}
@@ -2142,7 +2145,7 @@ export function IssueProperties({
     <>
       <input
         className="w-full px-2 py-1.5 text-xs bg-transparent outline-none border-b border-border mb-1 placeholder:text-muted-foreground/50"
-        placeholder="Search tasks..."
+        placeholder={t("issues.list.searchPlaceholder")}
         value={parentSearch}
         onChange={(e) => setParentSearch(e.target.value)}
         autoFocus={!inline}
@@ -2228,11 +2231,11 @@ export function IssueProperties({
     <>
       <input
         className="w-full px-2 py-1.5 text-xs bg-transparent outline-none border-b border-border mb-1 placeholder:text-muted-foreground/50"
-        placeholder="Search tasks..."
+        placeholder={t("issues.list.searchPlaceholder")}
         value={blockedBySearch}
         onChange={(e) => setBlockedBySearch(e.target.value)}
         autoFocus={!inline}
-        aria-label="Search tasks to add as blockers"
+        aria-label={t("issues.propertiesPanel.searchBlockersAria")}
       />
       <div className="max-h-48 overflow-y-auto overscroll-contain">
         <button
@@ -2532,7 +2535,7 @@ export function IssueProperties({
         {streamlinedPropertiesEnabled ? (
           <PropertyPicker
             inline={inline}
-            label="Subtasks"
+            label={t("issues.sidePanel.subtasks")}
             open={subtasksOpen}
             onOpenChange={setSubtasksOpen}
             separateTrigger={childIssues.length > 0}
@@ -2780,11 +2783,11 @@ export function IssueProperties({
                     </button>
                     <input
                       className="block w-full bg-transparent px-2 py-1.5 text-xs outline-none placeholder:text-muted-foreground/50"
-                      placeholder="Search workspaces..."
+                      placeholder={t("issues.propertiesPanel.searchWorkspaces")}
                       value={workspaceSearch}
                       onChange={(event) => setWorkspaceSearch(event.target.value)}
                       autoFocus={!inline}
-                      aria-label="Search reusable workspaces"
+                      aria-label={t("issues.propertiesPanel.searchWorkspacesAria")}
                     />
                   </div>
                   <div className="max-h-48 overflow-y-auto overscroll-contain py-1">
@@ -2995,18 +2998,18 @@ export function IssueProperties({
   const hasReferencesTab = streamlinedPropertiesEnabled
     && (panelReferencedTasks.length > 0 || panelMentionedInTasks.length > 0);
   const availablePaneTabs: IssuePaneTabDescriptor[] = [
-    { value: "properties", label: "Properties", closable: false },
+    { value: "properties", label: t("issues.sidePanel.properties"), closable: false },
     ...(hasSubtasksTab
-      ? [{ value: "subtasks" as const, label: "Subtasks", count: childIssues.length, closable: true }]
+      ? [{ value: "subtasks" as const, label: t("issues.sidePanel.subtasks"), count: childIssues.length, closable: true }]
       : []),
     ...(hasReferencesTab
-      ? [{ value: "references" as const, label: "References", closable: true }]
+      ? [{ value: "references" as const, label: t("issues.sidePanel.references"), closable: true }]
       : []),
     ...(hasPlanTab
-      ? [{ value: "plans" as const, label: "Plan", closable: true }]
+      ? [{ value: "plans" as const, label: t("issues.sidePanel.plan"), closable: true }]
       : []),
     ...(hasArtifactsTab
-      ? [{ value: "artifacts" as const, label: "Artifacts", closable: true }]
+      ? [{ value: "artifacts" as const, label: t("issues.sidePanel.artifacts"), closable: true }]
       : []),
   ];
   const visiblePaneTabs = availablePaneTabs.filter(
@@ -3031,11 +3034,11 @@ export function IssueProperties({
                     "inline-flex flex-none items-center bg-muted px-3",
                   )}
                 >
-                  Properties
+                  {t("issues.sidePanel.properties")}
                 </button>
               </div>,
               paneHeaderSlot,
-            ) : createPortal(<span className="text-sm font-medium">Properties</span>, paneHeaderSlot)
+            ) : createPortal(<span className="text-sm font-medium">{t("issues.sidePanel.properties")}</span>, paneHeaderSlot)
           : null}
         {propertiesBody}
       </>

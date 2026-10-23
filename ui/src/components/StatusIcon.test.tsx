@@ -1,8 +1,16 @@
 // @vitest-environment node
 
 import { renderToStaticMarkup } from "react-dom/server";
-import { describe, expect, it } from "vitest";
-import { t } from "@/i18n";
+import { afterAll, beforeAll, describe, expect, it } from "vitest";
+import { DEFAULT_LOCALE, i18n, t } from "@/i18n";
+
+beforeAll(async () => {
+  await i18n.changeLanguage("en");
+});
+
+afterAll(async () => {
+  await i18n.changeLanguage(DEFAULT_LOCALE);
+});
 import { StatusIcon } from "./StatusIcon";
 import { IssueStatusBadge } from "./StatusBadge";
 

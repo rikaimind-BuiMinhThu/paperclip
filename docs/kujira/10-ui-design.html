@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>UI design</title>
+  <link rel="stylesheet" href="assets/doc.css">
+</head>
+<body>
+  <h1>UI design</h1>
+  <p class="status">Status: this slice</p>
+  <svg viewBox="0 0 640 70" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Work nav order">
+    <text x="8" y="40" font-size="13">Tasks</text>
+    <text x="70" y="40" font-size="13">Routines</text>
+    <text x="160" y="40" font-size="13">Workforce</text>
+    <text x="270" y="40" font-size="13">Workflows</text>
+    <text x="380" y="40" font-size="13">Shifts</text>
+    <text x="460" y="40" font-size="13">Approvals</text>
+  </svg>
+  <table>
+    <thead><tr><th>Route</th><th>Page</th></tr></thead>
+    <tbody>
+      <tr><td><code>workforce</code></td><td>Overview cards and recent shifts. Empty state offers the Sachi template.</td></tr>
+      <tr><td><code>workforce/workflows</code></td><td>Definitions and published version number.</td></tr>
+      <tr><td><code>workforce/workflows/:definitionId</code></td><td>Linear node form. Save draft on the left, Publish on the right.</td></tr>
+      <tr><td><code>workforce/runs/:runId</code></td><td>Steps, payload subject, issue link, sandboxed artifact preview.</td></tr>
+      <tr><td><code>workforce/shifts</code></td><td>Timeline. Detail shows summary, previous summary, cost, and steps.</td></tr>
+      <tr><td><code>workforce/approvals</code></td><td>Agent, tool, to, subject, body, risk, issue, expiration, Approve, Reject.</td></tr>
+    </tbody>
+  </table>
+  <p>Employees stay on <code>/agents</code>. Labels are <code>nav.workforce</code>, <code>nav.workflows</code>, <code>nav.shifts</code>, and <code>nav.approvals</code> in English and Japanese. The chrome does not say Paperclip or CellCog.</p>
+</body>
+</html>

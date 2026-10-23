@@ -20,6 +20,7 @@ import {
   type BlockedInboxGroupBy,
   type BlockedInboxSort,
 } from "../lib/blockedInbox";
+import { useTranslation } from "@/i18n";
 import { useCompany } from "../context/CompanyContext";
 import { useToastActions } from "../context/ToastContext";
 import { useBreadcrumbs } from "../context/BreadcrumbContext";
@@ -690,6 +691,7 @@ function JoinRequestInboxRow({
 }
 
 export function Inbox() {
+  const { t } = useTranslation();
   const { selectedCompanyId } = useCompany();
   const { setBreadcrumbs } = useBreadcrumbs();
   const { openNewIssue } = useDialogActions();
@@ -2734,7 +2736,7 @@ export function Inbox() {
                           ({childCount} sub-task{childCount !== 1 ? "s" : ""})
                         </span>
                       ) : undefined}
-                      mobileMeta={issueActivityText(issue).toLowerCase()}
+                      mobileMeta={issueActivityText(issue, t).toLowerCase()}
                       mobileLeading={
                         depth === 0 && hasChildren && collapseParentId ? (
                           <button

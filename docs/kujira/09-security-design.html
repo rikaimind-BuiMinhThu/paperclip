@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Security design</title>
+  <link rel="stylesheet" href="assets/doc.css">
+</head>
+<body>
+  <h1>Security design</h1>
+  <p class="status">Status: this slice</p>
+  <svg viewBox="0 0 480 80" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Company boundary around every workforce query">
+    <rect x="20" y="16" width="440" height="48" fill="none" stroke="#44403c"/>
+    <text x="240" y="44" text-anchor="middle" font-size="13">company_id on every read and write</text>
+  </svg>
+  <table>
+    <thead><tr><th>Check</th><th>Result</th></tr></thead>
+    <tbody>
+      <tr><td>Cross-company id</td><td>404.</td></tr>
+      <tr><td>Approve body</td><td>Ignored. Server uses the stored hash. Mismatch is 409 and does not deliver.</td></tr>
+      <tr><td>Send</td><td>Refuses unless the action request is <code>executed</code> for that hash.</td></tr>
+      <tr><td>Draft employee</td><td>Routine run fails. No shift remains.</td></tr>
+      <tr><td>Viewer</td><td>GET only. Publish, approve, reject, cancel, and create require <code>tasks:assign</code>.</td></tr>
+      <tr><td>Budget</td><td><code>pauseReason = budget</code> throws <code>budget_hard_stop</code> and does not open a shift.</td></tr>
+      <tr><td>HTML</td><td>Asset route keeps the sandbox CSP. Preview iframe uses <code>sandbox=""</code>.</td></tr>
+    </tbody>
+  </table>
+</body>
+</html>

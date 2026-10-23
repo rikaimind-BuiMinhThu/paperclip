@@ -41,6 +41,20 @@ export function isIssueWorkMode(value: unknown): value is IssueWorkMode {
   return value === "standard" || value === "ask" || value === "planning";
 }
 
+export function workModeLabelKey(mode: IssueWorkMode): "issues.workMode.auto" | "issues.workMode.plan" | "issues.workMode.ask" {
+  if (mode === "ask") return "issues.workMode.ask";
+  if (mode === "planning") return "issues.workMode.plan";
+  return "issues.workMode.auto";
+}
+
+export function workModeTitleKey(
+  mode: IssueWorkMode,
+): "issues.workMode.autoTitle" | "issues.workMode.planTitle" | "issues.workMode.askTitle" {
+  if (mode === "ask") return "issues.workMode.askTitle";
+  if (mode === "planning") return "issues.workMode.planTitle";
+  return "issues.workMode.autoTitle";
+}
+
 export function workModeMetaList(): WorkModeMeta[] {
   return [
     {

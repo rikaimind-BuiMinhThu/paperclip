@@ -2,8 +2,10 @@
 
 import { createRoot } from "react-dom/client";
 import { flushSync } from "react-dom";
-import { afterEach, describe, expect, it, vi } from "vitest";
+import { afterAll, afterEach, beforeAll, describe, expect, it, vi } from "vitest";
 import type { Issue } from "@paperclipai/shared";
+import { i18n } from "@/i18n";
+import { DEFAULT_LOCALE } from "@/i18n/locales";
 import {
   InboxIssueMetaLeading,
   InboxIssueTrailingColumns,
@@ -48,6 +50,14 @@ function renderLeading(element: React.ReactElement): string {
 }
 
 describe("IssueColumnPicker presentation options", () => {
+  beforeAll(async () => {
+    await i18n.changeLanguage("en");
+  });
+
+  afterAll(async () => {
+    await i18n.changeLanguage(DEFAULT_LOCALE);
+  });
+
   it("offers date group separators as a toggle in the Columns menu", () => {
     const onToggleDateGroupSeparators = vi.fn();
     renderLeading(
@@ -64,7 +74,7 @@ describe("IssueColumnPicker presentation options", () => {
       />,
     );
 
-    const columnsButton = container?.querySelector<HTMLButtonElement>('button[title="Columns"]');
+    const columnsButton = container?.querySelector<HTMLButtonElement>(`button[title="${i18n.t("issues.list.columnsTitle")}"]`);
     expect(columnsButton).not.toBeNull();
     act(() => columnsButton?.dispatchEvent(new MouseEvent("pointerdown", { bubbles: true })));
 
@@ -78,9 +88,18 @@ describe("IssueColumnPicker presentation options", () => {
 });
 
 describe("InboxIssueMetaLeading live state", () => {
+  beforeAll(async () => {
+    await i18n.changeLanguage("en");
+  });
+
+  afterAll(async () => {
+    await i18n.changeLanguage(DEFAULT_LOCALE);
+  });
+
   it("describes the canonical identifier at the trailing edge", () => {
-    expect(issueColumnDescription("id", "task")).toContain("trailing edge");
-    expect(issueColumnDescription("id", "legacy")).not.toContain("trailing edge");
+    const translate = i18n.t.bind(i18n);
+    expect(issueColumnDescription("id", "task", translate)).toContain("trailing edge");
+    expect(issueColumnDescription("id", "legacy", translate)).not.toContain("trailing edge");
   });
 
   it("shows the own Live chip for a running issue and never the subtree chip", () => {

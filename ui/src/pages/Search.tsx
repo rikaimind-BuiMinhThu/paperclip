@@ -492,11 +492,13 @@ export function Search() {
       // Issue-only filters don't constrain agents/projects, so show a dash there
       // rather than an unfiltered count that would misrepresent the result set.
       const dashOut = filtersActive && (value === "agents" || value === "projects");
+      const textLabel = scopeLabel(value as CompanySearchScope, t);
       return {
         value,
+        optionLabel: textLabel,
         label: (
           <span className="flex items-center">
-            {scopeLabel(value as CompanySearchScope, t)}
+            {textLabel}
             {dashOut ? (
               <span className="ml-1.5 text-(length:--text-nano) text-muted-foreground">—</span>
             ) : count !== null ? (
@@ -506,7 +508,7 @@ export function Search() {
         ),
       } satisfies PageTabItem;
     });
-  }, [counts, data, filtersActive]);
+  }, [counts, data, filtersActive, t]);
 
   const operatorPills = useMemo(() => searchFilterPills(draftFilters, parserContext), [draftFilters, parserContext]);
   const operatorSuggestions = useMemo(
@@ -617,7 +619,7 @@ export function Search() {
                 <button
                   key={suggestion.token}
                   type="button"
-                  aria-label={`Insert operator ${suggestion.token}`}
+                  aria-label={t("search.insertOperator", { token: suggestion.token })}
                   onMouseDown={(event) => event.preventDefault()}
                   onClick={() => {
                     setDraftQuery(applySearchOperatorSuggestion(draftQuery, suggestion.token));
@@ -632,9 +634,11 @@ export function Search() {
             </div>
           ) : (
             <span className="truncate">
-              Try <code className="rounded bg-muted px-1 py-0.5 text-(length:--text-micro)">status:todo</code>,{" "}
+              {t("search.operatorHintBefore")}{" "}
+              <code className="rounded bg-muted px-1 py-0.5 text-(length:--text-micro)">status:todo</code>,{" "}
               <code className="rounded bg-muted px-1 py-0.5 text-(length:--text-micro)">assignee:me</code>,{" "}
-              or <code className="rounded bg-muted px-1 py-0.5 text-(length:--text-micro)">updated:&gt;7d</code>.
+              {t("search.operatorHintOr")}{" "}
+              <code className="rounded bg-muted px-1 py-0.5 text-(length:--text-micro)">updated:&gt;7d</code>.
             </span>
           )}
         </div>
@@ -779,15 +783,13 @@ function SearchTabContent({
     return (
       <div className="mx-auto flex w-full max-w-2xl flex-col gap-4 px-4 py-10 sm:px-6">
         <div>
-          <h2 className="text-lg font-semibold">Type to search organization memory.</h2>
-          <p className="mt-1 text-sm text-muted-foreground">
-            Tasks, comments, plan documents, artifacts, agents, projects — same surface, ranked by relevance.
-          </p>
+          <h2 className="text-lg font-semibold">{t("search.emptyTitle")}</h2>
+          <p className="mt-1 text-sm text-muted-foreground">{t("search.emptyDescription")}</p>
         </div>
         {recentSearches.length > 0 ? (
           <div>
             <div className="mb-2 text-(length:--text-micro) font-semibold uppercase tracking-wide text-muted-foreground">
-              Recent searches
+              {t("search.recentSearchesHeading")}
             </div>
             <ul className="flex flex-col divide-y divide-border rounded-md border border-border">
               {recentSearches.map((entry) => (
@@ -807,16 +809,26 @@ function SearchTabContent({
         ) : null}
         <ul className="space-y-1 text-xs text-muted-foreground">
           <li>
-            <span className="font-medium text-foreground">Identifier lookup:</span> type{" "}
-            <code className="rounded bg-muted px-1 py-0.5 text-(length:--text-micro)">PAP-123</code> to jump straight to a task.
+            <span className="font-medium text-foreground">{t("search.initialTipIdentifierLabel")}</span>{" "}
+            {(() => {
+              const example = "PAP-123";
+              const parts = t("search.initialTipIdentifierBody", { example }).split(example);
+              return (
+                <>
+                  {parts[0]}
+                  <code className="rounded bg-muted px-1 py-0.5 text-(length:--text-micro)">{example}</code>
+                  {parts[1] ?? ""}
+                </>
+              );
+            })()}
           </li>
           <li>
-            <span className="font-medium text-foreground">Quoted phrases:</span> wrap a phrase in quotes to match the
-            exact sequence.
+            <span className="font-medium text-foreground">{t("search.initialTipQuotesLabel")}</span>{" "}
+            {t("search.initialTipQuotesBody")}
           </li>
           <li>
-            <span className="font-medium text-foreground">⌘K:</span> reopens the command palette pre-seeded with your
-            current query.
+            <span className="font-medium text-foreground">{t("search.initialTipPaletteLabel")}</span>{" "}
+            {t("search.initialTipPaletteBody")}
           </li>
         </ul>
       </div>
@@ -894,11 +906,11 @@ function SearchTabContent({
           </Button>
         </div>
         <ul className="mt-2 space-y-0.5 text-xs text-muted-foreground">
-          <li>Try fewer tokens or a single distinctive term.</li>
+          <li>{t("search.tipFewerTokens")}</li>
           <li>
-            Use an identifier shortcut like <code className="rounded bg-muted px-1 py-0.5">PAP-123</code>.
+            {t("search.tipIdentifier", { example: "PAP-123" })}
           </li>
-          <li>Wrap multi-word phrases in quotes.</li>
+          <li>{t("search.tipQuotes")}</li>
         </ul>
       </div>
     );

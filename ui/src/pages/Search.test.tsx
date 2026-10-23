@@ -5,8 +5,8 @@ import { flushSync } from "react-dom";
 import { createRoot } from "react-dom/client";
 import { MemoryRouter, Route, Routes } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { t } from "@/i18n";
+import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
+import { DEFAULT_LOCALE, i18n, t } from "@/i18n";
 import { Search, buildSearchUrl } from "./Search";
 
 const companyState = vi.hoisted(() => ({
@@ -160,6 +160,14 @@ describe("buildSearchUrl", () => {
 
 describe("Search page", () => {
   let container: HTMLDivElement;
+
+  beforeAll(async () => {
+    await i18n.changeLanguage("en");
+  });
+
+  afterAll(async () => {
+    await i18n.changeLanguage(DEFAULT_LOCALE);
+  });
 
   beforeEach(() => {
     container = document.createElement("div");

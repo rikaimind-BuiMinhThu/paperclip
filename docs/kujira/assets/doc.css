@@ -1,0 +1,17 @@
+body {
+  font-family: "Iowan Old Style", Palatino, Georgia, serif;
+  max-width: 52rem;
+  margin: 2rem auto;
+  padding: 0 1.25rem 3rem;
+  color: #1c1917;
+  background: #fafaf9;
+  line-height: 1.5;
+}
+h1 { font-size: 1.8rem; margin-bottom: 0.25rem; }
+.status { margin-top: 0; color: #57534e; }
+a { color: #1d4ed8; }
+table { border-collapse: collapse; width: 100%; margin-top: 1rem; background: white; }
+th, td { border: 1px solid #d6d3d1; padding: 0.45rem 0.6rem; text-align: left; vertical-align: top; }
+th { background: #f5f5f4; }
+svg { display: block; margin: 1.25rem 0; max-width: 100%; height: auto; }
+code { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 0.92em; }

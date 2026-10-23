@@ -599,13 +599,14 @@ function AdapterPickerList({
   onToggleExpand: (slug: string) => void;
   onChangeConfig: (slug: string, patch: Partial<CreateConfigValues>) => void;
 }) {
+  const { t } = useTranslation();
   if (agents.length === 0) return null;
 
   return (
     <div className="mx-5 mt-3">
       <div className="rounded-md border border-border">
         <div className="flex items-center gap-2 border-b border-border px-4 py-2.5">
-          <h3 className="text-sm font-medium">Adapters</h3>
+          <h3 className="text-sm font-medium">{t("pages.import.adapters")}</h3>
           <span className="text-xs text-muted-foreground">
             {agents.length} agent{agents.length === 1 ? "" : "s"}
           </span>
@@ -1669,7 +1670,7 @@ export function CompanyImport() {
     return (
       <div className="max-w-6xl space-y-4 px-5 py-5">
         <div>
-          <h2 className="text-base font-semibold">Import completed</h2>
+          <h2 className="text-base font-semibold">{t("pages.import.importComplete")}</h2>
           <p className="text-xs text-muted-foreground mt-1">
             {importOutcome.companyName
               ? <>The import finished and <span className="font-medium text-foreground">{importOutcome.companyName}</span> is ready. Its detailed summary is no longer available.</>
@@ -1709,7 +1710,7 @@ export function CompanyImport() {
     return (
       <div className="max-w-6xl space-y-4 px-5 py-5">
         <div>
-          <h2 className="text-base font-semibold">Import complete</h2>
+          <h2 className="text-base font-semibold">{t("pages.import.importComplete")}</h2>
           <p className="text-xs text-muted-foreground mt-1">
             {result.company.name}: {result.agents.length} agent{result.agents.length === 1 ? "" : "s"},{" "}
             {skillResults.length} skill{skillResults.length === 1 ? "" : "s"},{" "}
@@ -1847,7 +1848,7 @@ export function CompanyImport() {
       {/* Source form section */}
       <div className="border-b border-border px-5 py-5 space-y-4">
         <div>
-          <h2 className="text-base font-semibold">Import source</h2>
+          <h2 className="text-base font-semibold">{t("pages.import.importSource")}</h2>
           <p className="text-xs text-muted-foreground mt-1">
             Choose a GitHub repo or upload a local Kujira AI Harness zip package.
           </p>
@@ -1856,7 +1857,7 @@ export function CompanyImport() {
         <div className="grid gap-2 md:grid-cols-2">
           {(
             [
-              { key: "github", icon: GithubIcon, label: "GitHub repo" },
+              { key: "github", icon: GithubIcon, label: t("pages.import.githubRepo") },
               { key: "local", icon: Upload, label: "Local zip" },
             ] as const
           ).map(({ key, icon: Icon, label }) => (
@@ -1999,7 +2000,7 @@ export function CompanyImport() {
               previewMutation.isPending || importMutation.isPending || !hasSource
             }
           >
-            {previewMutation.isPending ? "Previewing..." : "Preview import"}
+            {previewMutation.isPending ? "Previewing..." : t("pages.import.previewImport")}
           </Button>
           {!hasSource && !previewMutation.isPending && (
             <span className="text-xs text-muted-foreground">

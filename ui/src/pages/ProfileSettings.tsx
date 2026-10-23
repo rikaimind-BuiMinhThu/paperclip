@@ -71,7 +71,7 @@ export function ProfileSettings() {
   }
 
   function resolveProfileName() {
-    return name.trim() || sessionQuery.data?.user.name || "Board";
+    return name.trim() || sessionQuery.data?.user.name || t("pages.profile.boardPlaceholder");
   }
 
   const updateMutation = useMutation({
@@ -133,7 +133,7 @@ export function ProfileSettings() {
     );
   }
 
-  const currentName = name.trim() || sessionQuery.data.user.name || "Board";
+  const currentName = name.trim() || sessionQuery.data.user.name || t("pages.profile.boardPlaceholder");
   const currentImage = image.trim() || null;
   const initials = deriveInitials(currentName);
   const isSavingProfile = updateMutation.isPending || uploadAvatarMutation.isPending || removeAvatarMutation.isPending;
@@ -149,7 +149,7 @@ export function ProfileSettings() {
           <h1 className="text-lg font-semibold">{t("pages.profile.title")}</h1>
         </div>
         <p className="text-sm text-muted-foreground">
-          Control how your account appears in the sidebar and other board surfaces.
+          {t("pages.profile.description")}
         </p>
       </div>
 
@@ -201,7 +201,7 @@ export function ProfileSettings() {
                     disabled={!selectedCompanyId || isSavingProfile}
                   >
                     {uploadAvatarMutation.isPending ? <LoaderCircle className="size-4 animate-spin" /> : <Camera className="size-4" />}
-                    {currentImage ? "Change photo" : "Upload photo"}
+                    {currentImage ? t("pages.profile.changePhoto") : "Upload photo"}
                   </Button>
                   {currentImage ? (
                     <Button
@@ -244,7 +244,7 @@ export function ProfileSettings() {
               value={name}
               onChange={(event) => setName(event.target.value)}
               maxLength={120}
-              placeholder="Board"
+              placeholder={t("pages.profile.boardPlaceholder")}
             />
             <p className="text-xs text-muted-foreground">
               Shown in the sidebar account footer and comment author surfaces.

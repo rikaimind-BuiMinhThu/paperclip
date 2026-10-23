@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Agent runtime design</title>
+  <link rel="stylesheet" href="assets/doc.css">
+</head>
+<body>
+  <h1>Agent runtime design</h1>
+  <p class="status">Status: this slice</p>
+  <svg viewBox="0 0 640 80" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Lifecycle maps onto existing agent status">
+    <text x="8" y="40" font-size="13">draft</text>
+    <text x="80" y="40" font-size="13">pending_approval</text>
+    <text x="230" y="40" font-size="13">active idle running error</text>
+    <text x="450" y="40" font-size="13">paused</text>
+    <text x="540" y="40" font-size="13">archived</text>
+  </svg>
+  <table>
+    <thead><tr><th>Workforce lifecycle</th><th>Stored as</th><th>Wake</th></tr></thead>
+    <tbody>
+      <tr><td>draft</td><td><code>metadata.workforce.lifecycle = draft</code></td><td>Not woken. Routine run fails before start.</td></tr>
+      <tr><td>pending_approval</td><td>Existing agent status</td><td>Not invokable.</td></tr>
+      <tr><td>active</td><td><code>active</code>, <code>idle</code>, <code>running</code>, or <code>error</code></td><td>Invokable. Assignment wake still runs.</td></tr>
+      <tr><td>paused</td><td>Existing status <code>paused</code></td><td>Not invokable.</td></tr>
+      <tr><td>archived</td><td>Existing status <code>terminated</code></td><td>Not invokable.</td></tr>
+    </tbody>
+  </table>
+  <p>The run stamps the latest <code>agent_config_revisions.id</code>. Adapters and heartbeat runs stay the runtime. The employee node records the routine issue and does not open a second one.</p>
+</body>
+</html>
