@@ -74,4 +74,4 @@ Tests       22 passed (22)
 
 ## 6. Commit
 
-Filled after commit: see `git log -1 --oneline` on the DocuWorks feat commit.
+**Commit:** `6ed7dbd1` (`6ed7dbd149e520e76bf3caa6865c7d8ecebf55af`).
