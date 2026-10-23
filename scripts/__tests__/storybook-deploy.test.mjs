@@ -263,7 +263,7 @@ function avatarVerificationFixture(change = {}) {
   const png = Buffer.alloc(24);
   Buffer.from('89504e470d0a1a0a', 'hex').copy(png);
   png.writeUInt32BE(48, 16); png.writeUInt32BE(48, 20);
-  const entry = { path: 'agent-avatar-images/cap-v1/bubblegum-sky/rest-24-2.png', pixels: 48,
+  const entry = { path: 'agent-avatar-images/photo-v1/bubblegum-sky/rest-24-2.png', pixels: 48,
     sha256: createHash('sha256').update(png).digest('hex'), ...change.entry };
   const requested = [];
   return { requested, fetch: async (url) => {

@@ -12,6 +12,7 @@ import {
 } from "drizzle-orm/pg-core";
 import { agents } from "./agents.js";
 import { companies } from "./companies.js";
+import { workflowDefinitions } from "./workforce.js";
 import { companySecrets } from "./company_secrets.js";
 import { issues } from "./issues.js";
 import { projects } from "./projects.js";
@@ -32,6 +33,9 @@ export const routines = pgTable(
     title: text("title").notNull(),
     description: text("description"),
     assigneeAgentId: uuid("assignee_agent_id").references(() => agents.id),
+    workflowDefinitionId: uuid("workflow_definition_id").references(() => workflowDefinitions.id, {
+      onDelete: "set null",
+    }),
     priority: text("priority").notNull().default("medium"),
     status: text("status").notNull().default("active"),
     concurrencyPolicy: text("concurrency_policy").notNull().default("coalesce_if_active"),
@@ -57,6 +61,7 @@ export const routines = pgTable(
   (table) => ({
     companyStatusIdx: index("routines_company_status_idx").on(table.companyId, table.status),
     companyAssigneeIdx: index("routines_company_assignee_idx").on(table.companyId, table.assigneeAgentId),
+    companyWorkflowIdx: index("routines_company_workflow_idx").on(table.companyId, table.workflowDefinitionId),
     companyProjectIdx: index("routines_company_project_idx").on(table.companyId, table.projectId),
     companyFolderIdx: index("routines_company_folder_idx").on(table.companyId, table.folderId),
     companyResponsibleUserIdx: index("routines_company_responsible_user_idx").on(table.companyId, table.responsibleUserId),

@@ -23,12 +23,13 @@ export function AgentAvatar({ agent, appearance, size = 24, name, label, pose = 
   const identity = resolveAgentAppearance(appearance ?? agent?.appearance, agent?.id);
   const src = agentAvatarUrl(identity, size, 1, pose, muted);
   const [failedUrl, setFailedUrl] = useState<string | null>(null);
+  const photo = identity.characterVersion === "photo-v1";
   return (
-    <span data-slot="agent-avatar" className={cn("relative inline-flex shrink-0 items-center justify-center align-middle", avatarSizeClasses[size], className)}
+    <span data-slot="agent-avatar" className={cn("relative inline-flex shrink-0 items-center justify-center align-middle overflow-hidden", photo && "rounded-full", avatarSizeClasses[size], className)}
       role={label ? "img" : undefined} aria-label={label} aria-hidden={label ? undefined : true}>
       {failedUrl === src ? <span className="text-xs text-muted-foreground">{deriveInitials(name ?? agent?.name ?? "Agent")}</span> :
         <img src={src} srcSet={`${agentAvatarUrl(identity, size, 2, pose, muted)} 2x`} alt="" width={size} height={size}
-          decoding="async" loading="lazy" className="size-full object-contain" onError={() => setFailedUrl(src)} />}
+          decoding="async" loading="lazy" className={cn("size-full", photo ? "object-cover" : "object-contain")} onError={() => setFailedUrl(src)} />}
     </span>
   );
 }

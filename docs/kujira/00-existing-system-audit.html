@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Existing system audit</title>
+  <link rel="stylesheet" href="assets/doc.css">
+</head>
+<body>
+  <h1>Existing system audit</h1>
+  <p class="status">Status: this slice</p>
+  <svg viewBox="0 0 640 120" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Control plane reused by the workforce slice">
+    <rect x="8" y="28" width="120" height="48" fill="#e7e5e4" stroke="#44403c"/>
+    <text x="68" y="56" text-anchor="middle" font-size="13">agents</text>
+    <rect x="148" y="28" width="120" height="48" fill="#e7e5e4" stroke="#44403c"/>
+    <text x="208" y="56" text-anchor="middle" font-size="13">routines</text>
+    <rect x="288" y="28" width="150" height="48" fill="#e7e5e4" stroke="#44403c"/>
+    <text x="363" y="56" text-anchor="middle" font-size="13">tool approvals</text>
+    <rect x="458" y="28" width="160" height="48" fill="#d6d3d1" stroke="#44403c"/>
+    <text x="538" y="56" text-anchor="middle" font-size="13">workforce module</text>
+  </svg>
+  <table>
+    <thead><tr><th>Capability</th><th>Where it lives</th><th>This slice</th></tr></thead>
+    <tbody>
+      <tr><td>AI employee</td><td><code>packages/db/src/schema/agents.ts</code></td><td>Reuse. Lifecycle in <code>metadata.workforce.lifecycle</code>.</td></tr>
+      <tr><td>Tasks</td><td><code>issues</code> and assignment wake</td><td>Routine still creates one issue.</td></tr>
+      <tr><td>Schedule</td><td><code>server/src/services/routines.ts</code></td><td>One branch inside <code>dispatchRoutine</code>. Same 30s tick.</td></tr>
+      <tr><td>Approval</td><td><code>tool_action_requests</code></td><td>Hash and HMAC stay. New outbound table records the send.</td></tr>
+      <tr><td>Workflow graph</td><td>Experimental pipelines only</td><td>New linear tables. Pipelines stay untouched.</td></tr>
+      <tr><td>Company teams</td><td><code>agents.reports_to</code>, <code>master_teams</code></td><td>Later. No company team table in this slice.</td></tr>
+      <tr><td>Memory</td><td>Connector list only. No pgvector.</td><td>Scoped text rows.</td></tr>
+      <tr><td>Gmail send, Odoo, Stripe, computer use</td><td>Absent or send-disabled</td><td>Left closed.</td></tr>
+    </tbody>
+  </table>
+</body>
+</html>

@@ -79,12 +79,31 @@ export function formatShortDate(date: Date | string): string {
   });
 }
 
-export function relativeTime(date: Date | string): string {
+export function relativeTime(date: Date | string, locale?: string): string {
   const now = Date.now();
   const then = new Date(date).getTime();
-  const diffSec = Math.round((now - then) / 1000);
-  if (diffSec < 60) return "just now";
-  const diffMin = Math.round(diffSec / 60);
+  const diffMs = then - now;
+  const diffSec = Math.round(diffMs / 1000);
+  const absSec = Math.abs(diffSec);
+  const resolvedLocale = locale
+    ?? (typeof document !== "undefined" ? document.documentElement.lang : undefined)
+    ?? "en";
+
+  try {
+    const rtf = new Intl.RelativeTimeFormat(resolvedLocale, { numeric: "auto" });
+    if (absSec < 60) return rtf.format(Math.round(diffSec), "second");
+    const diffMin = Math.round(diffSec / 60);
+    if (Math.abs(diffMin) < 60) return rtf.format(diffMin, "minute");
+    const diffHr = Math.round(diffMin / 60);
+    if (Math.abs(diffHr) < 24) return rtf.format(diffHr, "hour");
+    const diffDay = Math.round(diffHr / 24);
+    if (Math.abs(diffDay) < 30) return rtf.format(diffDay, "day");
+  } catch {
+    // Fall through to compact English if Intl rejects the locale tag.
+  }
+
+  if (absSec < 60) return "just now";
+  const diffMin = Math.round(absSec / 60);
   if (diffMin < 60) return `${diffMin}m ago`;
   const diffHr = Math.round(diffMin / 60);
   if (diffHr < 24) return `${diffHr}h ago`;

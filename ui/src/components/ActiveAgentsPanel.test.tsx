@@ -3,7 +3,8 @@
 import { act, type ReactNode } from "react";
 import { createRoot } from "react-dom/client";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
+import { DEFAULT_LOCALE, i18n } from "@/i18n";
 import { ActiveAgentsPanel, AgentRunCard } from "./ActiveAgentsPanel";
 
 const mockHeartbeatsApi = vi.hoisted(() => ({
@@ -114,6 +115,14 @@ function createIssue(id: string, identifier: string, title: string) {
 
 describe("ActiveAgentsPanel", () => {
   let container: HTMLDivElement;
+
+  beforeAll(async () => {
+    await i18n.changeLanguage("en");
+  });
+
+  afterAll(async () => {
+    await i18n.changeLanguage(DEFAULT_LOCALE);
+  });
 
   beforeEach(() => {
     container = document.createElement("div");
@@ -304,7 +313,7 @@ describe("ActiveAgentsPanel", () => {
     ]);
     expect(headers.every((header) => header.querySelector("svg") === null)).toBe(true);
     expect(container.querySelector(".status-chip")).toBeNull();
-    expect(container.querySelectorAll('[aria-label="Task in review"]')).toHaveLength(7);
+    expect(container.querySelectorAll('[aria-label="In review"]')).toHaveLength(7);
     expect(container.querySelectorAll(".motion-safe\\:animate-spin")).toHaveLength(0);
     expect(container.querySelector('a[aria-label="Agent 0 — Running. View run"]')?.getAttribute("href"))
       .toBe("/agents/agent-0/runs/run-0");
@@ -319,8 +328,8 @@ describe("ActiveAgentsPanel", () => {
         issue={{ title: "Slack conversation", identifier: "PAP-559", status: "in_review", externalConversationState: "waiting" }} />);
     });
     expect(container.querySelector('[aria-label="Agent 0 — Succeeded. View run"]')).not.toBeNull();
-    expect(container.querySelector('[aria-label="Task idle"]')).not.toBeNull();
-    expect(container.querySelector('[aria-label="Task in review"]')).toBeNull();
+    expect(container.querySelector('[aria-label="Idle"]')).not.toBeNull();
+    expect(container.querySelector('[aria-label="In review"]')).toBeNull();
     await act(async () => root.unmount());
   });
 

@@ -407,7 +407,7 @@ export function Agents() {
         leading={hasInvalidOrgChain ? (
           <AlertTriangle className="h-3.5 w-3.5 text-amber-500" aria-label={t("agents.invalidReportingChain")} />
         ) : (
-          <AgentAvatar agent={agent} size={32} />
+          <AgentAvatar agent={agent} size={40} />
         )}
         secondaryRow={
           builtInCluster ? (

@@ -10,29 +10,30 @@ import { Link } from "@/lib/router";
 import { queryKeys } from "@/lib/queryKeys";
 import { copyTextToClipboard } from "@/lib/clipboard";
 import { Badge } from "@/components/ui/badge";
+import { useTranslation } from "@/i18n";
 
 const inviteRoleOptions = [
   {
     value: "viewer",
-    label: "Viewer",
+    labelKey: "pages.invites.roleViewer" as const,
     description: "Can view organization work and follow along.",
     gets: "View-only organization membership.",
   },
   {
     value: "operator",
-    label: "Operator",
+    labelKey: "pages.invites.roleOperator" as const,
     description: "Recommended for people who need to help run work without managing access.",
     gets: "Can assign tasks.",
   },
   {
     value: "admin",
-    label: "Admin",
+    labelKey: "pages.invites.roleAdmin" as const,
     description: "Recommended for operators who need to invite people, create agents, and approve joins.",
     gets: "Can create agents, invite users, assign tasks, and approve join requests.",
   },
   {
     value: "owner",
-    label: "Owner",
+    labelKey: "pages.invites.roleOwner" as const,
     description: "Full organization access, including membership management.",
     gets: "Everything in Admin, plus managing members.",
   },
@@ -47,6 +48,7 @@ function isInviteHistoryRow(value: unknown): value is Awaited<ReturnType<typeof 
 
 /** The Invites tab of the Members page (extracted from the former standalone Invites page). */
 export function InvitesSection() {
+  const { t } = useTranslation();
   const { selectedCompanyId } = useCompany();
   const { pushToast } = useToast();
   const queryClient = useQueryClient();
@@ -151,11 +153,11 @@ export function InvitesSection() {
   });
 
   if (!selectedCompanyId) {
-    return <div className="text-sm text-muted-foreground">Select an organization to manage invites.</div>;
+    return <div className="text-sm text-muted-foreground">{t("pages.invites.selectOrganization")}</div>;
   }
 
   if (invitesQuery.isLoading) {
-    return <div className="text-sm text-muted-foreground">Loading invites…</div>;
+    return <div className="text-sm text-muted-foreground">{t("pages.invites.loading")}</div>;
   }
 
   if (invitesQuery.error) {
@@ -177,14 +179,14 @@ export function InvitesSection() {
 
       <section className="space-y-4 rounded-xl border border-border p-5">
         <div className="space-y-1">
-          <h2 className="text-sm font-semibold">Invite a person</h2>
+          <h2 className="text-sm font-semibold">{t("pages.invites.invitePerson")}</h2>
           <p className="text-sm text-muted-foreground">
             Generate a human invite link and choose the default access it should request.
           </p>
         </div>
 
         <fieldset className="space-y-3">
-          <legend className="text-sm font-medium">Choose a role</legend>
+          <legend className="text-sm font-medium">{t("pages.invites.chooseRole")}</legend>
           <div className="rounded-xl border border-border">
             {inviteRoleOptions.map((option, index) => {
               const checked = humanRole === option.value;
@@ -203,7 +205,7 @@ export function InvitesSection() {
                   />
                   <span className="min-w-0 space-y-1">
                     <span className="flex flex-wrap items-center gap-2">
-                      <span className="text-sm font-medium">{option.label}</span>
+                      <span className="text-sm font-medium">{t(option.labelKey)}</span>
                       {option.value === "operator" ? (
                         <Badge variant="outline" className="border-border text-muted-foreground">
                           Default
@@ -225,16 +227,16 @@ export function InvitesSection() {
 
         <div className="flex flex-wrap items-center gap-3">
           <Button onClick={() => createInviteMutation.mutate()} disabled={createInviteMutation.isPending}>
-            {createInviteMutation.isPending ? "Creating…" : "Create invite"}
+            {createInviteMutation.isPending ? t("common.creating") : t("pages.invites.createInvite")}
           </Button>
-          <span className="text-sm text-muted-foreground">Invite history below keeps the audit trail.</span>
+          <span className="text-sm text-muted-foreground">{t("pages.invites.inviteHistoryHint")}</span>
         </div>
 
         {latestInviteUrl ? (
           <div className="space-y-3 rounded-lg border border-border px-4 py-4">
             <div className="space-y-1">
               <div className="flex items-center justify-between gap-3">
-                <div className="text-sm font-medium">Latest invite link</div>
+                <div className="text-sm font-medium">{t("pages.invites.latestInviteLink")}</div>
                 {latestInviteCopied ? (
                   <div className="inline-flex items-center gap-1 text-xs font-medium text-foreground">
                     <Check className="h-3.5 w-3.5" />

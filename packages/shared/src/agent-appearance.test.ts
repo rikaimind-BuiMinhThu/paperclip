@@ -3,19 +3,27 @@ import { AGENT_PALETTE_IDS, agentAppearanceSchema, appearanceForPalette, legacyA
 import { renderAgentSvg } from "./cliplab/static.js";
 
 describe("agent appearance", () => {
-  it("assigns only the 17 permanent cap palettes", () => {
-    for (let i = 0; i < 100; i++) expect(AGENT_PALETTE_IDS).toContain(randomAgentAppearance().paletteId);
+  it("assigns only the permanent palettes and defaults to photo-v1", () => {
+    for (let i = 0; i < 100; i++) {
+      const appearance = randomAgentAppearance();
+      expect(AGENT_PALETTE_IDS).toContain(appearance.paletteId);
+      expect(appearance.characterVersion).toBe("photo-v1");
+    }
     expect(agentAppearanceSchema.safeParse({ schemaVersion: 1, characterVersion: "cap-v1", paletteId: "muted-dream" }).success).toBe(false);
+    expect(agentAppearanceSchema.safeParse({ schemaVersion: 1, characterVersion: "photo-v1", paletteId: "deep-tide" }).success).toBe(true);
+    expect(agentAppearanceSchema.safeParse({ schemaVersion: 1, characterVersion: "cap-v1", paletteId: "deep-tide" }).success).toBe(true);
   });
   it("preserves a saved appearance and resolves legacy IDs deterministically", () => {
     const appearance = appearanceForPalette("deep-tide");
+    expect(appearance.characterVersion).toBe("photo-v1");
     expect(resolveAgentAppearance(appearance, "different-id")).toEqual(appearance);
     expect(resolveAgentAppearance(null, "agent-1")).toEqual(legacyAgentAppearance("agent-1"));
     expect(legacyAgentAppearance("agent-1")).toEqual(legacyAgentAppearance("agent-1"));
-    expect(agentAvatarUrl(appearance, 24, 2)).toBe("/api/agent-avatars/cap-v1/deep-tide/rest.png?size=24&scale=2");
+    expect(agentAvatarUrl(appearance, 24, 2)).toBe("/api/agent-avatars/photo-v1/deep-tide/rest.png?size=24&scale=2&v=2");
+    expect(agentAvatarUrl(appearanceForPalette("deep-tide", "cap-v1"), 24, 2)).toBe("/api/agent-avatars/cap-v1/deep-tide/rest.png?size=24&scale=2&v=2");
   });
-  it("renders without a browser and preserves logical-size detail at high density", () => {
-    const appearance = appearanceForPalette("bubblegum-sky");
+  it("renders cap-v1 without a browser and preserves logical-size detail at high density", () => {
+    const appearance = appearanceForPalette("bubblegum-sky", "cap-v1");
     // ClipLab v0.2.0 draws an enlarged compact face from 16px; only 12px and
     // below (not a logical size) is body-only.
     const small = renderAgentSvg(appearance, 16, 2);

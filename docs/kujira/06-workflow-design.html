@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Workflow design</title>
+  <link rel="stylesheet" href="assets/doc.css">
+</head>
+<body>
+  <h1>Workflow design</h1>
+  <p class="status">Status: this slice</p>
+  <svg viewBox="0 0 760 70" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Sachi daily chain">
+    <text x="4" y="40" font-size="12">start</text>
+    <text x="60" y="40" font-size="12">employee</text>
+    <text x="140" y="40" font-size="12">draft</text>
+    <text x="200" y="40" font-size="12">approve</text>
+    <text x="280" y="40" font-size="12">send</text>
+    <text x="340" y="40" font-size="12">crm</text>
+    <text x="400" y="40" font-size="12">artifact</text>
+    <text x="480" y="40" font-size="12">end</text>
+    <line x1="36" y1="48" x2="500" y2="48" stroke="#44403c"/>
+  </svg>
+  <table>
+    <thead><tr><th>Rule</th><th>Behavior</th></tr></thead>
+    <tbody>
+      <tr><td>Shape</td><td>One start, one end, one outgoing edge, chain length at most 20.</td></tr>
+      <tr><td>Nodes</td><td><code>start</code>, <code>employee</code>, <code>tool</code>, <code>approval</code>, <code>artifact</code>, <code>end</code>.</td></tr>
+      <tr><td>Publish</td><td>Draft becomes immutable. Runs copy <code>graph_snapshot</code> at start.</td></tr>
+      <tr><td>Resume</td><td>Succeeded steps are skipped. A running step with no action request is deleted and retried. <code>waiting_for_human</code> stays waiting.</td></tr>
+      <tr><td>Open routine</td><td><code>skip_if_active</code> finalizes skipped. Otherwise the routine run is coalesced. No second issue.</td></tr>
+      <tr><td>Delegation</td><td>Helper cap 3. This graph does not create children.</td></tr>
+    </tbody>
+  </table>
+</body>
+</html>

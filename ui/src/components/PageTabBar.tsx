@@ -1,11 +1,14 @@
 import type { ReactNode } from "react";
 import { ChevronDown } from "lucide-react";
+import { useTranslation } from "@/i18n";
 import { TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useSidebar } from "../context/SidebarContext";
 
 export interface PageTabItem {
   value: string;
   label: ReactNode;
+  /** Plain text for the mobile `<select>` when `label` is a React node. */
+  optionLabel?: string;
 }
 
 interface PageTabBarProps {
@@ -16,6 +19,7 @@ interface PageTabBarProps {
 }
 
 export function PageTabBar({ items, value, onValueChange, align = "center" }: PageTabBarProps) {
+  const { t } = useTranslation();
   const { isMobile } = useSidebar();
 
   if (isMobile && value !== undefined && onValueChange) {
@@ -25,11 +29,12 @@ export function PageTabBar({ items, value, onValueChange, align = "center" }: Pa
           value={value}
           onChange={(e) => onValueChange(e.target.value)}
           className="h-9 appearance-none rounded-md border border-border bg-background pl-3 pr-9 py-1 text-base focus:outline-none focus:ring-1 focus:ring-ring"
-          aria-label="Page section"
+          aria-label={t("a11y.pageSection")}
         >
           {items.map((item) => (
             <option key={item.value} value={item.value}>
-              {typeof item.label === "string" ? item.label : item.value}
+              {item.optionLabel
+                ?? (typeof item.label === "string" ? item.label : item.value)}
             </option>
           ))}
         </select>

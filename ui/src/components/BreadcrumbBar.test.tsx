@@ -2,9 +2,18 @@
 
 import { act, useEffect, type ReactNode } from "react";
 import { createRoot, type Root } from "react-dom/client";
-import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
+import { DEFAULT_LOCALE, i18n } from "@/i18n";
 import { BreadcrumbProvider, useBreadcrumbs } from "../context/BreadcrumbContext";
 import { BreadcrumbBar } from "./BreadcrumbBar";
+
+beforeAll(async () => {
+  await i18n.changeLanguage("en");
+});
+
+afterAll(async () => {
+  await i18n.changeLanguage(DEFAULT_LOCALE);
+});
 
 const viewport = vi.hoisted(() => ({ isMobile: false }));
 

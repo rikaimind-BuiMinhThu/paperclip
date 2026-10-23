@@ -188,7 +188,7 @@ import { TaskChatThread } from "../components/TaskChatThread";
 import type { TaskChatIssueBrief } from "../components/task-chat/TaskChatDescriptionBubble";
 import { useClassicTaskInterfaceEnabled } from "../hooks/useClassicTaskInterfaceEnabled";
 import { useStreamlinedUiEnabled } from "../hooks/useStreamlinedUiEnabled";
-import { workModeMetaFor } from "../lib/work-mode-meta";
+import { workModeLabelKey, workModeMetaFor } from "../lib/work-mode-meta";
 import { IssueContinuationHandoff } from "../components/IssueContinuationHandoff";
 import { IssueAttachmentsSection } from "../components/IssueAttachmentsSection";
 import { IssueDocumentsSection } from "../components/IssueDocumentsSection";
@@ -7160,6 +7160,7 @@ export function TaskDetailSurface({ conversation, tasksTab }: { tasksTab?: TaskS
           ? (() => {
               const workModeMeta = workModeMetaFor(issue.workMode);
               const WorkModeIcon = workModeMeta.icon;
+              const workModeLabel = t(workModeLabelKey(issue.workMode));
               return (
                 <Badge
                   variant="outline"
@@ -7167,10 +7168,10 @@ export function TaskDetailSurface({ conversation, tasksTab }: { tasksTab?: TaskS
                     "text-(length:--text-nano)",
                     workModeMeta.classes.badge,
                   )}
-                  title={`This task is in ${workModeMeta.label.toLowerCase()}.`}
+                  title={t("issues.workMode.badgeTitle", { mode: workModeLabel })}
                 >
                   <WorkModeIcon className="h-3 w-3" aria-hidden />
-                  {workModeMeta.label}
+                  {workModeLabel}
                 </Badge>
               );
             })()

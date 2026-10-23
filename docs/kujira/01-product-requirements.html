@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Product requirements</title>
+  <link rel="stylesheet" href="assets/doc.css">
+</head>
+<body>
+  <h1>Product requirements</h1>
+  <p class="status">Status: this slice</p>
+  <svg viewBox="0 0 720 80" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Nineteen step scenario collapsed to eight checkpoints">
+    <text x="8" y="28" font-size="13">Hire</text>
+    <text x="70" y="28" font-size="13">Schedule</text>
+    <text x="160" y="28" font-size="13">Issue</text>
+    <text x="230" y="28" font-size="13">Shift</text>
+    <text x="300" y="28" font-size="13">Approve</text>
+    <text x="390" y="28" font-size="13">Deliver</text>
+    <text x="470" y="28" font-size="13">Artifact</text>
+    <text x="560" y="28" font-size="13">Overview</text>
+    <line x1="40" y1="48" x2="600" y2="48" stroke="#44403c"/>
+  </svg>
+  <table>
+    <thead><tr><th>Step</th><th>Covered now</th></tr></thead>
+    <tbody>
+      <tr><td>Hire Sachi, Ikura, or Engineer from master agents</td><td>Yes. Existing hire path. Three new slugs.</td></tr>
+      <tr><td>Publish Daily Sales Operations</td><td>Yes. <code>POST</code> with <code>template: sachi-daily</code>.</td></tr>
+      <tr><td>Weekday 09:00 Asia/Tokyo routine</td><td>Suggested on the detail page. Created through the existing routine API.</td></tr>
+      <tr><td>Open a shift and pause for the exact outbound draft</td><td>Yes.</td></tr>
+      <tr><td>Approve once, write one delivery, one CRM row, one HTML artifact</td><td>Yes. The delivery row is the send. Gmail stays closed.</td></tr>
+      <tr><td>Show the shift on Workforce</td><td>Yes.</td></tr>
+      <tr><td>Visual graph, parallel join, Odoo, real Gmail, Playwright, computer use, Stripe, KPI charts</td><td>Later.</td></tr>
+    </tbody>
+  </table>
+</body>
+</html>

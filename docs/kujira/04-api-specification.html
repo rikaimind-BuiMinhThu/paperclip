@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>API specification</title>
+  <link rel="stylesheet" href="assets/doc.css">
+</head>
+<body>
+  <h1>API specification</h1>
+  <p class="status">Status: this slice</p>
+  <svg viewBox="0 0 520 80" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="GET is open to members, mutations require tasks assign">
+    <rect x="10" y="20" width="200" height="40" fill="#e7e5e4" stroke="#44403c"/>
+    <text x="110" y="44" text-anchor="middle" font-size="13">GET member</text>
+    <rect x="250" y="20" width="250" height="40" fill="#d6d3d1" stroke="#44403c"/>
+    <text x="375" y="44" text-anchor="middle" font-size="13">mutate tasks:assign</text>
+  </svg>
+  <table>
+    <thead><tr><th>Route</th><th>Who</th></tr></thead>
+    <tbody>
+      <tr><td><code>GET /api/companies/:companyId/workforce/overview</code></td><td>Member</td></tr>
+      <tr><td><code>GET .../shifts</code> and <code>.../shifts/:shiftId</code></td><td>Member. Wrong company id is 404.</td></tr>
+      <tr><td><code>GET/POST .../workflows</code></td><td>Create requires a non-viewer.</td></tr>
+      <tr><td><code>PUT .../draft</code> and <code>POST .../publish</code></td><td>Non-viewer.</td></tr>
+      <tr><td><code>POST .../runs</code> and <code>POST .../cancel</code></td><td>Non-viewer.</td></tr>
+      <tr><td><code>GET/POST .../approvals/:id/approve|reject</code></td><td>Approve body is ignored. Agents cannot approve.</td></tr>
+      <tr><td><code>GET/DELETE .../memories</code></td><td>Private rows are omitted for other agents.</td></tr>
+    </tbody>
+  </table>
+  <p>Error codes: <code>approval_payload_mismatch</code> 409, <code>approval_rejected</code>, <code>approval_expired</code>, <code>workflow_already_running</code> 409, <code>budget_hard_stop</code> 409, <code>unsupported_node</code>, <code>workforce_employee_draft</code>, <code>workforce_employee_not_invokable</code>.</p>
+</body>
+</html>

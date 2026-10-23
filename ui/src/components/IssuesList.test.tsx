@@ -5,7 +5,7 @@ import { flushSync } from "react-dom";
 import type { AnchorHTMLAttributes, ReactNode } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import type { Issue, Project } from "@paperclipai/shared";
-import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 import {
   IssuesList,
   issueAgeBucket,
@@ -14,6 +14,7 @@ import {
 } from "./IssuesList";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { taskCollectionPreferencesStorageKey } from "../lib/task-collection-preferences";
+import { DEFAULT_LOCALE, i18n, t } from "@/i18n";
 
 const companyState = vi.hoisted(() => ({
   selectedCompanyId: "company-1",
@@ -337,6 +338,14 @@ function renderWithQueryClient(node: ReactNode, container: HTMLDivElement) {
 
 describe("IssuesList", () => {
   let container: HTMLDivElement;
+
+  beforeAll(async () => {
+    await i18n.changeLanguage("en");
+  });
+
+  afterAll(async () => {
+    await i18n.changeLanguage(DEFAULT_LOCALE);
+  });
 
   beforeEach(() => {
     container = document.createElement("div");
@@ -947,7 +956,7 @@ describe("IssuesList", () => {
     });
 
     const groupButton = Array.from(container.querySelectorAll("button")).find(
-      (button) => button.getAttribute("title") === "Group",
+      (button) => button.getAttribute("title") === t("issues.list.group"),
     );
     expect(groupButton).toBeTruthy();
     act(() => {
@@ -955,8 +964,8 @@ describe("IssuesList", () => {
     });
     await waitForAssertion(() => {
       const labels = Array.from(document.body.querySelectorAll("button")).map((b) => b.textContent ?? "");
-      expect(labels.some((text) => text.includes("Status"))).toBe(true);
-      expect(labels.some((text) => text.includes("Priority"))).toBe(false);
+      expect(labels.some((text) => text.includes(t("issues.list.groupByStatus")))).toBe(true);
+      expect(labels.some((text) => text.includes(t("issues.list.groupByPriority")))).toBe(false);
     });
 
     act(() => {
@@ -1250,7 +1259,7 @@ describe("IssuesList", () => {
       container,
     );
 
-    const input = container.querySelector('input[aria-label="Search tasks"]') as HTMLInputElement | null;
+    const input = container.querySelector(`input[aria-label="${t("issues.list.searchAria")}"]`) as HTMLInputElement | null;
     expect(input).not.toBeNull();
     const valueSetter = Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, "value")?.set;
     expect(valueSetter).toBeTypeOf("function");
@@ -1457,7 +1466,7 @@ describe("IssuesList", () => {
     });
 
     const pageSizeButton = Array.from(container.querySelectorAll("button")).find((button) =>
-      button.getAttribute("title") === "Cards per column",
+      button.getAttribute("title") === t("issues.list.cardsPerColumn"),
     );
     expect(pageSizeButton).toBeTruthy();
 
@@ -1468,7 +1477,7 @@ describe("IssuesList", () => {
     let option25: HTMLButtonElement | undefined;
     await waitForAssertion(() => {
       option25 = Array.from(document.body.querySelectorAll("button")).find((button) =>
-        button.textContent?.includes("25 per column"),
+        button.textContent?.includes(t("issues.list.perColumn", { count: 25 })),
       );
       expect(option25).toBeTruthy();
     });
@@ -1767,7 +1776,7 @@ describe("IssuesList", () => {
 
     await waitForAssertion(() => {
       const columnsButton = Array.from(document.body.querySelectorAll("button")).find(
-        (button) => button.getAttribute("title") === "Columns",
+        (button) => button.getAttribute("title") === t("issues.list.columnsTitle"),
       );
       expect(columnsButton).not.toBeUndefined();
       expect(container.textContent).toContain("PAP-9");
@@ -1997,7 +2006,7 @@ describe("IssuesList", () => {
 
     await act(async () => {
       const filterButton = Array.from(document.body.querySelectorAll("button")).find(
-        (button) => button.getAttribute("title") === "Filter",
+        (button) => button.getAttribute("title") === t("issues.list.filter"),
       );
       filterButton?.dispatchEvent(new MouseEvent("click", { bubbles: true }));
       await Promise.resolve();
@@ -2041,13 +2050,13 @@ describe("IssuesList", () => {
     );
 
     await waitForAssertion(() => {
-      const input = container.querySelector('input[aria-label="Search tasks"]') as HTMLInputElement | null;
+      const input = container.querySelector(`input[aria-label="${t("issues.list.searchAria")}"]`) as HTMLInputElement | null;
       expect(input).not.toBeNull();
       input?.focus();
       expect(document.activeElement).toBe(input);
     });
 
-    const input = container.querySelector('input[aria-label="Search tasks"]') as HTMLInputElement;
+    const input = container.querySelector(`input[aria-label="${t("issues.list.searchAria")}"]`) as HTMLInputElement;
     act(() => {
       input.dispatchEvent(new KeyboardEvent("keydown", {
         key: "Enter",
@@ -2077,13 +2086,13 @@ describe("IssuesList", () => {
     );
 
     await waitForAssertion(() => {
-      const input = container.querySelector('input[aria-label="Search tasks"]') as HTMLInputElement | null;
+      const input = container.querySelector(`input[aria-label="${t("issues.list.searchAria")}"]`) as HTMLInputElement | null;
       expect(input).not.toBeNull();
       input?.focus();
       expect(document.activeElement).toBe(input);
     });
 
-    const input = container.querySelector('input[aria-label="Search tasks"]') as HTMLInputElement;
+    const input = container.querySelector(`input[aria-label="${t("issues.list.searchAria")}"]`) as HTMLInputElement;
     act(() => {
       input.dispatchEvent(new KeyboardEvent("keydown", {
         key: "Escape",
@@ -2181,7 +2190,7 @@ describe("IssuesList", () => {
     await waitForAssertion(() => {
       const separators = Array.from(container.querySelectorAll("[data-issues-date-separator]"));
       const labels = separators.map((el) => el.getAttribute("aria-label"));
-      expect(labels).toEqual(["Today", "Earlier"]);
+      expect(labels).toEqual([t("common.today"), t("common.earlier")]);
       expect(separators.every((separator) => (
         separator.querySelectorAll("[data-date-group-rule]").length === 2
       ))).toBe(true);
@@ -2262,7 +2271,7 @@ describe("IssuesList", () => {
     await waitForAssertion(() => {
       const labels = Array.from(container.querySelectorAll("[data-issues-date-separator]"))
         .map((el) => el.getAttribute("aria-label"));
-      expect(labels).toEqual(["Today", "Earlier"]);
+      expect(labels).toEqual([t("common.today"), t("common.earlier")]);
     });
 
     act(() => {
@@ -2297,9 +2306,9 @@ describe("IssuesList", () => {
         container.querySelectorAll("[data-testid='issue-row'], [data-issues-date-separator]"),
       ).map((element) => element.getAttribute("aria-label") ?? element.firstElementChild?.textContent);
       expect(visibleOrder).toEqual([
-        "Today",
+        t("common.today"),
         "Recent parent",
-        "Earlier",
+        t("common.earlier"),
         "Older child",
         "Old root",
       ]);
@@ -2334,7 +2343,7 @@ describe("IssuesList", () => {
       expect(container.querySelector("[data-testid='issue-row']")).not.toBeNull();
     });
     expect(Array.from(container.querySelectorAll("[data-issues-date-separator]"))
-      .map((element) => element.getAttribute("aria-label"))).toEqual(["Today"]);
+      .map((element) => element.getAttribute("aria-label"))).toEqual([t("common.today")]);
 
     act(() => {
       root.unmount();

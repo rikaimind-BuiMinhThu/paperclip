@@ -10,18 +10,29 @@ import {
   type MasterAgentRecord,
   type MasterTeamRecord,
 } from "@paperclipai/shared";
+import { accessApi } from "@/api/access";
 import { masterAgentsApi } from "@/api/masterAgents";
 import { GALLERY_DEPARTMENT_LABEL } from "@/components/onboarding/MasterAgentGallery";
 import { MasterAgentIcon } from "@/components/onboarding/master-agent-icons";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { ToggleSwitch } from "@/components/ui/toggle-switch";
 import { useBreadcrumbs } from "@/context/BreadcrumbContext";
 import { useTranslation } from "@/i18n";
+import { INSTANCE_SETTINGS_PATH_PREFIX } from "@/lib/instance-settings";
 import { queryKeys } from "@/lib/queryKeys";
+import { Link } from "@/lib/router";
 
 type AgentDraft = {
   title: string;
@@ -76,6 +87,10 @@ function skillList(value: string) {
   return value.split("\n").map((line) => line.trim()).filter(Boolean);
 }
 
+function errorMessage(error: unknown) {
+  return error instanceof Error ? error.message : String(error);
+}
+
 export function MasterAgents() {
   const { t } = useTranslation();
   const { setBreadcrumbs } = useBreadcrumbs();
@@ -87,21 +102,36 @@ export function MasterAgents() {
   const [apiKey, setApiKey] = useState("");
   const [editingAgentId, setEditingAgentId] = useState<string | "new" | null>(null);
   const [agentForm, setAgentForm] = useState<AgentDraft>(agentDraft());
+  const [confirmDelete, setConfirmDelete] = useState(false);
   const [editingTeamDepartment, setEditingTeamDepartment] = useState<MasterAgentDepartment | null>(null);
   const [teamForm, setTeamForm] = useState<TeamDraft | null>(null);
   const [formError, setFormError] = useState<string | null>(null);
+  const [actionError, setActionError] = useState<string | null>(null);
 
   useEffect(() => {
     setBreadcrumbs([{ label: t("settings.masterAgents") }]);
   }, [setBreadcrumbs, t]);
 
+  const boardAccess = useQuery({
+    queryKey: queryKeys.access.currentBoardAccess,
+    queryFn: () => accessApi.getCurrentBoardAccess(),
+    retry: false,
+  });
+  const canManage =
+    Boolean(boardAccess.data?.isInstanceAdmin) ||
+    boardAccess.data?.source === "local_implicit";
+  const includeDisabled = canManage;
+  const accessReady = boardAccess.isSuccess;
+
   const agentsQuery = useQuery({
-    queryKey: queryKeys.masterAgents.agents(true),
-    queryFn: () => masterAgentsApi.list(true),
+    queryKey: queryKeys.masterAgents.agents(includeDisabled),
+    queryFn: () => masterAgentsApi.list(includeDisabled),
+    enabled: accessReady,
   });
   const teamsQuery = useQuery({
-    queryKey: queryKeys.masterAgents.teams(true),
-    queryFn: () => masterAgentsApi.listTeams(true),
+    queryKey: queryKeys.masterAgents.teams(includeDisabled),
+    queryFn: () => masterAgentsApi.listTeams(includeDisabled),
+    enabled: accessReady,
   });
   const modelQuery = useQuery({
     queryKey: queryKeys.masterAgents.defaultModel,
@@ -122,6 +152,18 @@ export function MasterAgents() {
       queryClient.invalidateQueries({ queryKey: ["master-teams"] }),
       queryClient.invalidateQueries({ queryKey: queryKeys.masterAgents.defaultModel }),
     ]);
+  };
+
+  const closeAgentDialog = () => {
+    setEditingAgentId(null);
+    setConfirmDelete(false);
+    setFormError(null);
+  };
+
+  const closeTeamDialog = () => {
+    setEditingTeamDepartment(null);
+    setTeamForm(null);
+    setFormError(null);
   };
 
   const saveModel = useMutation({
@@ -163,17 +205,38 @@ export function MasterAgents() {
       return masterAgentsApi.create(body);
     },
     onSuccess: async () => {
-      setEditingAgentId(null);
-      setFormError(null);
+      closeAgentDialog();
       await refresh();
     },
     onError: (error: Error) => setFormError(error.message),
   });
 
+  const deleteAgent = useMutation({
+    mutationFn: async () => {
+      if (!editingAgentId || editingAgentId === "new") {
+        throw new Error("No agent selected");
+      }
+      await masterAgentsApi.remove(editingAgentId);
+    },
+    onSuccess: async () => {
+      closeAgentDialog();
+      setActionError(null);
+      await refresh();
+    },
+    onError: (error: Error) => {
+      setConfirmDelete(false);
+      setFormError(error.message);
+    },
+  });
+
   const patchAgent = useMutation({
     mutationFn: ({ id, body }: { id: string; body: Parameters<typeof masterAgentsApi.update>[1] }) =>
       masterAgentsApi.update(id, body),
-    onSuccess: refresh,
+    onSuccess: async () => {
+      setActionError(null);
+      await refresh();
+    },
+    onError: (error: Error) => setActionError(error.message),
   });
 
   const saveTeam = useMutation({
@@ -192,9 +255,7 @@ export function MasterAgents() {
       return masterAgentsApi.createTeam(body);
     },
     onSuccess: async () => {
-      setEditingTeamDepartment(null);
-      setTeamForm(null);
-      setFormError(null);
+      closeTeamDialog();
       await refresh();
     },
     onError: (error: Error) => setFormError(error.message),
@@ -203,10 +264,25 @@ export function MasterAgents() {
   const agents = agentsQuery.data ?? [];
   const teams = teamsQuery.data ?? [];
   const modelReady = Boolean(model.trim()) && (credentialKind === "stored_login" || apiKey.trim().length > 0 || modelQuery.data?.credentialKind === credentialKind);
+  const agentDialogOpen = editingAgentId !== null;
+  const teamDialogOpen = editingTeamDepartment !== null && teamForm !== null;
+  const isEditingExistingAgent = Boolean(editingAgentId && editingAgentId !== "new");
+  const loadError = agentsQuery.isError || teamsQuery.isError
+    ? errorMessage(agentsQuery.error ?? teamsQuery.error)
+    : null;
 
   return (
     <div className="mx-auto flex w-full max-w-3xl flex-col gap-8 p-6">
       <h1 className="text-lg font-medium">{t("settings.masterAgents")}</h1>
+
+      {!canManage && accessReady ? (
+        <p className="text-sm text-muted-foreground">
+          {t("settings.masterAgentsPage.readOnlyNotice")}{" "}
+          <Link to={`${INSTANCE_SETTINGS_PATH_PREFIX}/access`} className="text-foreground underline">
+            {t("settings.masterAgentsPage.openInstanceAccess")}
+          </Link>
+        </p>
+      ) : null}
 
       <section className="flex flex-col gap-3">
         <h2 className="text-sm font-medium">{t("settings.masterAgentsPage.defaultModel")}</h2>
@@ -217,6 +293,7 @@ export function MasterAgents() {
               id="default-adapter"
               className="h-9 rounded-md border border-border bg-card px-3 text-sm"
               value={adapterType}
+              disabled={!canManage}
               onChange={(event) => setAdapterType(event.target.value as DefaultModelAdapterType)}
             >
               {DEFAULT_MODEL_ADAPTER_TYPES.map((value) => (
@@ -224,14 +301,31 @@ export function MasterAgents() {
               ))}
             </select>
             <Label htmlFor="default-model">{t("settings.masterAgentsPage.model")}</Label>
-            <Input id="default-model" value={model} onChange={(event) => setModel(event.target.value)} />
+            <Input
+              id="default-model"
+              value={model}
+              disabled={!canManage}
+              onChange={(event) => setModel(event.target.value)}
+            />
             <div className="flex gap-4 text-sm">
               <label className="flex items-center gap-2">
-                <input type="radio" name="credential" checked={credentialKind === "stored_login"} onChange={() => setCredentialKind("stored_login")} />
+                <input
+                  type="radio"
+                  name="credential"
+                  checked={credentialKind === "stored_login"}
+                  disabled={!canManage}
+                  onChange={() => setCredentialKind("stored_login")}
+                />
                 {t("settings.masterAgentsPage.storedLogin")}
               </label>
               <label className="flex items-center gap-2">
-                <input type="radio" name="credential" checked={credentialKind === "api_key"} onChange={() => setCredentialKind("api_key")} />
+                <input
+                  type="radio"
+                  name="credential"
+                  checked={credentialKind === "api_key"}
+                  disabled={!canManage}
+                  onChange={() => setCredentialKind("api_key")}
+                />
                 {t("settings.masterAgentsPage.apiKey")}
               </label>
             </div>
@@ -241,17 +335,20 @@ export function MasterAgents() {
                 autoComplete="off"
                 placeholder={t("settings.masterAgentsPage.apiKeyPlaceholder")}
                 value={apiKey}
+                disabled={!canManage}
                 onChange={(event) => setApiKey(event.target.value)}
               />
             ) : null}
             {modelError ? <p className="text-xs text-destructive">{modelError}</p> : null}
-            <Button
-              type="button"
-              disabled={!modelReady || saveModel.isPending}
-              onClick={() => saveModel.mutate()}
-            >
-              {t("settings.masterAgentsPage.saveModel")}
-            </Button>
+            {canManage ? (
+              <Button
+                type="button"
+                disabled={!modelReady || saveModel.isPending}
+                onClick={() => saveModel.mutate()}
+              >
+                {t("settings.masterAgentsPage.saveModel")}
+              </Button>
+            ) : null}
           </CardContent>
         </Card>
       </section>
@@ -259,10 +356,23 @@ export function MasterAgents() {
       <section className="flex flex-col gap-4">
         <div className="flex items-center justify-between">
           <h2 className="text-sm font-medium">{t("settings.masterAgentsPage.agents")}</h2>
-          <Button type="button" variant="outline" onClick={() => { setEditingAgentId("new"); setAgentForm(agentDraft()); setFormError(null); }}>
-            {t("settings.masterAgentsPage.addAgent")}
-          </Button>
+          {canManage ? (
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => {
+                setEditingAgentId("new");
+                setAgentForm(agentDraft());
+                setConfirmDelete(false);
+                setFormError(null);
+              }}
+            >
+              {t("settings.masterAgentsPage.addAgent")}
+            </Button>
+          ) : null}
         </div>
+        {loadError ? <p className="text-xs text-destructive">{t("settings.masterAgentsPage.loadError")}: {loadError}</p> : null}
+        {actionError ? <p className="text-xs text-destructive">{actionError}</p> : null}
         {MASTER_AGENT_DEPARTMENTS.map((department) => {
           const rows = agents.filter((agent) => agent.department === department);
           return (
@@ -275,79 +385,41 @@ export function MasterAgents() {
                     <p className="truncate text-sm font-medium">{agent.title}</p>
                     <p className="truncate text-xs text-muted-foreground">{agent.description}</p>
                   </div>
-                  <ToggleSwitch
-                    checked={agent.enabled}
-                    aria-label={t("settings.masterAgentsPage.enabled")}
-                    onCheckedChange={(enabled) => patchAgent.mutate({ id: agent.id, body: { enabled } })}
-                  />
-                  <label className="flex items-center gap-1 text-xs text-muted-foreground">
-                    <input
-                      type="radio"
-                      name="recommended-agent"
-                      checked={agent.recommended}
-                      onChange={() => patchAgent.mutate({ id: agent.id, body: { recommended: true } })}
-                    />
-                    {t("settings.masterAgentsPage.recommended")}
-                  </label>
-                  <Button type="button" variant="ghost" onClick={() => { setEditingAgentId(agent.id); setAgentForm(agentDraft(agent)); setFormError(null); }}>
-                    {t("settings.masterAgentsPage.edit")}
-                  </Button>
+                  {canManage ? (
+                    <>
+                      <ToggleSwitch
+                        checked={agent.enabled}
+                        aria-label={t("settings.masterAgentsPage.enabled")}
+                        onCheckedChange={(enabled) => patchAgent.mutate({ id: agent.id, body: { enabled } })}
+                      />
+                      <label className="flex items-center gap-1 text-xs text-muted-foreground">
+                        <input
+                          type="radio"
+                          name="recommended-agent"
+                          checked={agent.recommended}
+                          onChange={() => patchAgent.mutate({ id: agent.id, body: { recommended: true } })}
+                        />
+                        {t("settings.masterAgentsPage.recommended")}
+                      </label>
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        onClick={() => {
+                          setEditingAgentId(agent.id);
+                          setAgentForm(agentDraft(agent));
+                          setConfirmDelete(false);
+                          setFormError(null);
+                        }}
+                      >
+                        {t("settings.masterAgentsPage.edit")}
+                      </Button>
+                    </>
+                  ) : null}
                 </div>
               ))}
             </div>
           );
         })}
-        {editingAgentId ? (
-          <Card>
-            <CardContent className="flex flex-col gap-3 pt-6">
-              <Label htmlFor="agent-title">{t("settings.masterAgentsPage.titleField")}</Label>
-              <Input id="agent-title" value={agentForm.title} onChange={(event) => setAgentForm({ ...agentForm, title: event.target.value })} />
-              <Label htmlFor="agent-department">{t("settings.masterAgentsPage.department")}</Label>
-              <select id="agent-department" className="h-9 rounded-md border border-border bg-card px-3 text-sm" value={agentForm.department} onChange={(event) => setAgentForm({ ...agentForm, department: event.target.value as MasterAgentDepartment })}>
-                {MASTER_AGENT_DEPARTMENTS.map((department) => (
-                  <option key={department} value={department}>{t(GALLERY_DEPARTMENT_LABEL[department])}</option>
-                ))}
-              </select>
-              <Label htmlFor="agent-description">{t("settings.masterAgentsPage.description")}</Label>
-              <Input id="agent-description" value={agentForm.description} onChange={(event) => setAgentForm({ ...agentForm, description: event.target.value })} />
-              <Label htmlFor="agent-instructions">{t("settings.masterAgentsPage.instructions")}</Label>
-              <Textarea id="agent-instructions" value={agentForm.instructions} onChange={(event) => setAgentForm({ ...agentForm, instructions: event.target.value })} />
-              <Label htmlFor="agent-role">{t("settings.masterAgentsPage.role")}</Label>
-              <select id="agent-role" className="h-9 rounded-md border border-border bg-card px-3 text-sm" value={agentForm.role} onChange={(event) => setAgentForm({ ...agentForm, role: event.target.value })}>
-                {AGENT_ROLES.map((role) => <option key={role} value={role}>{role}</option>)}
-              </select>
-              <Label htmlFor="agent-icon">{t("settings.masterAgentsPage.icon")}</Label>
-              <select id="agent-icon" className="h-9 rounded-md border border-border bg-card px-3 text-sm" value={agentForm.icon} onChange={(event) => setAgentForm({ ...agentForm, icon: event.target.value })}>
-                {MASTER_AGENT_ICONS.map((icon) => <option key={icon} value={icon}>{icon}</option>)}
-              </select>
-              <Label htmlFor="agent-skills">{t("settings.masterAgentsPage.skills")}</Label>
-              <Textarea id="agent-skills" value={agentForm.skillKeys} onChange={(event) => setAgentForm({ ...agentForm, skillKeys: event.target.value })} />
-              <label className="flex items-center gap-2 text-sm">
-                <input type="checkbox" checked={agentForm.canCreateAgents} onChange={(event) => setAgentForm({ ...agentForm, canCreateAgents: event.target.checked })} />
-                {t("settings.masterAgentsPage.canHire")}
-              </label>
-              <label className="flex items-center gap-2 text-sm">
-                <input type="checkbox" checked={agentForm.enabled} onChange={(event) => setAgentForm({ ...agentForm, enabled: event.target.checked })} />
-                {t("settings.masterAgentsPage.enabled")}
-              </label>
-              <label className="flex items-center gap-2 text-sm">
-                <input type="checkbox" checked={agentForm.recommended} onChange={(event) => setAgentForm({ ...agentForm, recommended: event.target.checked })} />
-                {t("settings.masterAgentsPage.recommended")}
-              </label>
-              {formError ? <p className="text-xs text-destructive">{formError}</p> : null}
-              <div className="flex justify-end gap-2">
-                <Button type="button" variant="outline" onClick={() => setEditingAgentId(null)}>{t("common.cancel")}</Button>
-                <Button
-                  type="button"
-                  disabled={!agentForm.title.trim() || !agentForm.description.trim() || !agentForm.instructions.trim() || saveAgent.isPending}
-                  onClick={() => saveAgent.mutate()}
-                >
-                  {t("settings.masterAgentsPage.save")}
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
-        ) : null}
       </section>
 
       <section className="flex flex-col gap-3">
@@ -356,21 +428,26 @@ export function MasterAgents() {
           const team = teams.find((row) => row.department === department);
           const summary = team?.members.map((member) => member.title).join(", ") ?? t("settings.masterAgentsPage.noTeam");
           return (
-            <div key={department} className="flex flex-col gap-2">
-              <div className="flex items-center gap-3 rounded-md border border-border bg-card p-3">
-                <div className="min-w-0 flex-1">
-                  <p className="truncate text-sm font-medium">{team?.name ?? t(GALLERY_DEPARTMENT_LABEL[department])}</p>
-                  <p className="truncate text-xs text-muted-foreground">{summary}</p>
-                </div>
-                {team ? (
-                  <ToggleSwitch
-                    checked={team.enabled}
-                    aria-label={t("settings.masterAgentsPage.enabled")}
-                    onCheckedChange={(enabled) => {
-                      void masterAgentsApi.updateTeam(team.id, { enabled }).then(refresh);
-                    }}
-                  />
-                ) : null}
+            <div key={department} className="flex items-center gap-3 rounded-md border border-border bg-card p-3">
+              <div className="min-w-0 flex-1">
+                <p className="truncate text-sm font-medium">{team?.name ?? t(GALLERY_DEPARTMENT_LABEL[department])}</p>
+                <p className="truncate text-xs text-muted-foreground">{summary}</p>
+              </div>
+              {canManage && team ? (
+                <ToggleSwitch
+                  checked={team.enabled}
+                  aria-label={t("settings.masterAgentsPage.enabled")}
+                  onCheckedChange={(enabled) => {
+                    void masterAgentsApi.updateTeam(team.id, { enabled })
+                      .then(async () => {
+                        setActionError(null);
+                        await refresh();
+                      })
+                      .catch((error: unknown) => setActionError(errorMessage(error)));
+                  }}
+                />
+              ) : null}
+              {canManage ? (
                 <Button
                   type="button"
                   variant="ghost"
@@ -382,59 +459,231 @@ export function MasterAgents() {
                 >
                   {t("settings.masterAgentsPage.edit")}
                 </Button>
-              </div>
-              {editingTeamDepartment === department && teamForm ? (
-                <Card>
-                  <CardContent className="flex flex-col gap-3 pt-6">
-                    <Label htmlFor="team-name">{t("settings.masterAgentsPage.teamName")}</Label>
-                    <Input id="team-name" value={teamForm.name} onChange={(event) => setTeamForm({ ...teamForm, name: event.target.value })} />
-                    <Label htmlFor="team-description">{t("settings.masterAgentsPage.description")}</Label>
-                    <Input id="team-description" value={teamForm.description} onChange={(event) => setTeamForm({ ...teamForm, description: event.target.value })} />
-                    <p className="text-xs text-muted-foreground">{t("settings.masterAgentsPage.members")}</p>
-                    {agents.filter((agent) => agent.department === department).map((agent) => {
-                      const checked = teamForm.memberIds.includes(agent.id);
-                      return (
-                        <label key={agent.id} className="flex items-center gap-2 text-sm">
-                          <input
-                            type="checkbox"
-                            checked={checked}
-                            onChange={(event) => {
-                              const memberIds = event.target.checked
-                                ? [...teamForm.memberIds, agent.id]
-                                : teamForm.memberIds.filter((id) => id !== agent.id);
-                              const managerId = memberIds.includes(teamForm.managerId) ? teamForm.managerId : memberIds[0] ?? "";
-                              setTeamForm({ ...teamForm, memberIds, managerId });
-                            }}
-                          />
-                          <input
-                            type="radio"
-                            name={`manager-${department}`}
-                            checked={teamForm.managerId === agent.id}
-                            disabled={!checked}
-                            onChange={() => setTeamForm({ ...teamForm, managerId: agent.id })}
-                          />
-                          {agent.title}
-                        </label>
-                      );
-                    })}
-                    {formError ? <p className="text-xs text-destructive">{formError}</p> : null}
-                    <div className="flex justify-end gap-2">
-                      <Button type="button" variant="outline" onClick={() => setEditingTeamDepartment(null)}>{t("common.cancel")}</Button>
-                      <Button
-                        type="button"
-                        disabled={!teamForm.name.trim() || !teamForm.description.trim() || teamForm.memberIds.length === 0 || !teamForm.managerId || saveTeam.isPending}
-                        onClick={() => saveTeam.mutate()}
-                      >
-                        {t("settings.masterAgentsPage.save")}
-                      </Button>
-                    </div>
-                  </CardContent>
-                </Card>
               ) : null}
             </div>
           );
         })}
       </section>
+
+      <Dialog
+        open={agentDialogOpen}
+        onOpenChange={(open) => {
+          if (!open) closeAgentDialog();
+        }}
+      >
+        <DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-lg">
+          <DialogHeader>
+            <DialogTitle>
+              {isEditingExistingAgent
+                ? t("settings.masterAgentsPage.editAgent")
+                : t("settings.masterAgentsPage.addAgent")}
+            </DialogTitle>
+            <DialogDescription className="sr-only">
+              {isEditingExistingAgent
+                ? t("settings.masterAgentsPage.editAgent")
+                : t("settings.masterAgentsPage.addAgent")}
+            </DialogDescription>
+          </DialogHeader>
+          {confirmDelete ? (
+            <div className="flex flex-col gap-3">
+              <p className="text-sm text-muted-foreground">{t("settings.masterAgentsPage.deleteAgentConfirm")}</p>
+              {formError ? <p className="text-xs text-destructive">{formError}</p> : null}
+              <DialogFooter>
+                <Button type="button" variant="outline" onClick={() => setConfirmDelete(false)}>
+                  {t("common.cancel")}
+                </Button>
+                <Button
+                  type="button"
+                  variant="destructive"
+                  disabled={deleteAgent.isPending}
+                  onClick={() => deleteAgent.mutate()}
+                >
+                  {t("common.delete")}
+                </Button>
+              </DialogFooter>
+            </div>
+          ) : (
+            <div className="flex flex-col gap-3">
+              <Label htmlFor="agent-title">{t("settings.masterAgentsPage.titleField")}</Label>
+              <Input
+                id="agent-title"
+                value={agentForm.title}
+                onChange={(event) => setAgentForm({ ...agentForm, title: event.target.value })}
+              />
+              <Label htmlFor="agent-department">{t("settings.masterAgentsPage.department")}</Label>
+              <select
+                id="agent-department"
+                className="h-9 rounded-md border border-border bg-card px-3 text-sm"
+                value={agentForm.department}
+                onChange={(event) => setAgentForm({ ...agentForm, department: event.target.value as MasterAgentDepartment })}
+              >
+                {MASTER_AGENT_DEPARTMENTS.map((department) => (
+                  <option key={department} value={department}>{t(GALLERY_DEPARTMENT_LABEL[department])}</option>
+                ))}
+              </select>
+              <Label htmlFor="agent-description">{t("settings.masterAgentsPage.description")}</Label>
+              <Input
+                id="agent-description"
+                value={agentForm.description}
+                onChange={(event) => setAgentForm({ ...agentForm, description: event.target.value })}
+              />
+              <Label htmlFor="agent-instructions">{t("settings.masterAgentsPage.instructions")}</Label>
+              <Textarea
+                id="agent-instructions"
+                value={agentForm.instructions}
+                onChange={(event) => setAgentForm({ ...agentForm, instructions: event.target.value })}
+              />
+              <Label htmlFor="agent-role">{t("settings.masterAgentsPage.role")}</Label>
+              <select
+                id="agent-role"
+                className="h-9 rounded-md border border-border bg-card px-3 text-sm"
+                value={agentForm.role}
+                onChange={(event) => setAgentForm({ ...agentForm, role: event.target.value })}
+              >
+                {AGENT_ROLES.map((role) => <option key={role} value={role}>{role}</option>)}
+              </select>
+              <Label htmlFor="agent-icon">{t("settings.masterAgentsPage.icon")}</Label>
+              <select
+                id="agent-icon"
+                className="h-9 rounded-md border border-border bg-card px-3 text-sm"
+                value={agentForm.icon}
+                onChange={(event) => setAgentForm({ ...agentForm, icon: event.target.value })}
+              >
+                {MASTER_AGENT_ICONS.map((icon) => <option key={icon} value={icon}>{icon}</option>)}
+              </select>
+              <Label htmlFor="agent-skills">{t("settings.masterAgentsPage.skills")}</Label>
+              <Textarea
+                id="agent-skills"
+                value={agentForm.skillKeys}
+                onChange={(event) => setAgentForm({ ...agentForm, skillKeys: event.target.value })}
+              />
+              <label className="flex items-center gap-2 text-sm">
+                <input
+                  type="checkbox"
+                  checked={agentForm.canCreateAgents}
+                  onChange={(event) => setAgentForm({ ...agentForm, canCreateAgents: event.target.checked })}
+                />
+                {t("settings.masterAgentsPage.canHire")}
+              </label>
+              <label className="flex items-center gap-2 text-sm">
+                <input
+                  type="checkbox"
+                  checked={agentForm.enabled}
+                  onChange={(event) => setAgentForm({ ...agentForm, enabled: event.target.checked })}
+                />
+                {t("settings.masterAgentsPage.enabled")}
+              </label>
+              <label className="flex items-center gap-2 text-sm">
+                <input
+                  type="checkbox"
+                  checked={agentForm.recommended}
+                  onChange={(event) => setAgentForm({ ...agentForm, recommended: event.target.checked })}
+                />
+                {t("settings.masterAgentsPage.recommended")}
+              </label>
+              {formError ? <p className="text-xs text-destructive">{formError}</p> : null}
+              <DialogFooter className="gap-2 sm:justify-between">
+                {isEditingExistingAgent ? (
+                  <Button
+                    type="button"
+                    variant="destructive"
+                    onClick={() => {
+                      setConfirmDelete(true);
+                      setFormError(null);
+                    }}
+                  >
+                    {t("common.delete")}
+                  </Button>
+                ) : <span />}
+                <div className="flex gap-2">
+                  <Button type="button" variant="outline" onClick={closeAgentDialog}>
+                    {t("common.cancel")}
+                  </Button>
+                  <Button
+                    type="button"
+                    disabled={!agentForm.title.trim() || !agentForm.description.trim() || !agentForm.instructions.trim() || saveAgent.isPending}
+                    onClick={() => saveAgent.mutate()}
+                  >
+                    {t("settings.masterAgentsPage.save")}
+                  </Button>
+                </div>
+              </DialogFooter>
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
+
+      <Dialog
+        open={teamDialogOpen}
+        onOpenChange={(open) => {
+          if (!open) closeTeamDialog();
+        }}
+      >
+        <DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-lg">
+          <DialogHeader>
+            <DialogTitle>{t("settings.masterAgentsPage.editTeam")}</DialogTitle>
+            <DialogDescription className="sr-only">
+              {t("settings.masterAgentsPage.editTeam")}
+            </DialogDescription>
+          </DialogHeader>
+          {teamForm ? (
+            <div className="flex flex-col gap-3">
+              <Label htmlFor="team-name">{t("settings.masterAgentsPage.teamName")}</Label>
+              <Input
+                id="team-name"
+                value={teamForm.name}
+                onChange={(event) => setTeamForm({ ...teamForm, name: event.target.value })}
+              />
+              <Label htmlFor="team-description">{t("settings.masterAgentsPage.description")}</Label>
+              <Input
+                id="team-description"
+                value={teamForm.description}
+                onChange={(event) => setTeamForm({ ...teamForm, description: event.target.value })}
+              />
+              <p className="text-xs text-muted-foreground">{t("settings.masterAgentsPage.members")}</p>
+              {agents.filter((agent) => agent.department === teamForm.department).map((agent) => {
+                const checked = teamForm.memberIds.includes(agent.id);
+                return (
+                  <label key={agent.id} className="flex items-center gap-2 text-sm">
+                    <input
+                      type="checkbox"
+                      checked={checked}
+                      onChange={(event) => {
+                        const memberIds = event.target.checked
+                          ? [...teamForm.memberIds, agent.id]
+                          : teamForm.memberIds.filter((id) => id !== agent.id);
+                        const managerId = memberIds.includes(teamForm.managerId) ? teamForm.managerId : memberIds[0] ?? "";
+                        setTeamForm({ ...teamForm, memberIds, managerId });
+                      }}
+                    />
+                    <input
+                      type="radio"
+                      name={`manager-${teamForm.department}`}
+                      checked={teamForm.managerId === agent.id}
+                      disabled={!checked}
+                      onChange={() => setTeamForm({ ...teamForm, managerId: agent.id })}
+                    />
+                    {agent.title}
+                  </label>
+                );
+              })}
+              {formError ? <p className="text-xs text-destructive">{formError}</p> : null}
+              <DialogFooter>
+                <Button type="button" variant="outline" onClick={closeTeamDialog}>
+                  {t("common.cancel")}
+                </Button>
+                <Button
+                  type="button"
+                  disabled={!teamForm.name.trim() || !teamForm.description.trim() || teamForm.memberIds.length === 0 || !teamForm.managerId || saveTeam.isPending}
+                  onClick={() => saveTeam.mutate()}
+                >
+                  {t("settings.masterAgentsPage.save")}
+                </Button>
+              </DialogFooter>
+            </div>
+          ) : null}
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

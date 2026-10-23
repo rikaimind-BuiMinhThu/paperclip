@@ -204,7 +204,7 @@ export function IssueRow({
   // The row already carries the issue's own scheduled retry, so the chip can tell a retry the
   // scheduler is actually running from one whose due time simply passed.
   const recoveryIndicator = recoveryAction && !requiresExecutionReconciliation(recoveryAction.cause)
-    ? renderRecoveryChip(recoveryAction, selected, { scheduledRetry: issue.scheduledRetry ?? null })
+    ? renderRecoveryChip(recoveryAction, selected, { scheduledRetry: issue.scheduledRetry ?? null }, t)
     : null;
   const parkedBlockerIndicator = hasAssignedBacklogBlocker(issue.blockedBy) ? (
     <Badge variant="outline"
@@ -244,7 +244,9 @@ export function IssueRow({
           onClickCapture={() => rememberIssueDetailLocationState(issuePathId, detailState)}
           className="absolute inset-0 rounded-lg no-underline text-inherit focus-visible:z-10 focus-visible:outline-none focus-visible:ring-(length:--rad-3) focus-visible:ring-ring"
         >
-          <span className="sr-only">Open {identifier}: {issue.title}</span>
+          <span className="sr-only">
+            {t("inbox.openIssueLink", { id: identifier, title: issue.title })}
+          </span>
         </Link>
 
         {showUnreadSlot ? (
@@ -385,7 +387,9 @@ export function IssueRow({
           "absolute inset-0 rounded-lg no-underline text-inherit focus-visible:z-10 focus-visible:outline-none focus-visible:ring-(length:--rad-3) focus-visible:ring-ring",
         )}
       >
-        <span className="sr-only">Open {identifier}: {issue.title}</span>
+        <span className="sr-only">
+          {t("inbox.openIssueLink", { id: identifier, title: issue.title })}
+        </span>
       </Link>
       <span className="flex shrink-0 items-center gap-1 pt-px sm:hidden">
         {mobileLeading ?? <StatusIcon status={issue.status} externalConversationState={issue.externalConversationState} blockerAttention={issue.blockerAttention} size="md" className={selectedStatusClass} />}
@@ -510,6 +514,7 @@ function renderRecoveryChip(
   action: IssueRecoveryAction,
   selected: boolean,
   liveness: RecoveryLivenessContext,
+  t: (key: string, options?: Record<string, unknown>) => string,
 ): ReactNode {
   const state = deriveActiveRecoveryDisplayState(action, liveness);
   if (!state) return null;
@@ -532,8 +537,8 @@ function renderRecoveryChip(
         selected ? "!border-muted-foreground !text-muted-foreground" : null,
       )}
       title={detail
-        ? `${label} — ${detail}. Open the source task to act.`
-        : `${label} — open the source task to act.`}
+        ? t("inbox.openSourceTaskToActDetail", { label, detail })
+        : t("inbox.openSourceTaskToActShort", { label })}
     >
       <Icon className="h-2.5 w-2.5" aria-hidden />
       {label}

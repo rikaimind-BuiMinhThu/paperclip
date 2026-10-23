@@ -1,0 +1,1072 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Client chat API</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,300;0,400;0,500;1,300&family=Source+Code+Pro:wght@300;400&display=swap" rel="stylesheet">
+  <style>
+    html, body { margin: 0; padding: 0; min-height: 100%; }
+    body {
+      font-family: Roboto, sans-serif;
+      background: #fff;
+      color: #323f4c;
+    }
+    strong { font-weight: 500; }
+    code { font-family: "Source Code Pro", monospace; }
+    .higlighted {
+      background: rgba(0, 0, 0, 0.05);
+      padding: 3px;
+      border-radius: 3px;
+    }
+
+    .left-menu {
+      position: fixed;
+      z-index: 3;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      width: 300px;
+      box-sizing: border-box;
+      background: #f4f5f8;
+      overflow-x: hidden;
+      overflow-y: auto;
+    }
+    .content-logo {
+      display: block;
+      padding: 16px 16px 4px;
+    }
+    .content-logo img {
+      display: block;
+      width: 100%;
+      height: auto;
+    }
+    .break-word { word-break: break-word; }
+    .content-infos { padding: 0 13.25% 8px; }
+    .info { font-size: 14px; margin-top: 5px; color: #777a7a; font-weight: 300; }
+    .info b { font-weight: 500; color: #034c8f; }
+    .content-menu { margin: 1.5em auto 2em; padding-bottom: 80px; }
+    .content-menu ul { list-style: none; margin: 0; padding: 0; }
+    .content-menu li a {
+      display: block;
+      padding: 12px 13.25%;
+      color: #777a7a;
+      letter-spacing: 0.025em;
+      line-height: 1.1;
+      text-decoration: none;
+      cursor: pointer;
+    }
+    .content-menu li.sub a { padding-left: 18%; font-size: 14px; }
+    .content-menu li:hover,
+    .content-menu li.active { background: #dcdee9; }
+    .content-menu li:hover a,
+    .content-menu li.active a { color: #00a8e3; }
+    @media (hover: none) {
+      .content-menu li:not(.active):hover { background: inherit; }
+      .content-menu li:not(.active):hover a { color: #777a7a; }
+    }
+
+    .content-page {
+      position: relative;
+      margin-left: 300px;
+      min-height: 100vh;
+      background: #fff;
+      z-index: 2;
+    }
+    .content-code {
+      width: 50%;
+      position: absolute;
+      right: 0;
+      top: 0;
+      bottom: 0;
+      background: #323f4c;
+    }
+    .content { position: relative; z-index: 30; }
+    .content-section { position: relative; overflow: hidden; }
+    .content h1,
+    .content h2,
+    .content h3,
+    .content h4,
+    .content p,
+    .content table,
+    .content ol,
+    .content ul,
+    .content .flow {
+      margin-right: 50%;
+      padding: 0 28px;
+      box-sizing: border-box;
+      max-width: 680px;
+    }
+    .content h1 {
+      font-size: 1.333em;
+      color: #034c8f;
+      padding-top: 2.5em;
+      margin: 0 50% 1.3em 0;
+      font-weight: 500;
+    }
+    .content h2 {
+      font-size: 1.333em;
+      color: #034c8f;
+      margin: 2.5em 50% 0.8em 0;
+      padding: 0 28px;
+      font-weight: 500;
+      scroll-margin-top: 16px;
+    }
+    .content h4 {
+      color: #00a8e3;
+      font-size: 14px;
+      margin: 0 50% 0.2em 0;
+      padding: 0 28px;
+      font-weight: 500;
+      text-transform: none;
+    }
+    .content p, .content li {
+      font-size: 14px;
+      color: #777a7a;
+      line-height: 1.6;
+      font-weight: 300;
+    }
+    .content p { margin: 0 50% 16px 0; }
+    .content ol, .content ul { margin: 0 50% 16px 0; padding: 0 28px 0 44px; }
+    .content a { color: #00a8e3; text-decoration: none; }
+    .content a:hover { text-decoration: underline; }
+    .content .flow {
+      display: block;
+      width: calc(50% - 56px);
+      max-width: 624px;
+      height: auto;
+      margin: 0 0 16px 28px;
+    }
+    .content pre {
+      background: #323f4c;
+      color: #fff;
+      font-family: "Source Code Pro", monospace;
+      font-size: 12px;
+      line-height: 1.5;
+      font-weight: 300;
+      padding: 0 28px 2em;
+      margin: 0;
+      width: 50%;
+      float: right;
+      clear: right;
+      box-sizing: border-box;
+      white-space: pre-wrap;
+      overflow-x: auto;
+    }
+    .content pre code { font-size: 12px; color: #fff; }
+    .content table {
+      font-size: 0.825em;
+      margin: 0 50% 1.5em 0;
+      border-collapse: collapse;
+      border-spacing: 0;
+      display: block;
+      overflow-x: auto;
+    }
+    .content table tr:last-child { border-bottom: 1px solid #ccc; }
+    .content th {
+      font-size: 0.925em;
+      padding: 5px 18px 5px 0;
+      border-bottom: 1px solid #ccc;
+      text-align: left;
+      vertical-align: bottom;
+      line-height: 1.6;
+      color: #323f4c;
+      font-weight: 500;
+    }
+    .content td {
+      padding: 5px 18px 5px 0;
+      text-align: left;
+      vertical-align: top;
+      line-height: 1.6;
+      font-weight: 300;
+      color: #777a7a;
+    }
+
+    .burger-menu-icon {
+      display: none;
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      position: absolute;
+      right: 26px;
+      top: 22px;
+      padding: 0;
+    }
+    .burger-menu-icon .line { fill: none; stroke: #000; stroke-width: 6; }
+    .mobile-menu-closer { display: none; }
+
+    @media only screen and (max-width: 980px) {
+      .content h1, .content h2, .content h4, .content p, .content table, .content ol, .content ul {
+        margin-right: 0;
+        max-width: 100%;
+      }
+      .content .flow { width: calc(100% - 56px); max-width: none; }
+      .content-code { display: none; }
+      .content pre {
+        float: none;
+        clear: none;
+        width: auto;
+        margin: 20px 28px;
+        padding: 28px;
+      }
+    }
+    @media only screen and (max-width: 680px) {
+      html { scroll-padding-top: 96px; }
+      html.menu-opened { overflow: hidden; }
+      .left-menu { position: relative; width: auto; }
+      .content-logo {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 4;
+        background: #f4f5f8;
+        padding-right: 64px;
+      }
+      .content-logo img { max-height: 56px; width: auto; }
+      .content-menu {
+        position: fixed;
+        width: 400px;
+        max-width: 90vw;
+        z-index: 3;
+        top: 0;
+        bottom: 0;
+        right: -405px;
+        left: auto;
+        background: #fff;
+        margin: 0;
+        overflow: auto;
+        padding-top: 96px;
+        padding-bottom: 20px;
+      }
+      html.menu-opened .content-menu { right: 0; }
+      .mobile-menu-closer {
+        display: block;
+        position: fixed;
+        inset: 0;
+        z-index: 2;
+        background: rgba(50, 63, 76, 0.5);
+        opacity: 0;
+        visibility: hidden;
+      }
+      html.menu-opened .mobile-menu-closer { opacity: 1; visibility: visible; }
+      .burger-menu-icon { display: block; }
+      .content-page { margin-left: 0; padding-top: 96px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="left-menu">
+    <div class="content-logo">
+      <img src="../../ui/public/brands/kujira-lockup-light.png" alt="Kujira AI Harness" />
+      <button class="burger-menu-icon" id="button-menu-mobile" type="button" aria-label="Open menu">
+        <svg width="34" height="34" viewBox="0 0 100 100"><path class="line" d="M 20,29 H 80"/><path class="line" d="M 20,50 H 80"/><path class="line" d="M 20,71 H 80"/></svg>
+      </button>
+    </div>
+    <div class="mobile-menu-closer"></div>
+    <div class="content-menu">
+      <div class="content-infos">
+        <div class="info"><b>Version:</b> spec only</div>
+        <div class="info"><b>Last updated:</b> 19 Oct 2026</div>
+      </div>
+      <ul>
+        <li class="scroll-to-link active" data-target="content-prerequisites"><a>Prerequisites</a></li>
+        <li class="scroll-to-link" data-target="content-resources"><a>Resources</a></li>
+        <li class="scroll-to-link" data-target="content-create-conversation"><a>Create Conversation</a></li>
+        <li class="scroll-to-link" data-target="content-list-conversations"><a>List Conversations</a></li>
+        <li class="scroll-to-link" data-target="content-get-conversation"><a>Get Conversation</a></li>
+        <li class="scroll-to-link" data-target="content-send-message"><a>Send Message</a></li>
+        <li class="scroll-to-link" data-target="content-list-messages"><a>List Messages</a></li>
+        <li class="scroll-to-link" data-target="content-upload-file"><a>Upload File</a></li>
+        <li class="scroll-to-link" data-target="content-download-file"><a>Download File</a></li>
+        <li class="scroll-to-link" data-target="content-get-usage"><a>Get Usage</a></li>
+        <li class="scroll-to-link" data-target="content-stream-run"><a>Stream Run</a></li>
+        <li class="scroll-to-link" data-target="content-close-conversation"><a>Close Conversation</a></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="content-page">
+    <div class="content-code"></div>
+    <div class="content">
+      <div class="content-section" id="content-prerequisites">
+        <h1>Prerequisites</h1>
+        <pre><code>API endpoint
+
+    /api/client/v1
+
+Authorization: Bearer pcp_cust_...</code></pre>
+        <p>A call is not valid until every item below is true.</p>
+        <ol>
+          <li>A board operator, in company settings under API Apps, creates an API app and sets its default agent.</li>
+          <li>The operator creates a customer on that app. The customer is active and has a plan.</li>
+          <li>The operator issues a <code class="higlighted">pcp_cust_</code> key and gives it to the client. The key is shown once.</li>
+          <li>The API app and the customer are both active.</li>
+          <li>An agent is bound: the customer's default agent, otherwise the app's default agent. If neither is set, every chat call returns <code class="higlighted">409</code> <code class="higlighted">AGENT_NOT_BOUND</code>.</li>
+        </ol>
+        <p>Every call sends <code class="higlighted">Authorization: Bearer pcp_cust_...</code>. The key already identifies the company, the API app, and the customer. The client does not send <code class="higlighted">companyId</code> and cannot pick an agent.</p>
+        <p>A client app holds a multi-turn conversation with the agent bound to its API app. External chat is transport. Paperclip remains the authority for the agent, the task, the run, budgets, and approvals. The client sees published replies. It does not see run logs, tool traces, chain-of-thought, secrets, or board-only comments.</p>
+        <p>These routes are not implemented yet.</p>
+        <svg class="flow" viewBox="0 0 710 80" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Create a conversation, send a message, stream the reply, then read the transcript">
+          <rect x="8" y="16" width="150" height="48" fill="#e7e5e4" stroke="#44403c"/>
+          <text x="83" y="44" text-anchor="middle" font-size="12" font-family="Roboto, sans-serif">POST conversation</text>
+          <line x1="158" y1="40" x2="184" y2="40" stroke="#44403c"/>
+          <rect x="186" y="16" width="150" height="48" fill="#d6d3d1" stroke="#44403c"/>
+          <text x="261" y="44" text-anchor="middle" font-size="12" font-family="Roboto, sans-serif">POST message</text>
+          <line x1="336" y1="40" x2="362" y2="40" stroke="#44403c"/>
+          <rect x="364" y="16" width="150" height="48" fill="#e7e5e4" stroke="#44403c"/>
+          <text x="439" y="44" text-anchor="middle" font-size="12" font-family="Roboto, sans-serif">GET stream</text>
+          <line x1="514" y1="40" x2="540" y2="40" stroke="#44403c"/>
+          <rect x="542" y="16" width="158" height="48" fill="#d6d3d1" stroke="#44403c"/>
+          <text x="621" y="44" text-anchor="middle" font-size="12" font-family="Roboto, sans-serif">GET messages</text>
+        </svg>
+        <p>Token and spend for the same key is <code class="higlighted">GET /api/api-app-customers/me/usage</code>. Pages processed and credits remaining are <code class="higlighted">GET /api/client/v1/usage</code>.</p>
+      </div>
+
+      <div class="content-section" id="content-resources">
+        <h2>Resources</h2>
+        <pre><code>{
+  "id": "6f1c0a2e-7b34-4c1d-9a55-2e8b0c4d11a0",
+  "title": "Invoice questions",
+  "status": "idle",
+  "agent": {
+    "id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+    "name": "Support"
+  },
+  "createdAt": "2026-10-19T06:00:00.000Z",
+  "activeRun": null
+}</code></pre>
+        <p>Ids are opaque. A missing id and another customer's id both return <code class="higlighted">404</code>.</p>
+        <table>
+          <thead><tr><th>Resource</th><th>Fields</th></tr></thead>
+          <tbody>
+            <tr>
+              <td>Conversation</td>
+              <td><code class="higlighted">id</code>, <code class="higlighted">title</code> (string or null), <code class="higlighted">status</code>, <code class="higlighted">agent</code> (<code class="higlighted">id</code>, <code class="higlighted">name</code>), <code class="higlighted">createdAt</code>. GET one conversation also returns <code class="higlighted">activeRun</code>: <code class="higlighted">{ id, status }</code> or null.</td>
+            </tr>
+            <tr>
+              <td>Message</td>
+              <td><code class="higlighted">id</code>, <code class="higlighted">role</code> (<code class="higlighted">user</code> or <code class="higlighted">assistant</code>), <code class="higlighted">content</code>, <code class="higlighted">createdAt</code>, <code class="higlighted">files</code> (<code class="higlighted">{ id, name, mediaType, byteSize }[]</code>, empty when there are no files).</td>
+            </tr>
+            <tr>
+              <td>Run</td>
+              <td><code class="higlighted">id</code>, <code class="higlighted">status</code>. A newly accepted message returns <code class="higlighted">status: "queued"</code> and <code class="higlighted">streamUrl</code>.</td>
+            </tr>
+            <tr>
+              <td>File</td>
+              <td><code class="higlighted">id</code>, <code class="higlighted">name</code>, <code class="higlighted">mediaType</code>, <code class="higlighted">byteSize</code>, <code class="higlighted">pageCount</code>, <code class="higlighted">creditsRequired</code>. Belongs to one conversation and one customer. Default max size is 10 MB (<code class="higlighted">PAPERCLIP_ATTACHMENT_MAX_BYTES</code>).</td>
+            </tr>
+          </tbody>
+        </table>
+        <p>Conversation <code class="higlighted">status</code> is one of <code class="higlighted">idle</code>, <code class="higlighted">running</code>, <code class="higlighted">waiting_approval</code>, <code class="higlighted">blocked</code>, <code class="higlighted">closed</code>, <code class="higlighted">failed</code>.</p>
+        <p><code class="higlighted">waiting_approval</code> and <code class="higlighted">blocked</code> are informational. The client cannot approve a gate or clear a block.</p>
+      </div>
+
+      <div class="content-section" id="content-create-conversation">
+        <h2>Create Conversation</h2>
+        <pre><code>curl -X POST /api/client/v1/conversations \
+  -H "Authorization: Bearer pcp_cust_..." \
+  -H "Content-Type: application/json" \
+  -d '{"title":"Invoice questions"}'</code></pre>
+        <pre><code>201
+{
+  "id": "6f1c0a2e-7b34-4c1d-9a55-2e8b0c4d11a0",
+  "title": "Invoice questions",
+  "status": "idle",
+  "agent": {
+    "id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+    "name": "Support"
+  },
+  "createdAt": "2026-10-19T06:00:00.000Z"
+}</code></pre>
+        <h4>Endpoint URL</h4>
+        <p><code class="higlighted break-word">POST /api/client/v1/conversations</code></p>
+        <h4>Header</h4>
+        <table>
+          <thead><tr><th>Field</th><th>Type</th><th>Description</th></tr></thead>
+          <tbody>
+            <tr><td>Authorization</td><td>String</td><td>Required. <code class="higlighted">Bearer pcp_cust_...</code></td></tr>
+            <tr><td>Content-Type</td><td>String</td><td>Required. <code class="higlighted">application/json</code></td></tr>
+          </tbody>
+        </table>
+        <h4>Body</h4>
+        <table>
+          <thead><tr><th>Field</th><th>Type</th><th>Description</th></tr></thead>
+          <tbody>
+            <tr><td>title</td><td>String</td><td>Optional. Max 120 characters. Omitted title is stored as null.</td></tr>
+          </tbody>
+        </table>
+        <h4>Response</h4>
+        <p><code class="higlighted">201</code></p>
+        <table>
+          <thead><tr><th>Field</th><th>Type</th><th>Description</th></tr></thead>
+          <tbody>
+            <tr><td>id</td><td>String</td><td>Conversation id.</td></tr>
+            <tr><td>title</td><td>String or null</td><td>Title sent by the client, or null.</td></tr>
+            <tr><td>status</td><td>String</td><td><code class="higlighted">idle</code> on create.</td></tr>
+            <tr><td>agent.id</td><td>String</td><td>Bound agent id.</td></tr>
+            <tr><td>agent.name</td><td>String</td><td>Bound agent name.</td></tr>
+            <tr><td>createdAt</td><td>String</td><td>ISO 8601 time.</td></tr>
+          </tbody>
+        </table>
+        <h4>Errors</h4>
+        <table>
+          <thead><tr><th>Status</th><th>Code</th><th>Meaning</th></tr></thead>
+          <tbody>
+            <tr><td>401</td><td></td><td>Invalid or revoked key.</td></tr>
+            <tr><td>402</td><td>API_CUSTOMER_PLAN_TOKEN_EXCEEDED</td><td>Monthly token plan limit exceeded. <code class="higlighted">details</code> may include usage.</td></tr>
+            <tr><td>402</td><td>API_CUSTOMER_PLAN_COST_EXCEEDED</td><td>Monthly cost plan limit exceeded.</td></tr>
+            <tr><td>402</td><td>API_CUSTOMER_UNIT_SPEND_EXCEEDED</td><td>Monthly unit spend cap exceeded.</td></tr>
+            <tr><td>403</td><td>API_APP_INACTIVE</td><td>API app is inactive.</td></tr>
+            <tr><td>403</td><td>API_CUSTOMER_INACTIVE</td><td>API app customer is inactive.</td></tr>
+            <tr><td>409</td><td>AGENT_NOT_BOUND</td><td>The customer and the app have no default agent.</td></tr>
+            <tr><td>422</td><td></td><td>Title is longer than 120 characters.</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="content-section" id="content-list-conversations">
+        <h2>List Conversations</h2>
+        <pre><code>curl "/api/client/v1/conversations?limit=20" \
+  -H "Authorization: Bearer pcp_cust_..."</code></pre>
+        <pre><code>200
+{
+  "items": [
+    {
+      "id": "6f1c0a2e-7b34-4c1d-9a55-2e8b0c4d11a0",
+      "title": "Invoice questions",
+      "status": "idle",
+      "agent": {
+        "id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+        "name": "Support"
+      },
+      "createdAt": "2026-10-19T06:00:00.000Z"
+    }
+  ],
+  "nextCursor": null
+}</code></pre>
+        <h4>Endpoint URL</h4>
+        <p><code class="higlighted break-word">GET /api/client/v1/conversations</code></p>
+        <p>The caller's conversations only, newest first.</p>
+        <h4>Header</h4>
+        <table>
+          <thead><tr><th>Field</th><th>Type</th><th>Description</th></tr></thead>
+          <tbody>
+            <tr><td>Authorization</td><td>String</td><td>Required. <code class="higlighted">Bearer pcp_cust_...</code></td></tr>
+          </tbody>
+        </table>
+        <h4>Query parameters</h4>
+        <table>
+          <thead><tr><th>Field</th><th>Type</th><th>Description</th></tr></thead>
+          <tbody>
+            <tr><td>limit</td><td>Integer</td><td>Optional. Default 20. Max 50.</td></tr>
+            <tr><td>cursor</td><td>String</td><td>Optional. Opaque page cursor from <code class="higlighted">nextCursor</code>.</td></tr>
+          </tbody>
+        </table>
+        <h4>Response</h4>
+        <p><code class="higlighted">200</code></p>
+        <table>
+          <thead><tr><th>Field</th><th>Type</th><th>Description</th></tr></thead>
+          <tbody>
+            <tr><td>items</td><td>Array</td><td>Conversation objects.</td></tr>
+            <tr><td>items[].id</td><td>String</td><td>Conversation id.</td></tr>
+            <tr><td>items[].title</td><td>String or null</td><td>Conversation title.</td></tr>
+            <tr><td>items[].status</td><td>String</td><td><code class="higlighted">idle</code>, <code class="higlighted">running</code>, <code class="higlighted">waiting_approval</code>, <code class="higlighted">blocked</code>, <code class="higlighted">closed</code>, or <code class="higlighted">failed</code>.</td></tr>
+            <tr><td>items[].agent.id</td><td>String</td><td>Bound agent id.</td></tr>
+            <tr><td>items[].agent.name</td><td>String</td><td>Bound agent name.</td></tr>
+            <tr><td>items[].createdAt</td><td>String</td><td>ISO 8601 time.</td></tr>
+            <tr><td>nextCursor</td><td>String or null</td><td>Null on the last page.</td></tr>
+          </tbody>
+        </table>
+        <h4>Errors</h4>
+        <table>
+          <thead><tr><th>Status</th><th>Code</th><th>Meaning</th></tr></thead>
+          <tbody>
+            <tr><td>401</td><td></td><td>Invalid or revoked key.</td></tr>
+            <tr><td>402</td><td>API_CUSTOMER_PLAN_TOKEN_EXCEEDED</td><td>Monthly token plan limit exceeded.</td></tr>
+            <tr><td>402</td><td>API_CUSTOMER_PLAN_COST_EXCEEDED</td><td>Monthly cost plan limit exceeded.</td></tr>
+            <tr><td>402</td><td>API_CUSTOMER_UNIT_SPEND_EXCEEDED</td><td>Monthly unit spend cap exceeded.</td></tr>
+            <tr><td>403</td><td>API_APP_INACTIVE</td><td>API app is inactive.</td></tr>
+            <tr><td>403</td><td>API_CUSTOMER_INACTIVE</td><td>API app customer is inactive.</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="content-section" id="content-get-conversation">
+        <h2>Get Conversation</h2>
+        <pre><code>curl /api/client/v1/conversations/6f1c0a2e-7b34-4c1d-9a55-2e8b0c4d11a0 \
+  -H "Authorization: Bearer pcp_cust_..."</code></pre>
+        <pre><code>200
+{
+  "id": "6f1c0a2e-7b34-4c1d-9a55-2e8b0c4d11a0",
+  "title": "Invoice questions",
+  "status": "running",
+  "agent": {
+    "id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+    "name": "Support"
+  },
+  "createdAt": "2026-10-19T06:00:00.000Z",
+  "activeRun": {
+    "id": "9c2e1b70-4a11-4d2e-8f33-1a6b5c7d22e1",
+    "status": "queued"
+  }
+}</code></pre>
+        <h4>Endpoint URL</h4>
+        <p><code class="higlighted break-word">GET /api/client/v1/conversations/:id</code></p>
+        <h4>Header</h4>
+        <table>
+          <thead><tr><th>Field</th><th>Type</th><th>Description</th></tr></thead>
+          <tbody>
+            <tr><td>Authorization</td><td>String</td><td>Required. <code class="higlighted">Bearer pcp_cust_...</code></td></tr>
+          </tbody>
+        </table>
+        <h4>Query parameters</h4>
+        <table>
+          <thead><tr><th>Field</th><th>Type</th><th>Description</th></tr></thead>
+          <tbody>
+            <tr><td></td><td></td><td>None.</td></tr>
+          </tbody>
+        </table>
+        <h4>Response</h4>
+        <p><code class="higlighted">200</code></p>
+        <table>
+          <thead><tr><th>Field</th><th>Type</th><th>Description</th></tr></thead>
+          <tbody>
+            <tr><td>id</td><td>String</td><td>Conversation id.</td></tr>
+            <tr><td>title</td><td>String or null</td><td>Conversation title.</td></tr>
+            <tr><td>status</td><td>String</td><td>Current conversation status.</td></tr>
+            <tr><td>agent.id</td><td>String</td><td>Bound agent id.</td></tr>
+            <tr><td>agent.name</td><td>String</td><td>Bound agent name.</td></tr>
+            <tr><td>createdAt</td><td>String</td><td>ISO 8601 time.</td></tr>
+            <tr><td>activeRun</td><td>Object or null</td><td>Null when nothing is running.</td></tr>
+            <tr><td>activeRun.id</td><td>String</td><td>Run id, when a run is active.</td></tr>
+            <tr><td>activeRun.status</td><td>String</td><td>Run status, for example <code class="higlighted">queued</code>.</td></tr>
+          </tbody>
+        </table>
+        <h4>Errors</h4>
+        <table>
+          <thead><tr><th>Status</th><th>Code</th><th>Meaning</th></tr></thead>
+          <tbody>
+            <tr><td>401</td><td></td><td>Invalid or revoked key.</td></tr>
+            <tr><td>402</td><td>API_CUSTOMER_PLAN_TOKEN_EXCEEDED</td><td>Monthly token plan limit exceeded.</td></tr>
+            <tr><td>402</td><td>API_CUSTOMER_PLAN_COST_EXCEEDED</td><td>Monthly cost plan limit exceeded.</td></tr>
+            <tr><td>402</td><td>API_CUSTOMER_UNIT_SPEND_EXCEEDED</td><td>Monthly unit spend cap exceeded.</td></tr>
+            <tr><td>403</td><td>API_APP_INACTIVE</td><td>API app is inactive.</td></tr>
+            <tr><td>403</td><td>API_CUSTOMER_INACTIVE</td><td>API app customer is inactive.</td></tr>
+            <tr><td>404</td><td></td><td>Unknown conversation, including another customer's id.</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="content-section" id="content-send-message">
+        <h2>Send Message</h2>
+        <pre><code>curl -X POST /api/client/v1/conversations/6f1c0a2e-7b34-4c1d-9a55-2e8b0c4d11a0/messages \
+  -H "Authorization: Bearer pcp_cust_..." \
+  -H "Content-Type: application/json" \
+  -H "Idempotency-Key: 3f8c2a10-6d4e-4b9a-8c71-0e5d2a9b44c6" \
+  -d '{"content":"Is invoice 1042 paid?","fileIds":["d4a91c20-8e77-4b10-9f55-7c2e0a6b3344"]}'</code></pre>
+        <pre><code>202
+{
+  "conversationId": "6f1c0a2e-7b34-4c1d-9a55-2e8b0c4d11a0",
+  "message": {
+    "id": "b7e1d4a2-0c55-4f18-9d63-5a0e8c2b7711",
+    "role": "user",
+    "content": "Is invoice 1042 paid?",
+    "createdAt": "2026-10-19T06:01:00.000Z",
+    "files": [
+      {
+        "id": "d4a91c20-8e77-4b10-9f55-7c2e0a6b3344",
+        "name": "invoice-1042.pdf",
+        "mediaType": "application/pdf",
+        "byteSize": 84211
+      }
+    ]
+  },
+  "run": {
+    "id": "9c2e1b70-4a11-4d2e-8f33-1a6b5c7d22e1",
+    "status": "queued"
+  },
+  "streamUrl": "/api/client/v1/runs/9c2e1b70-4a11-4d2e-8f33-1a6b5c7d22e1/stream"
+}</code></pre>
+        <h4>Endpoint URL</h4>
+        <p><code class="higlighted break-word">POST /api/client/v1/conversations/:id/messages</code></p>
+        <p>Send a user turn and wake the bound agent. <code class="higlighted">Idempotency-Key</code> is a non-empty string. The same key on the same conversation returns the original <code class="higlighted">202</code> and does not wake the agent again. A later body is ignored. Only a <code class="higlighted">202</code> is stored. A <code class="higlighted">409</code> does not consume the key.</p>
+        <h4>Header</h4>
+        <table>
+          <thead><tr><th>Field</th><th>Type</th><th>Description</th></tr></thead>
+          <tbody>
+            <tr><td>Authorization</td><td>String</td><td>Required. <code class="higlighted">Bearer pcp_cust_...</code></td></tr>
+            <tr><td>Content-Type</td><td>String</td><td>Required. <code class="higlighted">application/json</code></td></tr>
+            <tr><td>Idempotency-Key</td><td>String</td><td>Required. Non-empty.</td></tr>
+          </tbody>
+        </table>
+        <h4>Body</h4>
+        <table>
+          <thead><tr><th>Field</th><th>Type</th><th>Description</th></tr></thead>
+          <tbody>
+            <tr><td>content</td><td>String</td><td>Required. 1 to 20,000 characters after trim.</td></tr>
+            <tr><td>fileIds</td><td>Array of strings</td><td>Optional. Ids from Upload File on this conversation. Max 20. Unique. Not already attached. A file uploaded while a run is in progress waits here until this call cites it. It does not join the run already in progress.</td></tr>
+          </tbody>
+        </table>
+        <h4>Response</h4>
+        <p><code class="higlighted">202</code></p>
+        <table>
+          <thead><tr><th>Field</th><th>Type</th><th>Description</th></tr></thead>
+          <tbody>
+            <tr><td>conversationId</td><td>String</td><td>Conversation id.</td></tr>
+            <tr><td>message.id</td><td>String</td><td>User message id.</td></tr>
+            <tr><td>message.role</td><td>String</td><td><code class="higlighted">user</code>.</td></tr>
+            <tr><td>message.content</td><td>String</td><td>The text that was sent.</td></tr>
+            <tr><td>message.createdAt</td><td>String</td><td>ISO 8601 time.</td></tr>
+            <tr><td>message.files</td><td>Array</td><td>Attached files. Empty when there are none. Each item has <code class="higlighted">id</code>, <code class="higlighted">name</code>, <code class="higlighted">mediaType</code>, <code class="higlighted">byteSize</code>.</td></tr>
+            <tr><td>run.id</td><td>String</td><td>Run id.</td></tr>
+            <tr><td>run.status</td><td>String</td><td><code class="higlighted">queued</code>.</td></tr>
+            <tr><td>streamUrl</td><td>String</td><td>Path for the SSE stream.</td></tr>
+          </tbody>
+        </table>
+        <h4>Errors</h4>
+        <table>
+          <thead><tr><th>Status</th><th>Code</th><th>Meaning</th></tr></thead>
+          <tbody>
+            <tr><td>400</td><td></td><td>Missing <code class="higlighted">Idempotency-Key</code>.</td></tr>
+            <tr><td>401</td><td></td><td>Invalid or revoked key.</td></tr>
+            <tr><td>402</td><td>API_CUSTOMER_PLAN_TOKEN_EXCEEDED</td><td>Monthly token plan limit exceeded.</td></tr>
+            <tr><td>402</td><td>API_CUSTOMER_PLAN_COST_EXCEEDED</td><td>Monthly cost plan limit exceeded.</td></tr>
+            <tr><td>402</td><td>API_CUSTOMER_UNIT_SPEND_EXCEEDED</td><td>Monthly unit spend cap exceeded.</td></tr>
+            <tr><td>402</td><td>CREDITS_EXCEEDED</td><td><code class="higlighted">creditsRemaining</code> is below the sum of <code class="higlighted">creditsRequired</code> for the cited files.</td></tr>
+            <tr><td>403</td><td>API_APP_INACTIVE</td><td>API app is inactive.</td></tr>
+            <tr><td>403</td><td>API_CUSTOMER_INACTIVE</td><td>API app customer is inactive.</td></tr>
+            <tr><td>404</td><td></td><td>Unknown conversation, including another customer's id.</td></tr>
+            <tr><td>409</td><td>CONVERSATION_BUSY</td><td>A run is already in progress. Body includes <code class="higlighted">runId</code>.</td></tr>
+            <tr><td>409</td><td>CONVERSATION_CLOSED</td><td>The conversation is closed.</td></tr>
+            <tr><td>422</td><td></td><td>Content is empty or longer than 20,000 characters.</td></tr>
+            <tr><td>422</td><td>FILE_NOT_IN_CONVERSATION</td><td>A file id is unknown, already used, or from another conversation.</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="content-section" id="content-list-messages">
+        <h2>List Messages</h2>
+        <pre><code>curl /api/client/v1/conversations/6f1c0a2e-7b34-4c1d-9a55-2e8b0c4d11a0/messages \
+  -H "Authorization: Bearer pcp_cust_..."</code></pre>
+        <pre><code>200
+{
+  "items": [
+    {
+      "id": "b7e1d4a2-0c55-4f18-9d63-5a0e8c2b7711",
+      "role": "user",
+      "content": "Is invoice 1042 paid?",
+      "createdAt": "2026-10-19T06:01:00.000Z"
+    },
+    {
+      "id": "c8f20e55-1d66-4a29-8e74-6b1f9d3c8822",
+      "role": "assistant",
+      "content": "Invoice 1042 is paid.",
+      "createdAt": "2026-10-19T06:01:20.000Z",
+      "files": [
+        {
+          "id": "e5b02d31-9f88-4c21-a066-8d3f1b7c4455",
+          "name": "receipt.pdf",
+          "mediaType": "application/pdf",
+          "byteSize": 12044
+        }
+      ]
+    }
+  ],
+  "nextCursor": null
+}</code></pre>
+        <h4>Endpoint URL</h4>
+        <p><code class="higlighted break-word">GET /api/client/v1/conversations/:id/messages</code></p>
+        <p>Visible transcript only, oldest first. Poll this when the client does not use SSE.</p>
+        <h4>Header</h4>
+        <table>
+          <thead><tr><th>Field</th><th>Type</th><th>Description</th></tr></thead>
+          <tbody>
+            <tr><td>Authorization</td><td>String</td><td>Required. <code class="higlighted">Bearer pcp_cust_...</code></td></tr>
+          </tbody>
+        </table>
+        <h4>Query parameters</h4>
+        <table>
+          <thead><tr><th>Field</th><th>Type</th><th>Description</th></tr></thead>
+          <tbody>
+            <tr><td>limit</td><td>Integer</td><td>Optional. Default 20. Max 50.</td></tr>
+            <tr><td>cursor</td><td>String</td><td>Optional. Opaque page cursor.</td></tr>
+            <tr><td>after</td><td>String</td><td>Optional. Message id. The page starts after that message.</td></tr>
+          </tbody>
+        </table>
+        <h4>Response</h4>
+        <p><code class="higlighted">200</code></p>
+        <table>
+          <thead><tr><th>Field</th><th>Type</th><th>Description</th></tr></thead>
+          <tbody>
+            <tr><td>items</td><td>Array</td><td>Visible messages.</td></tr>
+            <tr><td>items[].id</td><td>String</td><td>Message id.</td></tr>
+            <tr><td>items[].role</td><td>String</td><td><code class="higlighted">user</code> or <code class="higlighted">assistant</code>.</td></tr>
+            <tr><td>items[].content</td><td>String</td><td>Message text.</td></tr>
+            <tr><td>items[].createdAt</td><td>String</td><td>ISO 8601 time.</td></tr>
+            <tr><td>items[].files</td><td>Array</td><td>Files on that message. Empty when there are none. Each item has <code class="higlighted">id</code>, <code class="higlighted">name</code>, <code class="higlighted">mediaType</code>, <code class="higlighted">byteSize</code>.</td></tr>
+            <tr><td>nextCursor</td><td>String or null</td><td>Null on the last page.</td></tr>
+          </tbody>
+        </table>
+        <h4>Errors</h4>
+        <table>
+          <thead><tr><th>Status</th><th>Code</th><th>Meaning</th></tr></thead>
+          <tbody>
+            <tr><td>401</td><td></td><td>Invalid or revoked key.</td></tr>
+            <tr><td>402</td><td>API_CUSTOMER_PLAN_TOKEN_EXCEEDED</td><td>Monthly token plan limit exceeded.</td></tr>
+            <tr><td>402</td><td>API_CUSTOMER_PLAN_COST_EXCEEDED</td><td>Monthly cost plan limit exceeded.</td></tr>
+            <tr><td>402</td><td>API_CUSTOMER_UNIT_SPEND_EXCEEDED</td><td>Monthly unit spend cap exceeded.</td></tr>
+            <tr><td>403</td><td>API_APP_INACTIVE</td><td>API app is inactive.</td></tr>
+            <tr><td>403</td><td>API_CUSTOMER_INACTIVE</td><td>API app customer is inactive.</td></tr>
+            <tr><td>404</td><td></td><td>Unknown conversation, including another customer's id.</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="content-section" id="content-upload-file">
+        <h2>Upload File</h2>
+        <pre><code>curl -X POST /api/client/v1/conversations/6f1c0a2e-7b34-4c1d-9a55-2e8b0c4d11a0/files \
+  -H "Authorization: Bearer pcp_cust_..." \
+  -F "file=@invoice-1042.pdf"</code></pre>
+        <pre><code>201
+{
+  "id": "d4a91c20-8e77-4b10-9f55-7c2e0a6b3344",
+  "name": "invoice-1042.pdf",
+  "mediaType": "application/pdf",
+  "byteSize": 84211,
+  "pageCount": 4,
+  "creditsRequired": 4
+}</code></pre>
+        <h4>Endpoint URL</h4>
+        <p><code class="higlighted break-word">POST /api/client/v1/conversations/:id/files</code></p>
+        <p>Allowed while the app is chatting, including while a run is <code class="higlighted">running</code> and the SSE stream is open. This call does not wake the agent and does not return <code class="higlighted">CONVERSATION_BUSY</code>. A file uploaded during a reply waits on the conversation until the next Send Message cites its id. It does not enter the run already in progress. Default max size is 10 MB (<code class="higlighted">PAPERCLIP_ATTACHMENT_MAX_BYTES</code>).</p>
+        <p><code class="higlighted">creditsRequired</code> is a quote for this customer and this file. Uploading does not spend credits and does not increase <code class="higlighted">pagesProcessed</code>. When a run that cited the file finishes successfully, <code class="higlighted">pageCount</code> is added to that customer's <code class="higlighted">pagesProcessed</code> and <code class="higlighted">creditsRequired</code> is subtracted from <code class="higlighted">creditsRemaining</code>. A failed run does not change either number. Counters belong to the customer on the key.</p>
+        <h4>Header</h4>
+        <table>
+          <thead><tr><th>Field</th><th>Type</th><th>Description</th></tr></thead>
+          <tbody>
+            <tr><td>Authorization</td><td>String</td><td>Required. <code class="higlighted">Bearer pcp_cust_...</code></td></tr>
+            <tr><td>Content-Type</td><td>String</td><td>Required. <code class="higlighted">multipart/form-data</code></td></tr>
+          </tbody>
+        </table>
+        <h4>Body</h4>
+        <table>
+          <thead><tr><th>Field</th><th>Type</th><th>Description</th></tr></thead>
+          <tbody>
+            <tr><td>file</td><td>File</td><td>Required. One part named <code class="higlighted">file</code>.</td></tr>
+          </tbody>
+        </table>
+        <h4>Response</h4>
+        <p><code class="higlighted">201</code></p>
+        <table>
+          <thead><tr><th>Field</th><th>Type</th><th>Description</th></tr></thead>
+          <tbody>
+            <tr><td>id</td><td>String</td><td>File id. Pass it in Send Message <code class="higlighted">fileIds</code>.</td></tr>
+            <tr><td>name</td><td>String</td><td>Original file name.</td></tr>
+            <tr><td>mediaType</td><td>String</td><td>Media type, for example <code class="higlighted">application/pdf</code>.</td></tr>
+            <tr><td>byteSize</td><td>Integer</td><td>Size in bytes.</td></tr>
+            <tr><td>pageCount</td><td>Integer</td><td>Pages in this file.</td></tr>
+            <tr><td>creditsRequired</td><td>Integer</td><td>Credits this customer needs to process this file. A quote, not a charge.</td></tr>
+          </tbody>
+        </table>
+        <h4>Errors</h4>
+        <table>
+          <thead><tr><th>Status</th><th>Code</th><th>Meaning</th></tr></thead>
+          <tbody>
+            <tr><td>401</td><td></td><td>Invalid or revoked key.</td></tr>
+            <tr><td>402</td><td>API_CUSTOMER_PLAN_TOKEN_EXCEEDED</td><td>Monthly token plan limit exceeded.</td></tr>
+            <tr><td>402</td><td>API_CUSTOMER_PLAN_COST_EXCEEDED</td><td>Monthly cost plan limit exceeded.</td></tr>
+            <tr><td>402</td><td>API_CUSTOMER_UNIT_SPEND_EXCEEDED</td><td>Monthly unit spend cap exceeded.</td></tr>
+            <tr><td>403</td><td>API_APP_INACTIVE</td><td>API app is inactive.</td></tr>
+            <tr><td>403</td><td>API_CUSTOMER_INACTIVE</td><td>API app customer is inactive.</td></tr>
+            <tr><td>404</td><td></td><td>Unknown conversation, including another customer's id.</td></tr>
+            <tr><td>413</td><td>FILE_TOO_LARGE</td><td>File is over the attachment ceiling. Default is 10 MB.</td></tr>
+            <tr><td>422</td><td></td><td>Missing <code class="higlighted">file</code> part.</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="content-section" id="content-download-file">
+        <h2>Download File</h2>
+        <pre><code>curl /api/client/v1/files/e5b02d31-9f88-4c21-a066-8d3f1b7c4455 \
+  -H "Authorization: Bearer pcp_cust_..." \
+  -o receipt.pdf</code></pre>
+        <pre><code>200
+Content-Type: application/pdf
+Content-Disposition: attachment; filename="receipt.pdf"
+
+...file bytes...</code></pre>
+        <h4>Endpoint URL</h4>
+        <p><code class="higlighted break-word">GET /api/client/v1/files/:id</code></p>
+        <p>Allowed while the app is chatting, including while a run is <code class="higlighted">running</code> and the SSE stream is open. This call does not wake the agent and does not return <code class="higlighted">CONVERSATION_BUSY</code>. As soon as a stream <code class="higlighted">message</code> event lists a file, the client can download it. The client does not wait for <code class="higlighted">done</code>. The same call downloads a file the client uploaded and a file the agent published.</p>
+        <h4>Header</h4>
+        <table>
+          <thead><tr><th>Field</th><th>Type</th><th>Description</th></tr></thead>
+          <tbody>
+            <tr><td>Authorization</td><td>String</td><td>Required. <code class="higlighted">Bearer pcp_cust_...</code></td></tr>
+          </tbody>
+        </table>
+        <h4>Query parameters</h4>
+        <table>
+          <thead><tr><th>Field</th><th>Type</th><th>Description</th></tr></thead>
+          <tbody>
+            <tr><td></td><td></td><td>None.</td></tr>
+          </tbody>
+        </table>
+        <h4>Response</h4>
+        <p><code class="higlighted">200</code>. Raw bytes. <code class="higlighted">Content-Type</code> is the file media type. <code class="higlighted">Content-Disposition</code> is <code class="higlighted">attachment</code> with the file name.</p>
+        <table>
+          <thead><tr><th>Field</th><th>Type</th><th>Description</th></tr></thead>
+          <tbody>
+            <tr><td>body</td><td>Bytes</td><td>File contents.</td></tr>
+          </tbody>
+        </table>
+        <h4>Errors</h4>
+        <table>
+          <thead><tr><th>Status</th><th>Code</th><th>Meaning</th></tr></thead>
+          <tbody>
+            <tr><td>401</td><td></td><td>Invalid or revoked key.</td></tr>
+            <tr><td>402</td><td>API_CUSTOMER_PLAN_TOKEN_EXCEEDED</td><td>Monthly token plan limit exceeded.</td></tr>
+            <tr><td>402</td><td>API_CUSTOMER_PLAN_COST_EXCEEDED</td><td>Monthly cost plan limit exceeded.</td></tr>
+            <tr><td>402</td><td>API_CUSTOMER_UNIT_SPEND_EXCEEDED</td><td>Monthly unit spend cap exceeded.</td></tr>
+            <tr><td>403</td><td>API_APP_INACTIVE</td><td>API app is inactive.</td></tr>
+            <tr><td>403</td><td>API_CUSTOMER_INACTIVE</td><td>API app customer is inactive.</td></tr>
+            <tr><td>404</td><td></td><td>Unknown file, or a file that belongs to another customer.</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="content-section" id="content-get-usage">
+        <h2>Get Usage</h2>
+        <pre><code>curl /api/client/v1/usage \
+  -H "Authorization: Bearer pcp_cust_..."</code></pre>
+        <pre><code>200
+{
+  "pagesProcessed": 12,
+  "creditsRemaining": 88
+}</code></pre>
+        <h4>Endpoint URL</h4>
+        <p><code class="higlighted break-word">GET /api/client/v1/usage</code></p>
+        <p>Pages and credits for the customer on this key. One customer cannot read another customer's numbers. Allowed while a run is streaming. This call does not wake the agent. <code class="higlighted">GET /api/api-app-customers/me/usage</code> remains the token and spend meter.</p>
+        <h4>Header</h4>
+        <table>
+          <thead><tr><th>Field</th><th>Type</th><th>Description</th></tr></thead>
+          <tbody>
+            <tr><td>Authorization</td><td>String</td><td>Required. <code class="higlighted">Bearer pcp_cust_...</code></td></tr>
+          </tbody>
+        </table>
+        <h4>Query parameters</h4>
+        <table>
+          <thead><tr><th>Field</th><th>Type</th><th>Description</th></tr></thead>
+          <tbody>
+            <tr><td></td><td></td><td>None.</td></tr>
+          </tbody>
+        </table>
+        <h4>Response</h4>
+        <p><code class="higlighted">200</code></p>
+        <table>
+          <thead><tr><th>Field</th><th>Type</th><th>Description</th></tr></thead>
+          <tbody>
+            <tr><td>pagesProcessed</td><td>Integer</td><td>Pages this customer has already processed. Increases only after a run that cited the file finishes successfully.</td></tr>
+            <tr><td>creditsRemaining</td><td>Integer</td><td>Credits left for this customer. Decreases by <code class="higlighted">creditsRequired</code> only after that same successful run.</td></tr>
+          </tbody>
+        </table>
+        <h4>Errors</h4>
+        <table>
+          <thead><tr><th>Status</th><th>Code</th><th>Meaning</th></tr></thead>
+          <tbody>
+            <tr><td>401</td><td></td><td>Invalid or revoked key.</td></tr>
+            <tr><td>403</td><td>API_APP_INACTIVE</td><td>API app is inactive.</td></tr>
+            <tr><td>403</td><td>API_CUSTOMER_INACTIVE</td><td>API app customer is inactive.</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="content-section" id="content-stream-run">
+        <h2>Stream Run</h2>
+        <pre><code>GET /api/client/v1/runs/9c2e1b70-4a11-4d2e-8f33-1a6b5c7d22e1/stream
+Accept: text/event-stream
+
+data: {"type":"status","status":"running"}
+
+data: {"type":"chunk","text":"Invoice 1042 "}
+
+data: {"type":"chunk","text":"is paid."}
+
+data: {"type":"message","id":"c8f20e55-1d66-4a29-8e74-6b1f9d3c8822","role":"assistant","content":"Invoice 1042 is paid.","createdAt":"2026-10-19T06:01:20.000Z","files":[{"id":"e5b02d31-9f88-4c21-a066-8d3f1b7c4455","name":"receipt.pdf","mediaType":"application/pdf","byteSize":12044}]}
+
+data: {"type":"done","status":"idle"}</code></pre>
+        <h4>Endpoint URL</h4>
+        <p><code class="higlighted break-word">GET /api/client/v1/runs/:runId/stream</code></p>
+        <p>One JSON object per <code class="higlighted">data:</code> line. Chunks are published assistant text only. The finished <code class="higlighted">message</code> event includes <code class="higlighted">files</code>. The client can download a listed file immediately and does not wait for <code class="higlighted">done</code>. Upload File and Download File stay open while this stream is open. If the run is already finished, the stream emits <code class="higlighted">message</code> when a reply exists, then <code class="higlighted">done</code>, then closes. <code class="higlighted">waiting_approval</code> is informational. The client cannot approve a gate.</p>
+        <h4>Header</h4>
+        <table>
+          <thead><tr><th>Field</th><th>Type</th><th>Description</th></tr></thead>
+          <tbody>
+            <tr><td>Authorization</td><td>String</td><td>Required. <code class="higlighted">Bearer pcp_cust_...</code></td></tr>
+            <tr><td>Accept</td><td>String</td><td>Required. <code class="higlighted">text/event-stream</code></td></tr>
+          </tbody>
+        </table>
+        <h4>Query parameters</h4>
+        <table>
+          <thead><tr><th>Field</th><th>Type</th><th>Description</th></tr></thead>
+          <tbody>
+            <tr><td></td><td></td><td>None.</td></tr>
+          </tbody>
+        </table>
+        <h4>Response</h4>
+        <p>SSE. Fields depend on <code class="higlighted">type</code>.</p>
+        <table>
+          <thead><tr><th>Field</th><th>Type</th><th>Description</th></tr></thead>
+          <tbody>
+            <tr><td>type</td><td>String</td><td><code class="higlighted">status</code>, <code class="higlighted">chunk</code>, <code class="higlighted">message</code>, <code class="higlighted">done</code>, or <code class="higlighted">error</code>.</td></tr>
+            <tr><td>status</td><td>String</td><td>On <code class="higlighted">status</code> and <code class="higlighted">done</code>. Conversation status after the event.</td></tr>
+            <tr><td>text</td><td>String</td><td>On <code class="higlighted">chunk</code>. Optional on <code class="higlighted">status</code>.</td></tr>
+            <tr><td>id</td><td>String</td><td>On <code class="higlighted">message</code>. Assistant message id.</td></tr>
+            <tr><td>role</td><td>String</td><td>On <code class="higlighted">message</code>. <code class="higlighted">assistant</code>.</td></tr>
+            <tr><td>content</td><td>String</td><td>On <code class="higlighted">message</code>. Full assistant reply.</td></tr>
+            <tr><td>createdAt</td><td>String</td><td>On <code class="higlighted">message</code>. ISO 8601 time.</td></tr>
+            <tr><td>files</td><td>Array</td><td>On <code class="higlighted">message</code>. Same file objects as List Messages. Empty when there are none.</td></tr>
+            <tr><td>code</td><td>String</td><td>On <code class="higlighted">error</code>. The stream ends. No <code class="higlighted">done</code> follows.</td></tr>
+            <tr><td>message</td><td>String</td><td>On <code class="higlighted">error</code>. Error text.</td></tr>
+          </tbody>
+        </table>
+        <h4>Errors</h4>
+        <table>
+          <thead><tr><th>Status</th><th>Code</th><th>Meaning</th></tr></thead>
+          <tbody>
+            <tr><td>401</td><td></td><td>Invalid or revoked key.</td></tr>
+            <tr><td>403</td><td>API_APP_INACTIVE</td><td>API app is inactive.</td></tr>
+            <tr><td>403</td><td>API_CUSTOMER_INACTIVE</td><td>API app customer is inactive.</td></tr>
+            <tr><td>404</td><td></td><td>Unknown run, including another customer's run.</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="content-section" id="content-close-conversation">
+        <h2>Close Conversation</h2>
+        <pre><code>curl -X POST /api/client/v1/conversations/6f1c0a2e-7b34-4c1d-9a55-2e8b0c4d11a0/close \
+  -H "Authorization: Bearer pcp_cust_..."</code></pre>
+        <pre><code>200
+{
+  "id": "6f1c0a2e-7b34-4c1d-9a55-2e8b0c4d11a0",
+  "title": "Invoice questions",
+  "status": "closed",
+  "agent": {
+    "id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+    "name": "Support"
+  },
+  "createdAt": "2026-10-19T06:00:00.000Z",
+  "activeRun": null
+}</code></pre>
+        <h4>Endpoint URL</h4>
+        <p><code class="higlighted break-word">POST /api/client/v1/conversations/:id/close</code></p>
+        <p>Further messages return <code class="higlighted">409</code> <code class="higlighted">CONVERSATION_CLOSED</code>.</p>
+        <h4>Header</h4>
+        <table>
+          <thead><tr><th>Field</th><th>Type</th><th>Description</th></tr></thead>
+          <tbody>
+            <tr><td>Authorization</td><td>String</td><td>Required. <code class="higlighted">Bearer pcp_cust_...</code></td></tr>
+          </tbody>
+        </table>
+        <h4>Body</h4>
+        <table>
+          <thead><tr><th>Field</th><th>Type</th><th>Description</th></tr></thead>
+          <tbody>
+            <tr><td></td><td></td><td>None.</td></tr>
+          </tbody>
+        </table>
+        <h4>Response</h4>
+        <p><code class="higlighted">200</code></p>
+        <table>
+          <thead><tr><th>Field</th><th>Type</th><th>Description</th></tr></thead>
+          <tbody>
+            <tr><td>id</td><td>String</td><td>Conversation id.</td></tr>
+            <tr><td>title</td><td>String or null</td><td>Conversation title.</td></tr>
+            <tr><td>status</td><td>String</td><td><code class="higlighted">closed</code>.</td></tr>
+            <tr><td>agent.id</td><td>String</td><td>Bound agent id.</td></tr>
+            <tr><td>agent.name</td><td>String</td><td>Bound agent name.</td></tr>
+            <tr><td>createdAt</td><td>String</td><td>ISO 8601 time.</td></tr>
+            <tr><td>activeRun</td><td>null</td><td>No run is active.</td></tr>
+          </tbody>
+        </table>
+        <h4>Errors</h4>
+        <table>
+          <thead><tr><th>Status</th><th>Code</th><th>Meaning</th></tr></thead>
+          <tbody>
+            <tr><td>401</td><td></td><td>Invalid or revoked key.</td></tr>
+            <tr><td>402</td><td>API_CUSTOMER_PLAN_TOKEN_EXCEEDED</td><td>Monthly token plan limit exceeded.</td></tr>
+            <tr><td>402</td><td>API_CUSTOMER_PLAN_COST_EXCEEDED</td><td>Monthly cost plan limit exceeded.</td></tr>
+            <tr><td>402</td><td>API_CUSTOMER_UNIT_SPEND_EXCEEDED</td><td>Monthly unit spend cap exceeded.</td></tr>
+            <tr><td>403</td><td>API_APP_INACTIVE</td><td>API app is inactive.</td></tr>
+            <tr><td>403</td><td>API_CUSTOMER_INACTIVE</td><td>API app customer is inactive.</td></tr>
+            <tr><td>404</td><td></td><td>Unknown conversation, including another customer's id.</td></tr>
+          </tbody>
+        </table>
+        <p>Out of scope: choosing a different agent, approving gates, reading heartbeat run events, and changing the existing issue routes that an API customer key can already call.</p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    var menuLinks = document.querySelectorAll(".scroll-to-link");
+    var sections = [];
+
+    function mark(id) {
+      menuLinks.forEach(function (item) {
+        item.classList.toggle("active", item.getAttribute("data-target") === id);
+      });
+    }
+
+    function measure() {
+      var total = 0;
+      sections = [];
+      document.querySelectorAll(".content-section").forEach(function (node) {
+        total += node.offsetHeight;
+        sections.push({ id: node.id, maxHeight: total - 25 });
+      });
+    }
+
+    function onScroll() {
+      var scroll = window.pageYOffset;
+      var current = sections[0] && sections[0].id;
+      for (var i = 0; i < sections.length; i++) {
+        if (scroll <= sections[i].maxHeight) {
+          current = sections[i].id;
+          break;
+        }
+      }
+      if (window.innerHeight + scroll + 5 >= document.body.scrollHeight && sections.length) {
+        current = sections[sections.length - 1].id;
+      }
+      if (current) mark(current);
+    }
+
+    menuLinks.forEach(function (item) {
+      item.addEventListener("click", function (event) {
+        event.preventDefault();
+        var id = item.getAttribute("data-target");
+        var target = document.getElementById(id);
+        if (target) target.scrollIntoView({ behavior: "smooth" });
+        mark(id);
+        document.documentElement.classList.remove("menu-opened");
+      });
+    });
+
+    document.getElementById("button-menu-mobile").addEventListener("click", function (event) {
+      event.preventDefault();
+      document.documentElement.classList.toggle("menu-opened");
+    });
+    document.querySelector(".mobile-menu-closer").addEventListener("click", function () {
+      document.documentElement.classList.remove("menu-opened");
+    });
+
+    measure();
+    window.addEventListener("load", measure);
+    window.addEventListener("resize", measure);
+    window.addEventListener("scroll", onScroll, { passive: true });
+  </script>
+</body>
+</html>

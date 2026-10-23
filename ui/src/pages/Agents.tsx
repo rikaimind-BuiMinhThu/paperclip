@@ -414,7 +414,7 @@ export function Agents({ initialView = "list" }: { initialView?: AgentsView } = 
         leading={hasInvalidOrgChain ? (
           <AlertTriangle className="h-3.5 w-3.5 text-amber-500" aria-label={t("agents.invalidReportingChain")} />
         ) : (
-          <AgentAvatar agent={agent} size={32} />
+          <AgentAvatar agent={agent} size={40} />
         )}
         secondaryRow={builtInCluster && (
           <div className="@5xl:hidden flex flex-wrap items-center gap-1.5">

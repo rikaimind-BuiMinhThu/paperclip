@@ -1521,7 +1521,7 @@ export function DesignGuide() {
       {/*  IDENTITY                                                     */}
       {/* ============================================================ */}
       <Section title="Agent personas">
-        <SubSection title="Stable palette identities">
+        <SubSection title="Photo-v1 portrait identities">
           <div className="flex flex-wrap gap-3">{AGENT_PALETTE_IDS.map(palette => <AgentAvatar key={palette} appearance={appearanceForPalette(palette)} size={48} label={palette} />)}</div>
         </SubSection>
         <SubSection title="Onboarding and live character">

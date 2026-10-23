@@ -1,5 +1,6 @@
 import type { Agent } from "@paperclipai/shared";
-import { describe, expect, it } from "vitest";
+import { afterAll, beforeAll, describe, expect, it } from "vitest";
+import { DEFAULT_LOCALE, i18n } from "@/i18n";
 import { formatActivityVerb, formatIssueActivityAction } from "./activity-format";
 
 describe("activity formatting", () => {
@@ -7,6 +8,14 @@ describe("activity formatting", () => {
     ["agent-reviewer", { id: "agent-reviewer", name: "Reviewer Bot" } as Agent],
     ["agent-approver", { id: "agent-approver", name: "Approver Bot" } as Agent],
   ]);
+
+  beforeAll(async () => {
+    await i18n.changeLanguage("en");
+  });
+
+  afterAll(async () => {
+    await i18n.changeLanguage(DEFAULT_LOCALE);
+  });
 
   it("labels a Slack settlement as idle while retaining actual review wording", () => {
     const details = { status: "in_review", externalConversationState: "waiting" };

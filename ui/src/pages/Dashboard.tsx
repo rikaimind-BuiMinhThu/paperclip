@@ -2,7 +2,6 @@ import { AgentIdentity } from "../components/AgentIdentity";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useLocation } from "@/lib/router";
 import {
-  onboardingStepForCompany,
   shouldRouteAgentlessCompanyToOnboarding,
 } from "../lib/onboarding-route";
 import { claimOnboardingOffer } from "../lib/onboarding-auto-open";
@@ -74,7 +73,7 @@ export function derivePausedAgentBanner(agents: Agent[] | undefined): PausedAgen
 export function Dashboard() {
   const { t } = useTranslation();
   const { selectedCompanyId, companies } = useCompany();
-  const { openOnboarding } = useDialogActions();
+  const { openOnboarding, openHireStarter } = useDialogActions();
   const location = useLocation();
   const { setBreadcrumbs } = useBreadcrumbs();
   const [animatedActivityIds, setAnimatedActivityIds] = useState<Set<string>>(new Set());
@@ -148,13 +147,10 @@ export function Dashboard() {
   useEffect(() => {
     if (!shouldOpenOnboarding || !selectedCompanyId) return;
     if (!claimOnboardingOffer(selectedCompanyId)) return;
-    openOnboarding({
-      companyId: selectedCompanyId,
-      initialStep: onboardingStepForCompany(),
-    });
-    // No mission lookup to wait on any more: the step this opens is the same
-    // whatever the goals say, so waiting only delayed the open.
-  }, [shouldOpenOnboarding, selectedCompanyId, openOnboarding]);
+    openHireStarter();
+    // Medium hire-starter dialog covers the agentless company offer; first-time
+    // org creation still goes through the full OnboardingWizard elsewhere.
+  }, [shouldOpenOnboarding, selectedCompanyId, openHireStarter]);
 
   useEffect(() => {
     setBreadcrumbs([{ label: t("dashboard.title") }]);
@@ -368,7 +364,7 @@ export function Dashboard() {
             </p>
           </div>
           <button
-            onClick={() => openOnboarding({ initialStep: 3, companyId: selectedCompanyId! })}
+            onClick={() => openHireStarter()}
             className="text-sm font-medium text-amber-700 hover:text-amber-900 dark:text-amber-300 dark:hover:text-amber-100 underline underline-offset-2 shrink-0"
           >
             Create one here

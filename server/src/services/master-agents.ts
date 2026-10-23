@@ -1,6 +1,7 @@
 import { randomUUID } from "node:crypto";
 import { and, asc, eq, sql } from "drizzle-orm";
 import {
+  agents,
   companies,
   instanceDefaultModels,
   masterAgents,
@@ -14,6 +15,7 @@ import {
 } from "@paperclipai/adapter-utils/server-utils";
 import {
   IMPLICIT_PLATFORM_DEFAULT_MODEL,
+  legacyAgentAppearance,
   type CreateMasterAgent,
   type CreateMasterTeam,
   type DefaultModelStatus,
@@ -40,6 +42,12 @@ const API_KEY_ENV: Record<string, string> = {
   codex_local: "OPENAI_API_KEY",
   cursor: "CURSOR_API_KEY",
 };
+
+function masterAgentIdFromMetadata(metadata: unknown): string | null {
+  if (!metadata || typeof metadata !== "object" || Array.isArray(metadata)) return null;
+  const value = (metadata as Record<string, unknown>).masterAgentId;
+  return typeof value === "string" && value.length > 0 ? value : null;
+}
 
 function slugify(title: string) {
   const base = title
@@ -494,6 +502,8 @@ export function masterAgentService(db: Db) {
       title: params.master.title,
       role: params.master.role,
       icon: params.master.icon,
+      appearance: legacyAgentAppearance(params.master.id),
+      metadata: { masterAgentId: params.master.id },
       reportsTo: params.reportsTo,
       adapterType: params.adapterType,
       adapterConfig,
@@ -580,10 +590,32 @@ export function masterAgentService(db: Db) {
       actor,
     };
 
+    const companyAgents = await db.select().from(agents).where(eq(agents.companyId, companyId));
+    const hiredMasterIds = new Set<string>();
+    for (const row of companyAgents) {
+      const fromMeta = masterAgentIdFromMetadata(row.metadata);
+      if (fromMeta) hiredMasterIds.add(fromMeta);
+    }
+    const findExistingForMaster = (master: MasterAgentRecord) => {
+      if (hiredMasterIds.has(master.id)) {
+        return companyAgents.find((row) => masterAgentIdFromMetadata(row.metadata) === master.id)
+          ?? companyAgents.find((row) => row.title === master.title || row.name === master.title)
+          ?? null;
+      }
+      return companyAgents.find((row) => row.title === master.title || row.name === master.title) ?? null;
+    };
+    const markHired = (masterId: string) => {
+      hiredMasterIds.add(masterId);
+    };
+
     if (input.masterAgentId) {
       const [row] = await db.select().from(masterAgents).where(eq(masterAgents.id, input.masterAgentId));
       if (!row || !row.enabled) throw notFound("Master agent not found");
-      const agent = await hireOne({ ...hireParams, master: toAgentRecord(row), reportsTo: null });
+      const master = toAgentRecord(row);
+      if (findExistingForMaster(master)) {
+        throw conflict("This starter is already hired in this organization");
+      }
+      const agent = await hireOne({ ...hireParams, master, reportsTo: null });
       return { agents: [agent], managerAgentId: agent.id, label: agent.name };
     }
 
@@ -598,21 +630,45 @@ export function masterAgentService(db: Db) {
     const enabledMembers = memberRows.filter((row) => row.agent.enabled);
     const manager = enabledMembers.find((row) => row.member.isManager);
     if (!manager) throw unprocessable("The team manager is not available");
-    const hiredManager = await hireOne({
-      ...hireParams,
-      master: toAgentRecord(manager.agent),
-      reportsTo: null,
-    });
-    const hired = [hiredManager];
+
+    const managerMaster = toAgentRecord(manager.agent);
+    const existingManager = findExistingForMaster(managerMaster);
+    const hired: Awaited<ReturnType<typeof hireOne>>[] = [];
+    let managerAgentId: string;
+    if (existingManager) {
+      managerAgentId = existingManager.id;
+      markHired(managerMaster.id);
+    } else {
+      const hiredManager = await hireOne({
+        ...hireParams,
+        master: managerMaster,
+        reportsTo: null,
+      });
+      hired.push(hiredManager);
+      managerAgentId = hiredManager.id;
+      markHired(managerMaster.id);
+    }
+
     for (const row of enabledMembers) {
       if (row.member.isManager) continue;
-      hired.push(await hireOne({
+      const master = toAgentRecord(row.agent);
+      if (findExistingForMaster(master)) {
+        markHired(master.id);
+        continue;
+      }
+      const created = await hireOne({
         ...hireParams,
-        master: toAgentRecord(row.agent),
-        reportsTo: hiredManager.id,
-      }));
+        master,
+        reportsTo: managerAgentId,
+      });
+      hired.push(created);
+      markHired(master.id);
     }
-    return { agents: hired, managerAgentId: hiredManager.id, label: team.name };
+
+    if (hired.length === 0) {
+      throw conflict("Every member of this team is already hired in this organization");
+    }
+    return { agents: hired, managerAgentId, label: team.name };
   }
 
   async function logInstanceChange(actor: { actorType: "user" | "agent" | "system"; actorId: string }, action: string, entityId: string) {

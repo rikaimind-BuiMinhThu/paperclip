@@ -314,6 +314,21 @@ describe("Public marketing home", () => {
     expect(appSource).toContain("<PublicHome appEntry={<CompanyRootRedirect />} />");
     expect(appSource).not.toContain('<Route index element={<CompanyRootRedirect />} />');
   });
+
+  it("serves MarketingLandingPage at /home outside CloudAccessGate", () => {
+    expect(appSource).toContain(
+      'import { MarketingLandingPage } from "./pages/marketing/MarketingLandingPage";',
+    );
+    expect(appSource).toContain('path="home"');
+    expect(appSource).toContain("<MarketingLandingPage />");
+    const homeRouteIndex = appSource.indexOf('path="home"');
+    const gateIndex = appSource.indexOf(
+      "<Route element={streamlinedUiLoaded ? <CloudAccessGate /> : <PaperclipLoading />}>",
+    );
+    expect(homeRouteIndex).toBeGreaterThan(-1);
+    expect(gateIndex).toBeGreaterThan(-1);
+    expect(homeRouteIndex).toBeLessThan(gateIndex);
+  });
 });
 
 describe("Skill Studio routes", () => {

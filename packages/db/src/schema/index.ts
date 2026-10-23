@@ -29,6 +29,8 @@ export { apiAppCustomerKeys } from "./api_app_customer_keys.js";
 export { billingUnitDefs } from "./billing_unit_defs.js";
 export { apiAppCustomerUnitPrices } from "./api_app_customer_unit_prices.js";
 export { billingUnitMeterEvents } from "./billing_unit_meter_events.js";
+export { licenseRedeemTokens } from "./license_redeem_tokens.js";
+export { docuworksOcrJobs } from "./docuworks_ocr_jobs.js";
 export { agentRuntimeState } from "./agent_runtime_state.js";
 export { agentTaskSessions, agentSessionGoalActions } from "./agent_task_sessions.js";
 export { agentWakeupRequests } from "./agent_wakeup_requests.js";
@@ -72,6 +74,16 @@ export {
 } from "./chat_channels.js";
 export { issueRelations } from "./issue_relations.js";
 export { routines, routineRevisions, routineTriggers, routineWebhookTestReceipts, routineRuns } from "./routines.js";
+export {
+  workflowDefinitions,
+  workflowVersions,
+  workflowRuns,
+  workflowStepRuns,
+  workforceShifts,
+  workforceMemories,
+  workforceOutboundDeliveries,
+  workforceCrmRecords,
+} from "./workforce.js";
 export { pipelines, pipelineStages, pipelineTransitions } from "./pipelines.js";
 export {
   cases,

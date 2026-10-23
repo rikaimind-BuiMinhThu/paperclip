@@ -37,10 +37,11 @@
     "types": "./dist/index.d.ts"
   },
   "files": [
-    "dist"
+    "dist",
+    "assets"
   ],
   "scripts": {
-    "build": "tsc && mkdir -p dist/cliplab && cp src/cliplab/LICENSE src/cliplab/PROVENANCE.md dist/cliplab/",
+    "build": "tsc && mkdir -p dist/cliplab dist/assets && cp src/cliplab/LICENSE src/cliplab/PROVENANCE.md dist/cliplab/ && cp -R assets/. dist/assets/",
     "clean": "rm -rf dist",
     "typecheck": "tsc --noEmit"
   },

@@ -2,6 +2,7 @@ import request from "supertest";
 import { eq } from "drizzle-orm";
 import { afterEach, expect, it } from "vitest";
 import { activityLog, agents, companySkills, instanceDefaultModels, masterAgents, masterTeamMembers, masterTeams } from "@paperclipai/db";
+import { legacyAgentAppearance } from "@paperclipai/shared";
 import { masterAgentRoutes } from "../routes/master-agents.js";
 import {
   describeEmbeddedPostgres,
@@ -115,6 +116,13 @@ describeEmbeddedPostgres("master agent gallery", () => {
     expect(hired.body.agents[0].adapterType).toBe("claude_local");
     expect(hired.body.agents[0].adapterConfig.model).toBe("claude-sonnet-platform");
     expect(hired.body.agents[0].reportsTo).toBeNull();
+    expect(hired.body.agents[0].appearance).toEqual(legacyAgentAppearance(chief.id));
+    expect(hired.body.agents[0].metadata).toEqual({ masterAgentId: chief.id });
+
+    const duplicate = await request(board)
+      .post(`/api/companies/${seeded.companyId}/onboarding/hires`)
+      .send({ masterAgentId: chief.id });
+    expect(duplicate.status).toBe(409);
   });
 
   it("sets reportsTo on a team hire", async () => {
@@ -157,5 +165,10 @@ describeEmbeddedPostgres("master agent gallery", () => {
     expect(reports.every((row) => row.reportsTo === manager?.id)).toBe(true);
     expect(rows.every((row) => row.adapterType === "codex_local")).toBe(true);
     expect(rows.every((row) => (row.adapterConfig as { model?: string }).model === "gpt-platform")).toBe(true);
+    expect(manager?.appearance).toEqual(legacyAgentAppearance(cmo.id));
+    for (const member of marketing.members as Array<{ masterAgentId: string; title: string }>) {
+      const row = rows.find((agent) => agent.name === member.title);
+      expect(row?.appearance).toEqual(legacyAgentAppearance(member.masterAgentId));
+    }
   });
 });

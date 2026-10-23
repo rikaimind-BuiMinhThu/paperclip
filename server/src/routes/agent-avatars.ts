@@ -1,14 +1,14 @@
 import { finished, pipeline } from "node:stream/promises";
 import { Router } from "express";
 import { z } from "zod";
-import { AGENT_PALETTE_IDS, AGENT_AVATAR_SIZES, CHARACTER_STATES, appearanceForPalette, type AgentAvatarSize } from "@paperclipai/shared";
+import { AGENT_CHARACTER_VERSIONS, AGENT_PALETTE_IDS, AGENT_AVATAR_SIZES, CHARACTER_STATES, appearanceForPalette, type AgentAvatarSize, type AgentCharacterVersion } from "@paperclipai/shared";
 import { AvatarAdmissionError, createAgentAvatarService } from "../services/agent-avatars.js";
 import { createStorageProviderFromConfig } from "../storage/provider-registry.js";
 import { loadConfig } from "../config.js";
 import { logger } from "../middleware/logger.js";
 
 const requestSchema = z.object({
-  version: z.literal("cap-v1"),
+  version: z.enum(AGENT_CHARACTER_VERSIONS),
   palette: z.enum([...AGENT_PALETTE_IDS, "muted-dream"]),
   pose: z.enum(CHARACTER_STATES),
   size: z.string().regex(/^\d+$/).default("512").transform(Number).refine(n => (AGENT_AVATAR_SIZES as readonly number[]).includes(n)),
@@ -28,15 +28,21 @@ export function agentAvatarRoutes(injected?: ReturnType<typeof createAgentAvatar
   let service = injected;
   router.get("/agent-avatars/:version/:palette/:file", async (req, res) => {
     const file = String(req.params.file);
-    const parsed = requestSchema.safeParse({ ...req.query, version: req.params.version, palette: req.params.palette, pose: file.endsWith(".png") ? file.slice(0, -4) : file });
-    if (!file.endsWith(".png") || !parsed.success || Object.keys(req.query).some(key => key !== "size" && key !== "scale")) {
+    // `v` is a client cache-buster only; strip before the strict request schema.
+    const { v: _assetRevision, ...avatarQuery } = req.query as Record<string, unknown>;
+    const parsed = requestSchema.safeParse({ ...avatarQuery, version: req.params.version, palette: req.params.palette, pose: file.endsWith(".png") ? file.slice(0, -4) : file });
+    if (!file.endsWith(".png") || !parsed.success || Object.keys(req.query).some(key => key !== "size" && key !== "scale" && key !== "v")) {
       res.setHeader("Cache-Control", "no-store");
       res.status(400).json({ error: "Unsupported avatar version, palette, pose, size, or scale" }); return;
     }
-    const { palette, pose, size, scale } = parsed.data;
+    const { version, palette, pose, size, scale } = parsed.data;
     try {
       service ??= createAgentAvatarService(createStorageProviderFromConfig(loadConfig()));
-      const { stream, byteSize, etag } = await service.get({ appearance: appearanceForPalette(palette === "muted-dream" ? AGENT_PALETTE_IDS[0] : palette), muted: palette === "muted-dream", pose, size: size as AgentAvatarSize, scale: Number(scale) as 1 | 2 }, req.ip || req.socket.remoteAddress || "unknown");
+      const appearance = appearanceForPalette(
+        palette === "muted-dream" ? AGENT_PALETTE_IDS[0] : palette,
+        version as AgentCharacterVersion,
+      );
+      const { stream, byteSize, etag } = await service.get({ appearance, muted: palette === "muted-dream", pose, size: size as AgentAvatarSize, scale: Number(scale) as 1 | 2 }, req.ip || req.socket.remoteAddress || "unknown");
       res.setHeader("Cache-Control", "public, max-age=31536000, immutable");
       res.setHeader("ETag", etag);
       res.setHeader("X-Content-Type-Options", "nosniff");

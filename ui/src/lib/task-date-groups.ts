@@ -30,8 +30,9 @@ export function taskDateGroup(value: Date | string | number, now: Date = new Dat
 export function taskDateGroupSeparator(
   previous: TaskDateGroup | null,
   current: TaskDateGroup,
+  labels: Record<TaskDateGroup, string> = taskDateGroupLabels,
 ): string | null {
   if (previous === current) return null;
   if (previous === null && current === "earlier") return null;
-  return taskDateGroupLabels[current];
+  return labels[current];
 }

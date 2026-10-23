@@ -1,6 +1,11 @@
+import { t } from "@/i18n";
 import type { Agent } from "@paperclipai/shared";
 import type { CompanyUserProfile } from "./company-members";
 import { formatReviewPolicyValue } from "./review-policy";
+
+function localizeActivityVerb(action: string, english: string): string {
+  return t(`activity.verbs.${action.replace(/\./g, "_")}`, { defaultValue: english });
+}
 
 type ActivityDetails = Record<string, unknown> | null | undefined;
 
@@ -102,6 +107,11 @@ const ACTIVITY_ROW_VERBS: Record<string, string> = {
   "company.archived": "archived",
   "company.reactivated": "reactivated",
   "company.budget_updated": "updated budget for",
+  "company.skills_scanned": "company skills scanned",
+  "master_agent.created": "master agent created",
+  "master_agent.updated": "master agent updated",
+  "master_agent.deleted": "master agent deleted",
+  "agent.hired_from_master": "agent hired from master",
   "audit.exported": "exported the agent audit log for",
   "tool_app.connected": "connected",
   "tool_app.oauth_connected": "connected credentials for",
@@ -480,7 +490,8 @@ export function formatActivityVerb(
   });
   if (structuredChange) return structuredChange;
 
-  return ACTIVITY_ROW_VERBS[action] ?? action.replace(/[._]/g, " ");
+  const english = ACTIVITY_ROW_VERBS[action] ?? action.replace(/[._]/g, " ");
+  return localizeActivityVerb(action, english);
 }
 
 export function formatIssueActivityAction(

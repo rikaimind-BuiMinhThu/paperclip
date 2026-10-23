@@ -6,10 +6,10 @@ import { agentAvatarUrl } from "./agent-avatar-url";
 describe("packaged Storybook avatar URLs", () => {
   it("keeps production on the public API and resolves preview assets under a branch prefix", () => {
     const appearance = appearanceForPalette("bubblegum-sky");
-    expect(productionUrl(appearance, 24, 2)).toBe("/api/agent-avatars/cap-v1/bubblegum-sky/rest.png?size=24&scale=2");
+    expect(productionUrl(appearance, 24, 2)).toBe("/api/agent-avatars/photo-v1/bubblegum-sky/rest.png?size=24&scale=2&v=2");
     expect(new URL(agentAvatarUrl(appearance, 24, 2), "https://example.com/branches/personas/builds/123/iframe.html").href)
-      .toBe("https://example.com/branches/personas/builds/123/agent-avatar-images/cap-v1/bubblegum-sky/rest-24-2.png");
-    expect(agentAvatarUrl(appearance)).toBe("./agent-avatar-images/cap-v1/bubblegum-sky/rest-512-1.png");
+      .toBe("https://example.com/branches/personas/builds/123/agent-avatar-images/photo-v1/bubblegum-sky/rest-24-2.png");
+    expect(agentAvatarUrl(appearance)).toBe("./agent-avatar-images/photo-v1/bubblegum-sky/rest-512-1.png");
   });
 
   it("gives every finite preset a distinct filename, retaining logical size separately from density", () => {
@@ -22,6 +22,6 @@ describe("packaged Storybook avatar URLs", () => {
     expect(paths.size).toBe((AGENT_PALETTE_IDS.length + 1) * CHARACTER_STATES.length * AGENT_AVATAR_SIZES.length * 2);
     expect(agentAvatarUrl(appearanceForPalette("arctic-blue"), 24, 2))
       .not.toBe(agentAvatarUrl(appearanceForPalette("arctic-blue"), 48, 1));
-    expect([...paths].every(path => !path.includes("?") && path.startsWith("./agent-avatar-images/cap-v1/"))).toBe(true);
+    expect([...paths].every(path => !path.includes("?") && path.startsWith("./agent-avatar-images/photo-v1/"))).toBe(true);
   });
 });

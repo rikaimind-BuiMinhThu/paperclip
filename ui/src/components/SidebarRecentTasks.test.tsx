@@ -3,7 +3,8 @@
 import { act, type ReactNode } from "react";
 import { createRoot, type Root } from "react-dom/client";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
+import { DEFAULT_LOCALE, i18n } from "@/i18n";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { SidebarRecentTasks } from "./SidebarRecentTasks";
 import {
@@ -54,6 +55,14 @@ vi.mock("@/context/SidebarContext", () => ({
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 (globalThis as any).IS_REACT_ACT_ENVIRONMENT = true;
+
+beforeAll(async () => {
+  await i18n.changeLanguage("en");
+});
+
+afterAll(async () => {
+  await i18n.changeLanguage(DEFAULT_LOCALE);
+});
 
 describe("SidebarRecentTasks", () => {
   let container: HTMLDivElement;

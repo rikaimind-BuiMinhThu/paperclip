@@ -4,8 +4,9 @@ import type { ComponentProps, ReactNode } from "react";
 import { flushSync } from "react-dom";
 import { createRoot } from "react-dom/client";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 import { queryKeys } from "../lib/queryKeys";
+import { DEFAULT_LOCALE, i18n, t } from "@/i18n";
 import { NewIssueDialog } from "./NewIssueDialog";
 
 const dialogState = vi.hoisted(() => ({
@@ -323,6 +324,14 @@ describe("NewIssueDialog", () => {
   let originalVisualViewportDescriptor: PropertyDescriptor | undefined;
   let originalInnerHeightDescriptor: PropertyDescriptor | undefined;
 
+  beforeAll(async () => {
+    await i18n.changeLanguage("en");
+  });
+
+  afterAll(async () => {
+    await i18n.changeLanguage(DEFAULT_LOCALE);
+  });
+
   beforeEach(() => {
     vi.useRealTimers();
     originalResizeObserver = globalThis.ResizeObserver;
@@ -397,11 +406,11 @@ describe("NewIssueDialog", () => {
     const { root } = renderDialog(container);
     await flush();
 
-    expect(container.textContent).toContain("New sub-task");
+    expect(container.textContent).toContain(t("issues.dialog.newSubTask"));
     expect(container.textContent).toContain("Sub-task of");
     expect(container.textContent).toContain("PAP-1");
     expect(container.textContent).toContain("Parent issue");
-    expect(container.textContent).toContain("Create Sub-Task");
+    expect(container.textContent).toContain(t("issues.dialog.createSubTask"));
 
     act(() => root.unmount());
 
@@ -409,8 +418,8 @@ describe("NewIssueDialog", () => {
     const rerendered = renderDialog(container);
     await flush();
 
-    expect(container.textContent).toContain("New task");
-    expect(container.textContent).toContain("Create Task");
+    expect(container.textContent).toContain(t("issues.dialog.newTask"));
+    expect(container.textContent).toContain(t("issues.dialog.createTask"));
     expect(container.textContent).not.toContain("Sub-task of");
 
     act(() => rerendered.root.unmount());
@@ -424,8 +433,8 @@ describe("NewIssueDialog", () => {
       container.querySelectorAll<HTMLElement>('[data-slot="new-issue-compact-control"]'),
     );
     const prefix = compactControls.find((control) => control.textContent === "PAP");
-    const assignee = compactControls.find((control) => control.textContent === "Assignee");
-    const project = compactControls.find((control) => control.textContent === "Project");
+    const assignee = compactControls.find((control) => control.textContent === t("issues.dialog.assigneePlaceholder"));
+    const project = compactControls.find((control) => control.textContent === t("issues.dialog.projectPlaceholder"));
     const status = compactControls.find((control) => control.textContent?.trim() === "Todo");
     const upload = compactControls.find((control) => control.textContent?.trim() === "Upload");
     const mode = compactControls.find((control) => control.hasAttribute("data-issue-work-mode-chip"));
@@ -491,7 +500,7 @@ describe("NewIssueDialog", () => {
     expect(mockExecutionWorkspacesApi.list).not.toHaveBeenCalled();
 
     const submitButton = Array.from(container.querySelectorAll("button"))
-      .find((button) => button.textContent?.includes("Create Sub-Task"));
+      .find((button) => button.textContent?.includes(t("issues.dialog.createSubTask")));
     expect(submitButton).not.toBeUndefined();
     await waitForAssertion(() => {
       expect(submitButton?.hasAttribute("disabled")).toBe(false);
@@ -658,7 +667,7 @@ describe("NewIssueDialog", () => {
     expect(planningButton?.className).toContain("bg-accent");
 
     const submitButton = Array.from(container.querySelectorAll("button"))
-      .find((button) => button.textContent?.includes("Create Task"));
+      .find((button) => button.textContent?.includes(t("issues.dialog.createTask")));
     expect(submitButton).not.toBeUndefined();
     await vi.waitFor(() => {
       expect(submitButton?.hasAttribute("disabled")).toBe(false);
@@ -693,7 +702,7 @@ describe("NewIssueDialog", () => {
     expect(askButton?.className).toContain("bg-accent");
 
     const submitButton = Array.from(container.querySelectorAll("button"))
-      .find((button) => button.textContent?.includes("Create Task"));
+      .find((button) => button.textContent?.includes(t("issues.dialog.createTask")));
     expect(submitButton).not.toBeUndefined();
     await vi.waitFor(() => {
       expect(submitButton?.hasAttribute("disabled")).toBe(false);
@@ -731,8 +740,8 @@ describe("NewIssueDialog", () => {
     await flush();
     expect(container.textContent).not.toContain("Execution workspace");
     expect(container.querySelector('option[value="isolated_workspace"]')).toBeNull();
-    await typeTextareaValue(container.querySelector('textarea[placeholder="Task title (optional)"]')!, "Managed task");
-    const create = Array.from(container.querySelectorAll("button")).find((button) => button.textContent?.includes("Create Task"));
+    await typeTextareaValue(container.querySelector(`textarea[placeholder="${t("issues.dialog.titlePlaceholder")}"]`)!, "Managed task");
+    const create = Array.from(container.querySelectorAll("button")).find((button) => button.textContent?.includes(t("issues.dialog.createTask")));
     act(() => create!.click());
     await waitForAssertion(() => expect(mockIssuesApi.create).toHaveBeenCalled());
     const payload = mockIssuesApi.create.mock.calls[0][1];
@@ -751,8 +760,8 @@ describe("NewIssueDialog", () => {
     const { root } = renderDialog(container, ["workspaces.isolation"]);
     await flush();
     expect(container.querySelector('option[value="isolated_workspace"]')).toBeNull();
-    await typeTextareaValue(container.querySelector('textarea[placeholder="Task title (optional)"]')!, "Context task");
-    const create = Array.from(container.querySelectorAll("button")).find((button) => button.textContent?.includes(subtask ? "Create Sub-Task" : "Create Task"));
+    await typeTextareaValue(container.querySelector(`textarea[placeholder="${t("issues.dialog.titlePlaceholder")}"]`)!, "Context task");
+    const create = Array.from(container.querySelectorAll("button")).find((button) => button.textContent?.includes(subtask ? t("issues.dialog.createSubTask") : t("issues.dialog.createTask")));
     act(() => create!.click());
     await waitForAssertion(() => expect(mockIssuesApi.create).toHaveBeenCalled());
     expect(mockIssuesApi.create.mock.calls[0][1]).toMatchObject({
@@ -810,14 +819,14 @@ describe("NewIssueDialog", () => {
     const { root } = renderDialog(container);
     await flush();
 
-    expect(container.textContent).toContain("New task");
-    expect(container.textContent).not.toContain("New sub-task");
+    expect(container.textContent).toContain(t("issues.dialog.newTask"));
+    expect(container.textContent).not.toContain(t("issues.dialog.newSubTask"));
     await waitForAssertion(() => {
       expect(container.textContent).toContain("Reusing PAP-100");
     });
 
     const submitButton = Array.from(container.querySelectorAll("button"))
-      .find((button) => button.textContent?.includes("Create Task"));
+      .find((button) => button.textContent?.includes(t("issues.dialog.createTask")));
     expect(submitButton).not.toBeUndefined();
 
     await act(async () => {
@@ -902,9 +911,9 @@ describe("NewIssueDialog", () => {
     const { root } = renderDialog(container);
     await flush();
     await waitForAssertion(() => {
-      expect((container.querySelector('textarea[aria-label="Add description..."]') as HTMLTextAreaElement).value).toBe("Keep the request without a title");
+      expect((container.querySelector(`textarea[aria-label="${t("issues.dialog.descriptionPlaceholder")}"]`) as HTMLTextAreaElement).value).toBe("Keep the request without a title");
     });
-    const submit = Array.from(container.querySelectorAll("button")).find(button => button.textContent?.includes("Create Task"))!;
+    const submit = Array.from(container.querySelectorAll("button")).find(button => button.textContent?.includes(t("issues.dialog.createTask")))!;
     expect(submit.hasAttribute("disabled")).toBe(false);
     await act(async () => root.unmount());
   });
@@ -912,9 +921,9 @@ describe("NewIssueDialog", () => {
   it("creates a task from its description without requiring a title", async () => {
     const { root } = renderDialog(container);
     await flush();
-    const submit = Array.from(container.querySelectorAll("button")).find(button => button.textContent?.includes("Create Task"))!;
+    const submit = Array.from(container.querySelectorAll("button")).find(button => button.textContent?.includes(t("issues.dialog.createTask")))!;
     expect(submit.hasAttribute("disabled")).toBe(true);
-    await typeTextareaValue(container.querySelector('textarea[aria-label="Add description..."]')!, "Investigate the sign-in redirect and fix it");
+    await typeTextareaValue(container.querySelector(`textarea[aria-label="${t("issues.dialog.descriptionPlaceholder")}"]`)!, "Investigate the sign-in redirect and fix it");
     await vi.waitFor(() => expect(submit.hasAttribute("disabled")).toBe(false));
     await act(async () => { submit.dispatchEvent(new MouseEvent("click", { bubbles: true })); });
     await flush();
@@ -938,8 +947,8 @@ describe("NewIssueDialog", () => {
     const { root } = renderDialog(container);
     await flush();
 
-    const titleInput = container.querySelector('textarea[placeholder="Task title (optional)"]') as HTMLTextAreaElement | null;
-    const descriptionInput = container.querySelector('textarea[aria-label="Add description..."]') as HTMLTextAreaElement | null;
+    const titleInput = container.querySelector(`textarea[placeholder="${t("issues.dialog.titlePlaceholder")}"]`) as HTMLTextAreaElement | null;
+    const descriptionInput = container.querySelector(`textarea[aria-label="${t("issues.dialog.descriptionPlaceholder")}"]`) as HTMLTextAreaElement | null;
     expect(titleInput).not.toBeNull();
     expect(descriptionInput).not.toBeNull();
 
@@ -961,7 +970,7 @@ describe("NewIssueDialog", () => {
     await flush();
 
     const submitButton = Array.from(container.querySelectorAll("button"))
-      .find((button) => button.textContent?.includes("Create Task"));
+      .find((button) => button.textContent?.includes(t("issues.dialog.createTask")));
     expect(submitButton).not.toBeUndefined();
     await vi.waitFor(() => {
       expect(submitButton?.hasAttribute("disabled")).toBe(false);
@@ -992,7 +1001,7 @@ describe("NewIssueDialog", () => {
     await flush();
 
     const submitButton = Array.from(container.querySelectorAll("button"))
-      .find((button) => button.textContent?.includes("Create Task"));
+      .find((button) => button.textContent?.includes(t("issues.dialog.createTask")));
     expect(submitButton).not.toBeUndefined();
 
     await act(async () => {
@@ -1000,7 +1009,7 @@ describe("NewIssueDialog", () => {
     });
     await flush();
 
-    expect(submitButton?.textContent).toContain("Creating...");
+    expect(submitButton?.textContent).toContain(t("issues.dialog.creating"));
     expect(submitButton?.getAttribute("aria-busy")).toBe("true");
     expect(container.textContent).not.toContain("Creating issue");
 
@@ -1018,8 +1027,8 @@ describe("NewIssueDialog", () => {
     const { root } = renderDialog(container);
     await flush();
 
-    const titleInput = container.querySelector('textarea[placeholder="Task title (optional)"]') as HTMLTextAreaElement | null;
-    const descriptionInput = container.querySelector('textarea[aria-label="Add description..."]') as HTMLTextAreaElement | null;
+    const titleInput = container.querySelector(`textarea[placeholder="${t("issues.dialog.titlePlaceholder")}"]`) as HTMLTextAreaElement | null;
+    const descriptionInput = container.querySelector(`textarea[aria-label="${t("issues.dialog.descriptionPlaceholder")}"]`) as HTMLTextAreaElement | null;
     expect(titleInput).not.toBeNull();
     expect(descriptionInput).not.toBeNull();
 
@@ -1027,7 +1036,7 @@ describe("NewIssueDialog", () => {
     await typeTextareaValue(descriptionInput!, description);
 
     const submitButton = Array.from(container.querySelectorAll("button"))
-      .find((button) => button.textContent?.includes("Create Task"));
+      .find((button) => button.textContent?.includes(t("issues.dialog.createTask")));
     expect(submitButton).not.toBeUndefined();
     await vi.waitFor(() => {
       expect(submitButton?.hasAttribute("disabled")).toBe(false);
@@ -1054,7 +1063,7 @@ describe("NewIssueDialog", () => {
     const { root } = renderDialog(container);
     await flush();
 
-    const titleInput = container.querySelector('textarea[placeholder="Task title (optional)"]') as HTMLTextAreaElement | null;
+    const titleInput = container.querySelector(`textarea[placeholder="${t("issues.dialog.titlePlaceholder")}"]`) as HTMLTextAreaElement | null;
     expect(titleInput).not.toBeNull();
     await typeTextareaValue(titleInput!, "Plan this first");
 
@@ -1066,7 +1075,7 @@ describe("NewIssueDialog", () => {
     await flush();
 
     const submitButton = Array.from(container.querySelectorAll("button"))
-      .find((button) => button.textContent?.includes("Create Task"));
+      .find((button) => button.textContent?.includes(t("issues.dialog.createTask")));
     expect(submitButton).not.toBeUndefined();
     await vi.waitFor(() => {
       expect(submitButton?.hasAttribute("disabled")).toBe(false);
@@ -1092,7 +1101,7 @@ describe("NewIssueDialog", () => {
     const { root } = renderDialog(container);
     await flush();
 
-    const titleInput = container.querySelector('textarea[placeholder="Task title (optional)"]') as HTMLTextAreaElement | null;
+    const titleInput = container.querySelector(`textarea[placeholder="${t("issues.dialog.titlePlaceholder")}"]`) as HTMLTextAreaElement | null;
     expect(titleInput).not.toBeNull();
     await typeTextareaValue(titleInput!, "Answer this first");
 
@@ -1104,7 +1113,7 @@ describe("NewIssueDialog", () => {
     await flush();
 
     const submitButton = Array.from(container.querySelectorAll("button"))
-      .find((button) => button.textContent?.includes("Create Task"));
+      .find((button) => button.textContent?.includes(t("issues.dialog.createTask")));
     expect(submitButton).not.toBeUndefined();
     await vi.waitFor(() => {
       expect(submitButton?.hasAttribute("disabled")).toBe(false);
@@ -1254,7 +1263,7 @@ describe("NewIssueDialog", () => {
     await flush();
 
     const submitButton = Array.from(container.querySelectorAll("button"))
-      .find((button) => button.textContent?.includes("Create Sub-Task"));
+      .find((button) => button.textContent?.includes(t("issues.dialog.createSubTask")));
     expect(submitButton).not.toBeUndefined();
 
     await act(async () => {
@@ -1286,8 +1295,8 @@ describe("NewIssueDialog", () => {
     expect(dialogContent?.className).toContain("h-(--new-issue-dialog-height)");
     expect(dialogContent?.className).toContain("overflow-hidden");
 
-    const titleInput = container.querySelector('textarea[placeholder="Task title (optional)"]');
-    const descriptionInput = container.querySelector('textarea[aria-label="Add description..."]');
+    const titleInput = container.querySelector(`textarea[placeholder="${t("issues.dialog.titlePlaceholder")}"]`);
+    const descriptionInput = container.querySelector(`textarea[aria-label="${t("issues.dialog.descriptionPlaceholder")}"]`);
     const bodyScrollRegion = Array.from(container.querySelectorAll("div")).find((element) =>
       typeof element.className === "string" && element.className.includes("overscroll-contain"),
     );
@@ -1322,7 +1331,7 @@ describe("NewIssueDialog", () => {
       element.className.includes("max-h-(--new-issue-dialog-height)"),
     );
     const descriptionInput = container.querySelector<HTMLTextAreaElement>(
-      'textarea[aria-label="Add description..."]',
+      `textarea[aria-label="${t("issues.dialog.descriptionPlaceholder")}"]`,
     );
     const scrollIntoView = vi.fn();
     Object.defineProperty(descriptionInput!, "scrollIntoView", {
@@ -1431,7 +1440,7 @@ describe("NewIssueDialog", () => {
     await flush();
 
     const submitButton = Array.from(container.querySelectorAll("button"))
-      .find((button) => button.textContent?.includes("Create Task"));
+      .find((button) => button.textContent?.includes(t("issues.dialog.createTask")));
     expect(submitButton).not.toBeUndefined();
     await vi.waitFor(() => {
       expect(submitButton?.hasAttribute("disabled")).toBe(false);
@@ -1601,7 +1610,7 @@ describe("NewIssueDialog", () => {
     expect(container.textContent).toContain("Keep it moving");
 
     const submitButton = Array.from(container.querySelectorAll("button"))
-      .find((button) => button.textContent?.includes("Create Task"));
+      .find((button) => button.textContent?.includes(t("issues.dialog.createTask")));
     expect(submitButton).not.toBeUndefined();
     await vi.waitFor(() => {
       expect(submitButton?.hasAttribute("disabled")).toBe(false);
@@ -1650,8 +1659,8 @@ describe("NewIssueDialog", () => {
       expect(workModeOption("ask")?.textContent).toContain("Ask mode");
       expect(workModeOption("planning")?.textContent).toContain("Plan mode");
 
-      expect(statusOptionIconClass("Todo", "Executable - assignee will be woken")).toContain("text-amber-600");
-      expect(statusOptionIconClass("In Progress")).toContain("text-blue-600");
+      expect(statusOptionIconClass(t("status.todo"), t("issues.dialog.todoExecutable"))).toContain("text-amber-600");
+      expect(statusOptionIconClass(t("status.inProgress"))).toContain("text-blue-600");
 
       act(() => root.unmount());
     });

@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Technical architecture</title>
+  <link rel="stylesheet" href="assets/doc.css">
+</head>
+<body>
+  <h1>Technical architecture</h1>
+  <p class="status">Status: this slice</p>
+  <svg viewBox="0 0 640 160" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Routine dispatch calls the workforce executor">
+    <rect x="20" y="20" width="180" height="44" fill="#e7e5e4" stroke="#44403c"/>
+    <text x="110" y="46" text-anchor="middle" font-size="13">dispatchRoutine</text>
+    <rect x="240" y="20" width="180" height="44" fill="#e7e5e4" stroke="#44403c"/>
+    <text x="330" y="46" text-anchor="middle" font-size="13">issues + wake</text>
+    <rect x="20" y="90" width="400" height="44" fill="#d6d3d1" stroke="#44403c"/>
+    <text x="220" y="116" text-anchor="middle" font-size="13">workforceWorkflowService</text>
+    <line x1="110" y1="64" x2="110" y2="90" stroke="#44403c"/>
+  </svg>
+  <table>
+    <thead><tr><th>Layer</th><th>Role</th></tr></thead>
+    <tbody>
+      <tr><td>Control plane</td><td>Companies, agents, issues, routines, budgets, activity log. Unchanged owners.</td></tr>
+      <tr><td>Executor</td><td><code>server/src/services/workforce/workflow-engine.ts</code>. Deterministic. No LLM wait.</td></tr>
+      <tr><td>Hook</td><td>After the routine issue is created and before the assignment wake.</td></tr>
+      <tr><td>Recovery</td><td><code>resumeInterruptedRuns</code> once at startup. Not inside the 30s tick.</td></tr>
+      <tr><td>UI</td><td><code>ui/src/pages/workforce</code> over the same company prefix.</td></tr>
+    </tbody>
+  </table>
+</body>
+</html>

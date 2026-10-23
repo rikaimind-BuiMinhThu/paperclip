@@ -1,3 +1,4 @@
+import { workforceWorkflowService } from "./services/workforce/workflow-engine.js";
 import { subscribeAllCompanyLiveEvents } from "./services/live-events.js";
 import { chatCompletionDeliveryService } from "./services/chat-completion-delivery.js";
 /// <reference path="./types/express.d.ts" />
@@ -1636,6 +1637,9 @@ async function startServerWithDatabaseTeardown(
       return { archived, ...notifications };
     };
     await runRetentionSweep();
+    await workforceWorkflowService(db).resumeInterruptedRuns().catch((err) => {
+      logger.error({ err }, "workforce workflow resume failed");
+    });
 
     startHeartbeatSchedulerInterval(() => {
       // Track the outer async callback as well as the work it starts. Shutdown
