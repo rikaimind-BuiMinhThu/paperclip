@@ -30,7 +30,7 @@ Auth: `Authorization: Bearer pcp_cust_…` **or** `X-API-Key: pcp_cust_…`.
 | Object | ID / value |
 |--------|------------|
 | Company | `63e75bf2-64fc-4a20-9ac5-71dbd5f6fa6f` — DocuWorks Audit Dev |
-| Agent | `c016aafc-028b-4c93-b6b5-7965264fa7e4` — PDF OCR (`gemini_local`) |
+| Agent | `c016aafc-028b-4c93-b6b5-7965264fa7e4` — PDF OCR (seeded `gemini_local`; real-server smoke used `cursor` — vault Gemini key absent) |
 | API App | `f17932dc-e16b-40fe-a83f-c643b2de9208` — DocuWorks Drawing Audit |
 | Billing unit | `page` @ ¥15 (`1500` cents) |
 | Customer | `483dfd71-5f8d-4224-a96d-8805a936848d` — 清水建設… |
@@ -54,7 +54,27 @@ Partner curl recipes: [docuworks-partner.md](./docuworks-partner.md)
 | `POST /api/v1/ocr/handwriting` | **202** | `request_id=dev-req-20261023-4d5a` + `poll_url` (agent did not finish within wait; expected without vault Gemini) |
 | `X-API-Key` on license | **200** | Same license shape; `machine_id` from prior consume metadata |
 
-## 4. Automated tests
+## 4. Real-server smoke (2026-10-23, post-push)
+
+**Target:** `BASE=http://127.0.0.1:3100` (no remote Dev URL configured; code at `7d0c865b` after `git push -u fork HEAD`).
+
+**Vault / vision:** Company secrets catalog empty; `GEMINI_API_KEY` not in vault. Gemini CLI OAuth ineligible (`UNSUPPORTED_CLIENT`). PDF OCR agent switched to `cursor` for vision so OCR could finish.
+
+**Master data:** Reused DocuWorks Audit Dev company/app/customer/key; attached `skills/docuworks-handwriting-ocr` into agent instructions.
+
+| Call | HTTP | Result |
+|------|------|--------|
+| `GET /api/v1/license/current` | **200** | Active Enterprise; `LIC-2026-DEV-001` |
+| `GET /api/v1/license/quota` | **200** | DocuWorks quota shape |
+| `GET /api/v1/billing/pricing-summary` | **200** | ¥15/page + refill packages |
+| `POST /api/v1/license/consume-quota` | **200** | `remaining_pages=998`; same `job_id` idempotent (same `transaction_id`) |
+| `X-API-Key` on license | **200** | Same shape |
+| `POST /api/v1/ocr/handwriting` | **202** → poll | `request_id=dev-req-20261023-508e` |
+| `GET /api/v1/ocr/jobs/dev-req-20261023-508e` | **200** | `text=出入口の幅を1000に変更すること`, `confidence=High`, `confidence_score=0.92`, `pages_deducted=1` |
+
+Image: synthetic JA architecture-note PNG (`/tmp/docuworks-smoke/ja-handwriting.png`, not 1×1). No raw `pcp_cust_` key in this report.
+
+## 5. Automated tests
 
 ```text
 pnpm exec vitest run \
@@ -65,13 +85,16 @@ Test Files  2 passed (2)
 Tests       22 passed (22)
 ```
 
-## 5. Gaps / follow-ups
+## 6. Gaps / follow-ups
 
-- **OCR 200** needs platform-vault Gemini (or other vision) keys so the agent can complete within `PAPERCLIP_DOCUWORKS_OCR_WAIT_MS` (default 25s); otherwise clients poll `GET /api/v1/ocr/jobs/:id`.
+- **Vault Gemini** still missing on this host; production OCR should use `gemini_local` + vault `GEMINI_API_KEY` (or keep a vision adapter). Sync path stays 202 unless agent finishes within `PAPERCLIP_DOCUWORKS_OCR_WAIT_MS` (default 25s) — clients should poll.
+- **OCR agent** must **POST an issue comment** with the JSON fence; assistant transcript alone does not complete the job.
 - **Refill packages** are static catalog in the facade (not Stripe checkout).
 - **Activate / top-up** requires board-minted tokens via `POST /api/api-apps/:id/docuworks/license-tokens`.
 - Migration: `packages/db/src/migrations/0299_daily_stellaris.sql` (`docuworks_ocr_jobs`, `license_redeem_tokens`).
 
-## 6. Commit
+## 7. Commits
 
-**Commit:** `6ed7dbd1` (`6ed7dbd149e520e76bf3caa6865c7d8ecebf55af`).
+- Feat: `6ed7dbd1` (`6ed7dbd149e520e76bf3caa6865c7d8ecebf55af`)
+- Report SHA: `7d0c865b`
+- Pushed to: `fork` (`rikaimind-BuiMinhThu/paperclip`) on `feat/marketing-plan-first-org-work-flow`
