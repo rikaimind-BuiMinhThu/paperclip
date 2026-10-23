@@ -1251,7 +1251,13 @@
       "save": "保存",
       "teamName": "チーム名",
       "members": "メンバー。ラジオボタンがマネージャーです。",
-      "noTeam": "チームなし"
+      "noTeam": "チームなし",
+      "editAgent": "Edit agent",
+      "editTeam": "Edit team",
+      "deleteAgentConfirm": "Delete this master agent? This cannot be undone.",
+      "readOnlyNotice": "Only instance admins can edit master agents.",
+      "openInstanceAccess": "Open instance access",
+      "loadError": "Failed to load master agents"
     }
   },
   "inbox": {
