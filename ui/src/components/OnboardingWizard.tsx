@@ -1,5 +1,6 @@
 import { accessApi } from "@/api/access";
 import { masterAgentsApi } from "@/api/masterAgents";
+import { masterDepartmentsApi } from "@/api/masterDepartments";
 import { healthApi } from "@/api/health";
 import { LocalProviderLoginInstructions } from "./AdapterLoginChrome";
 import { useLocalAiLogin } from "./ai-connections/useLocalAiLogin";
@@ -26,7 +27,7 @@ import type {
   Environment,
   InstanceSettings,
 } from "@paperclipai/shared";
-import { AGENT_ROLES, AGENT_ROLE_LABELS, ADAPTER_AUTH_MISSING_CHECK_CODE, MASTER_AGENT_DEPARTMENTS, type MasterAgentDepartment } from "@paperclipai/shared";
+import { AGENT_ROLES, AGENT_ROLE_LABELS, ADAPTER_AUTH_MISSING_CHECK_CODE } from "@paperclipai/shared";
 import { AdapterLoginPanel } from "./AgentConfigForm";
 import {
   CONNECT_SOURCE_NAMES,
@@ -136,7 +137,7 @@ import {
 } from "./onboarding/Stepper";
 import { AgentPreview } from "./onboarding/AgentPreview";
 import {
-  GALLERY_DEPARTMENT_LABEL,
+  galleryDepartmentLabel,
   MasterAgentGallery,
   type GallerySelection,
 } from "./onboarding/MasterAgentGallery";
@@ -748,13 +749,18 @@ function OnboardingWizardInner({
     string | null
   >((saved?.createdCompanyPrefix as string) ?? null);
   const [createdAgentId, setCreatedAgentId] = useState<string | null>((saved?.createdAgentId as string) ?? null);
-  const [galleryDepartment, setGalleryDepartment] = useState<MasterAgentDepartment>("leadership");
+  const [galleryDepartment, setGalleryDepartment] = useState("leadership");
   const [gallerySelection, setGallerySelection] = useState<GallerySelection | null>(null);
   const [galleryError, setGalleryError] = useState<string | null>(null);
   const [hiring, setHiring] = useState(false);
   const hiringRef = useRef(false);
   const gallerySeeded = useRef(false);
   const galleryEnabled = effectiveOnboardingOpen && step === 3;
+  const galleryDepartmentsQuery = useQuery({
+    queryKey: queryKeys.masterDepartments.list(false),
+    queryFn: () => masterDepartmentsApi.list(false),
+    enabled: galleryEnabled,
+  });
   const galleryAgentsQuery = useQuery({
     queryKey: queryKeys.masterAgents.agents(false),
     queryFn: () => masterAgentsApi.list(false),
@@ -780,7 +786,8 @@ function OnboardingWizardInner({
     const rows = galleryAgentsQuery.data;
     if (!rows || rows.length === 0) return;
     const recommended = rows.find((row) => row.recommended);
-    const fallback = MASTER_AGENT_DEPARTMENTS
+    const order = (galleryDepartmentsQuery.data ?? []).map((row) => row.slug);
+    const fallback = (order.length > 0 ? order : ["leadership"])
       .map((department) => rows.find((row) => row.department === department))
       .find((row) => row !== undefined);
     const picked = recommended ?? fallback;
@@ -790,7 +797,7 @@ function OnboardingWizardInner({
     setGalleryDepartment(picked.department);
     setAgentName(picked.title);
     setAgentAppearance(legacyAgentAppearance(picked.id));
-  }, [galleryAgentsQuery.data]);
+  }, [galleryAgentsQuery.data, galleryDepartmentsQuery.data]);
   const [createdCompanyGoalId, setCreatedCompanyGoalId] = useState<string | null>(
     (saved?.createdCompanyGoalId as string) ?? null
   );
@@ -2460,6 +2467,10 @@ function OnboardingWizardInner({
 
   if (!effectiveOnboardingOpen) return null;
 
+  const galleryDepartments = (galleryDepartmentsQuery.data ?? []).map((row) => ({
+    slug: row.slug,
+    name: row.name,
+  }));
   const galleryAgents = (galleryAgentsQuery.data ?? []).map((agent) => ({
     id: agent.id,
     title: agent.title,
@@ -2488,7 +2499,15 @@ function OnboardingWizardInner({
       const agent = galleryAgents.find((row) => row.id === gallerySelection.id);
       return {
         name: agent?.title ?? "",
-        role: agent ? t(GALLERY_DEPARTMENT_LABEL[agent.department]) : "",
+        role: agent
+          ? galleryDepartmentLabel(
+            t,
+            galleryDepartments.find((row) => row.slug === agent.department) ?? {
+              slug: agent.department,
+              name: agent.department,
+            },
+          )
+          : "",
       };
     }
     const team = galleryTeams.find((row) => row.id === gallerySelection.id);
@@ -2802,6 +2821,7 @@ function OnboardingWizardInner({
                   <MasterAgentGallery
                     agents={galleryAgents}
                     teams={galleryTeams}
+                    departments={galleryDepartments}
                     department={galleryDepartment}
                     onDepartment={setGalleryDepartment}
                     selection={gallerySelection}

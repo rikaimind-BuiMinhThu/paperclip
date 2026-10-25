@@ -6,6 +6,7 @@ import {
   Download,
   FlaskConical,
   KeyRound,
+  LayoutGrid,
   MailPlus,
   MonitorCog,
   Puzzle,
@@ -215,6 +216,13 @@ export function CompanySettingsSidebar() {
               to={`${INSTANCE_SETTINGS_PATH_PREFIX}/master-agents`}
               label={t("settings.masterAgents")}
               icon={Users}
+            />
+          )}
+          {showPage("instance.masterDepartments") && (
+            <SidebarNavItem
+              to={`${INSTANCE_SETTINGS_PATH_PREFIX}/master-departments`}
+              label={t("settings.masterDepartments")}
+              icon={LayoutGrid}
             />
           )}
           {showPage("instance.masterSkills") && (

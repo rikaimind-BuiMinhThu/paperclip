@@ -637,6 +637,9 @@ export const queryKeys = {
     prefs: ["master-skill-catalog-prefs"] as const,
     options: (includeDisabled: boolean) => ["master-skill-options", includeDisabled] as const,
   },
+  masterDepartments: {
+    list: (includeDisabled: boolean) => ["master-departments", includeDisabled] as const,
+  },
   health: ["health"] as const,
   stagingCommit: ["staging-commit"] as const,
   cloud: {

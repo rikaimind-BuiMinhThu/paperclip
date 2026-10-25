@@ -3,18 +3,17 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   AGENT_ROLES,
   DEFAULT_MODEL_ADAPTER_TYPES,
-  MASTER_AGENT_DEPARTMENTS,
   MASTER_AGENT_ICONS,
   type DefaultModelAdapterType,
-  type MasterAgentDepartment,
   type MasterAgentRecord,
   type MasterTeamRecord,
 } from "@paperclipai/shared";
 import { accessApi } from "@/api/access";
 import { agentsApi } from "@/api/agents";
 import { masterAgentsApi } from "@/api/masterAgents";
+import { masterDepartmentsApi } from "@/api/masterDepartments";
 import { masterSkillsApi } from "@/api/masterSkills";
-import { GALLERY_DEPARTMENT_LABEL } from "@/components/onboarding/MasterAgentGallery";
+import { galleryDepartmentLabel } from "@/components/onboarding/MasterAgentGallery";
 import { MasterAgentIcon } from "@/components/onboarding/master-agent-icons";
 import {
   SkillMultiSelect,
@@ -57,7 +56,7 @@ export function masterAgentSkillLabel(skillKey: string): string {
 
 type AgentDraft = {
   title: string;
-  department: MasterAgentDepartment;
+  department: string;
   description: string;
   instructions: string;
   role: string;
@@ -72,7 +71,7 @@ type AgentDraft = {
 
 type TeamDraft = {
   name: string;
-  department: MasterAgentDepartment;
+  department: string;
   description: string;
   enabled: boolean;
   memberIds: string[];
@@ -184,7 +183,7 @@ function CatalogModelSelect(props: {
   );
 }
 
-function teamDraft(team: MasterTeamRecord | undefined, department: MasterAgentDepartment): TeamDraft {
+function teamDraft(team: MasterTeamRecord | undefined, department: string): TeamDraft {
   const members = [...(team?.members ?? [])].sort((a, b) => a.sortOrder - b.sortOrder);
   return {
     name: team?.name ?? "",
@@ -213,7 +212,7 @@ export function MasterAgents() {
   const [editingAgentId, setEditingAgentId] = useState<string | "new" | null>(null);
   const [agentForm, setAgentForm] = useState<AgentDraft>(agentDraft());
   const [confirmDelete, setConfirmDelete] = useState(false);
-  const [editingTeamDepartment, setEditingTeamDepartment] = useState<MasterAgentDepartment | null>(null);
+  const [editingTeamDepartment, setEditingTeamDepartment] = useState<string | null>(null);
   const [teamForm, setTeamForm] = useState<TeamDraft | null>(null);
   const [formError, setFormError] = useState<string | null>(null);
   const [actionError, setActionError] = useState<string | null>(null);
@@ -252,6 +251,12 @@ export function MasterAgents() {
     queryFn: () => masterSkillsApi.listOptions(false),
     enabled: editingAgentId !== null,
   });
+  const departmentsQuery = useQuery({
+    queryKey: queryKeys.masterDepartments.list(includeDisabled),
+    queryFn: () => masterDepartmentsApi.list(includeDisabled),
+    enabled: accessReady,
+  });
+  const departments = departmentsQuery.data ?? [];
 
   const skillOptions = useMemo((): SkillMultiSelectOption[] => {
     const byKey = new Map<string, SkillMultiSelectOption>();
@@ -517,11 +522,11 @@ export function MasterAgents() {
         </div>
         {loadError ? <p className="text-xs text-destructive">{t("settings.masterAgentsPage.loadError")}: {loadError}</p> : null}
         {actionError ? <p className="text-xs text-destructive">{actionError}</p> : null}
-        {MASTER_AGENT_DEPARTMENTS.map((department) => {
-          const rows = agents.filter((agent) => agent.department === department);
+        {departments.map((department) => {
+          const rows = agents.filter((agent) => agent.department === department.slug);
           return (
-            <div key={department} className="flex flex-col gap-2">
-              <h3 className="text-xs text-muted-foreground">{t(GALLERY_DEPARTMENT_LABEL[department])}</h3>
+            <div key={department.slug} className="flex flex-col gap-2">
+              <h3 className="text-xs text-muted-foreground">{galleryDepartmentLabel(t, department)}</h3>
               {rows.map((agent) => (
                 <div key={agent.id} className="flex items-start gap-3 rounded-md border border-border bg-card p-3">
                   <MasterAgentIcon name={agent.icon} />
@@ -586,13 +591,13 @@ export function MasterAgents() {
 
       <section className="flex flex-col gap-3">
         <h2 className="text-sm font-medium">{t("settings.masterAgentsPage.teams")}</h2>
-        {MASTER_AGENT_DEPARTMENTS.filter((department) => department !== "leadership").map((department) => {
-          const team = teams.find((row) => row.department === department);
+        {departments.filter((department) => department.slug !== "leadership").map((department) => {
+          const team = teams.find((row) => row.department === department.slug);
           const summary = team?.members.map((member) => member.title).join(", ") ?? t("settings.masterAgentsPage.noTeam");
           return (
-            <div key={department} className="flex items-center gap-3 rounded-md border border-border bg-card p-3">
+            <div key={department.slug} className="flex items-center gap-3 rounded-md border border-border bg-card p-3">
               <div className="min-w-0 flex-1">
-                <p className="truncate text-sm font-medium">{team?.name ?? t(GALLERY_DEPARTMENT_LABEL[department])}</p>
+                <p className="truncate text-sm font-medium">{team?.name ?? galleryDepartmentLabel(t, department)}</p>
                 <p className="truncate text-xs text-muted-foreground">{summary}</p>
               </div>
               {canManage && team ? (
@@ -614,8 +619,8 @@ export function MasterAgents() {
                   type="button"
                   variant="ghost"
                   onClick={() => {
-                    setEditingTeamDepartment(department);
-                    setTeamForm(teamDraft(team, department));
+                    setEditingTeamDepartment(department.slug);
+                    setTeamForm(teamDraft(team, department.slug));
                     setFormError(null);
                   }}
                 >
@@ -677,10 +682,12 @@ export function MasterAgents() {
                 id="agent-department"
                 className="h-9 rounded-md border border-border bg-card px-3 text-sm"
                 value={agentForm.department}
-                onChange={(event) => setAgentForm({ ...agentForm, department: event.target.value as MasterAgentDepartment })}
+                onChange={(event) => setAgentForm({ ...agentForm, department: event.target.value })}
               >
-                {MASTER_AGENT_DEPARTMENTS.map((department) => (
-                  <option key={department} value={department}>{t(GALLERY_DEPARTMENT_LABEL[department])}</option>
+                {departments.map((department) => (
+                  <option key={department.slug} value={department.slug}>
+                    {galleryDepartmentLabel(t, department)}
+                  </option>
                 ))}
               </select>
               <Label htmlFor="agent-description">{t("settings.masterAgentsPage.description")}</Label>

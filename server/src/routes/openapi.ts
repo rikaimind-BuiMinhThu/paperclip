@@ -2992,6 +2992,22 @@ for (const route of [
   });
 }
 
+// ─── Master departments ──────────────────────────────────────────────────────
+
+for (const route of [
+  ["get", "/api/instance/master-departments", "List master departments"],
+  ["post", "/api/instance/master-departments", "Create a master department"],
+  ["patch", "/api/instance/master-departments/{id}", "Update a master department"],
+  ["delete", "/api/instance/master-departments/{id}", "Delete a master department"],
+] as const) {
+  registerCurrentRoute({
+    method: route[0],
+    path: route[1],
+    tags: ["master-departments"],
+    summary: route[2],
+  });
+}
+
 // ─── Master skills ───────────────────────────────────────────────────────────
 
 for (const route of [

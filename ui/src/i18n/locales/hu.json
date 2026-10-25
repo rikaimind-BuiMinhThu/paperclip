@@ -1412,6 +1412,27 @@
       "sortAlphabetical": "Alphabetical",
       "sortRecommended": "Recommended first",
       "noCatalogMatches": "No catalog skills match this filter."
+    },
+    "masterDepartments": "Master departments",
+    "masterDepartmentsPage": {
+      "subtitle": "Organize hire shelves for master agents and teams.",
+      "addDepartment": "Add department",
+      "editDepartment": "Edit department",
+      "edit": "Edit",
+      "delete": "Delete",
+      "deleteTitle": "Delete department?",
+      "deleteBody": "Delete \"{{name}}\"? This fails if agents or teams still use it.",
+      "name": "Name",
+      "slug": "Slug",
+      "slugPlaceholder": "optional-kebab-slug",
+      "description": "Description",
+      "enabled": "Enabled",
+      "disabled": "Disabled",
+      "sortOrder": "Sort order",
+      "empty": "No master departments yet.",
+      "readOnlyNotice": "Only instance admins can edit master departments.",
+      "openInstanceAccess": "Open instance access",
+      "loadError": "Failed to load master departments"
     }
   },
   "inbox": {

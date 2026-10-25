@@ -1,17 +1,18 @@
 import { z } from "zod";
 import { AGENT_ROLES } from "../constants.js";
+import {
+  MASTER_AGENT_DEPARTMENTS,
+  MASTER_DEPARTMENT_SEEDS,
+  masterDepartmentSlugSchema,
+  type MasterAgentDepartment,
+} from "./master-departments.js";
 
-export const MASTER_AGENT_DEPARTMENTS = [
-  "leadership",
-  "marketing",
-  "sales",
-  "engineering",
-  "product",
-  "customer-success",
-  "back-office",
-] as const;
-
-export type MasterAgentDepartment = (typeof MASTER_AGENT_DEPARTMENTS)[number];
+export {
+  MASTER_AGENT_DEPARTMENTS,
+  MASTER_DEPARTMENT_SEEDS,
+  masterDepartmentSlugSchema,
+  type MasterAgentDepartment,
+};
 
 export const MASTER_AGENT_ICONS = [
   "briefcase",
@@ -61,7 +62,6 @@ export const IMPLICIT_PLATFORM_DEFAULT_MODEL = {
   credentialKind: "stored_login" | "api_key";
 };
 
-const departmentSchema = z.enum(MASTER_AGENT_DEPARTMENTS);
 const iconSchema = z.enum(MASTER_AGENT_ICONS);
 const roleSchema = z.enum(AGENT_ROLES);
 
@@ -69,7 +69,7 @@ export const masterAgentSchema = z.object({
   id: z.string().uuid(),
   slug: z.string(),
   title: z.string(),
-  department: departmentSchema,
+  department: z.string(),
   role: roleSchema,
   description: z.string(),
   instructions: z.string(),
@@ -97,7 +97,7 @@ export const masterTeamSchema = z.object({
   slug: z.string(),
   name: z.string(),
   description: z.string(),
-  department: departmentSchema,
+  department: z.string(),
   enabled: z.boolean(),
   sortOrder: z.number().int(),
   members: z.array(masterTeamMemberSchema),
@@ -110,7 +110,7 @@ const optionalModel = z.string().trim().max(200).nullable().optional();
 
 export const createMasterAgentSchema = z.object({
   title: z.string().trim().min(1).max(120),
-  department: departmentSchema,
+  department: masterDepartmentSlugSchema,
   description: z.string().trim().min(1).max(200),
   instructions: z.string().trim().min(1).max(20_000),
   role: roleSchema.optional(),
@@ -138,7 +138,7 @@ export type CreateMasterAgent = z.infer<typeof createMasterAgentSchema>;
 
 export const updateMasterAgentSchema = z.object({
   title: z.string().trim().min(1).max(120).optional(),
-  department: departmentSchema.optional(),
+  department: masterDepartmentSlugSchema.optional(),
   description: z.string().trim().min(1).max(200).optional(),
   instructions: z.string().trim().min(1).max(20_000).optional(),
   role: roleSchema.optional(),
@@ -170,7 +170,7 @@ export type UpdateMasterAgent = z.infer<typeof updateMasterAgentSchema>;
 export const createMasterTeamSchema = z.object({
   name: z.string().trim().min(1).max(120),
   description: z.string().trim().min(1).max(200),
-  department: departmentSchema,
+  department: masterDepartmentSlugSchema,
   enabled: z.boolean().optional(),
   sortOrder: z.number().int().min(0).max(10_000).optional(),
   memberIds: z.array(z.string().uuid()).min(1).max(12),
@@ -190,7 +190,7 @@ export type CreateMasterTeam = z.infer<typeof createMasterTeamSchema>;
 export const updateMasterTeamSchema = z.object({
   name: z.string().trim().min(1).max(120).optional(),
   description: z.string().trim().min(1).max(200).optional(),
-  department: departmentSchema.optional(),
+  department: masterDepartmentSlugSchema.optional(),
   enabled: z.boolean().optional(),
   sortOrder: z.number().int().min(0).max(10_000).optional(),
   memberIds: z.array(z.string().uuid()).min(1).max(12).optional(),

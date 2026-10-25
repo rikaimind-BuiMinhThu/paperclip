@@ -1,9 +1,9 @@
 import { useEffect, useMemo, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { MASTER_AGENT_DEPARTMENTS, type MasterAgentDepartment } from "@paperclipai/shared";
 import { accessApi } from "@/api/access";
 import { agentsApi } from "@/api/agents";
 import { masterAgentsApi } from "@/api/masterAgents";
+import { masterDepartmentsApi } from "@/api/masterDepartments";
 import { useCompany } from "@/context/CompanyContext";
 import { useDialog } from "@/context/DialogContext";
 import { useTranslation } from "@/i18n";
@@ -19,7 +19,7 @@ import {
   DialogTitle,
 } from "./ui/dialog";
 import {
-  GALLERY_DEPARTMENT_LABEL,
+  galleryDepartmentLabel,
   MasterAgentGallery,
   type GallerySelection,
 } from "./onboarding/MasterAgentGallery";
@@ -46,11 +46,15 @@ function HireStarterDialogContent({
 }) {
   const { t } = useTranslation();
   const queryClient = useQueryClient();
-  const [department, setDepartment] = useState<MasterAgentDepartment>("leadership");
+  const [department, setDepartment] = useState("leadership");
   const [selection, setSelection] = useState<GallerySelection | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [seeded, setSeeded] = useState(false);
 
+  const departmentsQuery = useQuery({
+    queryKey: queryKeys.masterDepartments.list(false),
+    queryFn: () => masterDepartmentsApi.list(false),
+  });
   const agentsQuery = useQuery({
     queryKey: queryKeys.masterAgents.agents(false),
     queryFn: () => masterAgentsApi.list(false),
@@ -104,6 +108,11 @@ function HireStarterDialogContent({
     [teamsQuery.data],
   );
 
+  const galleryDepartments = useMemo(
+    () => (departmentsQuery.data ?? []).map((row) => ({ slug: row.slug, name: row.name })),
+    [departmentsQuery.data],
+  );
+
   const hiredIds = useMemo(
     () => hiredMasterAgentIds(companyAgentsQuery.data ?? [], agentsQuery.data ?? []),
     [companyAgentsQuery.data, agentsQuery.data],
@@ -117,7 +126,8 @@ function HireStarterDialogContent({
       return;
     }
     const recommended = available.find((agent) => agent.recommended);
-    const fallback = MASTER_AGENT_DEPARTMENTS
+    const order = galleryDepartments.map((row) => row.slug);
+    const fallback = (order.length > 0 ? order : ["leadership"])
       .map((dept) => available.find((agent) => agent.department === dept))
       .find((agent) => agent !== undefined);
     const picked = recommended ?? fallback;
@@ -128,7 +138,7 @@ function HireStarterDialogContent({
     setSelection({ kind: "agent", id: picked.id });
     setDepartment(picked.department);
     setSeeded(true);
-  }, [galleryAgents, hiredIds, seeded]);
+  }, [galleryAgents, galleryDepartments, hiredIds, seeded]);
 
   useEffect(() => {
     if (!selection) return;
@@ -189,6 +199,7 @@ function HireStarterDialogContent({
           <MasterAgentGallery
             agents={galleryAgents}
             teams={galleryTeams}
+            departments={galleryDepartments}
             department={department}
             onDepartment={setDepartment}
             selection={selection}
@@ -221,7 +232,13 @@ function HireStarterDialogContent({
           {selection?.kind === "team" ? (
             <p className="sr-only">
               {t("onboarding.wizard.gallery.hireTeam", {
-                department: t(GALLERY_DEPARTMENT_LABEL[department]),
+                department: galleryDepartmentLabel(
+                  t,
+                  galleryDepartments.find((row) => row.slug === department) ?? {
+                    slug: department,
+                    name: department,
+                  },
+                ),
               })}
             </p>
           ) : null}

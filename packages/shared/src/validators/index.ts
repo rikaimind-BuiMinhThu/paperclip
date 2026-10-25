@@ -997,5 +997,6 @@ export { restoreAgentInstructionSchema } from "./agent.js";
 export * from "./skill-source.js";
 export * from "./api-apps.js";
 export * from "./master-agents.js";
+export * from "./master-departments.js";
 export * from "./master-skills.js";
 export * from "./marketing-requirement.js";

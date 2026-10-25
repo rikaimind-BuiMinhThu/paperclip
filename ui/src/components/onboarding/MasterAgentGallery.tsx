@@ -1,17 +1,22 @@
 import { useRef } from "react";
 import { Link } from "@/lib/router";
-import { MASTER_AGENT_DEPARTMENTS, type MasterAgentDepartment } from "@paperclipai/shared";
+import type { MasterAgentDepartment } from "@paperclipai/shared";
 import { useTranslation } from "@/i18n";
 import { cn } from "../../lib/utils";
 import { AgentAvatar } from "../AgentAvatar";
 import { MasterAgentIcon } from "./master-agent-icons";
+
+export interface GalleryDepartment {
+  slug: string;
+  name: string;
+}
 
 export interface GalleryAgent {
   id: string;
   title: string;
   description: string;
   icon: string;
-  department: MasterAgentDepartment;
+  department: string;
   recommended: boolean;
 }
 
@@ -19,7 +24,7 @@ export interface GalleryTeam {
   id: string;
   name: string;
   description: string;
-  department: MasterAgentDepartment;
+  department: string;
   memberTitles: string[];
   memberIds: string[];
   managerId: string | null;
@@ -29,6 +34,7 @@ export type GallerySelection =
   | { kind: "agent"; id: string }
   | { kind: "team"; id: string };
 
+/** i18n overlay for seeded department slugs; custom departments use API name. */
 export const GALLERY_DEPARTMENT_LABEL: Record<MasterAgentDepartment, string> = {
   leadership: "onboarding.wizard.gallery.departments.leadership",
   marketing: "onboarding.wizard.gallery.departments.marketing",
@@ -38,6 +44,14 @@ export const GALLERY_DEPARTMENT_LABEL: Record<MasterAgentDepartment, string> = {
   "customer-success": "onboarding.wizard.gallery.departments.customerSuccess",
   "back-office": "onboarding.wizard.gallery.departments.backOffice",
 };
+
+export function galleryDepartmentLabel(
+  t: (key: string) => string,
+  department: GalleryDepartment | { slug: string; name: string },
+): string {
+  const key = GALLERY_DEPARTMENT_LABEL[department.slug as MasterAgentDepartment];
+  return key ? t(key) : department.name;
+}
 
 const EMPTY_HIRED = new Set<string>();
 
@@ -84,6 +98,7 @@ function teamHireState(memberIds: string[], hiredMasterAgentIds: ReadonlySet<str
 export function MasterAgentGallery({
   agents,
   teams,
+  departments,
   department,
   onDepartment,
   selection,
@@ -95,8 +110,9 @@ export function MasterAgentGallery({
 }: {
   agents: GalleryAgent[];
   teams: GalleryTeam[];
-  department: MasterAgentDepartment;
-  onDepartment: (department: MasterAgentDepartment) => void;
+  departments: GalleryDepartment[];
+  department: string;
+  onDepartment: (department: string) => void;
   selection: GallerySelection | null;
   onSelect: (selection: GallerySelection) => void;
   modelMissing: boolean;
@@ -106,8 +122,12 @@ export function MasterAgentGallery({
 }) {
   const { t } = useTranslation();
   const buttons = useRef(new Map<string, HTMLButtonElement>());
-  const visibleAgents = agents.filter((agent) => agent.department === department);
-  const team = teams.find((row) => row.department === department) ?? null;
+  const activeDepartment =
+    departments.find((row) => row.slug === department) ??
+    departments[0] ??
+    { slug: department, name: department };
+  const visibleAgents = agents.filter((agent) => agent.department === activeDepartment.slug);
+  const team = teams.find((row) => row.department === activeDepartment.slug) ?? null;
   const teamState = team ? teamHireState(team.memberIds, hiredMasterAgentIds) : null;
   const selectableOptions: GallerySelection[] = [
     ...visibleAgents
@@ -147,18 +167,18 @@ export function MasterAgentGallery({
         </p>
       ) : null}
       <div className="flex flex-wrap gap-2">
-        {MASTER_AGENT_DEPARTMENTS.map((value) => {
-          const count = agents.filter((agent) => agent.department === value).length;
-          const label = t(GALLERY_DEPARTMENT_LABEL[value]);
+        {departments.map((row) => {
+          const count = agents.filter((agent) => agent.department === row.slug).length;
+          const label = galleryDepartmentLabel(t, row);
           return (
             <button
-              key={value}
+              key={row.slug}
               type="button"
-              aria-pressed={value === department}
-              onClick={() => onDepartment(value)}
+              aria-pressed={row.slug === activeDepartment.slug}
+              onClick={() => onDepartment(row.slug)}
               className={cn(
                 "rounded-full border px-3 py-1 text-xs",
-                value === department ? "border-foreground/40 bg-accent text-foreground" : "border-border bg-card text-muted-foreground",
+                row.slug === activeDepartment.slug ? "border-foreground/40 bg-accent text-foreground" : "border-border bg-card text-muted-foreground",
               )}
             >
               {label} {count}
@@ -172,7 +192,7 @@ export function MasterAgentGallery({
       {visibleAgents.length === 0 && !team ? (
         <p className="text-sm text-muted-foreground">{t("onboarding.wizard.gallery.empty")}</p>
       ) : (
-        <div role="radiogroup" aria-label={t(GALLERY_DEPARTMENT_LABEL[department])} className="flex flex-col gap-2" onKeyDown={(event) => {
+        <div role="radiogroup" aria-label={galleryDepartmentLabel(t, activeDepartment)} className="flex flex-col gap-2" onKeyDown={(event) => {
           if (event.key === "ArrowDown" || event.key === "ArrowRight") {
             event.preventDefault();
             move(1);
@@ -258,7 +278,9 @@ export function MasterAgentGallery({
               <GalleryTeamAvatarStack memberIds={team.memberIds} />
               <span className="min-w-0 flex-1">
                 <span className="block truncate text-sm font-medium text-foreground">
-                  {t("onboarding.wizard.gallery.hireTeam", { department: t(GALLERY_DEPARTMENT_LABEL[department]) })}
+                  {t("onboarding.wizard.gallery.hireTeam", {
+                    department: galleryDepartmentLabel(t, activeDepartment),
+                  })}
                 </span>
                 <span className="block truncate text-xs text-muted-foreground">{team.memberTitles.join(", ")}</span>
               </span>

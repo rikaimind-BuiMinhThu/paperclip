@@ -69,6 +69,7 @@ export function normalizeRememberedInstanceSettingsPath(rawPath: string | null):
     suffix === "/experimental" ||
     suffix === "/adapters" ||
     suffix === "/master-agents" ||
+    suffix === "/master-departments" ||
     suffix === "/master-skills"
   ) {
     return `${INSTANCE_SETTINGS_PATH_PREFIX}${suffix}${search}${hash}`;
@@ -97,9 +98,11 @@ export function filterHiddenInstanceSettingsPath(
   const page = suffix.split("/")[1];
   const hiddenKey = page === "master-agents"
     ? "instance.masterAgents"
-    : page === "master-skills"
-      ? "instance.masterSkills"
-      : `instance.${page}`;
+    : page === "master-departments"
+      ? "instance.masterDepartments"
+      : page === "master-skills"
+        ? "instance.masterSkills"
+        : `instance.${page}`;
   if (page && page !== "general" && hidden.has(hiddenKey)) {
     return DEFAULT_INSTANCE_SETTINGS_PATH;
   }

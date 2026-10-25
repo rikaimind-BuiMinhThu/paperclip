@@ -2101,6 +2101,13 @@
       "when": 1792938988635,
       "tag": "0301_nervous_iron_fist",
       "breakpoints": true
+    },
+    {
+      "idx": 302,
+      "version": "7",
+      "when": 1792943558501,
+      "tag": "0302_soft_rick_jones",
+      "breakpoints": true
     }
   ]
 }

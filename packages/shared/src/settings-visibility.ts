@@ -39,6 +39,7 @@ export const HIDEABLE_INSTANCE_PAGES = [
   "instance.plugins",
   "instance.adapters",
   "instance.masterAgents",
+  "instance.masterDepartments",
   "instance.masterSkills",
 ] as const;
 

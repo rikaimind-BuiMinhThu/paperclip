@@ -35,6 +35,7 @@ import { agentInstructionsService } from "./agent-instructions.js";
 import { companySkillService } from "./company-skills.js";
 import { logActivity } from "./activity-log.js";
 import { instanceSettingsService } from "./instance-settings.js";
+import { masterDepartmentService } from "./master-departments.js";
 import { masterSkillService } from "./master-skills.js";
 import { secretService } from "./secrets.js";
 import { MASTER_AGENT_SEEDS, MASTER_TEAM_SEEDS } from "./master-agent-catalog.js";
@@ -106,6 +107,7 @@ export function masterAgentService(db: Db) {
   const instructions = agentInstructionsService(db);
   const skills = companySkillService(db);
   const masterSkills = masterSkillService(db);
+  const departments = masterDepartmentService(db);
   const secrets = secretService(db);
   const settings = instanceSettingsService(db);
 
@@ -193,6 +195,7 @@ export function masterAgentService(db: Db) {
   }
 
   async function ensureSeed() {
+    await departments.ensureSeed();
     const [existing] = await db.select({ id: masterAgents.id }).from(masterAgents).limit(1);
     if (existing) {
       await ensureKujiraTemplates();
@@ -319,6 +322,7 @@ export function masterAgentService(db: Db) {
 
   async function createAgent(input: CreateMasterAgent): Promise<MasterAgentRecord> {
     await ensureSeed();
+    await departments.assertDepartmentExists(input.department);
     if (input.skillKeys) await masterSkills.assertSkillKeysAllowed(input.skillKeys);
     if (input.recommended) await clearRecommended();
     const slug = await uniqueSlug(input.title);
@@ -347,6 +351,7 @@ export function masterAgentService(db: Db) {
     await ensureSeed();
     const [current] = await db.select().from(masterAgents).where(eq(masterAgents.id, id));
     if (!current) throw notFound("Master agent not found");
+    if (input.department) await departments.assertDepartmentExists(input.department);
     if (input.skillKeys) await masterSkills.assertSkillKeysAllowed(input.skillKeys);
     if (input.recommended) await clearRecommended(id);
     const nextOverride = (input.adapterType !== undefined || input.model !== undefined)
@@ -412,6 +417,7 @@ export function masterAgentService(db: Db) {
 
   async function createTeam(input: CreateMasterTeam): Promise<MasterTeamRecord> {
     await ensureSeed();
+    await departments.assertDepartmentExists(input.department);
     const [departmentTaken] = await db
       .select({ id: masterTeams.id })
       .from(masterTeams)
@@ -440,6 +446,7 @@ export function masterAgentService(db: Db) {
     const [current] = await db.select().from(masterTeams).where(eq(masterTeams.id, id));
     if (!current) throw notFound("Master team not found");
     const department = input.department ?? current.department;
+    if (input.department) await departments.assertDepartmentExists(input.department);
     if (department !== current.department) {
       const [taken] = await db.select({ id: masterTeams.id }).from(masterTeams).where(eq(masterTeams.department, department)).limit(1);
       if (taken && taken.id !== id) throw conflict("That department already has a team");

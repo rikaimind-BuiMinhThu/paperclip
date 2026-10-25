@@ -11,8 +11,7 @@ import {
   uniqueIndex,
   uuid,
 } from "drizzle-orm/pg-core";
-
-const departmentInList = sql`'leadership', 'marketing', 'sales', 'engineering', 'product', 'customer-success', 'back-office'`;
+import { masterDepartments } from "./master_departments.js";
 
 /**
  * Instance-scoped job templates shown in onboarding. They are not company
@@ -24,7 +23,9 @@ export const masterAgents = pgTable(
     id: uuid("id").primaryKey().defaultRandom(),
     slug: text("slug").notNull(),
     title: text("title").notNull(),
-    department: text("department").notNull(),
+    department: text("department")
+      .notNull()
+      .references(() => masterDepartments.slug, { onDelete: "restrict" }),
     role: text("role").notNull().default("general"),
     description: text("description").notNull(),
     instructions: text("instructions").notNull(),
@@ -46,10 +47,6 @@ export const masterAgents = pgTable(
     recommendedUq: uniqueIndex("master_agents_recommended_uq")
       .on(table.recommended)
       .where(sql`${table.recommended} = true`),
-    departmentCheck: check(
-      "master_agents_department_check",
-      sql`${table.department} in (${departmentInList})`,
-    ),
   }),
 );
 
@@ -60,7 +57,9 @@ export const masterTeams = pgTable(
     slug: text("slug").notNull(),
     name: text("name").notNull(),
     description: text("description").notNull(),
-    department: text("department").notNull(),
+    department: text("department")
+      .notNull()
+      .references(() => masterDepartments.slug, { onDelete: "restrict" }),
     enabled: boolean("enabled").notNull().default(true),
     sortOrder: integer("sort_order").notNull().default(0),
     createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
@@ -69,10 +68,6 @@ export const masterTeams = pgTable(
   (table) => ({
     slugUq: uniqueIndex("master_teams_slug_uq").on(table.slug),
     departmentUq: uniqueIndex("master_teams_department_uq").on(table.department),
-    departmentCheck: check(
-      "master_teams_department_check",
-      sql`${table.department} in (${departmentInList})`,
-    ),
   }),
 );
 
