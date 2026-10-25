@@ -29,7 +29,7 @@ test("marketing plan approve creates children and lights org work flow", async (
   );
   const marketing = teams.find((team) => team.slug === "marketing-team");
   expect(marketing).toBeTruthy();
-  expect(marketing!.members).toHaveLength(4);
+  expect(marketing!.members).toHaveLength(8);
 
   const hired = await json<{
     agents: Array<{ id: string; name: string; reportsTo: string | null }>;
@@ -39,7 +39,7 @@ test("marketing plan approve creates children and lights org work flow", async (
       data: { masterTeamId: marketing!.id },
     }),
   );
-  expect(hired.agents).toHaveLength(4);
+  expect(hired.agents).toHaveLength(8);
   const cmo = hired.agents.find((agent) => agent.id === hired.managerAgentId)!;
   const writer = hired.agents.find((agent) => agent.name === "Content Writer")!;
   const video = hired.agents.find((agent) => agent.name === "Video Editor")!;

@@ -180,27 +180,43 @@ describeEmbeddedPostgres("master agent gallery", () => {
     expect(cmo.skillKeys).toEqual(expect.arrayContaining([
       "paperclipai/bundled/paperclip-operations/task-planning",
       "paperclipai/bundled/paperclip-operations/issue-triage",
+      "paperclipai/optional/marketing/marketing-plan",
+      "paperclipai/optional/marketing/content-strategy",
+    ]));
+    const contentWriter = catalog.body.find((row: { slug: string }) => row.slug === "content-writer");
+    expect(contentWriter.skillKeys).toEqual(expect.arrayContaining([
+      "paperclipai/optional/marketing/copywriting",
+      "paperclipai/optional/marketing/copy-editing",
     ]));
 
     const teams = await request(board).get("/api/instance/master-teams");
     const marketing = teams.body.find((row: { slug: string }) => row.slug === "marketing-team");
-    expect(marketing.members).toHaveLength(4);
+    expect(marketing.members).toHaveLength(8);
     expect(marketing.members.map((row: { title: string }) => row.title)).toEqual(
-      expect.arrayContaining(["CMO", "Content Writer", "Video Editor", "Social Media Manager"]),
+      expect.arrayContaining([
+        "CMO",
+        "Content Writer",
+        "Video Editor",
+        "Social Media Manager",
+        "SEO Specialist",
+        "Performance Marketer",
+        "Email Marketer",
+        "Community Manager",
+      ]),
     );
 
     const hired = await request(board)
       .post(`/api/companies/${seeded.companyId}/onboarding/hires`)
       .send({ masterTeamId: marketing.id });
     expect(hired.status).toBe(201);
-    expect(hired.body.agents).toHaveLength(4);
+    expect(hired.body.agents).toHaveLength(8);
 
     const rows = await ctx.db.select().from(agents).where(eq(agents.companyId, seeded.companyId));
     const manager = rows.find((row) => row.id === hired.body.managerAgentId);
     expect(manager?.reportsTo).toBeNull();
     expect(manager?.name).toBe("CMO");
     const reports = rows.filter((row) => row.id !== manager?.id);
-    expect(reports).toHaveLength(3);
+    expect(reports).toHaveLength(7);
     expect(reports.every((row) => row.reportsTo === manager?.id)).toBe(true);
     expect(rows.every((row) => row.adapterType === "codex_local")).toBe(true);
     expect(rows.every((row) => (row.adapterConfig as { model?: string }).model === "gpt-platform")).toBe(true);
@@ -209,5 +225,5 @@ describeEmbeddedPostgres("master agent gallery", () => {
       const row = rows.find((agent) => agent.name === member.title);
       expect(row?.appearance).toEqual(legacyAgentAppearance(member.masterAgentId));
     }
-  });
+  }, 90_000);
 });

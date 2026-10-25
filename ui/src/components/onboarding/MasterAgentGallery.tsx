@@ -49,8 +49,10 @@ export function galleryDepartmentLabel(
   t: (key: string) => string,
   department: GalleryDepartment | { slug: string; name: string },
 ): string {
+  const trimmed = department.name.trim();
+  if (trimmed) return trimmed;
   const key = GALLERY_DEPARTMENT_LABEL[department.slug as MasterAgentDepartment];
-  return key ? t(key) : department.name;
+  return key ? t(key) : department.slug;
 }
 
 const EMPTY_HIRED = new Set<string>();

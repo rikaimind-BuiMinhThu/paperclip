@@ -1,14 +1,25 @@
 import { z } from "zod";
 
+/** Previous English seed copy — used to migrate untouched rows to current seed labels. */
+export const MASTER_DEPARTMENT_SEED_LEGACY_EN = {
+  leadership: { name: "Leadership", description: "Company leadership and coordination." },
+  marketing: { name: "Marketing", description: "Campaigns, content, and growth." },
+  sales: { name: "Sales", description: "Prospecting and closing." },
+  engineering: { name: "Engineering", description: "Build, ship, and quality." },
+  product: { name: "Product", description: "Product direction, design, and research." },
+  "customer-success": { name: "Customer success", description: "Adoption and support." },
+  "back-office": { name: "Back office", description: "Operations, books, and people." },
+} as const;
+
 /** Seeded shelves that ship with every instance (also used by agent catalog seeds). */
 export const MASTER_DEPARTMENT_SEEDS = [
-  { slug: "leadership", name: "Leadership", description: "Company leadership and coordination.", sortOrder: 0 },
-  { slug: "marketing", name: "Marketing", description: "Campaigns, content, and growth.", sortOrder: 1 },
-  { slug: "sales", name: "Sales", description: "Prospecting and closing.", sortOrder: 2 },
-  { slug: "engineering", name: "Engineering", description: "Build, ship, and quality.", sortOrder: 3 },
-  { slug: "product", name: "Product", description: "Product direction, design, and research.", sortOrder: 4 },
-  { slug: "customer-success", name: "Customer success", description: "Adoption and support.", sortOrder: 5 },
-  { slug: "back-office", name: "Back office", description: "Operations, books, and people.", sortOrder: 6 },
+  { slug: "leadership", name: "リーダーシップ", description: "会社のリーダーシップと調整。", sortOrder: 0 },
+  { slug: "marketing", name: "マーケティング", description: "キャンペーン、コンテンツ、グロース。", sortOrder: 1 },
+  { slug: "sales", name: "営業", description: "見込み客の開拓と成約。", sortOrder: 2 },
+  { slug: "engineering", name: "エンジニアリング", description: "構築、出荷、品質。", sortOrder: 3 },
+  { slug: "product", name: "プロダクト", description: "プロダクトの方向性、デザイン、リサーチ。", sortOrder: 4 },
+  { slug: "customer-success", name: "カスタマーサクセス", description: "導入支援とサポート。", sortOrder: 5 },
+  { slug: "back-office", name: "バックオフィス", description: "オペレーション、経理、人事。", sortOrder: 6 },
 ] as const;
 
 export type MasterAgentDepartment = (typeof MASTER_DEPARTMENT_SEEDS)[number]["slug"];

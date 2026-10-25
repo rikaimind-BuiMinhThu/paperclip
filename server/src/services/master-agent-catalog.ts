@@ -7,6 +7,11 @@ const QA_ACCEPTANCE = "paperclipai/bundled/quality/qa-acceptance";
 const WIREFRAME = "paperclipai/bundled/product/wireframe";
 const DESIGN_CRITIQUE = "paperclipai/optional/product/design-critique";
 
+/** Optional marketing catalog skill key. */
+function marketingSkill(slug: string) {
+  return `paperclipai/optional/marketing/${slug}`;
+}
+
 export interface MasterAgentSeed {
   slug: string;
   title: string;
@@ -69,10 +74,18 @@ export const MASTER_AGENT_SEEDS: MasterAgentSeed[] = [
     description: "Plans campaigns and assigns approved work.",
     instructions: brief(
       "CMO",
-      "Turn every user idea into an issue plan document first. Do not create child issues or assign writers, video, or social until the user accepts that plan. After acceptance, create child issues and assign them to your marketing reports by role (content writer, video editor, social media manager).",
+      "Turn every user idea into an issue plan document first. Do not create child issues or assign marketing reports until the user accepts that plan. After acceptance, create child issues and assign them by role (content writer, video editor, social media manager, SEO, performance, email, community). Use assigned marketing plan and strategy skills.",
     ),
     icon: "megaphone",
-    skillKeys: [TASK_PLANNING, ISSUE_TRIAGE],
+    skillKeys: [
+      TASK_PLANNING,
+      ISSUE_TRIAGE,
+      marketingSkill("marketing-plan"),
+      marketingSkill("content-strategy"),
+      marketingSkill("product-marketing"),
+      marketingSkill("launch"),
+      marketingSkill("marketing-ideas"),
+    ],
     canCreateAgents: true,
     sortOrder: 0,
   },
@@ -82,9 +95,18 @@ export const MASTER_AGENT_SEEDS: MasterAgentSeed[] = [
     department: "marketing",
     role: "cmo",
     description: "Writes articles, posts, and landing-page copy.",
-    instructions: brief("Content Writer", "Write articles, posts, and landing-page copy in the company's voice."),
+    instructions: brief(
+      "Content Writer",
+      "Write articles, posts, and landing-page copy in the company's voice. Use assigned copywriting, editing, content strategy, lead-magnet, and image skills.",
+    ),
     icon: "pen-line",
-    skillKeys: [],
+    skillKeys: [
+      marketingSkill("copywriting"),
+      marketingSkill("copy-editing"),
+      marketingSkill("content-strategy"),
+      marketingSkill("lead-magnets"),
+      marketingSkill("image"),
+    ],
     canCreateAgents: false,
     sortOrder: 1,
   },
@@ -94,9 +116,16 @@ export const MASTER_AGENT_SEEDS: MasterAgentSeed[] = [
     department: "marketing",
     role: "cmo",
     description: "Cuts and publishes video.",
-    instructions: brief("Video Editor", "Cut and publish video from the footage and the brief you are given."),
+    instructions: brief(
+      "Video Editor",
+      "Cut and publish video from the footage and brief you are given. Use assigned video, ad-creative, and image skills.",
+    ),
     icon: "clapperboard",
-    skillKeys: [],
+    skillKeys: [
+      marketingSkill("video"),
+      marketingSkill("ad-creative"),
+      marketingSkill("image"),
+    ],
     canCreateAgents: false,
     sortOrder: 2,
   },
@@ -106,9 +135,17 @@ export const MASTER_AGENT_SEEDS: MasterAgentSeed[] = [
     department: "marketing",
     role: "cmo",
     description: "Schedules posts and replies on social accounts.",
-    instructions: brief("Social Media Manager", "Schedule posts and reply on the company's social accounts."),
+    instructions: brief(
+      "Social Media Manager",
+      "Schedule posts and reply on the company's social accounts. Use assigned social, community, influencer, and image skills.",
+    ),
     icon: "share-2",
-    skillKeys: [],
+    skillKeys: [
+      marketingSkill("social"),
+      marketingSkill("community-marketing"),
+      marketingSkill("influencer-marketing"),
+      marketingSkill("image"),
+    ],
     canCreateAgents: false,
     sortOrder: 3,
   },
@@ -118,9 +155,19 @@ export const MASTER_AGENT_SEEDS: MasterAgentSeed[] = [
     department: "marketing",
     role: "cmo",
     description: "Gets pages found in search.",
-    instructions: brief("SEO Specialist", "Get the company's pages found in search."),
+    instructions: brief(
+      "SEO Specialist",
+      "Get the company's pages found in search. Use assigned SEO audit, AI SEO, programmatic SEO, schema, site architecture, and link-building skills.",
+    ),
     icon: "search",
-    skillKeys: [],
+    skillKeys: [
+      marketingSkill("seo-audit"),
+      marketingSkill("ai-seo"),
+      marketingSkill("programmatic-seo"),
+      marketingSkill("schema"),
+      marketingSkill("site-architecture"),
+      marketingSkill("link-building"),
+    ],
     canCreateAgents: false,
     sortOrder: 4,
   },
@@ -130,9 +177,20 @@ export const MASTER_AGENT_SEEDS: MasterAgentSeed[] = [
     department: "marketing",
     role: "cmo",
     description: "Runs paid campaigns and reports spend.",
-    instructions: brief("Performance Marketer", "Run paid campaigns and report what the spend produced."),
+    instructions: brief(
+      "Performance Marketer",
+      "Run paid campaigns and report what the spend produced. Use assigned ads, creative, A/B testing, analytics, attribution, conversion tracking, and CRO skills.",
+    ),
     icon: "badge-dollar-sign",
-    skillKeys: [],
+    skillKeys: [
+      marketingSkill("ads"),
+      marketingSkill("ad-creative"),
+      marketingSkill("ab-testing"),
+      marketingSkill("analytics"),
+      marketingSkill("attribution"),
+      marketingSkill("conversion-tracking"),
+      marketingSkill("cro"),
+    ],
     canCreateAgents: false,
     sortOrder: 5,
   },
@@ -142,9 +200,19 @@ export const MASTER_AGENT_SEEDS: MasterAgentSeed[] = [
     department: "marketing",
     role: "cmo",
     description: "Writes lifecycle email and the newsletter.",
-    instructions: brief("Email Marketer", "Write lifecycle email and the newsletter."),
+    instructions: brief(
+      "Email Marketer",
+      "Write lifecycle email and the newsletter. Use assigned email, cold email, onboarding, churn, SMS, and lead-magnet skills.",
+    ),
     icon: "mail",
-    skillKeys: [],
+    skillKeys: [
+      marketingSkill("emails"),
+      marketingSkill("cold-email"),
+      marketingSkill("onboarding"),
+      marketingSkill("churn-prevention"),
+      marketingSkill("sms"),
+      marketingSkill("lead-magnets"),
+    ],
     canCreateAgents: false,
     sortOrder: 6,
   },
@@ -154,9 +222,18 @@ export const MASTER_AGENT_SEEDS: MasterAgentSeed[] = [
     department: "marketing",
     role: "cmo",
     description: "Runs the community and answers public comments.",
-    instructions: brief("Community Manager", "Run the community and answer public comments."),
+    instructions: brief(
+      "Community Manager",
+      "Run the community and answer public comments. Use assigned community, social, PR, events, and influencer skills.",
+    ),
     icon: "messages-square",
-    skillKeys: [],
+    skillKeys: [
+      marketingSkill("community-marketing"),
+      marketingSkill("social"),
+      marketingSkill("public-relations"),
+      marketingSkill("events"),
+      marketingSkill("influencer-marketing"),
+    ],
     canCreateAgents: false,
     sortOrder: 7,
   },
@@ -466,11 +543,20 @@ export const MASTER_TEAM_SEEDS: MasterTeamSeed[] = [
   {
     slug: "marketing-team",
     name: "Marketing team",
-    description: "A lead plus writing, video, and social.",
+    description: "A lead plus writing, video, social, SEO, paid, email, and community.",
     department: "marketing",
     sortOrder: 0,
     managerSlug: "cmo",
-    memberSlugs: ["cmo", "content-writer", "video-editor", "social-media-manager"],
+    memberSlugs: [
+      "cmo",
+      "content-writer",
+      "video-editor",
+      "social-media-manager",
+      "seo-specialist",
+      "performance-marketer",
+      "email-marketer",
+      "community-manager",
+    ],
   },
   {
     slug: "sales-team",

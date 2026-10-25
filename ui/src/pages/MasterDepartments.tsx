@@ -183,7 +183,7 @@ export function MasterDepartments() {
                   <Badge variant="secondary">{t("settings.masterDepartmentsPage.disabled")}</Badge>
                 )}
               </div>
-              {row.description ? (
+              {row.description.trim() ? (
                 <p className="line-clamp-2 text-sm text-muted-foreground">{row.description}</p>
               ) : null}
               <div className="mt-auto flex flex-wrap items-center justify-between gap-2">

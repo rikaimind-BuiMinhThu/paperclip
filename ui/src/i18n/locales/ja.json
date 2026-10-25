@@ -1413,26 +1413,26 @@
       "sortRecommended": "おすすめ優先",
       "noCatalogMatches": "このフィルターに一致するカタログスキルはありません。"
     },
-    "masterDepartments": "Master departments",
+    "masterDepartments": "マスター部門",
     "masterDepartmentsPage": {
-      "subtitle": "Organize hire shelves for master agents and teams.",
-      "addDepartment": "Add department",
-      "editDepartment": "Edit department",
-      "edit": "Edit",
-      "delete": "Delete",
-      "deleteTitle": "Delete department?",
-      "deleteBody": "Delete \"{{name}}\"? This fails if agents or teams still use it.",
-      "name": "Name",
-      "slug": "Slug",
-      "slugPlaceholder": "optional-kebab-slug",
-      "description": "Description",
-      "enabled": "Enabled",
-      "disabled": "Disabled",
-      "sortOrder": "Sort order",
-      "empty": "No master departments yet.",
-      "readOnlyNotice": "Only instance admins can edit master departments.",
-      "openInstanceAccess": "Open instance access",
-      "loadError": "Failed to load master departments"
+      "subtitle": "マスターエージェントとチームの採用カテゴリを管理します。",
+      "addDepartment": "部門を追加",
+      "editDepartment": "部門を編集",
+      "edit": "編集",
+      "delete": "削除",
+      "deleteTitle": "部門を削除しますか？",
+      "deleteBody": "「{{name}}」を削除しますか？エージェントやチームが参照している場合は削除できません。",
+      "name": "名前",
+      "slug": "スラッグ",
+      "slugPlaceholder": "任意のケバブケース",
+      "description": "説明",
+      "enabled": "有効",
+      "disabled": "無効",
+      "sortOrder": "表示順",
+      "empty": "マスター部門はまだありません。",
+      "readOnlyNotice": "マスター部門を編集できるのはインスタンス管理者のみです。",
+      "openInstanceAccess": "インスタンスのアクセスを開く",
+      "loadError": "マスター部門の読み込みに失敗しました"
     }
   },
   "inbox": {
@@ -1947,6 +1947,15 @@
           "product": "プロダクト",
           "customerSuccess": "カスタマーサクセス",
           "backOffice": "バックオフィス"
+        },
+        "departmentDescriptions": {
+          "leadership": "会社のリーダーシップと調整。",
+          "marketing": "キャンペーン、コンテンツ、グロース。",
+          "sales": "見込み客の開拓と成約。",
+          "engineering": "構築、出荷、品質。",
+          "product": "プロダクトの方向性、デザイン、リサーチ。",
+          "customerSuccess": "導入支援とサポート。",
+          "backOffice": "オペレーション、経理、人事。"
         }
       }
     },

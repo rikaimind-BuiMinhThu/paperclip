@@ -13,7 +13,6 @@ import { agentsApi } from "@/api/agents";
 import { masterAgentsApi } from "@/api/masterAgents";
 import { masterDepartmentsApi } from "@/api/masterDepartments";
 import { masterSkillsApi } from "@/api/masterSkills";
-import { galleryDepartmentLabel } from "@/components/onboarding/MasterAgentGallery";
 import { MasterAgentIcon } from "@/components/onboarding/master-agent-icons";
 import {
   SkillMultiSelect,
@@ -78,10 +77,10 @@ type TeamDraft = {
   managerId: string;
 };
 
-function agentDraft(agent?: MasterAgentRecord): AgentDraft {
+function agentDraft(agent?: MasterAgentRecord, defaultDepartment = "leadership"): AgentDraft {
   return {
     title: agent?.title ?? "",
-    department: agent?.department ?? "leadership",
+    department: agent?.department ?? defaultDepartment,
     description: agent?.description ?? "",
     instructions: agent?.instructions ?? "",
     role: agent?.role ?? "general",
@@ -291,9 +290,14 @@ export function MasterAgents() {
     await Promise.all([
       queryClient.invalidateQueries({ queryKey: ["master-agents"] }),
       queryClient.invalidateQueries({ queryKey: ["master-teams"] }),
+      queryClient.invalidateQueries({ queryKey: ["master-departments"] }),
       queryClient.invalidateQueries({ queryKey: queryKeys.masterAgents.defaultModel }),
     ]);
   };
+
+  const defaultDepartmentSlug = departments[0]?.slug ?? "leadership";
+  const departmentsLoadError =
+    departmentsQuery.error instanceof Error ? departmentsQuery.error.message : null;
 
   const closeAgentDialog = () => {
     setEditingAgentId(null);
@@ -511,7 +515,7 @@ export function MasterAgents() {
               variant="outline"
               onClick={() => {
                 setEditingAgentId("new");
-                setAgentForm(agentDraft());
+                setAgentForm(agentDraft(undefined, defaultDepartmentSlug));
                 setConfirmDelete(false);
                 setFormError(null);
               }}
@@ -521,12 +525,22 @@ export function MasterAgents() {
           ) : null}
         </div>
         {loadError ? <p className="text-xs text-destructive">{t("settings.masterAgentsPage.loadError")}: {loadError}</p> : null}
+        {departmentsLoadError ? (
+          <p className="text-xs text-destructive">
+            {t("settings.masterDepartmentsPage.loadError")}: {departmentsLoadError}
+          </p>
+        ) : null}
         {actionError ? <p className="text-xs text-destructive">{actionError}</p> : null}
         {departments.map((department) => {
           const rows = agents.filter((agent) => agent.department === department.slug);
           return (
             <div key={department.slug} className="flex flex-col gap-2">
-              <h3 className="text-xs text-muted-foreground">{galleryDepartmentLabel(t, department)}</h3>
+              <div className="flex flex-col gap-0.5">
+                <h3 className="text-xs font-medium text-muted-foreground">{department.name}</h3>
+                {department.description.trim() ? (
+                  <p className="text-xs text-muted-foreground/80">{department.description}</p>
+                ) : null}
+              </div>
               {rows.map((agent) => (
                 <div key={agent.id} className="flex items-start gap-3 rounded-md border border-border bg-card p-3">
                   <MasterAgentIcon name={agent.icon} />
@@ -597,7 +611,7 @@ export function MasterAgents() {
           return (
             <div key={department.slug} className="flex items-center gap-3 rounded-md border border-border bg-card p-3">
               <div className="min-w-0 flex-1">
-                <p className="truncate text-sm font-medium">{team?.name ?? galleryDepartmentLabel(t, department)}</p>
+                <p className="truncate text-sm font-medium">{team?.name ?? department.name}</p>
                 <p className="truncate text-xs text-muted-foreground">{summary}</p>
               </div>
               {canManage && team ? (
@@ -686,7 +700,7 @@ export function MasterAgents() {
               >
                 {departments.map((department) => (
                   <option key={department.slug} value={department.slug}>
-                    {galleryDepartmentLabel(t, department)}
+                    {department.name}
                   </option>
                 ))}
               </select>

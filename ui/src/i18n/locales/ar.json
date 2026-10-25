@@ -1947,6 +1947,15 @@
           "product": "Product",
           "customerSuccess": "Customer success",
           "backOffice": "Back office"
+        },
+        "departmentDescriptions": {
+          "leadership": "Company leadership and coordination.",
+          "marketing": "Campaigns, content, and growth.",
+          "sales": "Prospecting and closing.",
+          "engineering": "Build, ship, and quality.",
+          "product": "Product direction, design, and research.",
+          "customerSuccess": "Adoption and support.",
+          "backOffice": "Operations, books, and people."
         }
       }
     },

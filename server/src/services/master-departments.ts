@@ -6,6 +6,7 @@ import {
   type Db,
 } from "@paperclipai/db";
 import {
+  MASTER_DEPARTMENT_SEED_LEGACY_EN,
   MASTER_DEPARTMENT_SEEDS,
   type CreateMasterDepartment,
   type MasterDepartmentRecord,
@@ -41,18 +42,29 @@ export function masterDepartmentService(db: Db) {
   async function ensureSeed() {
     for (const seed of MASTER_DEPARTMENT_SEEDS) {
       const [existing] = await db
-        .select({ id: masterDepartments.id })
+        .select()
         .from(masterDepartments)
         .where(eq(masterDepartments.slug, seed.slug))
         .limit(1);
-      if (existing) continue;
-      await db.insert(masterDepartments).values({
-        slug: seed.slug,
-        name: seed.name,
-        description: seed.description,
-        enabled: true,
-        sortOrder: seed.sortOrder,
-      });
+      if (!existing) {
+        await db.insert(masterDepartments).values({
+          slug: seed.slug,
+          name: seed.name,
+          description: seed.description,
+          enabled: true,
+          sortOrder: seed.sortOrder,
+        });
+        continue;
+      }
+      // Migrate untouched English seed copy to current seed labels; keep admin renames.
+      const legacy = MASTER_DEPARTMENT_SEED_LEGACY_EN[seed.slug];
+      const name = existing.name === legacy.name ? seed.name : existing.name;
+      const description = existing.description === legacy.description ? seed.description : existing.description;
+      if (name === existing.name && description === existing.description) continue;
+      await db
+        .update(masterDepartments)
+        .set({ name, description, updatedAt: new Date() })
+        .where(eq(masterDepartments.id, existing.id));
     }
   }
 

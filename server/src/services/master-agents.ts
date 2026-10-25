@@ -111,14 +111,48 @@ export function masterAgentService(db: Db) {
   const secrets = secretService(db);
   const settings = instanceSettingsService(db);
 
-  async function ensureKujiraTemplates() {
-    const slugs = new Set(["sachi-sales", "ikura-back-office", "kujira-engineer"]);
+  function sameSkillKeys(current: unknown, desired: string[]) {
+    if (!Array.isArray(current) || current.length !== desired.length) return false;
+    return desired.every((key, index) => current[index] === key);
+  }
+
+  /** Upsert seed rows by slug. Never deletes custom masters or company agents. */
+  async function syncCatalogAgentSeeds() {
+    const rows = await db.select().from(masterAgents);
+    const bySlug = new Map(rows.map((row) => [row.slug, row]));
     for (const seed of MASTER_AGENT_SEEDS) {
-      if (!slugs.has(seed.slug)) continue;
-      const [existing] = await db.select({ id: masterAgents.id }).from(masterAgents).where(eq(masterAgents.slug, seed.slug));
-      if (existing) continue;
-      await db.insert(masterAgents).values({
-        slug: seed.slug,
+      const existing = bySlug.get(seed.slug);
+      if (!existing) {
+        await db.insert(masterAgents).values({
+          slug: seed.slug,
+          title: seed.title,
+          department: seed.department,
+          role: seed.role,
+          description: seed.description,
+          instructions: seed.instructions,
+          icon: seed.icon,
+          skillKeys: seed.skillKeys,
+          canCreateAgents: seed.canCreateAgents,
+          enabled: true,
+          recommended: seed.recommended === true,
+          sortOrder: seed.sortOrder,
+        });
+        continue;
+      }
+      if (
+        sameSkillKeys(existing.skillKeys, seed.skillKeys)
+        && existing.title === seed.title
+        && existing.department === seed.department
+        && existing.role === seed.role
+        && existing.description === seed.description
+        && existing.instructions === seed.instructions
+        && existing.icon === seed.icon
+        && existing.canCreateAgents === seed.canCreateAgents
+        && existing.sortOrder === seed.sortOrder
+      ) {
+        continue;
+      }
+      await db.update(masterAgents).set({
         title: seed.title,
         department: seed.department,
         role: seed.role,
@@ -127,79 +161,81 @@ export function masterAgentService(db: Db) {
         icon: seed.icon,
         skillKeys: seed.skillKeys,
         canCreateAgents: seed.canCreateAgents,
-        enabled: true,
-        recommended: false,
         sortOrder: seed.sortOrder,
-      });
-    }
-  }
-
-  async function ensureCmoPlanFirstTemplate() {
-    const seed = MASTER_AGENT_SEEDS.find((row) => row.slug === "cmo");
-    if (!seed) return;
-    const [existing] = await db.select().from(masterAgents).where(eq(masterAgents.slug, "cmo")).limit(1);
-    if (!existing) return;
-    const keys = Array.isArray(existing.skillKeys) ? existing.skillKeys : [];
-    const missingSkill = seed.skillKeys.some((key) => !keys.includes(key));
-    if (
-      !missingSkill
-      && existing.description === seed.description
-      && existing.instructions === seed.instructions
-    ) {
-      return;
-    }
-    await db.update(masterAgents).set({
-      description: seed.description,
-      instructions: seed.instructions,
-      skillKeys: seed.skillKeys,
-      updatedAt: new Date(),
-    }).where(eq(masterAgents.id, existing.id));
-  }
-
-  async function ensureMarketingTeamMembership() {
-    const seed = MASTER_TEAM_SEEDS.find((row) => row.slug === "marketing-team");
-    if (!seed) return;
-    const [team] = await db.select().from(masterTeams).where(eq(masterTeams.slug, "marketing-team")).limit(1);
-    if (!team) return;
-    if (team.description !== seed.description) {
-      await db.update(masterTeams).set({
-        description: seed.description,
         updatedAt: new Date(),
-      }).where(eq(masterTeams.id, team.id));
+      }).where(eq(masterAgents.id, existing.id));
     }
-    const [social] = await db.select({ id: masterAgents.id })
-      .from(masterAgents)
-      .where(eq(masterAgents.slug, "social-media-manager"))
-      .limit(1);
-    if (!social) return;
-    const [member] = await db.select({ id: masterTeamMembers.id })
-      .from(masterTeamMembers)
-      .where(and(
-        eq(masterTeamMembers.teamId, team.id),
-        eq(masterTeamMembers.masterAgentId, social.id),
-      ))
-      .limit(1);
-    if (member) return;
-    const sortOrder = seed.memberSlugs.indexOf("social-media-manager");
-    await db.insert(masterTeamMembers).values({
-      teamId: team.id,
-      masterAgentId: social.id,
-      isManager: false,
-      sortOrder: sortOrder >= 0 ? sortOrder : 3,
-    });
   }
 
-  async function ensureMarketingTemplates() {
-    await ensureCmoPlanFirstTemplate();
-    await ensureMarketingTeamMembership();
+  /** Upsert seed teams and ensure seed members exist. Does not remove extra custom members. */
+  async function syncCatalogTeamSeeds() {
+    const agentRows = await db.select({ id: masterAgents.id, slug: masterAgents.slug }).from(masterAgents);
+    const idBySlug = new Map(agentRows.map((row) => [row.slug, row.id]));
+
+    for (const seed of MASTER_TEAM_SEEDS) {
+      let [team] = await db.select().from(masterTeams).where(eq(masterTeams.slug, seed.slug)).limit(1);
+      if (!team) {
+        [team] = await db.insert(masterTeams).values({
+          slug: seed.slug,
+          name: seed.name,
+          description: seed.description,
+          department: seed.department,
+          enabled: true,
+          sortOrder: seed.sortOrder,
+        }).returning();
+      } else if (
+        team.name !== seed.name
+        || team.description !== seed.description
+        || team.department !== seed.department
+        || team.sortOrder !== seed.sortOrder
+      ) {
+        await db.update(masterTeams).set({
+          name: seed.name,
+          description: seed.description,
+          department: seed.department,
+          sortOrder: seed.sortOrder,
+          updatedAt: new Date(),
+        }).where(eq(masterTeams.id, team.id));
+      }
+      if (!team) continue;
+
+      for (let index = 0; index < seed.memberSlugs.length; index += 1) {
+        const memberSlug = seed.memberSlugs[index]!;
+        const masterAgentId = idBySlug.get(memberSlug);
+        if (!masterAgentId) continue;
+        const isManager = memberSlug === seed.managerSlug;
+        const [member] = await db.select()
+          .from(masterTeamMembers)
+          .where(and(
+            eq(masterTeamMembers.teamId, team.id),
+            eq(masterTeamMembers.masterAgentId, masterAgentId),
+          ))
+          .limit(1);
+        if (!member) {
+          await db.insert(masterTeamMembers).values({
+            teamId: team.id,
+            masterAgentId,
+            isManager,
+            sortOrder: index,
+          });
+          continue;
+        }
+        if (member.isManager !== isManager || member.sortOrder !== index) {
+          await db.update(masterTeamMembers).set({
+            isManager,
+            sortOrder: index,
+          }).where(eq(masterTeamMembers.id, member.id));
+        }
+      }
+    }
   }
 
   async function ensureSeed() {
     await departments.ensureSeed();
     const [existing] = await db.select({ id: masterAgents.id }).from(masterAgents).limit(1);
     if (existing) {
-      await ensureKujiraTemplates();
-      await ensureMarketingTemplates();
+      await syncCatalogAgentSeeds();
+      await syncCatalogTeamSeeds();
       return;
     }
     await db.transaction(async (tx) => {
@@ -250,8 +286,6 @@ export function masterAgentService(db: Db) {
         });
       }));
     });
-    await ensureKujiraTemplates();
-    await ensureMarketingTemplates();
   }
 
   async function listAgents(includeDisabled: boolean): Promise<MasterAgentRecord[]> {
