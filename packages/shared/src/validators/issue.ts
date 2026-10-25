@@ -447,6 +447,23 @@ export const issueExecutionPolicySchema = z.object({
     .optional()
     .nullable()
     .default(null),
+  /** Optional Marketing Workforce workflow marker (no separate issues.metadata column). */
+  marketingWorkforce: z
+    .object({
+      workflowId: z.enum([
+        "WF-01",
+        "WF-02",
+        "WF-03",
+        "WF-04",
+        "WF-05",
+        "WF-06",
+        "WF-07",
+        "WF-08",
+      ]),
+      phase: z.enum(["discovery", "planning", "execution"]).optional(),
+    })
+    .strict()
+    .optional(),
 });
 
 export const issueExecutionMonitorStateSchema = z.object({

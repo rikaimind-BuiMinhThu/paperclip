@@ -15,6 +15,7 @@ const EXPECTED_BUNDLED_KEYS = [
 
 const EXPECTED_OPTIONAL_KEYS = [
   "paperclipai/optional/content/content-machine",
+  "paperclipai/optional/marketing/marketing-workforce",
 ];
 
 const PACKAGE_DIR = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
@@ -100,6 +101,48 @@ describe("shipped teams catalog", () => {
       "product-engineering/senior-coder": { role: "engineer", reportsTo: "cto", skills: ["github-pr-workflow", "doc-maintenance"] },
       "product-design/ux-designer": { role: "designer", reportsTo: null, skills: ["wireframe", "design-critique", "task-planning"] },
       "content-machine/content-lead": { role: "content-strategist", reportsTo: null, skills: ["content-calendar"] },
+      "marketing-workforce/marketing-manager": {
+        role: "cmo",
+        reportsTo: null,
+        skills: [
+          "context-retrieval",
+          "requirement-discovery",
+          "adaptive-question-generation",
+          "requirement-gap-analysis",
+          "requirement-brief-generation",
+          "approval-management",
+        ],
+      },
+      "marketing-workforce/market-research": {
+        role: "researcher",
+        reportsTo: "marketing-manager",
+        skills: [],
+      },
+      "marketing-workforce/marketing-strategy": {
+        role: "cmo",
+        reportsTo: "marketing-manager",
+        skills: [],
+      },
+      "marketing-workforce/content-creative": {
+        role: "designer",
+        reportsTo: "marketing-manager",
+        skills: [],
+      },
+      "marketing-workforce/channel-campaign": {
+        role: "cmo",
+        reportsTo: "marketing-manager",
+        skills: [],
+      },
+      "marketing-workforce/growth-lead-gen": {
+        role: "general",
+        reportsTo: "marketing-manager",
+        skills: [],
+      },
+      "marketing-workforce/marketing-analytics": {
+        role: "researcher",
+        reportsTo: "marketing-manager",
+        skills: [],
+      },
     };
     const observed: Record<string, unknown> = {};
     for (const team of catalogTeams) {

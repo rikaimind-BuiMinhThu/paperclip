@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "packageName": "@paperclipai/teams-catalog",
   "packageVersion": "0.1.0",
-  "generatedAt": "2026-10-02T21:51:05.380Z",
+  "generatedAt": "2026-10-25T13:46:02.394Z",
   "teams": [
     {
       "id": "paperclipai:bundled:company-defaults:core-exec-team",
@@ -102,8 +102,8 @@
         {
           "path": "agents/ceo/AGENTS.md",
           "kind": "agent",
-          "sizeBytes": 263,
-          "sha256": "75848c6f794646a93e23bc73b80d31ef0eb8b83c105423eb98ea29e7685d2fd0"
+          "sizeBytes": 834,
+          "sha256": "6f16fae6e43da9369c0d4a02b9323d1f535d604d8e85c5e3ab13b64cadb1f210"
         },
         {
           "path": "agents/cto/AGENTS.md",
@@ -132,7 +132,7 @@
       ],
       "trustLevel": "markdown_only",
       "compatibility": "compatible",
-      "contentHash": "sha256:9d0416ebc0a81585dc51b73efb25decba9e1e3f3741940fc9fca74f3238f344d"
+      "contentHash": "sha256:b8976f90a279fbe55e61db2fb386e2c974704be592a94569ffc5c5aee6dafd47"
     },
     {
       "id": "paperclipai:bundled:product:product-design",
@@ -462,6 +462,213 @@
       "trustLevel": "markdown_only",
       "compatibility": "compatible",
       "contentHash": "sha256:06822cec5f2b6910cb37ba0ebd5e04ed5c7e34f77225564ddddc2470779cdaa6"
+    },
+    {
+      "id": "paperclipai:optional:marketing:marketing-workforce",
+      "key": "paperclipai/optional/marketing/marketing-workforce",
+      "kind": "optional",
+      "category": "marketing",
+      "slug": "marketing-workforce",
+      "name": "Marketing Workforce",
+      "description": "Hub-and-spoke marketing organization led by a Marketing Manager. Phase 1 ships Requirement Discovery (WF-01); specialists are scaffolded for later research, strategy, content, channel, growth, and analytics workflows.",
+      "path": "catalog/optional/marketing/marketing-workforce",
+      "entrypoint": "TEAM.md",
+      "schema": "agentcompanies/v1",
+      "defaultInstall": false,
+      "recommendedForCompanyTypes": [
+        "agency",
+        "marketing",
+        "startup"
+      ],
+      "tags": [
+        "marketing",
+        "discovery",
+        "workforce",
+        "interview"
+      ],
+      "counts": {
+        "agents": 7,
+        "projects": 1,
+        "tasks": 1,
+        "routines": 0,
+        "localSkills": 6,
+        "catalogSkills": 0,
+        "externalSkillSources": 0
+      },
+      "rootAgentSlugs": [
+        "marketing-manager"
+      ],
+      "agentSlugs": [
+        "channel-campaign",
+        "content-creative",
+        "growth-lead-gen",
+        "market-research",
+        "marketing-analytics",
+        "marketing-manager",
+        "marketing-strategy"
+      ],
+      "projectSlugs": [
+        "marketing-campaigns"
+      ],
+      "requiredSkills": [
+        {
+          "type": "local",
+          "ref": "adaptive-question-generation",
+          "agentSlugs": [
+            "marketing-manager"
+          ],
+          "resolved": true,
+          "localPath": "skills/adaptive-question-generation/SKILL.md"
+        },
+        {
+          "type": "local",
+          "ref": "approval-management",
+          "agentSlugs": [
+            "marketing-manager"
+          ],
+          "resolved": true,
+          "localPath": "skills/approval-management/SKILL.md"
+        },
+        {
+          "type": "local",
+          "ref": "context-retrieval",
+          "agentSlugs": [
+            "marketing-manager"
+          ],
+          "resolved": true,
+          "localPath": "skills/context-retrieval/SKILL.md"
+        },
+        {
+          "type": "local",
+          "ref": "requirement-brief-generation",
+          "agentSlugs": [
+            "marketing-manager"
+          ],
+          "resolved": true,
+          "localPath": "skills/requirement-brief-generation/SKILL.md"
+        },
+        {
+          "type": "local",
+          "ref": "requirement-discovery",
+          "agentSlugs": [
+            "marketing-manager"
+          ],
+          "resolved": true,
+          "localPath": "skills/requirement-discovery/SKILL.md"
+        },
+        {
+          "type": "local",
+          "ref": "requirement-gap-analysis",
+          "agentSlugs": [
+            "marketing-manager"
+          ],
+          "resolved": true,
+          "localPath": "skills/requirement-gap-analysis/SKILL.md"
+        }
+      ],
+      "envInputs": [],
+      "sourceRefs": [],
+      "files": [
+        {
+          "path": "TEAM.md",
+          "kind": "team",
+          "sizeBytes": 1671,
+          "sha256": "27f1ddc540d52ca2b7d10dec245df642659d4ee7a37786abdd7f6247b63b9b7b"
+        },
+        {
+          "path": "agents/channel-campaign/AGENTS.md",
+          "kind": "agent",
+          "sizeBytes": 341,
+          "sha256": "2f161241454e9d10fbc7772a9e99bfeca0dedb5aaf4d9ee27ba5d757a8ea43fa"
+        },
+        {
+          "path": "agents/content-creative/AGENTS.md",
+          "kind": "agent",
+          "sizeBytes": 333,
+          "sha256": "8bbf243567f06b75b0e6273d5ff8b4040031179ed7ce0e3850399599be517dc0"
+        },
+        {
+          "path": "agents/growth-lead-gen/AGENTS.md",
+          "kind": "agent",
+          "sizeBytes": 391,
+          "sha256": "8754fd660c4b1c05f58b502c5726364cb7e1d0787beb9af10eedd8f809703bfa"
+        },
+        {
+          "path": "agents/market-research/AGENTS.md",
+          "kind": "agent",
+          "sizeBytes": 531,
+          "sha256": "6c701a54d64acba6635e2ac32fc5973fcf9791290601f5e34b94c8fecf420928"
+        },
+        {
+          "path": "agents/marketing-analytics/AGENTS.md",
+          "kind": "agent",
+          "sizeBytes": 338,
+          "sha256": "a4ca2b8d9825980124622139b0bfb1bd4f8e0c937a4df565d752eeecf44bf289"
+        },
+        {
+          "path": "agents/marketing-manager/AGENTS.md",
+          "kind": "agent",
+          "sizeBytes": 1867,
+          "sha256": "cd4628fd4a6f0a95640e3993c268b7235ac38b7c33163b062c77a7373cdc796f"
+        },
+        {
+          "path": "agents/marketing-strategy/AGENTS.md",
+          "kind": "agent",
+          "sizeBytes": 422,
+          "sha256": "266fac22ba990b2021ea0004824e752b17d454f0ccde004bc4c88503461b6c8c"
+        },
+        {
+          "path": "projects/marketing-campaigns/PROJECT.md",
+          "kind": "project",
+          "sizeBytes": 441,
+          "sha256": "7d8d65075e8b7b881b376ae83d87e52f2b39d9417192329596f988b6e8bdf4a6"
+        },
+        {
+          "path": "projects/marketing-campaigns/tasks/requirement-discovery/TASK.md",
+          "kind": "task",
+          "sizeBytes": 570,
+          "sha256": "8ba0f0c2f354637efeb91b273ed8405c8da5feb6b3f2bb18951b75c8e2de50d4"
+        },
+        {
+          "path": "skills/adaptive-question-generation/SKILL.md",
+          "kind": "skill",
+          "sizeBytes": 1619,
+          "sha256": "6f3852ee604a91c7d150539eba120483721a9dc2f5b831627852807498ddddf6"
+        },
+        {
+          "path": "skills/approval-management/SKILL.md",
+          "kind": "skill",
+          "sizeBytes": 1614,
+          "sha256": "791f24bdb8d74e33a4bf2d987f7d628a07081c74cc01d15e55db85920a38299a"
+        },
+        {
+          "path": "skills/context-retrieval/SKILL.md",
+          "kind": "skill",
+          "sizeBytes": 1545,
+          "sha256": "369a025d2a86b561fa1a17e575c002a21ff0ba3497ed16047ff63b686878b723"
+        },
+        {
+          "path": "skills/requirement-brief-generation/SKILL.md",
+          "kind": "skill",
+          "sizeBytes": 1339,
+          "sha256": "6fca7915f4bfcde0593cbc26e1f958aa7000a63bb504646b1e746c5264c8025f"
+        },
+        {
+          "path": "skills/requirement-discovery/SKILL.md",
+          "kind": "skill",
+          "sizeBytes": 2132,
+          "sha256": "fba5a36eb68ba83b22d3bb52343c71ecefd0bd3be6d4d0a888f719e87c21b937"
+        },
+        {
+          "path": "skills/requirement-gap-analysis/SKILL.md",
+          "kind": "skill",
+          "sizeBytes": 1393,
+          "sha256": "4e10fa17edfb8d33d4f66bda63fb8a92fd58560d8df27bda4c02683227d1b4b5"
+        }
+      ],
+      "trustLevel": "markdown_only",
+      "compatibility": "compatible",
+      "contentHash": "sha256:af934857aa98c2a7c565280fe8dd7c6fcebf48924390532a9f872fffa4f01cfc"
     }
   ]
 }
