@@ -1,0 +1,24 @@
+{
+  "source": {
+    "type": "github",
+    "hostname": "github.com",
+    "owner": "coreyhaines31",
+    "repo": "marketingskills",
+    "ref": "main",
+    "commit": "e85f3cbc2e4a79bf33b2a12e9bdd9087d414735b",
+    "path": "skills/signup"
+  },
+  "files": [
+    "SKILL.md"
+  ],
+  "description": "When the user wants to optimize signup, registration, account creation, or trial activation flows.",
+  "defaultInstall": false,
+  "recommendedForRoles": [
+    "marketer"
+  ],
+  "tags": [
+    "marketing",
+    "signup",
+    "conversion"
+  ]
+}

@@ -1,0 +1,26 @@
+{
+  "source": {
+    "type": "github",
+    "hostname": "github.com",
+    "owner": "coreyhaines31",
+    "repo": "marketingskills",
+    "ref": "main",
+    "commit": "e85f3cbc2e4a79bf33b2a12e9bdd9087d414735b",
+    "path": "skills/image"
+  },
+  "files": [
+    "SKILL.md",
+    "references/**"
+  ],
+  "description": "When the user wants to create, generate, edit, or optimize images for marketing \u2014 blog heroes, social graphics, product mockups, profile banners, listing visuals, or brand assets.",
+  "defaultInstall": false,
+  "recommendedForRoles": [
+    "marketer",
+    "designer"
+  ],
+  "tags": [
+    "marketing",
+    "image",
+    "creative"
+  ]
+}

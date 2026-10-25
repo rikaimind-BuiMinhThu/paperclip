@@ -15,6 +15,7 @@ import {
 } from "@paperclipai/adapter-utils/server-utils";
 import {
   IMPLICIT_PLATFORM_DEFAULT_MODEL,
+  isMasterCustomSkillKey,
   legacyAgentAppearance,
   type CreateMasterAgent,
   type CreateMasterTeam,
@@ -34,6 +35,7 @@ import { agentInstructionsService } from "./agent-instructions.js";
 import { companySkillService } from "./company-skills.js";
 import { logActivity } from "./activity-log.js";
 import { instanceSettingsService } from "./instance-settings.js";
+import { masterSkillService } from "./master-skills.js";
 import { secretService } from "./secrets.js";
 import { MASTER_AGENT_SEEDS, MASTER_TEAM_SEEDS } from "./master-agent-catalog.js";
 
@@ -103,6 +105,7 @@ export function masterAgentService(db: Db) {
   const agentsSvc = agentService(db);
   const instructions = agentInstructionsService(db);
   const skills = companySkillService(db);
+  const masterSkills = masterSkillService(db);
   const secrets = secretService(db);
   const settings = instanceSettingsService(db);
 
@@ -316,6 +319,7 @@ export function masterAgentService(db: Db) {
 
   async function createAgent(input: CreateMasterAgent): Promise<MasterAgentRecord> {
     await ensureSeed();
+    if (input.skillKeys) await masterSkills.assertSkillKeysAllowed(input.skillKeys);
     if (input.recommended) await clearRecommended();
     const slug = await uniqueSlug(input.title);
     const override = normalizeModelOverride(input.adapterType, input.model);
@@ -343,6 +347,7 @@ export function masterAgentService(db: Db) {
     await ensureSeed();
     const [current] = await db.select().from(masterAgents).where(eq(masterAgents.id, id));
     if (!current) throw notFound("Master agent not found");
+    if (input.skillKeys) await masterSkills.assertSkillKeysAllowed(input.skillKeys);
     if (input.recommended) await clearRecommended(id);
     const nextOverride = (input.adapterType !== undefined || input.model !== undefined)
       ? normalizeModelOverride(
@@ -497,12 +502,49 @@ export function masterAgentService(db: Db) {
     return defaultModelStatus();
   }
 
-  async function installSkills(companyId: string, skillKeys: string[]) {
-    for (const key of skillKeys) {
+  /**
+   * Install master skill keys into the company and return keys for paperclipSkillSync.
+   * Catalog keys stay as catalog keys; custom master keys become company skill keys.
+   */
+  async function installSkills(companyId: string, skillKeys: string[]): Promise<string[]> {
+    const desired: string[] = [];
+    for (const raw of skillKeys) {
+      const key = raw.trim();
+      if (!key) continue;
+      if (isMasterCustomSkillKey(key)) {
+        const masterSkill = await masterSkills.resolveCustomForHire(key);
+        if (!masterSkill) continue;
+        const companyKey = `company/${companyId}/${masterSkill.slug}`;
+        const existing = await skills.getByKey(companyId, companyKey);
+        if (existing) {
+          desired.push(existing.key);
+          continue;
+        }
+        const markdown = [
+          "---",
+          `name: ${masterSkill.name}`,
+          `description: ${masterSkill.description}`,
+          "---",
+          "",
+          masterSkill.instructions,
+          "",
+        ].join("\n");
+        const created = await skills.createLocalSkill(companyId, {
+          name: masterSkill.name,
+          slug: masterSkill.slug,
+          description: masterSkill.description,
+          markdown,
+          categories: masterSkill.category ? [masterSkill.category] : undefined,
+        });
+        desired.push(created.key);
+        continue;
+      }
       const catalogSkill = resolveCatalogSkillRef(key);
       if (!catalogSkill) continue;
       await skills.installFromCatalog(companyId, { catalogSkillId: catalogSkill.id });
+      desired.push(catalogSkill.key);
     }
+    return desired;
   }
 
   async function hireOne(params: {
@@ -517,6 +559,7 @@ export function masterAgentService(db: Db) {
     credentialKind: string;
     actor: { actorType: "user" | "agent" | "system"; actorId: string; userId: string | null };
   }) {
+    const desiredSkills = await installSkills(params.companyId, params.master.skillKeys);
     const baseConfig: Record<string, unknown> = {
       model: params.model,
       timeoutSec: 0,
@@ -524,7 +567,7 @@ export function masterAgentService(db: Db) {
     };
     if (params.adapterType === "claude_local") baseConfig.dangerouslySkipPermissions = true;
     if (params.env) baseConfig.env = params.env;
-    const adapterConfig = writePaperclipSkillSyncPreference(baseConfig, params.master.skillKeys);
+    const adapterConfig = writePaperclipSkillSyncPreference(baseConfig, desiredSkills);
     const created = await agentsSvc.create(params.companyId, {
       name: params.master.title,
       title: params.master.title,
@@ -556,7 +599,6 @@ export function masterAgentService(db: Db) {
     const updated = await agentsSvc.update(created.id, { adapterConfig: materialized.adapterConfig }, {
       allowPendingApprovalConfigUpdate: true,
     });
-    await installSkills(params.companyId, params.master.skillKeys);
     await logActivity(db, {
       companyId: params.companyId,
       actorType: params.actor.actorType,

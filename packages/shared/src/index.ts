@@ -2863,5 +2863,6 @@ export * from "./types/skill-source.js";
 export * from "./validators/skill-source.js";
 export * from "./github-skill-repository.js";
 export * from "./validators/master-agents.js";
+export * from "./validators/master-skills.js";
 export * from "./validators/workforce-workflow.js";
 export * from "./workforce-templates.js";

@@ -2992,6 +2992,25 @@ for (const route of [
   });
 }
 
+// ─── Master skills ───────────────────────────────────────────────────────────
+
+for (const route of [
+  ["get", "/api/instance/master-skills", "List custom master skills"],
+  ["post", "/api/instance/master-skills", "Create a custom master skill"],
+  ["patch", "/api/instance/master-skills/{id}", "Update a custom master skill"],
+  ["delete", "/api/instance/master-skills/{id}", "Delete a custom master skill"],
+  ["get", "/api/instance/master-skill-catalog-prefs", "List catalog skill preferences"],
+  ["put", "/api/instance/master-skill-catalog-prefs", "Upsert a catalog skill preference"],
+  ["get", "/api/instance/master-skill-options", "List effective master skill options"],
+] as const) {
+  registerCurrentRoute({
+    method: route[0],
+    path: route[1],
+    tags: ["master-skills"],
+    summary: route[2],
+  });
+}
+
 // ─── Agents ──────────────────────────────────────────────────────────────────
 
 registry.register("AgentAppearance", agentAppearanceSchema);

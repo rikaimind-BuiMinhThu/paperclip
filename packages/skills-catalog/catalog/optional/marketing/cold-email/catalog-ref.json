@@ -1,0 +1,27 @@
+{
+  "source": {
+    "type": "github",
+    "hostname": "github.com",
+    "owner": "coreyhaines31",
+    "repo": "marketingskills",
+    "ref": "main",
+    "commit": "e85f3cbc2e4a79bf33b2a12e9bdd9087d414735b",
+    "path": "skills/cold-email"
+  },
+  "files": [
+    "SKILL.md",
+    "references/**"
+  ],
+  "description": "Write and run B2B cold outbound that gets replies, from cold emails and follow-ups to sending setup, LinkedIn, multichannel cadences, and reply handling.",
+  "defaultInstall": false,
+  "recommendedForRoles": [
+    "marketer",
+    "sales"
+  ],
+  "tags": [
+    "marketing",
+    "cold-email",
+    "email",
+    "outbound"
+  ]
+}

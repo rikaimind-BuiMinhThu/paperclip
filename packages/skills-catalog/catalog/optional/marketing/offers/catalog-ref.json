@@ -1,0 +1,25 @@
+{
+  "source": {
+    "type": "github",
+    "hostname": "github.com",
+    "owner": "coreyhaines31",
+    "repo": "marketingskills",
+    "ref": "main",
+    "commit": "e85f3cbc2e4a79bf33b2a12e9bdd9087d414735b",
+    "path": "skills/offers"
+  },
+  "files": [
+    "SKILL.md",
+    "references/**"
+  ],
+  "description": "When the user wants to design, construct, or improve an offer \u2014 the thing they actually sell \u2014 including value framing, bonus stacking, guarantee design, scarcity/urgency, naming, and payment structure.",
+  "defaultInstall": false,
+  "recommendedForRoles": [
+    "marketer"
+  ],
+  "tags": [
+    "marketing",
+    "offers",
+    "positioning"
+  ]
+}

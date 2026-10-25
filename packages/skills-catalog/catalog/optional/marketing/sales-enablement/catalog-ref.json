@@ -1,0 +1,26 @@
+{
+  "source": {
+    "type": "github",
+    "hostname": "github.com",
+    "owner": "coreyhaines31",
+    "repo": "marketingskills",
+    "ref": "main",
+    "commit": "e85f3cbc2e4a79bf33b2a12e9bdd9087d414735b",
+    "path": "skills/sales-enablement"
+  },
+  "files": [
+    "SKILL.md",
+    "references/**"
+  ],
+  "description": "When the user wants to create sales collateral, pitch decks, one-pagers, objection handling docs, or demo scripts.",
+  "defaultInstall": false,
+  "recommendedForRoles": [
+    "marketer",
+    "sales"
+  ],
+  "tags": [
+    "marketing",
+    "sales-enablement",
+    "sales"
+  ]
+}

@@ -1,0 +1,25 @@
+{
+  "source": {
+    "type": "github",
+    "hostname": "github.com",
+    "owner": "coreyhaines31",
+    "repo": "marketingskills",
+    "ref": "main",
+    "commit": "e85f3cbc2e4a79bf33b2a12e9bdd9087d414735b",
+    "path": "skills/lead-magnets"
+  },
+  "files": [
+    "SKILL.md",
+    "references/**"
+  ],
+  "description": "When the user wants to create, plan, or optimize a lead magnet for email capture or lead generation.",
+  "defaultInstall": false,
+  "recommendedForRoles": [
+    "marketer"
+  ],
+  "tags": [
+    "marketing",
+    "lead-magnets",
+    "demand-gen"
+  ]
+}

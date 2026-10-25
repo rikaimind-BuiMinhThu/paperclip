@@ -1,0 +1,25 @@
+{
+  "source": {
+    "type": "github",
+    "hostname": "github.com",
+    "owner": "coreyhaines31",
+    "repo": "marketingskills",
+    "ref": "main",
+    "commit": "e85f3cbc2e4a79bf33b2a12e9bdd9087d414735b",
+    "path": "skills/free-tools"
+  },
+  "files": [
+    "SKILL.md",
+    "references/**"
+  ],
+  "description": "When the user wants to plan, evaluate, or build a free tool for marketing purposes \u2014 lead generation, SEO value, or brand awareness.",
+  "defaultInstall": false,
+  "recommendedForRoles": [
+    "marketer"
+  ],
+  "tags": [
+    "marketing",
+    "free-tools",
+    "growth"
+  ]
+}

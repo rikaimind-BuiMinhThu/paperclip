@@ -11,6 +11,7 @@ import {
   Puzzle,
   Shield,
   SlidersHorizontal,
+  Sparkles,
   Upload,
   UserRoundPen,
   Users,
@@ -214,6 +215,13 @@ export function CompanySettingsSidebar() {
               to={`${INSTANCE_SETTINGS_PATH_PREFIX}/master-agents`}
               label={t("settings.masterAgents")}
               icon={Users}
+            />
+          )}
+          {showPage("instance.masterSkills") && (
+            <SidebarNavItem
+              to={`${INSTANCE_SETTINGS_PATH_PREFIX}/master-skills`}
+              label={t("settings.masterSkills")}
+              icon={Sparkles}
             />
           )}
         </div>

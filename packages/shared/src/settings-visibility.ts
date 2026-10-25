@@ -39,6 +39,7 @@ export const HIDEABLE_INSTANCE_PAGES = [
   "instance.plugins",
   "instance.adapters",
   "instance.masterAgents",
+  "instance.masterSkills",
 ] as const;
 
 export type HideableInstancePage = (typeof HIDEABLE_INSTANCE_PAGES)[number];

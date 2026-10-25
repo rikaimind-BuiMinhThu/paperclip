@@ -1,0 +1,32 @@
+{
+  "source": {
+    "type": "github",
+    "hostname": "github.com",
+    "owner": "coreyhaines31",
+    "repo": "marketingskills",
+    "ref": "main",
+    "commit": "e85f3cbc2e4a79bf33b2a12e9bdd9087d414735b",
+    "path": "skills/conversion-tracking"
+  },
+  "files": [
+    "SKILL.md",
+    "references/**",
+    "assets/**",
+    "scripts/**"
+  ],
+  "description": "Set up, audit, verify, or fix website conversion tracking.",
+  "defaultInstall": false,
+  "recommendedForRoles": [
+    "marketer",
+    "engineer"
+  ],
+  "requires": [
+    "python3"
+  ],
+  "tags": [
+    "marketing",
+    "conversion-tracking",
+    "analytics",
+    "tracking"
+  ]
+}

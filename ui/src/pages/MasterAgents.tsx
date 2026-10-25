@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   AGENT_ROLES,
@@ -13,8 +13,14 @@ import {
 import { accessApi } from "@/api/access";
 import { agentsApi } from "@/api/agents";
 import { masterAgentsApi } from "@/api/masterAgents";
+import { masterSkillsApi } from "@/api/masterSkills";
 import { GALLERY_DEPARTMENT_LABEL } from "@/components/onboarding/MasterAgentGallery";
 import { MasterAgentIcon } from "@/components/onboarding/master-agent-icons";
+import {
+  SkillMultiSelect,
+  type SkillMultiSelectOption,
+} from "@/components/SkillMultiSelect";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import {
@@ -38,6 +44,16 @@ import { Link } from "@/lib/router";
 
 const CUSTOM_MODEL_VALUE = "__custom__";
 const EMPTY_MODEL_VALUE = "";
+/** Matches create/update master-agent skillKeys max in shared validators. */
+const MASTER_AGENT_MAX_SKILLS = 20;
+
+/** Show the short skill id (last path segment) as the tag label. */
+export function masterAgentSkillLabel(skillKey: string): string {
+  const trimmed = skillKey.trim();
+  if (!trimmed) return trimmed;
+  const parts = trimmed.split("/");
+  return parts[parts.length - 1] || trimmed;
+}
 
 type AgentDraft = {
   title: string;
@@ -46,7 +62,7 @@ type AgentDraft = {
   instructions: string;
   role: string;
   icon: string;
-  skillKeys: string;
+  skillKeys: string[];
   canCreateAgents: boolean;
   enabled: boolean;
   recommended: boolean;
@@ -71,7 +87,7 @@ function agentDraft(agent?: MasterAgentRecord): AgentDraft {
     instructions: agent?.instructions ?? "",
     role: agent?.role ?? "general",
     icon: agent?.icon ?? "user",
-    skillKeys: (agent?.skillKeys ?? []).join("\n"),
+    skillKeys: [...(agent?.skillKeys ?? [])],
     canCreateAgents: agent?.canCreateAgents ?? false,
     enabled: agent?.enabled ?? true,
     recommended: agent?.recommended ?? false,
@@ -180,10 +196,6 @@ function teamDraft(team: MasterTeamRecord | undefined, department: MasterAgentDe
   };
 }
 
-function skillList(value: string) {
-  return value.split("\n").map((line) => line.trim()).filter(Boolean);
-}
-
 function errorMessage(error: unknown) {
   return error instanceof Error ? error.message : String(error);
 }
@@ -235,6 +247,32 @@ export function MasterAgents() {
     queryKey: queryKeys.masterAgents.defaultModel,
     queryFn: () => masterAgentsApi.defaultModel(),
   });
+  const skillOptionsQuery = useQuery({
+    queryKey: queryKeys.masterSkills.options(false),
+    queryFn: () => masterSkillsApi.listOptions(false),
+    enabled: editingAgentId !== null,
+  });
+
+  const skillOptions = useMemo((): SkillMultiSelectOption[] => {
+    const byKey = new Map<string, SkillMultiSelectOption>();
+    for (const skill of skillOptionsQuery.data ?? []) {
+      byKey.set(skill.key, {
+        key: skill.key,
+        name: skill.name,
+        description: skill.description,
+        category: skill.category,
+      });
+    }
+    for (const key of agentForm.skillKeys) {
+      if (byKey.has(key)) continue;
+      byKey.set(key, {
+        key,
+        name: masterAgentSkillLabel(key),
+        description: key,
+      });
+    }
+    return [...byKey.values()];
+  }, [agentForm.skillKeys, skillOptionsQuery.data]);
 
   useEffect(() => {
     const status = modelQuery.data;
@@ -293,7 +331,7 @@ export function MasterAgents() {
         instructions: agentForm.instructions,
         role: agentForm.role as MasterAgentRecord["role"],
         icon,
-        skillKeys: skillList(agentForm.skillKeys),
+        skillKeys: agentForm.skillKeys,
         canCreateAgents: agentForm.canCreateAgents,
         enabled: agentForm.enabled,
         recommended: agentForm.recommended,
@@ -485,14 +523,32 @@ export function MasterAgents() {
             <div key={department} className="flex flex-col gap-2">
               <h3 className="text-xs text-muted-foreground">{t(GALLERY_DEPARTMENT_LABEL[department])}</h3>
               {rows.map((agent) => (
-                <div key={agent.id} className="flex items-center gap-3 rounded-md border border-border bg-card p-3">
+                <div key={agent.id} className="flex items-start gap-3 rounded-md border border-border bg-card p-3">
                   <MasterAgentIcon name={agent.icon} />
                   <div className="min-w-0 flex-1">
                     <p className="truncate text-sm font-medium">{agent.title}</p>
                     <p className="truncate text-xs text-muted-foreground">{agent.description}</p>
+                    {agent.skillKeys.length > 0 ? (
+                      <ul
+                        className="mt-2 flex flex-wrap gap-1"
+                        aria-label={t("settings.masterAgentsPage.skills")}
+                      >
+                        {agent.skillKeys.map((skillKey) => (
+                          <li key={skillKey}>
+                            <Badge
+                              variant="secondary"
+                              className="max-w-full truncate px-1.5 py-0 text-(length:--text-micro) font-normal normal-case"
+                              title={skillKey}
+                            >
+                              {masterAgentSkillLabel(skillKey)}
+                            </Badge>
+                          </li>
+                        ))}
+                      </ul>
+                    ) : null}
                   </div>
                   {canManage ? (
-                    <>
+                    <div className="flex shrink-0 items-center gap-3">
                       <ToggleSwitch
                         checked={agent.enabled}
                         aria-label={t("settings.masterAgentsPage.enabled")}
@@ -519,7 +575,7 @@ export function MasterAgents() {
                       >
                         {t("settings.masterAgentsPage.edit")}
                       </Button>
-                    </>
+                    </div>
                   ) : null}
                 </div>
               ))}
@@ -577,7 +633,7 @@ export function MasterAgents() {
           if (!open) closeAgentDialog();
         }}
       >
-        <DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-lg">
+        <DialogContent className="max-h-(--sz-88vh) overflow-y-auto sm:max-w-lg">
           <DialogHeader>
             <DialogTitle>
               {isEditingExistingAgent
@@ -684,10 +740,18 @@ export function MasterAgents() {
                 {MASTER_AGENT_ICONS.map((icon) => <option key={icon} value={icon}>{icon}</option>)}
               </select>
               <Label htmlFor="agent-skills">{t("settings.masterAgentsPage.skills")}</Label>
-              <Textarea
+              <SkillMultiSelect
                 id="agent-skills"
-                value={agentForm.skillKeys}
-                onChange={(event) => setAgentForm({ ...agentForm, skillKeys: event.target.value })}
+                skills={skillOptions}
+                selectedSkillKeys={new Set(agentForm.skillKeys)}
+                loading={skillOptionsQuery.isLoading}
+                maxSelected={MASTER_AGENT_MAX_SKILLS}
+                onChange={(next) => {
+                  setAgentForm({
+                    ...agentForm,
+                    skillKeys: [...next].slice(0, MASTER_AGENT_MAX_SKILLS),
+                  });
+                }}
               />
               <label className="flex items-center gap-2 text-sm">
                 <input
@@ -757,7 +821,7 @@ export function MasterAgents() {
           if (!open) closeTeamDialog();
         }}
       >
-        <DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-lg">
+        <DialogContent className="max-h-(--sz-88vh) overflow-y-auto sm:max-w-lg">
           <DialogHeader>
             <DialogTitle>{t("settings.masterAgentsPage.editTeam")}</DialogTitle>
             <DialogDescription className="sr-only">

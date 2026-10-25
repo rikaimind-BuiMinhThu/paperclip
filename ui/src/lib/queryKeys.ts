@@ -632,6 +632,11 @@ export const queryKeys = {
     teams: (includeDisabled: boolean) => ["master-teams", includeDisabled] as const,
     defaultModel: ["instance", "default-model"] as const,
   },
+  masterSkills: {
+    custom: (includeDisabled: boolean) => ["master-skills", includeDisabled] as const,
+    prefs: ["master-skill-catalog-prefs"] as const,
+    options: (includeDisabled: boolean) => ["master-skill-options", includeDisabled] as const,
+  },
   health: ["health"] as const,
   stagingCommit: ["staging-commit"] as const,
   cloud: {

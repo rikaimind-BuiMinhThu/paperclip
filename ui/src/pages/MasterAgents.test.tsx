@@ -20,7 +20,41 @@ const mocks = vi.hoisted(() => ({
   putDefaultModel: vi.fn(),
   getCurrentBoardAccess: vi.fn(),
   setBreadcrumbs: vi.fn(),
+  listOptions: vi.fn(),
 }));
+
+const SKILL_OPTIONS = [
+  {
+    key: "paperclipai/bundled/paperclip-operations/task-planning",
+    name: "Task Planning",
+    description: "Plan tasks",
+    category: "paperclip-operations",
+    kind: "catalog",
+    enabled: true,
+    recommended: false,
+    sortOrder: 0,
+  },
+  {
+    key: "paperclipai/bundled/paperclip-operations/issue-triage",
+    name: "Issue Triage",
+    description: "Triage issues",
+    category: "paperclip-operations",
+    kind: "catalog",
+    enabled: true,
+    recommended: false,
+    sortOrder: 0,
+  },
+  {
+    key: "paperclipai/bundled/quality/qa-acceptance",
+    name: "QA Acceptance",
+    description: "Acceptance checks",
+    category: "quality",
+    kind: "catalog",
+    enabled: true,
+    recommended: false,
+    sortOrder: 0,
+  },
+];
 
 vi.mock("@/api/masterAgents", () => ({
   masterAgentsApi: {
@@ -59,6 +93,12 @@ vi.mock("@/api/agents", () => ({
   },
 }));
 
+vi.mock("@/api/masterSkills", () => ({
+  masterSkillsApi: {
+    listOptions: mocks.listOptions,
+  },
+}));
+
 vi.mock("@/lib/router", () => ({
   Link: ({ children, to }: { children: ReactNode; to: string }) => <a href={to}>{children}</a>,
 }));
@@ -79,7 +119,14 @@ function lookupEnglish(key: string) {
 
 vi.mock("@/i18n", () => ({
   useTranslation: () => ({
-    t: (key: string) => lookupEnglish(key),
+    t: (key: string, options?: Record<string, unknown>) => {
+      const template = lookupEnglish(key);
+      if (!options || typeof template !== "string") return template;
+      return template.replace(/\{\{(\w+)\}\}/g, (_match, name: string) => {
+        const value = options[name];
+        return value == null ? "" : String(value);
+      });
+    },
   }),
 }));
 
@@ -94,7 +141,10 @@ const agent: MasterAgentRecord = {
   description: "Coordinates the company.",
   instructions: "Plan and coordinate.",
   icon: "briefcase",
-  skillKeys: [],
+  skillKeys: [
+    "paperclipai/bundled/paperclip-operations/task-planning",
+    "paperclipai/bundled/paperclip-operations/issue-triage",
+  ],
   canCreateAgents: true,
   enabled: true,
   recommended: true,
@@ -154,6 +204,7 @@ beforeEach(() => {
   });
   mocks.list.mockResolvedValue([agent]);
   mocks.listTeams.mockResolvedValue(teams);
+  mocks.listOptions.mockResolvedValue(SKILL_OPTIONS);
   mocks.defaultModel.mockResolvedValue({
     configured: true,
     adapterType: "cursor",
@@ -206,6 +257,18 @@ describe("MasterAgents", () => {
     });
   });
 
+  it("shows skill keys as tags on each agent row", async () => {
+    await renderPage();
+    await eventually(() => {
+      expect(container.textContent).toContain("Chief of Staff");
+      const skillList = container.querySelector('[aria-label="Skills"]');
+      expect(skillList).not.toBeNull();
+      expect(skillList?.textContent).toContain("task-planning");
+      expect(skillList?.textContent).toContain("issue-triage");
+      expect(skillList?.textContent).not.toContain("paperclipai/bundled");
+    });
+  });
+
   it("opens the edit dialog prefilled for an existing agent", async () => {
     await renderPage();
     await eventually(() => expect(button("Edit")).toBeDefined());
@@ -216,6 +279,49 @@ describe("MasterAgents", () => {
       expect(document.querySelector<HTMLInputElement>("#agent-title")?.value).toBe("Chief of Staff");
       expect(document.querySelector<HTMLInputElement>("#agent-description")?.value).toBe("Coordinates the company.");
       expect(document.querySelector<HTMLTextAreaElement>("#agent-instructions")?.value).toBe("Plan and coordinate.");
+      expect(document.querySelector("#agent-skills")?.textContent).toContain("2 skills selected");
+      expect(document.querySelector("textarea#agent-skills")).toBeNull();
+    });
+
+    await eventually(() => {
+      expect(mocks.listOptions).toHaveBeenCalled();
+      expect(document.body.textContent).toContain("Task Planning");
+      expect(document.body.textContent).toContain("Issue Triage");
+    });
+  });
+
+  it("lets admins pick skills from the catalog instead of typing keys", async () => {
+    await renderPage();
+    await eventually(() => expect(button("Add agent")).toBeDefined());
+
+    await act(async () => button("Add agent")!.click());
+    await eventually(() => {
+      expect(document.querySelector("#agent-skills")).not.toBeNull();
+      expect(document.querySelector("#agent-skills")?.tagName).toBe("BUTTON");
+      expect(document.querySelector("textarea#agent-skills")).toBeNull();
+    });
+
+    await act(async () => document.querySelector<HTMLButtonElement>("#agent-skills")!.click());
+    await eventually(() => {
+      expect(mocks.listOptions).toHaveBeenCalled();
+      expect(document.body.textContent).toContain("QA Acceptance");
+    });
+
+    await act(async () => {
+      document.querySelector<HTMLButtonElement>('button[aria-label="Select QA Acceptance"]')!.click();
+    });
+    await act(async () => {
+      setInputValue(document.querySelector<HTMLInputElement>("#agent-title")!, "QA Lead");
+      setInputValue(document.querySelector<HTMLInputElement>("#agent-description")!, "Runs QA.");
+      setInputValue(document.querySelector<HTMLTextAreaElement>("#agent-instructions")!, "Accept work.");
+    });
+    await act(async () => button("Save")!.click());
+
+    await eventually(() => {
+      expect(mocks.create).toHaveBeenCalledWith(expect.objectContaining({
+        title: "QA Lead",
+        skillKeys: ["paperclipai/bundled/quality/qa-acceptance"],
+      }));
     });
   });
 

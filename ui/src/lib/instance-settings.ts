@@ -94,7 +94,11 @@ export function filterHiddenInstanceSettingsPath(
   const suffix = instanceSettingsSuffix(pathname);
   if (!suffix) return normalizedPath;
   const page = suffix.split("/")[1];
-  const hiddenKey = page === "master-agents" ? "instance.masterAgents" : `instance.${page}`;
+  const hiddenKey = page === "master-agents"
+    ? "instance.masterAgents"
+    : page === "master-skills"
+      ? "instance.masterSkills"
+      : `instance.${page}`;
   if (page && page !== "general" && hidden.has(hiddenKey)) {
     return DEFAULT_INSTANCE_SETTINGS_PATH;
   }

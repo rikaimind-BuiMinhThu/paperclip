@@ -51,6 +51,8 @@ interface ReferencedGitHubSourceDescriptor {
 interface ReferencedSkillDescriptor {
   source: ReferencedGitHubSourceDescriptor;
   files?: string[];
+  /** Catalog browse/search blurb; overrides upstream SKILL.md when set (≤300 chars). */
+  description?: string;
   defaultInstall?: boolean;
   recommendedForRoles?: string[];
   requires?: string[];
@@ -99,6 +101,10 @@ export async function buildExpectedCatalogManifest(
 export async function buildCatalogManifest(
   options: BuildCatalogManifestOptions,
 ): Promise<BuildCatalogManifestResult> {
+  // Per-build cache so concurrent skills sharing a commit reuse one tree fetch,
+  // without leaking responses across builds or tests.
+  githubTreeCache.clear();
+
   const packageDir = path.resolve(options.packageDir);
   const packageJson = await readPackageJson(packageDir);
   const existingManifest = await readExistingManifest(packageDir);
@@ -374,8 +380,12 @@ async function buildReferencedCatalogSkill(
   const name = asString(parsed.frontmatter.name);
   if (!name) errors.push(`${source.url}/${SKILL_ENTRYPOINT} frontmatter must include name.`);
 
-  const description = asString(parsed.frontmatter.description);
-  if (!description) errors.push(`${source.url}/${SKILL_ENTRYPOINT} frontmatter must include description.`);
+  const upstreamDescription = asString(parsed.frontmatter.description);
+  const overrideDescription = descriptor.description?.trim() || null;
+  const description = overrideDescription ?? upstreamDescription;
+  if (!description) {
+    errors.push(`${source.url}/${SKILL_ENTRYPOINT} frontmatter must include description.`);
+  }
 
   const explicitKey = asString(parsed.frontmatter.key);
   if (explicitKey && explicitKey !== key) {
@@ -509,6 +519,7 @@ async function readReferencedSkillDescriptor(
     return null;
   }
 
+  const descriptionOverride = asString(raw.description);
   const descriptor: ReferencedSkillDescriptor = {
     source: {
       type: "github",
@@ -521,12 +532,16 @@ async function readReferencedSkillDescriptor(
     },
     defaultInstall: asBoolean(raw.defaultInstall) ?? false,
     files: asStringArray(raw.files ?? undefined) ?? undefined,
+    description: descriptionOverride ?? undefined,
     recommendedForRoles: asStringArray(raw.recommendedForRoles ?? undefined) ?? undefined,
     requires: asStringArray(raw.requires ?? undefined) ?? undefined,
     tags: asStringArray(raw.tags ?? undefined) ?? undefined,
   };
 
   if (raw.files !== undefined && !descriptor.files) errors.push(`${prefix}/${CATALOG_REFERENCE_FILE} files must be an array of strings.`);
+  if (raw.description !== undefined && !descriptionOverride) {
+    errors.push(`${prefix}/${CATALOG_REFERENCE_FILE} description must be a non-empty string when set.`);
+  }
   if (raw.recommendedForRoles !== undefined && !descriptor.recommendedForRoles) errors.push(`${prefix}/${CATALOG_REFERENCE_FILE} recommendedForRoles must be an array of strings.`);
   if (raw.requires !== undefined && !descriptor.requires) errors.push(`${prefix}/${CATALOG_REFERENCE_FILE} requires must be an array of strings.`);
   if (raw.tags !== undefined && !descriptor.tags) errors.push(`${prefix}/${CATALOG_REFERENCE_FILE} tags must be an array of strings.`);
@@ -608,25 +623,51 @@ async function collectReferencedSkillFiles(
   return files;
 }
 
+const githubTreeCache = new Map<string, Promise<GitHubTreeEntry[]>>();
+
 async function fetchGitHubTree(
   source: CatalogSkillSource,
   prefix: string,
   errors: string[],
 ): Promise<GitHubTreeEntry[]> {
-  const url = `${githubApiBase(source.hostname)}/repos/${source.owner}/${source.repo}/git/trees/${source.commit}?recursive=1`;
+  const cacheKey = `${source.hostname}:${source.owner}/${source.repo}@${source.commit}`;
+  let pending = githubTreeCache.get(cacheKey);
+  if (!pending) {
+    pending = fetchGitHubTreeUncached(source).catch((error) => {
+      githubTreeCache.delete(cacheKey);
+      throw error;
+    });
+    githubTreeCache.set(cacheKey, pending);
+  }
   try {
-    const response = await fetch(url, { headers: { accept: "application/vnd.github+json" } });
-    if (!response.ok) {
-      errors.push(`${prefix} failed to fetch GitHub tree: HTTP ${response.status}.`);
-      return [];
-    }
-    const body = await response.json() as { tree?: GitHubTreeEntry[]; truncated?: boolean };
-    if (body.truncated) errors.push(`${prefix} GitHub tree response was truncated.`);
-    return Array.isArray(body.tree) ? body.tree : [];
+    return await pending;
   } catch (error) {
     errors.push(`${prefix} failed to fetch GitHub tree: ${errorMessage(error)}.`);
     return [];
   }
+}
+
+async function fetchGitHubTreeUncached(source: CatalogSkillSource): Promise<GitHubTreeEntry[]> {
+  const url = `${githubApiBase(source.hostname)}/repos/${source.owner}/${source.repo}/git/trees/${source.commit}?recursive=1`;
+  const response = await fetch(url, { headers: githubApiHeaders() });
+  if (!response.ok) {
+    throw new Error(`HTTP ${response.status}`);
+  }
+  const body = await response.json() as { tree?: GitHubTreeEntry[]; truncated?: boolean };
+  if (body.truncated) {
+    throw new Error("GitHub tree response was truncated");
+  }
+  return Array.isArray(body.tree) ? body.tree : [];
+}
+
+function githubApiHeaders(): Record<string, string> {
+  const headers: Record<string, string> = {
+    accept: "application/vnd.github+json",
+    "user-agent": "paperclip-skills-catalog",
+  };
+  const token = process.env.GITHUB_TOKEN?.trim() || process.env.GH_TOKEN?.trim();
+  if (token) headers.authorization = `Bearer ${token}`;
+  return headers;
 }
 
 async function readReferencedFileText(

@@ -1,0 +1,25 @@
+{
+  "source": {
+    "type": "github",
+    "hostname": "github.com",
+    "owner": "coreyhaines31",
+    "repo": "marketingskills",
+    "ref": "main",
+    "commit": "e85f3cbc2e4a79bf33b2a12e9bdd9087d414735b",
+    "path": "skills/marketing-loops"
+  },
+  "files": [
+    "SKILL.md",
+    "references/**"
+  ],
+  "description": "When the user wants to set up a recurring, self-running marketing workflow \u2014 a repeatable loop an AI agent runs on a cadence (weekly, daily, on a trigger) rather than a one-off task.",
+  "defaultInstall": false,
+  "recommendedForRoles": [
+    "marketer"
+  ],
+  "tags": [
+    "marketing",
+    "marketing-loops",
+    "growth"
+  ]
+}

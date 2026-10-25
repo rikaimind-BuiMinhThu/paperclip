@@ -1,0 +1,28 @@
+{
+  "source": {
+    "type": "github",
+    "hostname": "github.com",
+    "owner": "coreyhaines31",
+    "repo": "marketingskills",
+    "ref": "main",
+    "commit": "e85f3cbc2e4a79bf33b2a12e9bdd9087d414735b",
+    "path": "skills/ad-creative"
+  },
+  "files": [
+    "SKILL.md",
+    "references/**",
+    "assets/**"
+  ],
+  "description": "When the user wants to generate, iterate, or scale ad creative \u2014 headlines, descriptions, primary text, or full ad variations \u2014 for any paid advertising platform.",
+  "defaultInstall": false,
+  "recommendedForRoles": [
+    "marketer",
+    "designer"
+  ],
+  "tags": [
+    "marketing",
+    "ad-creative",
+    "paid",
+    "creative"
+  ]
+}

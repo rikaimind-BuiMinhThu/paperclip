@@ -1,0 +1,26 @@
+{
+  "source": {
+    "type": "github",
+    "hostname": "github.com",
+    "owner": "coreyhaines31",
+    "repo": "marketingskills",
+    "ref": "main",
+    "commit": "e85f3cbc2e4a79bf33b2a12e9bdd9087d414735b",
+    "path": "skills/attribution"
+  },
+  "files": [
+    "SKILL.md",
+    "references/**"
+  ],
+  "description": "When the user wants to figure out which marketing actually drives conversions and revenue, choose or interpret an attribution model, or reconcile conflicting numbers across tools.",
+  "defaultInstall": false,
+  "recommendedForRoles": [
+    "marketer",
+    "analyst"
+  ],
+  "tags": [
+    "marketing",
+    "attribution",
+    "measurement"
+  ]
+}

@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "packageName": "@paperclipai/skills-catalog",
   "packageVersion": "0.3.1",
-  "generatedAt": "2026-10-19T07:56:52.163Z",
+  "generatedAt": "2026-10-25T15:14:27.685Z",
   "skills": [
     {
       "id": "paperclipai:bundled:docs:doc-maintenance",
@@ -557,6 +557,4051 @@
         }
       ],
       "contentHash": "sha256:e7a1212d3b58cebc1e4403a7124732d3d809f8a4cd823bd55607e46bbd19b6a2"
+    },
+    {
+      "id": "paperclipai:optional:marketing:ab-testing",
+      "key": "paperclipai/optional/marketing/ab-testing",
+      "kind": "optional",
+      "category": "marketing",
+      "slug": "ab-testing",
+      "name": "ab-testing",
+      "description": "When the user wants to plan, design, or implement an A/B test or experiment, or build a growth experimentation program.",
+      "path": "catalog/optional/marketing/ab-testing",
+      "entrypoint": "SKILL.md",
+      "trustLevel": "markdown_only",
+      "compatibility": "compatible",
+      "defaultInstall": false,
+      "recommendedForRoles": [
+        "marketer"
+      ],
+      "requires": [],
+      "tags": [
+        "marketing",
+        "ab-testing",
+        "experimentation"
+      ],
+      "files": [
+        {
+          "path": "SKILL.md",
+          "kind": "skill",
+          "sizeBytes": 12540,
+          "sha256": "fba679be14a9b21a06cde009caf17a652b92040c6f78a520a5d4baec0a5bd5da"
+        },
+        {
+          "path": "references/sample-size-guide.md",
+          "kind": "reference",
+          "sizeBytes": 9050,
+          "sha256": "8288381cc11f9e4821c0a6a5ec3eec73506832a189af45207dcc583c371f3e7b"
+        },
+        {
+          "path": "references/test-templates.md",
+          "kind": "reference",
+          "sizeBytes": 6473,
+          "sha256": "761a40b9de8d16f18fa7f60b59e77aa749607ac8014af43e0b022f47fa87c812"
+        }
+      ],
+      "contentHash": "sha256:63d88e9d80cfdef3c0bce91c7f5bbb38796ce099220752aab83538e792455375",
+      "source": {
+        "type": "github",
+        "hostname": "github.com",
+        "owner": "coreyhaines31",
+        "repo": "marketingskills",
+        "ref": "main",
+        "commit": "e85f3cbc2e4a79bf33b2a12e9bdd9087d414735b",
+        "path": "skills/ab-testing",
+        "url": "https://github.com/coreyhaines31/marketingskills/tree/main/skills/ab-testing"
+      }
+    },
+    {
+      "id": "paperclipai:optional:marketing:ad-creative",
+      "key": "paperclipai/optional/marketing/ad-creative",
+      "kind": "optional",
+      "category": "marketing",
+      "slug": "ad-creative",
+      "name": "ad-creative",
+      "description": "When the user wants to generate, iterate, or scale ad creative — headlines, descriptions, primary text, or full ad variations — for any paid advertising platform.",
+      "path": "catalog/optional/marketing/ad-creative",
+      "entrypoint": "SKILL.md",
+      "trustLevel": "assets",
+      "compatibility": "compatible",
+      "defaultInstall": false,
+      "recommendedForRoles": [
+        "marketer",
+        "designer"
+      ],
+      "requires": [],
+      "tags": [
+        "marketing",
+        "ad-creative",
+        "paid",
+        "creative"
+      ],
+      "files": [
+        {
+          "path": "SKILL.md",
+          "kind": "skill",
+          "sizeBytes": 26996,
+          "sha256": "973244b10730f514ea1ec2c0a4f132d570e55cd3298392b4fc15f8227e5228ba"
+        },
+        {
+          "path": "assets/creative-review-template.html",
+          "kind": "asset",
+          "sizeBytes": 26092,
+          "sha256": "0ca7cce4fa809235aee776606205925d8dc01bde8a8325e2af7197d86394d3b7"
+        },
+        {
+          "path": "references/awareness-headlines.md",
+          "kind": "reference",
+          "sizeBytes": 6765,
+          "sha256": "0f9b2408e402ad03956ff84bf31e5c594371dd3e2974c5390c42af4e3c60ed4d"
+        },
+        {
+          "path": "references/creative-review-page.md",
+          "kind": "reference",
+          "sizeBytes": 9602,
+          "sha256": "03518911b1648bce12a3d579c5979b97442af50de24ff74809a43ba3395dcb3a"
+        },
+        {
+          "path": "references/creative-roadmap.md",
+          "kind": "reference",
+          "sizeBytes": 9010,
+          "sha256": "a0be737841d8a73f0cf02094c9ed1e3f7c050e1c6f867794b1fa8b64dbf3b50e"
+        },
+        {
+          "path": "references/generative-tools.md",
+          "kind": "reference",
+          "sizeBytes": 23286,
+          "sha256": "f4dc366913c5d20d45442d7df91cfbfedd746946d2a51d20977db7e938ab652f"
+        },
+        {
+          "path": "references/hook-system.md",
+          "kind": "reference",
+          "sizeBytes": 10030,
+          "sha256": "2967ecbf32423bbb70ca9587b0af8d257466c852106fe909f6447bbab9a18002"
+        },
+        {
+          "path": "references/imessage-video-ads.md",
+          "kind": "reference",
+          "sizeBytes": 19899,
+          "sha256": "8b798cc2249188a4c1679eea33a2bd7736b2eb02fe5de41e3fc8eb6fa2de16f4"
+        },
+        {
+          "path": "references/meta-creative-formats.md",
+          "kind": "reference",
+          "sizeBytes": 10686,
+          "sha256": "09720c4550761365a8c93c8587fe629c87718dbb331677312d93e5b2faa9761f"
+        },
+        {
+          "path": "references/motion-video-ads.md",
+          "kind": "reference",
+          "sizeBytes": 11801,
+          "sha256": "c64e83199f0316e12e7811667f09a6475a34044c8eec2e3ba549faf9c33fc28c"
+        },
+        {
+          "path": "references/platform-specs.md",
+          "kind": "reference",
+          "sizeBytes": 6525,
+          "sha256": "de69753161071a8d3e4d244280562810a6c4d6ae2696c5a21940f983abd0aa8e"
+        },
+        {
+          "path": "references/short-form-video-specs.md",
+          "kind": "reference",
+          "sizeBytes": 19389,
+          "sha256": "1aa1cc498e350ed00ec4783b60d2eddee5bc98f25750761f6086742d0758f953"
+        },
+        {
+          "path": "references/static-ad-templates.md",
+          "kind": "reference",
+          "sizeBytes": 23710,
+          "sha256": "fc93d3f5fa6b3442cc1c6785eda05979da0d299c640d5f0a277033209d68e651"
+        }
+      ],
+      "contentHash": "sha256:828615917da4f954f107391244e9711d87f65118d02e244b6010550aea4adac5",
+      "source": {
+        "type": "github",
+        "hostname": "github.com",
+        "owner": "coreyhaines31",
+        "repo": "marketingskills",
+        "ref": "main",
+        "commit": "e85f3cbc2e4a79bf33b2a12e9bdd9087d414735b",
+        "path": "skills/ad-creative",
+        "url": "https://github.com/coreyhaines31/marketingskills/tree/main/skills/ad-creative"
+      }
+    },
+    {
+      "id": "paperclipai:optional:marketing:ads",
+      "key": "paperclipai/optional/marketing/ads",
+      "kind": "optional",
+      "category": "marketing",
+      "slug": "ads",
+      "name": "ads",
+      "description": "When the user wants help with paid advertising campaigns on Google Ads, Meta (Facebook/Instagram), LinkedIn, Twitter/X, or other ad platforms.",
+      "path": "catalog/optional/marketing/ads",
+      "entrypoint": "SKILL.md",
+      "trustLevel": "markdown_only",
+      "compatibility": "compatible",
+      "defaultInstall": false,
+      "recommendedForRoles": [
+        "marketer"
+      ],
+      "requires": [],
+      "tags": [
+        "marketing",
+        "ads",
+        "paid"
+      ],
+      "files": [
+        {
+          "path": "SKILL.md",
+          "kind": "skill",
+          "sizeBytes": 30661,
+          "sha256": "71b4f853c49f383a19777cec4f4e31a3b87f984e988a7e930942a88f592366b8"
+        },
+        {
+          "path": "references/abm-playbook.md",
+          "kind": "reference",
+          "sizeBytes": 8100,
+          "sha256": "acb5c89ced4497674d012d015504a5c8e17c619bd2fc1f0191d833a9957eb44a"
+        },
+        {
+          "path": "references/ad-copy-templates.md",
+          "kind": "reference",
+          "sizeBytes": 4821,
+          "sha256": "853ab37e23b75aa3355bdbed9a1357948e635dbdf737be5a1a7aa0126d701206"
+        },
+        {
+          "path": "references/audience-targeting.md",
+          "kind": "reference",
+          "sizeBytes": 6067,
+          "sha256": "21ed7c99fb1124ca38635d6f313cc2f3ca49a192f390cd55293b7bd5a028e1b1"
+        },
+        {
+          "path": "references/audit-guardrails.md",
+          "kind": "reference",
+          "sizeBytes": 8136,
+          "sha256": "ffcbbda4cabd919bce93c11699fac49059dde7d96c64dbf34f77c482420e6667"
+        },
+        {
+          "path": "references/b2b-paid-playbook.md",
+          "kind": "reference",
+          "sizeBytes": 7951,
+          "sha256": "21dc1125905f8d985763996afb24a2bf54539330535b7b2b45c052901c5b2006"
+        },
+        {
+          "path": "references/creative-research-automation.md",
+          "kind": "reference",
+          "sizeBytes": 8481,
+          "sha256": "c2894a19eff596412f52c4a8aceea1b8f390e7f1821e9c13cb3e6c693e625cfd"
+        },
+        {
+          "path": "references/google-ads-audit-checklist.md",
+          "kind": "reference",
+          "sizeBytes": 12811,
+          "sha256": "4c21526a52869f8045cc2f1c599dfbef487f6390c94cb9b38e8a7e830b1c0279"
+        },
+        {
+          "path": "references/google-search-playbook.md",
+          "kind": "reference",
+          "sizeBytes": 10348,
+          "sha256": "5771d6c876ddd2b3cbaa28190884eebd698112febcf0ea83aeb0c8016e04e097"
+        },
+        {
+          "path": "references/linkedin-b2b-playbook.md",
+          "kind": "reference",
+          "sizeBytes": 9222,
+          "sha256": "8f38aadbf24c1a554fbaa47bf2f24bac0c4773fa16f65d34c1c600e5e3d8a6ee"
+        },
+        {
+          "path": "references/meta-andromeda-playbook.md",
+          "kind": "reference",
+          "sizeBytes": 6365,
+          "sha256": "8da58633c3866b9a4aa07b234a9a7e96eeb19a9497bb85bae09f1aac36e27268"
+        },
+        {
+          "path": "references/meta-decision-system.md",
+          "kind": "reference",
+          "sizeBytes": 15663,
+          "sha256": "861709bcc4e7467eac7d4de63f0bdd6709eb3c12a1d72b3855dce313ca15407f"
+        },
+        {
+          "path": "references/operating-check.md",
+          "kind": "reference",
+          "sizeBytes": 5894,
+          "sha256": "0039550a0867dc5f80595b824f8d6a6a298c5777ef2d0e54d225c1405f900de3"
+        },
+        {
+          "path": "references/payback-period.md",
+          "kind": "reference",
+          "sizeBytes": 6920,
+          "sha256": "77b0f35b65b35cdee53881105a16498e3e4538b657923a176b99a19b807daba1"
+        },
+        {
+          "path": "references/platform-setup-checklists.md",
+          "kind": "reference",
+          "sizeBytes": 7613,
+          "sha256": "b86e206f8c7233c235d7d385a69e17fac16ac001ab130242b7700fe650752f69"
+        },
+        {
+          "path": "references/reading-google-ads-data.md",
+          "kind": "reference",
+          "sizeBytes": 8750,
+          "sha256": "e5bb10f5bd81eabaae63c005a9be8c3f70d63df60e192dcd37faf3718ff0fd09"
+        },
+        {
+          "path": "references/rsa-output-spec.md",
+          "kind": "reference",
+          "sizeBytes": 3689,
+          "sha256": "285fec5c1671c9cc1a4cdfbcf06d8a54a022cbad52693941457d90e1f2c5f503"
+        }
+      ],
+      "contentHash": "sha256:175e2df8e393a2f5eea2922a361ae3bf318f7c64c19b5d6a0ea7848a0dda6133",
+      "source": {
+        "type": "github",
+        "hostname": "github.com",
+        "owner": "coreyhaines31",
+        "repo": "marketingskills",
+        "ref": "main",
+        "commit": "e85f3cbc2e4a79bf33b2a12e9bdd9087d414735b",
+        "path": "skills/ads",
+        "url": "https://github.com/coreyhaines31/marketingskills/tree/main/skills/ads"
+      }
+    },
+    {
+      "id": "paperclipai:optional:marketing:ai-seo",
+      "key": "paperclipai/optional/marketing/ai-seo",
+      "kind": "optional",
+      "category": "marketing",
+      "slug": "ai-seo",
+      "name": "ai-seo",
+      "description": "When the user wants to optimize content for AI search engines, get cited by LLMs, or appear in AI-generated answers.",
+      "path": "catalog/optional/marketing/ai-seo",
+      "entrypoint": "SKILL.md",
+      "trustLevel": "markdown_only",
+      "compatibility": "compatible",
+      "defaultInstall": false,
+      "recommendedForRoles": [
+        "marketer"
+      ],
+      "requires": [],
+      "tags": [
+        "marketing",
+        "ai-seo",
+        "seo",
+        "ai"
+      ],
+      "files": [
+        {
+          "path": "SKILL.md",
+          "kind": "skill",
+          "sizeBytes": 36458,
+          "sha256": "1293062b48cecc0a19f0e5444ecd0c929f640171fbbb234d44812dbd01cb8a52"
+        },
+        {
+          "path": "references/agent-defaults.md",
+          "kind": "reference",
+          "sizeBytes": 9344,
+          "sha256": "4f009f323b381553961914bf7d67755ee3c178dd10f1570f61fe306cd0054b21"
+        },
+        {
+          "path": "references/agent-readiness.md",
+          "kind": "reference",
+          "sizeBytes": 8425,
+          "sha256": "1f9b3e4646c6d50a17b6b5b34ca22b868518266f23664de3132cf519c72d7a9a"
+        },
+        {
+          "path": "references/ai-attribution.md",
+          "kind": "reference",
+          "sizeBytes": 4302,
+          "sha256": "accaf004e50fd92d16e5e1b57ce0aa5f5c0f88d1ba7bb2ce6939de29fe3e1728"
+        },
+        {
+          "path": "references/answer-accuracy.md",
+          "kind": "reference",
+          "sizeBytes": 5705,
+          "sha256": "9c9115a720c6891fc7e0122d465ed38643170b026fa461de5971feb642f0da57"
+        },
+        {
+          "path": "references/citations-vs-recommendations.md",
+          "kind": "reference",
+          "sizeBytes": 12839,
+          "sha256": "90adc950592b24d8ebd46460ef7ada6a2c4df0f4e4752903c93341cbe182b919"
+        },
+        {
+          "path": "references/content-patterns.md",
+          "kind": "reference",
+          "sizeBytes": 12949,
+          "sha256": "2aa584f93587c322f08697f2eedcb6b48fd79bccb75d1f0ae2072dfcc8c7c684"
+        },
+        {
+          "path": "references/content-types.md",
+          "kind": "reference",
+          "sizeBytes": 3558,
+          "sha256": "2323104990cb3057f3ce135c2b7bac71e5369992d5aeb24cec009c8f6d841d0b"
+        },
+        {
+          "path": "references/format-volatility.md",
+          "kind": "reference",
+          "sizeBytes": 7269,
+          "sha256": "235858ee4d820dd0b89d3c7ffc65f4f59c7904f63feef7d2fff78cc6818caddf"
+        },
+        {
+          "path": "references/linkedin-ai-citations.md",
+          "kind": "reference",
+          "sizeBytes": 8747,
+          "sha256": "2bd191703b543fc5f3ae36f5e367ed6d5504ad38e7446797cd3c5fe23ababd4b"
+        },
+        {
+          "path": "references/multilingual-and-commerce.md",
+          "kind": "reference",
+          "sizeBytes": 4880,
+          "sha256": "5d65db4b85c9c257f4d052a9b3b65bb2f72af140076e2b2dc4cf7dd34d111057"
+        },
+        {
+          "path": "references/okf.md",
+          "kind": "reference",
+          "sizeBytes": 5952,
+          "sha256": "4abcab5b8ee90b63c5d09c98387a8ec3cdb8f5df33e75d3b4b91eb817283bfd8"
+        },
+        {
+          "path": "references/platform-ranking-factors.md",
+          "kind": "reference",
+          "sizeBytes": 16102,
+          "sha256": "39ecaf6af6ee819008b47aa852444ad532baeafb4854086285318032ecde9693"
+        },
+        {
+          "path": "references/positioning-and-consensus.md",
+          "kind": "reference",
+          "sizeBytes": 7283,
+          "sha256": "b7618247e57a4560c3785155c34de77adc232784b7dd91b2c44a77a73617b9b4"
+        },
+        {
+          "path": "references/prompt-portfolio.md",
+          "kind": "reference",
+          "sizeBytes": 6326,
+          "sha256": "11708d2315ef3a6df1fc1de6df8700d6229f7121479835784889f77548c7c12e"
+        },
+        {
+          "path": "references/youtube-ai-citations.md",
+          "kind": "reference",
+          "sizeBytes": 4478,
+          "sha256": "eee24cd9f377db5f59933c775a740f5ff7ece9f238b051157ba72531d9507a99"
+        }
+      ],
+      "contentHash": "sha256:edad73cec7c8b017bf622f1451a7271c8ac81d3cde0b8d032951db4727100bd4",
+      "source": {
+        "type": "github",
+        "hostname": "github.com",
+        "owner": "coreyhaines31",
+        "repo": "marketingskills",
+        "ref": "main",
+        "commit": "e85f3cbc2e4a79bf33b2a12e9bdd9087d414735b",
+        "path": "skills/ai-seo",
+        "url": "https://github.com/coreyhaines31/marketingskills/tree/main/skills/ai-seo"
+      }
+    },
+    {
+      "id": "paperclipai:optional:marketing:analytics",
+      "key": "paperclipai/optional/marketing/analytics",
+      "kind": "optional",
+      "category": "marketing",
+      "slug": "analytics",
+      "name": "analytics",
+      "description": "When the user wants to set up, improve, or audit analytics tracking and measurement.",
+      "path": "catalog/optional/marketing/analytics",
+      "entrypoint": "SKILL.md",
+      "trustLevel": "markdown_only",
+      "compatibility": "compatible",
+      "defaultInstall": false,
+      "recommendedForRoles": [
+        "marketer",
+        "analyst"
+      ],
+      "requires": [],
+      "tags": [
+        "marketing",
+        "analytics",
+        "measurement"
+      ],
+      "files": [
+        {
+          "path": "SKILL.md",
+          "kind": "skill",
+          "sizeBytes": 14372,
+          "sha256": "675e284b745837d595aa4d36903cb54b3921181fd343cc519d31f34fe8002196"
+        },
+        {
+          "path": "references/event-library.md",
+          "kind": "reference",
+          "sizeBytes": 8654,
+          "sha256": "c60e3e145e6b06258570350b614913ed9150143b4494a71396abaef479502b05"
+        },
+        {
+          "path": "references/ga4-implementation.md",
+          "kind": "reference",
+          "sizeBytes": 7084,
+          "sha256": "b0232fc2ee873ffa5e6cbdf0ae712a5d74b18263372139d8ae72f9dcf48a8db4"
+        },
+        {
+          "path": "references/gtm-implementation.md",
+          "kind": "reference",
+          "sizeBytes": 8413,
+          "sha256": "0b161102de710c978cc2ac52c78c79f32e184bc028aa946eba18e777d7a60d64"
+        }
+      ],
+      "contentHash": "sha256:fb197e0533f0be55ff68d578872ba722e72397339fc8a22e8ae679ec0c5bd05c",
+      "source": {
+        "type": "github",
+        "hostname": "github.com",
+        "owner": "coreyhaines31",
+        "repo": "marketingskills",
+        "ref": "main",
+        "commit": "e85f3cbc2e4a79bf33b2a12e9bdd9087d414735b",
+        "path": "skills/analytics",
+        "url": "https://github.com/coreyhaines31/marketingskills/tree/main/skills/analytics"
+      }
+    },
+    {
+      "id": "paperclipai:optional:marketing:aso",
+      "key": "paperclipai/optional/marketing/aso",
+      "kind": "optional",
+      "category": "marketing",
+      "slug": "aso",
+      "name": "aso",
+      "description": "When the user wants to audit or optimize an App Store or Google Play listing.",
+      "path": "catalog/optional/marketing/aso",
+      "entrypoint": "SKILL.md",
+      "trustLevel": "markdown_only",
+      "compatibility": "compatible",
+      "defaultInstall": false,
+      "recommendedForRoles": [
+        "marketer"
+      ],
+      "requires": [],
+      "tags": [
+        "marketing",
+        "aso",
+        "app-store"
+      ],
+      "files": [
+        {
+          "path": "SKILL.md",
+          "kind": "skill",
+          "sizeBytes": 15947,
+          "sha256": "681a8e3cb4ffe91bb8d68497726d9a708901c06a2a99e23a92684d53241fc02c"
+        },
+        {
+          "path": "references/apple-specs.md",
+          "kind": "reference",
+          "sizeBytes": 6089,
+          "sha256": "b2f9d3efc041624dd8f2392cad34533fa5f889a171957eb47000a6a057dcd13a"
+        },
+        {
+          "path": "references/benchmarks.md",
+          "kind": "reference",
+          "sizeBytes": 5444,
+          "sha256": "64b33412338388f8d6b4cafc12a8547afff9d64ca37646a996cf1baecf54043c"
+        },
+        {
+          "path": "references/google-play-specs.md",
+          "kind": "reference",
+          "sizeBytes": 6599,
+          "sha256": "8a47707817aa40684f51ccc16e8b718ca6acaa27e3b1a00d2fdc21dd63b6ad9e"
+        },
+        {
+          "path": "references/report-template.md",
+          "kind": "reference",
+          "sizeBytes": 5124,
+          "sha256": "f67c8827c4600cb1e392c8cad05ed5740f9cd01321fd715a9e851e37ec0047b2"
+        },
+        {
+          "path": "references/scoring-criteria.md",
+          "kind": "reference",
+          "sizeBytes": 13667,
+          "sha256": "e821093e54db5b6f3eb9c932eef57ec47b6e0bb1aad2fe0ae6f524a217713591"
+        }
+      ],
+      "contentHash": "sha256:4284cecc8727005f95b457943a583f6f32ed997816f0efd3e2487e653216dc2f",
+      "source": {
+        "type": "github",
+        "hostname": "github.com",
+        "owner": "coreyhaines31",
+        "repo": "marketingskills",
+        "ref": "main",
+        "commit": "e85f3cbc2e4a79bf33b2a12e9bdd9087d414735b",
+        "path": "skills/aso",
+        "url": "https://github.com/coreyhaines31/marketingskills/tree/main/skills/aso"
+      }
+    },
+    {
+      "id": "paperclipai:optional:marketing:attribution",
+      "key": "paperclipai/optional/marketing/attribution",
+      "kind": "optional",
+      "category": "marketing",
+      "slug": "attribution",
+      "name": "attribution",
+      "description": "When the user wants to figure out which marketing actually drives conversions and revenue, choose or interpret an attribution model, or reconcile conflicting numbers across tools.",
+      "path": "catalog/optional/marketing/attribution",
+      "entrypoint": "SKILL.md",
+      "trustLevel": "markdown_only",
+      "compatibility": "compatible",
+      "defaultInstall": false,
+      "recommendedForRoles": [
+        "marketer",
+        "analyst"
+      ],
+      "requires": [],
+      "tags": [
+        "marketing",
+        "attribution",
+        "measurement"
+      ],
+      "files": [
+        {
+          "path": "SKILL.md",
+          "kind": "skill",
+          "sizeBytes": 23423,
+          "sha256": "950ed42f471fa5484eae4c122a2c2cd54aa4916ce65581b5cb2f51fe8c630710"
+        },
+        {
+          "path": "references/attribution-models.md",
+          "kind": "reference",
+          "sizeBytes": 6783,
+          "sha256": "503c61bf2f38d54755398fc5b1bb0d190e989c59494b097407652ae65bf474af"
+        },
+        {
+          "path": "references/by-business-type.md",
+          "kind": "reference",
+          "sizeBytes": 7857,
+          "sha256": "224a937e09842dbd7a8e00fb67f060cd1ac50f58f9f576be8d015a7c800c9de4"
+        },
+        {
+          "path": "references/first-party-tracking.md",
+          "kind": "reference",
+          "sizeBytes": 19867,
+          "sha256": "a8e12b00d3d049d4b32e3a2785e504936ee7ae33a523a2a1717c338bd4140b6c"
+        },
+        {
+          "path": "references/measurement-paradigms.md",
+          "kind": "reference",
+          "sizeBytes": 10598,
+          "sha256": "5efca610abaa3a80a31cd6be5e835e4449d54462c5314e97b055b86413dee5b2"
+        }
+      ],
+      "contentHash": "sha256:5acc76cb159e5dad5285590fd4692c91f82d3bf47cb1509d5591de1ec1f5072b",
+      "source": {
+        "type": "github",
+        "hostname": "github.com",
+        "owner": "coreyhaines31",
+        "repo": "marketingskills",
+        "ref": "main",
+        "commit": "e85f3cbc2e4a79bf33b2a12e9bdd9087d414735b",
+        "path": "skills/attribution",
+        "url": "https://github.com/coreyhaines31/marketingskills/tree/main/skills/attribution"
+      }
+    },
+    {
+      "id": "paperclipai:optional:marketing:churn-prevention",
+      "key": "paperclipai/optional/marketing/churn-prevention",
+      "kind": "optional",
+      "category": "marketing",
+      "slug": "churn-prevention",
+      "name": "churn-prevention",
+      "description": "When the user wants to reduce churn, build cancellation flows, set up save offers, recover failed payments, or implement retention strategies.",
+      "path": "catalog/optional/marketing/churn-prevention",
+      "entrypoint": "SKILL.md",
+      "trustLevel": "markdown_only",
+      "compatibility": "compatible",
+      "defaultInstall": false,
+      "recommendedForRoles": [
+        "marketer"
+      ],
+      "requires": [],
+      "tags": [
+        "marketing",
+        "churn-prevention",
+        "retention"
+      ],
+      "files": [
+        {
+          "path": "SKILL.md",
+          "kind": "skill",
+          "sizeBytes": 20037,
+          "sha256": "425497b9c3415fa91a5cc4a7140a1bee727d3b6398beed1bb4fa4880503c0355"
+        },
+        {
+          "path": "references/cancel-flow-patterns.md",
+          "kind": "reference",
+          "sizeBytes": 10650,
+          "sha256": "d64b9282b956da6831ec97a1fffda5841c5c43a71721b512b66b04bde104c139"
+        },
+        {
+          "path": "references/dunning-playbook.md",
+          "kind": "reference",
+          "sizeBytes": 14061,
+          "sha256": "24b96a01cfba174c9f3adde66d417e7282c0cf31789c2719e6bd37b8ad2ecf8c"
+        }
+      ],
+      "contentHash": "sha256:6da4c4a9d492f17cffc2340c748f9380443aeb7b268bef35682f2ff6f62a3093",
+      "source": {
+        "type": "github",
+        "hostname": "github.com",
+        "owner": "coreyhaines31",
+        "repo": "marketingskills",
+        "ref": "main",
+        "commit": "e85f3cbc2e4a79bf33b2a12e9bdd9087d414735b",
+        "path": "skills/churn-prevention",
+        "url": "https://github.com/coreyhaines31/marketingskills/tree/main/skills/churn-prevention"
+      }
+    },
+    {
+      "id": "paperclipai:optional:marketing:co-marketing",
+      "key": "paperclipai/optional/marketing/co-marketing",
+      "kind": "optional",
+      "category": "marketing",
+      "slug": "co-marketing",
+      "name": "co-marketing",
+      "description": "When the user wants to find co-marketing partners, plan joint campaigns, or brainstorm partnership opportunities.",
+      "path": "catalog/optional/marketing/co-marketing",
+      "entrypoint": "SKILL.md",
+      "trustLevel": "markdown_only",
+      "compatibility": "compatible",
+      "defaultInstall": false,
+      "recommendedForRoles": [
+        "marketer"
+      ],
+      "requires": [],
+      "tags": [
+        "marketing",
+        "co-marketing",
+        "partnerships"
+      ],
+      "files": [
+        {
+          "path": "SKILL.md",
+          "kind": "skill",
+          "sizeBytes": 12034,
+          "sha256": "1073aad4a1452b735e4f70ccb28b7b778658d2eb3b49946eb56265f00a69598c"
+        },
+        {
+          "path": "references/partnership-types.md",
+          "kind": "reference",
+          "sizeBytes": 8111,
+          "sha256": "1f9d48e29097149530bdfe7b1c553f4b35f64486be86a2c72ca9165c6c2298c4"
+        }
+      ],
+      "contentHash": "sha256:bbfa3db7e4e15ee7023eafd001df9b4aaf3383b1656169815db5712fc1d2fe36",
+      "source": {
+        "type": "github",
+        "hostname": "github.com",
+        "owner": "coreyhaines31",
+        "repo": "marketingskills",
+        "ref": "main",
+        "commit": "e85f3cbc2e4a79bf33b2a12e9bdd9087d414735b",
+        "path": "skills/co-marketing",
+        "url": "https://github.com/coreyhaines31/marketingskills/tree/main/skills/co-marketing"
+      }
+    },
+    {
+      "id": "paperclipai:optional:marketing:cold-email",
+      "key": "paperclipai/optional/marketing/cold-email",
+      "kind": "optional",
+      "category": "marketing",
+      "slug": "cold-email",
+      "name": "cold-email",
+      "description": "Write and run B2B cold outbound that gets replies, from cold emails and follow-ups to sending setup, LinkedIn, multichannel cadences, and reply handling.",
+      "path": "catalog/optional/marketing/cold-email",
+      "entrypoint": "SKILL.md",
+      "trustLevel": "markdown_only",
+      "compatibility": "compatible",
+      "defaultInstall": false,
+      "recommendedForRoles": [
+        "marketer",
+        "sales"
+      ],
+      "requires": [],
+      "tags": [
+        "marketing",
+        "cold-email",
+        "email",
+        "outbound"
+      ],
+      "files": [
+        {
+          "path": "SKILL.md",
+          "kind": "skill",
+          "sizeBytes": 12571,
+          "sha256": "963540924147c3b74b7693bbc292ac2da3d407807c270f8a3123bd3432fdc337"
+        },
+        {
+          "path": "references/benchmarks.md",
+          "kind": "reference",
+          "sizeBytes": 6411,
+          "sha256": "f69fd26e8c9a4e61d3d74368e3e8dae5e737f5a05ffb49f6b13f724a2aef49e5"
+        },
+        {
+          "path": "references/deliverability.md",
+          "kind": "reference",
+          "sizeBytes": 7833,
+          "sha256": "dccb53b0ea4462139b642f44a748ea74ab6f034801fd8b4de599dc2f10287021"
+        },
+        {
+          "path": "references/follow-up-sequences.md",
+          "kind": "reference",
+          "sizeBytes": 3863,
+          "sha256": "5be46bdff5abb83005bbd2a3f7789e545b64fb318d61af4fa5d654ba63b17b4e"
+        },
+        {
+          "path": "references/frameworks.md",
+          "kind": "reference",
+          "sizeBytes": 5387,
+          "sha256": "067c1f5ef701932193f1421b903c5d285ffe9845d2488f9cb4691ca36e513d3b"
+        },
+        {
+          "path": "references/linkedin-outreach.md",
+          "kind": "reference",
+          "sizeBytes": 5750,
+          "sha256": "c95ba4c785bafccfffd98c6d850c20ea674cac1b18fa817d3f4dce23ed159ba5"
+        },
+        {
+          "path": "references/multichannel-cadence.md",
+          "kind": "reference",
+          "sizeBytes": 5481,
+          "sha256": "3189071b3afb7dfbd480d2e5c9835867e757fa1cad783b2e7c3f63da3ffe1e76"
+        },
+        {
+          "path": "references/outbound-plays.md",
+          "kind": "reference",
+          "sizeBytes": 6113,
+          "sha256": "d48f43c90b811b1124f2cd23447854a62196c9fce45248662eaede722542f44f"
+        },
+        {
+          "path": "references/personalization.md",
+          "kind": "reference",
+          "sizeBytes": 5238,
+          "sha256": "9d5368645025aa632316b3c7de999762e2f8743fb54aae0b59adfa011b212c5a"
+        },
+        {
+          "path": "references/reply-handling.md",
+          "kind": "reference",
+          "sizeBytes": 4648,
+          "sha256": "fa2a5e020a0206ffba29093b54bd7977ebe6d3e34a6ae323b34ce86ce1604da4"
+        },
+        {
+          "path": "references/subject-lines.md",
+          "kind": "reference",
+          "sizeBytes": 3015,
+          "sha256": "f71f31b1151d972bb19ff03791ffb9d24941a8ccea8b913e5a5c7aca439b45ce"
+        }
+      ],
+      "contentHash": "sha256:9b80d55838fd9d7a91d8c8274986d1771f2654aeda8643c7c2d663a8fd51af68",
+      "source": {
+        "type": "github",
+        "hostname": "github.com",
+        "owner": "coreyhaines31",
+        "repo": "marketingskills",
+        "ref": "main",
+        "commit": "e85f3cbc2e4a79bf33b2a12e9bdd9087d414735b",
+        "path": "skills/cold-email",
+        "url": "https://github.com/coreyhaines31/marketingskills/tree/main/skills/cold-email"
+      }
+    },
+    {
+      "id": "paperclipai:optional:marketing:community-marketing",
+      "key": "paperclipai/optional/marketing/community-marketing",
+      "kind": "optional",
+      "category": "marketing",
+      "slug": "community-marketing",
+      "name": "community-marketing",
+      "description": "Build and leverage online communities to drive product growth and brand loyalty.",
+      "path": "catalog/optional/marketing/community-marketing",
+      "entrypoint": "SKILL.md",
+      "trustLevel": "markdown_only",
+      "compatibility": "compatible",
+      "defaultInstall": false,
+      "recommendedForRoles": [
+        "marketer"
+      ],
+      "requires": [],
+      "tags": [
+        "marketing",
+        "community-marketing",
+        "community"
+      ],
+      "files": [
+        {
+          "path": "SKILL.md",
+          "kind": "skill",
+          "sizeBytes": 9826,
+          "sha256": "e4c4a21e82a04e8ef6e2845fa34ebaf5512ba59ae1c9c74d8caa9f045628f4da"
+        },
+        {
+          "path": "references/community-models.md",
+          "kind": "reference",
+          "sizeBytes": 4049,
+          "sha256": "85e8d154751d136591d4a39886c37cbf3535dabec823d62c3ae0df16b852b7f3"
+        }
+      ],
+      "contentHash": "sha256:7c2693d3dd79a5ac9419d4e27ea24a94fde6f74c764f28ec4649c3ed894a825f",
+      "source": {
+        "type": "github",
+        "hostname": "github.com",
+        "owner": "coreyhaines31",
+        "repo": "marketingskills",
+        "ref": "main",
+        "commit": "e85f3cbc2e4a79bf33b2a12e9bdd9087d414735b",
+        "path": "skills/community-marketing",
+        "url": "https://github.com/coreyhaines31/marketingskills/tree/main/skills/community-marketing"
+      }
+    },
+    {
+      "id": "paperclipai:optional:marketing:competitor-profiling",
+      "key": "paperclipai/optional/marketing/competitor-profiling",
+      "kind": "optional",
+      "category": "marketing",
+      "slug": "competitor-profiling",
+      "name": "competitor-profiling",
+      "description": "When the user wants to research, profile, or analyze competitors from their URLs.",
+      "path": "catalog/optional/marketing/competitor-profiling",
+      "entrypoint": "SKILL.md",
+      "trustLevel": "markdown_only",
+      "compatibility": "compatible",
+      "defaultInstall": false,
+      "recommendedForRoles": [
+        "marketer"
+      ],
+      "requires": [],
+      "tags": [
+        "marketing",
+        "competitor-profiling",
+        "research"
+      ],
+      "files": [
+        {
+          "path": "SKILL.md",
+          "kind": "skill",
+          "sizeBytes": 17519,
+          "sha256": "dd97331ef22b65be8dc75ee36e6ccb154096e2303aac2f7d627f3d002191a8ae"
+        },
+        {
+          "path": "references/templates.md",
+          "kind": "reference",
+          "sizeBytes": 4668,
+          "sha256": "710d78cb519012eb7e39f63643e22d7b9026c91c569262b44c45535c10717a91"
+        },
+        {
+          "path": "references/tool-reference.md",
+          "kind": "reference",
+          "sizeBytes": 13132,
+          "sha256": "fda64910bc1b3a2bc7df21c15701220849b4b79a58a51f9d3ccae1b7311dbd79"
+        }
+      ],
+      "contentHash": "sha256:298b1ac5a892079b53f88651abd49f5ebe7bb0238028fa09a9111ddb12d35b87",
+      "source": {
+        "type": "github",
+        "hostname": "github.com",
+        "owner": "coreyhaines31",
+        "repo": "marketingskills",
+        "ref": "main",
+        "commit": "e85f3cbc2e4a79bf33b2a12e9bdd9087d414735b",
+        "path": "skills/competitor-profiling",
+        "url": "https://github.com/coreyhaines31/marketingskills/tree/main/skills/competitor-profiling"
+      }
+    },
+    {
+      "id": "paperclipai:optional:marketing:competitors",
+      "key": "paperclipai/optional/marketing/competitors",
+      "kind": "optional",
+      "category": "marketing",
+      "slug": "competitors",
+      "name": "competitors",
+      "description": "When the user wants to create competitor comparison or alternative pages for SEO and buyer-facing use.",
+      "path": "catalog/optional/marketing/competitors",
+      "entrypoint": "SKILL.md",
+      "trustLevel": "markdown_only",
+      "compatibility": "compatible",
+      "defaultInstall": false,
+      "recommendedForRoles": [
+        "marketer"
+      ],
+      "requires": [],
+      "tags": [
+        "marketing",
+        "competitors",
+        "seo",
+        "content"
+      ],
+      "files": [
+        {
+          "path": "SKILL.md",
+          "kind": "skill",
+          "sizeBytes": 12075,
+          "sha256": "ff77b76dfe43158b2fc248bb8c41fe94745d1264abb0a0c665b2c55318287a35"
+        },
+        {
+          "path": "references/content-architecture.md",
+          "kind": "reference",
+          "sizeBytes": 7745,
+          "sha256": "893b0bf30a630753bff02345029a96959ac359a5221467132d553d8e09a2d433"
+        },
+        {
+          "path": "references/templates.md",
+          "kind": "reference",
+          "sizeBytes": 5649,
+          "sha256": "138f4367a45fc9cc775f9fd67324f8a6f1e1f5c3c1a90bd952db4731f080844f"
+        }
+      ],
+      "contentHash": "sha256:e1c98486c39cca13bbe7bd26d3f9bc2222fb138f5b9fb44ad4f4f1ac875a2fec",
+      "source": {
+        "type": "github",
+        "hostname": "github.com",
+        "owner": "coreyhaines31",
+        "repo": "marketingskills",
+        "ref": "main",
+        "commit": "e85f3cbc2e4a79bf33b2a12e9bdd9087d414735b",
+        "path": "skills/competitors",
+        "url": "https://github.com/coreyhaines31/marketingskills/tree/main/skills/competitors"
+      }
+    },
+    {
+      "id": "paperclipai:optional:marketing:content-strategy",
+      "key": "paperclipai/optional/marketing/content-strategy",
+      "kind": "optional",
+      "category": "marketing",
+      "slug": "content-strategy",
+      "name": "content-strategy",
+      "description": "When the user wants to plan a content strategy, decide what content to create, or figure out what topics to cover.",
+      "path": "catalog/optional/marketing/content-strategy",
+      "entrypoint": "SKILL.md",
+      "trustLevel": "markdown_only",
+      "compatibility": "compatible",
+      "defaultInstall": false,
+      "recommendedForRoles": [
+        "marketer"
+      ],
+      "requires": [],
+      "tags": [
+        "marketing",
+        "content-strategy",
+        "content"
+      ],
+      "files": [
+        {
+          "path": "SKILL.md",
+          "kind": "skill",
+          "sizeBytes": 19387,
+          "sha256": "5097ae8c11c27e2846be307b30f09ac17333fd1ffab1bae19728c81444767001"
+        },
+        {
+          "path": "references/content-distribution.md",
+          "kind": "reference",
+          "sizeBytes": 5576,
+          "sha256": "1861a1aab0627ab29c279000879a9889242da1ba85e677acdc759c66a6241778"
+        },
+        {
+          "path": "references/headless-cms.md",
+          "kind": "reference",
+          "sizeBytes": 8583,
+          "sha256": "efc796ae9596d1efcb876683db2d9b7c10c83e76e1cb69e527097907d5b4fc3f"
+        }
+      ],
+      "contentHash": "sha256:b06124a6e245cbb1ceced7479fea377187ded96fdfa61943f141b1302a4cf4ac",
+      "source": {
+        "type": "github",
+        "hostname": "github.com",
+        "owner": "coreyhaines31",
+        "repo": "marketingskills",
+        "ref": "main",
+        "commit": "e85f3cbc2e4a79bf33b2a12e9bdd9087d414735b",
+        "path": "skills/content-strategy",
+        "url": "https://github.com/coreyhaines31/marketingskills/tree/main/skills/content-strategy"
+      }
+    },
+    {
+      "id": "paperclipai:optional:marketing:conversion-tracking",
+      "key": "paperclipai/optional/marketing/conversion-tracking",
+      "kind": "optional",
+      "category": "marketing",
+      "slug": "conversion-tracking",
+      "name": "conversion-tracking",
+      "description": "Set up, audit, verify, or fix website conversion tracking.",
+      "path": "catalog/optional/marketing/conversion-tracking",
+      "entrypoint": "SKILL.md",
+      "trustLevel": "scripts_executables",
+      "compatibility": "compatible",
+      "defaultInstall": false,
+      "recommendedForRoles": [
+        "marketer",
+        "engineer"
+      ],
+      "requires": [
+        "python3"
+      ],
+      "tags": [
+        "marketing",
+        "conversion-tracking",
+        "analytics",
+        "tracking"
+      ],
+      "files": [
+        {
+          "path": "SKILL.md",
+          "kind": "skill",
+          "sizeBytes": 30747,
+          "sha256": "06274ddf5127bd5cad935b69faa1ada211e8e1cd7494c51784db30f887807961"
+        },
+        {
+          "path": "assets/gtm-recipes/detect/detect-acuity-scheduling.json",
+          "kind": "asset",
+          "sizeBytes": 7154,
+          "sha256": "426514803f0ebabf2963c75d952cb2dfcc5cd882591b57bac77baf8de68b1ec7"
+        },
+        {
+          "path": "assets/gtm-recipes/detect/detect-cal-com.json",
+          "kind": "asset",
+          "sizeBytes": 9059,
+          "sha256": "e58f4b6912c2618509c36ebc5d49e66ef593b88d70e9e0fddd28021321c2ccee"
+        },
+        {
+          "path": "assets/gtm-recipes/detect/detect-calendly.json",
+          "kind": "asset",
+          "sizeBytes": 7873,
+          "sha256": "4cc8f3d8b2073a8baf858e81e5311dad5710978c3be504a19e488ed1f9de65e7"
+        },
+        {
+          "path": "assets/gtm-recipes/detect/detect-contact-form-7.json",
+          "kind": "asset",
+          "sizeBytes": 6460,
+          "sha256": "1f3d01757da4e884d7ad3c89875ae5d208ee80faa034ca4264af85b2fb093b37"
+        },
+        {
+          "path": "assets/gtm-recipes/detect/detect-divi-forms.json",
+          "kind": "asset",
+          "sizeBytes": 5092,
+          "sha256": "33ff8fba2a162940e9ffcd851b79db5f48f72e7e19c748f93d258776350ba50a"
+        },
+        {
+          "path": "assets/gtm-recipes/detect/detect-elementor-forms.json",
+          "kind": "asset",
+          "sizeBytes": 4463,
+          "sha256": "b05ff8a7060ed050bf1d9b240c7559e3d0917cc9454dbd7b3b6e841ab7c7ac4a"
+        },
+        {
+          "path": "assets/gtm-recipes/detect/detect-file-download.json",
+          "kind": "asset",
+          "sizeBytes": 5098,
+          "sha256": "ecbb1fd305173b515fbcae61d9d9049c4f59f4253799c9f5a3f50d50c9b659e9"
+        },
+        {
+          "path": "assets/gtm-recipes/detect/detect-fluent-forms.json",
+          "kind": "asset",
+          "sizeBytes": 6939,
+          "sha256": "23a849a28fdcde10f4759acc85209b724d3e85400fe1f1e216d31254220fe92c"
+        },
+        {
+          "path": "assets/gtm-recipes/detect/detect-formidable-forms.json",
+          "kind": "asset",
+          "sizeBytes": 10301,
+          "sha256": "564ba05d8f3d69a3e94ce147314deaf30ba86971a2449ed58f40ce22da4c07af"
+        },
+        {
+          "path": "assets/gtm-recipes/detect/detect-forminator.json",
+          "kind": "asset",
+          "sizeBytes": 5616,
+          "sha256": "c894b5c74462744826829f1d5d0f6e2ee59af6c1bf594fec277d13bb204340a5"
+        },
+        {
+          "path": "assets/gtm-recipes/detect/detect-framer-forms.json",
+          "kind": "asset",
+          "sizeBytes": 6487,
+          "sha256": "38de58405bd4704ecffce5b2f6bad6ffe5d1c0ea847ea164ed8eaf46a51a934d"
+        },
+        {
+          "path": "assets/gtm-recipes/detect/detect-generic-ajax-form.json",
+          "kind": "asset",
+          "sizeBytes": 7815,
+          "sha256": "3d378776b2d4ea8a1c44b4b723b6ded298ccf058bdb016b68d7800934e20f01e"
+        },
+        {
+          "path": "assets/gtm-recipes/detect/detect-gravity-forms.json",
+          "kind": "asset",
+          "sizeBytes": 15762,
+          "sha256": "2441e7792d67007b875282043dec3e81871a6619b196b1356edf1a461014704a"
+        },
+        {
+          "path": "assets/gtm-recipes/detect/detect-hubspot-forms.json",
+          "kind": "asset",
+          "sizeBytes": 9472,
+          "sha256": "8768ee01a80eb8db440d2cbc0929cab1661193e80f431fefb5af1cce4af5cbab"
+        },
+        {
+          "path": "assets/gtm-recipes/detect/detect-jotform.json",
+          "kind": "asset",
+          "sizeBytes": 3885,
+          "sha256": "043e7624be8a1b0b8b3dbb170e164553f202e8926e989e97536b35c09279e3b9"
+        },
+        {
+          "path": "assets/gtm-recipes/detect/detect-ninja-forms.json",
+          "kind": "asset",
+          "sizeBytes": 8605,
+          "sha256": "426bb73b5071bf7d5c2dd6daefd1696c56ef3ed5d820bf7119c511494f9d7d77"
+        },
+        {
+          "path": "assets/gtm-recipes/detect/detect-phone-click.json",
+          "kind": "asset",
+          "sizeBytes": 4745,
+          "sha256": "ae2c337c44569bc942bf6c8230dc692c4a4381d9d3ed82701ab2bd11cac0c894"
+        },
+        {
+          "path": "assets/gtm-recipes/detect/detect-squarespace-forms.json",
+          "kind": "asset",
+          "sizeBytes": 18966,
+          "sha256": "9290e2b9d1bccda6c84337227b2713b11eb0867576633ed275da98351e5bab1c"
+        },
+        {
+          "path": "assets/gtm-recipes/detect/detect-tally.json",
+          "kind": "asset",
+          "sizeBytes": 10662,
+          "sha256": "b035b835b6f10395a76d0bfbd82b2eed4030639dd6a98574b2fe039b9e069118"
+        },
+        {
+          "path": "assets/gtm-recipes/detect/detect-thank-you-page.json",
+          "kind": "asset",
+          "sizeBytes": 4733,
+          "sha256": "335e19b59a140fa8dcbc9e498873c6b1df414aebcb0a4c93e3174f261ae6ead3"
+        },
+        {
+          "path": "assets/gtm-recipes/detect/detect-typeform.json",
+          "kind": "asset",
+          "sizeBytes": 8061,
+          "sha256": "3c51a4c2a7cafb9306097d2678734fcc8de63bb353cb21941bf6e5a21d919225"
+        },
+        {
+          "path": "assets/gtm-recipes/detect/detect-webflow-forms.json",
+          "kind": "asset",
+          "sizeBytes": 5695,
+          "sha256": "3ed98ac500883d03a90e2fc117c2cce25bee3584b5ce5f79ff14da2da2859813"
+        },
+        {
+          "path": "assets/gtm-recipes/detect/detect-wix-forms.json",
+          "kind": "asset",
+          "sizeBytes": 9772,
+          "sha256": "6c0d4f35298c1d08859617054ed3bdca9fb6185fc4757e4ad3179926e59bbdd4"
+        },
+        {
+          "path": "assets/gtm-recipes/detect/detect-wix-scheduling.json",
+          "kind": "asset",
+          "sizeBytes": 5199,
+          "sha256": "1ea831747838a0e82a9c6f952ecadeac6b76fbab5d09fe92fa4a067092129d78"
+        },
+        {
+          "path": "assets/gtm-recipes/detect/detect-wpforms.json",
+          "kind": "asset",
+          "sizeBytes": 11381,
+          "sha256": "aba0f592a18a31be10d97d7f66caeb6f8bccc8905bd2decde69d9446011279da"
+        },
+        {
+          "path": "assets/gtm-recipes/detect/detect-ws-form.json",
+          "kind": "asset",
+          "sizeBytes": 4777,
+          "sha256": "325a98b53de2e2acc4b0f225fd2c636217063b9b8daee379ddcd1d57128acc61"
+        },
+        {
+          "path": "assets/gtm-recipes/event-map.json",
+          "kind": "asset",
+          "sizeBytes": 3211,
+          "sha256": "4d2d09b3dae067247c018f84709a1f43f0aba572c4426732bf522d25f65d56cf"
+        },
+        {
+          "path": "assets/gtm-recipes/README.md",
+          "kind": "asset",
+          "sizeBytes": 6405,
+          "sha256": "5838272e4d524a4d55aec96faf987921dd888dea3eddff2d4f81e402b999248d"
+        },
+        {
+          "path": "assets/gtm-recipes/send/ga4.json",
+          "kind": "asset",
+          "sizeBytes": 1859,
+          "sha256": "54711eae2bdf3749795d5bbda8032cc998f7c3b24bd9a1513b2a3db1fa6e5554"
+        },
+        {
+          "path": "assets/gtm-recipes/send/google-ads.json",
+          "kind": "asset",
+          "sizeBytes": 2765,
+          "sha256": "7f7eb01043e67e98276777fb6b9765cf76755a792bdba2e0e76f8eeb1d37476b"
+        },
+        {
+          "path": "assets/gtm-recipes/send/linkedin.json",
+          "kind": "asset",
+          "sizeBytes": 3851,
+          "sha256": "8ca48dab89786bc19e54278feb6a090aee5226fc83dc9ce3763888100b361e6c"
+        },
+        {
+          "path": "assets/gtm-recipes/send/meta.json",
+          "kind": "asset",
+          "sizeBytes": 4218,
+          "sha256": "1b16894b8aa42f109d2e166d4cc07424bbfa6022b771bcfbcb23315fe52dc8e5"
+        },
+        {
+          "path": "assets/gtm-recipes/send/microsoft.json",
+          "kind": "asset",
+          "sizeBytes": 4105,
+          "sha256": "db97b1c76a870d5df2f549a6fb4617ea889434b12a6162e3accb38d0ac96c9e4"
+        },
+        {
+          "path": "assets/gtm-recipes/send/tiktok.json",
+          "kind": "asset",
+          "sizeBytes": 4464,
+          "sha256": "c9b83ad1fb510394b29f7c8e69cc1d8a13c98721b71a75a1d1f3aa73101fa493"
+        },
+        {
+          "path": "assets/snippets/acuity-scheduling-field.html",
+          "kind": "asset",
+          "sizeBytes": 1290,
+          "sha256": "429d45cfe22390749d5a02365b1a75004d3e00a5135dffb3225f35a35d16c6ce"
+        },
+        {
+          "path": "assets/snippets/acuity-scheduling.js",
+          "kind": "asset",
+          "sizeBytes": 3368,
+          "sha256": "803ac3687cd0c1b0aa2595c45c1b6482e88a0e0c8c673062d804bc43284b6b8e"
+        },
+        {
+          "path": "assets/snippets/cal-com.js",
+          "kind": "asset",
+          "sizeBytes": 5650,
+          "sha256": "bbb673890b353c5029d8130f052437e037ca4c0f7ce1d9cf5d6907763ce3caa5"
+        },
+        {
+          "path": "assets/snippets/calendly.js",
+          "kind": "asset",
+          "sizeBytes": 4923,
+          "sha256": "b9dab516bc55fdfd1fed3bc0e9f488594e8a159fe40b63beb38895f47b9df779"
+        },
+        {
+          "path": "assets/snippets/contact-form-7.js",
+          "kind": "asset",
+          "sizeBytes": 3964,
+          "sha256": "154c1d776fe958c1e1df869b6533f068f3046fa987dbb94b9bbf9acfc2c10999"
+        },
+        {
+          "path": "assets/snippets/divi-forms.js",
+          "kind": "asset",
+          "sizeBytes": 2657,
+          "sha256": "4edd76362677a979ef7854c1dee7406141617eb463ca58851816297c7f794522"
+        },
+        {
+          "path": "assets/snippets/elementor-forms.js",
+          "kind": "asset",
+          "sizeBytes": 2013,
+          "sha256": "5d3c725ce0bc87455cccf69d93cfb9a2941c1f0dab522de683242ab4ad8aa7f6"
+        },
+        {
+          "path": "assets/snippets/file-download.js",
+          "kind": "asset",
+          "sizeBytes": 3230,
+          "sha256": "531bfa6201f5f4696e16a1db20c45e2fcedfcdd831cf292d258a06a9538ab2c8"
+        },
+        {
+          "path": "assets/snippets/fluent-forms.js",
+          "kind": "asset",
+          "sizeBytes": 4407,
+          "sha256": "aca359b50acdc6deb3fe0cea43604098bef8adfaa05dff19b285cb143f6b806c"
+        },
+        {
+          "path": "assets/snippets/formidable-forms.js",
+          "kind": "asset",
+          "sizeBytes": 7695,
+          "sha256": "bf4f9e19a6cd809f16e408bcd71443cbcaf90851a0d30cb2a2eeb32217a43050"
+        },
+        {
+          "path": "assets/snippets/forminator.js",
+          "kind": "asset",
+          "sizeBytes": 3164,
+          "sha256": "8791b19a667b5dd9ec5ae3e13f344deefe5976004fdba4cd81c8c5df061b1faa"
+        },
+        {
+          "path": "assets/snippets/framer-forms.js",
+          "kind": "asset",
+          "sizeBytes": 3990,
+          "sha256": "7d0ca007cd3d2bfae6465b6a96a646d3a1835b876a0fe22df6b1dc68f8125a48"
+        },
+        {
+          "path": "assets/snippets/generic-ajax-form.js",
+          "kind": "asset",
+          "sizeBytes": 5874,
+          "sha256": "adc3dbacd6b38ee8a9ff94b4c0ae3c3773826b92fa859d023d292d040e0acaaf"
+        },
+        {
+          "path": "assets/snippets/gravity-forms.js",
+          "kind": "asset",
+          "sizeBytes": 13094,
+          "sha256": "e6a090d8c1647da9df43a6f6da88c6c497683ef1b4af746a4ab4a5a06cc033a9"
+        },
+        {
+          "path": "assets/snippets/hubspot-forms.js",
+          "kind": "asset",
+          "sizeBytes": 6921,
+          "sha256": "ecde2f6d6507a834920de99abf7ae8f78cfdd981d9f03e79dc2b9145962e3071"
+        },
+        {
+          "path": "assets/snippets/jotform.js",
+          "kind": "asset",
+          "sizeBytes": 1465,
+          "sha256": "72321c0cdbac4995e6752741da7afd91c96d1b2ec486a7469b93fef20f1bdff5"
+        },
+        {
+          "path": "assets/snippets/ninja-forms.js",
+          "kind": "asset",
+          "sizeBytes": 6058,
+          "sha256": "930eeddc2988762a402d8047d61bb220347eed44065088123646d8e8c567f0be"
+        },
+        {
+          "path": "assets/snippets/phone-click.js",
+          "kind": "asset",
+          "sizeBytes": 2870,
+          "sha256": "502a1bc554579c36becc08b455c806adec82ca01d43d8d73b1251ab24a513870"
+        },
+        {
+          "path": "assets/snippets/README.md",
+          "kind": "asset",
+          "sizeBytes": 17623,
+          "sha256": "bab0e38326820f4b8405c433e7ae8b36b1f4766ada377592415633df0239c82c"
+        },
+        {
+          "path": "assets/snippets/squarespace-forms.js",
+          "kind": "asset",
+          "sizeBytes": 15690,
+          "sha256": "ce2b494dfb658077d16952219e5057e86b097a730826567d451cc77e275fedae"
+        },
+        {
+          "path": "assets/snippets/tally.js",
+          "kind": "asset",
+          "sizeBytes": 7668,
+          "sha256": "2d8e1d098455a371d93870fe195e1ef2ece84b60bf7a92d2867eab9f8421686e"
+        },
+        {
+          "path": "assets/snippets/thank-you-page.js",
+          "kind": "asset",
+          "sizeBytes": 2871,
+          "sha256": "e06594b9ed6ce8d25390594f77caef2996b959ce5853e0f76eebbc85056c87e9"
+        },
+        {
+          "path": "assets/snippets/typeform.js",
+          "kind": "asset",
+          "sizeBytes": 5080,
+          "sha256": "72263000329964dbc4be312d447fd54c3c521cba112348db276c61b82d88487b"
+        },
+        {
+          "path": "assets/snippets/webflow-forms.js",
+          "kind": "asset",
+          "sizeBytes": 3245,
+          "sha256": "70147fe014e39af513f664c1c687b0e0d62c8513cce82f73794eb98c881b4200"
+        },
+        {
+          "path": "assets/snippets/wix-forms.js",
+          "kind": "asset",
+          "sizeBytes": 7145,
+          "sha256": "59dd95eee0a031e2bef15fcec0d0f8e26c0af2c4c16e7c9a222d7ba6b487cd45"
+        },
+        {
+          "path": "assets/snippets/wix-scheduling.js",
+          "kind": "asset",
+          "sizeBytes": 2722,
+          "sha256": "d91348c7ab1c0f6de78ca63ea9743fdfc38de591e3871ead591ad17ff107a4ba"
+        },
+        {
+          "path": "assets/snippets/wpforms.js",
+          "kind": "asset",
+          "sizeBytes": 8797,
+          "sha256": "e19be843ea2a44204b0e4382902f2571349f7596d7bb22bdc11caa2195ca15ed"
+        },
+        {
+          "path": "assets/snippets/ws-form.js",
+          "kind": "asset",
+          "sizeBytes": 2346,
+          "sha256": "fe61749515891e2bd6e32b84bb25ab0845d71b07d3ede81ca9382db252b60662"
+        },
+        {
+          "path": "references/audit-playbook.md",
+          "kind": "reference",
+          "sizeBytes": 12862,
+          "sha256": "d55c2b781e84973bccb1e6f75860de0df8cd5ef1db6ab69a036ddb99d698c0cb"
+        },
+        {
+          "path": "references/browser-side.md",
+          "kind": "reference",
+          "sizeBytes": 23029,
+          "sha256": "d31b92606479c5b40340c137f25ff56d427b25dcb952a2be9ea219f71f2a55f3"
+        },
+        {
+          "path": "references/conversion-moments.md",
+          "kind": "reference",
+          "sizeBytes": 32010,
+          "sha256": "827baa68c0fd7f5658db959ab0349012a8012c75d0ab3b2da85ea74ec75f13e6"
+        },
+        {
+          "path": "references/discrepancies.md",
+          "kind": "reference",
+          "sizeBytes": 13767,
+          "sha256": "ad85f70371f2aebf2ab7624969a93a759b0dccc6b4ae046f8c7451e81dca2078"
+        },
+        {
+          "path": "references/ecommerce-platforms.md",
+          "kind": "reference",
+          "sizeBytes": 10127,
+          "sha256": "b7dca043096fa4c9b502c42e1a74ca00231c6c7948d4b8b925c130998f72d36e"
+        },
+        {
+          "path": "references/google-ads.md",
+          "kind": "reference",
+          "sizeBytes": 30294,
+          "sha256": "64b1687bc8bd4993abedf82572be472caee83b43b350f08f7cf061d35fbbb46a"
+        },
+        {
+          "path": "references/meta.md",
+          "kind": "reference",
+          "sizeBytes": 18249,
+          "sha256": "984e85c0c043c56297cc3b0649d0dcd37232f05b75a5ce8127a6b3fe03353741"
+        },
+        {
+          "path": "references/other-platforms.md",
+          "kind": "reference",
+          "sizeBytes": 20004,
+          "sha256": "158f37efe6b569a0d09ae808705182a5718f8dafce90bebffbf406176d90698a"
+        },
+        {
+          "path": "references/server-side.md",
+          "kind": "reference",
+          "sizeBytes": 31914,
+          "sha256": "d47f28a68fa677c9899a771334318989c313d41e1a29fd1d6682fb0195cc851b"
+        },
+        {
+          "path": "scripts/build_recipe.py",
+          "kind": "script",
+          "sizeBytes": 11107,
+          "sha256": "5024e952becb54eaa1f12e086473aaa93c624cf8c63debf07f83bc802d580bf2"
+        },
+        {
+          "path": "scripts/check_recipes.py",
+          "kind": "script",
+          "sizeBytes": 3246,
+          "sha256": "47fbf50c39c906e9fe60e25cbef582137fe935fa2808dadfa7bcfd19c7774fa9"
+        }
+      ],
+      "contentHash": "sha256:76ab839c8337d7724a3f23860a562495466a1fb42b4df83aad46840698d2a4f7",
+      "source": {
+        "type": "github",
+        "hostname": "github.com",
+        "owner": "coreyhaines31",
+        "repo": "marketingskills",
+        "ref": "main",
+        "commit": "e85f3cbc2e4a79bf33b2a12e9bdd9087d414735b",
+        "path": "skills/conversion-tracking",
+        "url": "https://github.com/coreyhaines31/marketingskills/tree/main/skills/conversion-tracking"
+      }
+    },
+    {
+      "id": "paperclipai:optional:marketing:copy-editing",
+      "key": "paperclipai/optional/marketing/copy-editing",
+      "kind": "optional",
+      "category": "marketing",
+      "slug": "copy-editing",
+      "name": "copy-editing",
+      "description": "When the user wants to edit, review, or improve existing marketing copy, or refresh outdated content.",
+      "path": "catalog/optional/marketing/copy-editing",
+      "entrypoint": "SKILL.md",
+      "trustLevel": "markdown_only",
+      "compatibility": "compatible",
+      "defaultInstall": false,
+      "recommendedForRoles": [
+        "marketer"
+      ],
+      "requires": [],
+      "tags": [
+        "marketing",
+        "copy-editing",
+        "copy"
+      ],
+      "files": [
+        {
+          "path": "SKILL.md",
+          "kind": "skill",
+          "sizeBytes": 18459,
+          "sha256": "2a072606d9d5662509ea6ef62c65719487dcb68876acab9286bde4d1af5c030f"
+        },
+        {
+          "path": "references/checklist.md",
+          "kind": "reference",
+          "sizeBytes": 4505,
+          "sha256": "4cf94c922286223681fc53721fcc65ae7299f1e36e797e7397d369d674580c60"
+        },
+        {
+          "path": "references/content-refresh.md",
+          "kind": "reference",
+          "sizeBytes": 4662,
+          "sha256": "ba73cdf278fe6b552eee27eb1452494f11f9d17ef67d720657e0982f76fb961b"
+        },
+        {
+          "path": "references/plain-english-alternatives.md",
+          "kind": "reference",
+          "sizeBytes": 8258,
+          "sha256": "df4f820d4c63ae8a517c64a243c101658352cd07d002355bf3c97de0a00f3775"
+        }
+      ],
+      "contentHash": "sha256:05c2107bbfb151fa3f66b5596ffc55806872fd343e81e4412a56276fe36d47b0",
+      "source": {
+        "type": "github",
+        "hostname": "github.com",
+        "owner": "coreyhaines31",
+        "repo": "marketingskills",
+        "ref": "main",
+        "commit": "e85f3cbc2e4a79bf33b2a12e9bdd9087d414735b",
+        "path": "skills/copy-editing",
+        "url": "https://github.com/coreyhaines31/marketingskills/tree/main/skills/copy-editing"
+      }
+    },
+    {
+      "id": "paperclipai:optional:marketing:copywriting",
+      "key": "paperclipai/optional/marketing/copywriting",
+      "kind": "optional",
+      "category": "marketing",
+      "slug": "copywriting",
+      "name": "copywriting",
+      "description": "When the user wants to write, rewrite, or improve marketing copy for any page, including homepage, landing pages, pricing pages, feature pages, about pages, or product pages.",
+      "path": "catalog/optional/marketing/copywriting",
+      "entrypoint": "SKILL.md",
+      "trustLevel": "markdown_only",
+      "compatibility": "compatible",
+      "defaultInstall": false,
+      "recommendedForRoles": [
+        "marketer"
+      ],
+      "requires": [],
+      "tags": [
+        "marketing",
+        "copywriting",
+        "copy"
+      ],
+      "files": [
+        {
+          "path": "SKILL.md",
+          "kind": "skill",
+          "sizeBytes": 15520,
+          "sha256": "13c580c2432a4499e9dfdcf5d553df7aa6589e90cf5bd869fb4fbde5caf9f567"
+        },
+        {
+          "path": "references/ai-tells.md",
+          "kind": "reference",
+          "sizeBytes": 20804,
+          "sha256": "b98c3a19b3a75c714d69e80a0076e4c07244b0e833c2ce81ff2631224fb7f7b2"
+        },
+        {
+          "path": "references/copy-frameworks.md",
+          "kind": "reference",
+          "sizeBytes": 14352,
+          "sha256": "352122944bf9e891ceb0e003adce41591d111e9d97057700626249919dfe430d"
+        },
+        {
+          "path": "references/natural-transitions.md",
+          "kind": "reference",
+          "sizeBytes": 5561,
+          "sha256": "9bd61b0de5be2c4de4ce130c68236b4f290b12737823827a458bb2b4c8584683"
+        }
+      ],
+      "contentHash": "sha256:640a828c8aa27584a01eea3fca3238647418c69d11539011137d68c53d48d3e2",
+      "source": {
+        "type": "github",
+        "hostname": "github.com",
+        "owner": "coreyhaines31",
+        "repo": "marketingskills",
+        "ref": "main",
+        "commit": "e85f3cbc2e4a79bf33b2a12e9bdd9087d414735b",
+        "path": "skills/copywriting",
+        "url": "https://github.com/coreyhaines31/marketingskills/tree/main/skills/copywriting"
+      }
+    },
+    {
+      "id": "paperclipai:optional:marketing:cro",
+      "key": "paperclipai/optional/marketing/cro",
+      "kind": "optional",
+      "category": "marketing",
+      "slug": "cro",
+      "name": "cro",
+      "description": "When the user wants to optimize, improve, or increase conversions on any marketing page or form — including homepage, landing pages, pricing pages, feature pages, lead capture forms, or contact forms.",
+      "path": "catalog/optional/marketing/cro",
+      "entrypoint": "SKILL.md",
+      "trustLevel": "markdown_only",
+      "compatibility": "compatible",
+      "defaultInstall": false,
+      "recommendedForRoles": [
+        "marketer"
+      ],
+      "requires": [],
+      "tags": [
+        "marketing",
+        "cro",
+        "conversion"
+      ],
+      "files": [
+        {
+          "path": "SKILL.md",
+          "kind": "skill",
+          "sizeBytes": 7114,
+          "sha256": "6e172cc38178c800ff41ceb097f36c6a1db8035fb88a1fee53043f8ec38a6f35"
+        },
+        {
+          "path": "references/experiments.md",
+          "kind": "reference",
+          "sizeBytes": 7850,
+          "sha256": "bbcc356c0af36cfaa4556bf9e929deac30c65cafb37f909d7c51d4777fe254ca"
+        },
+        {
+          "path": "references/form.md",
+          "kind": "reference",
+          "sizeBytes": 10332,
+          "sha256": "49b8f29b3da1ae6510572288cad3eb1f3d43a969373443be98b38639746587e6"
+        }
+      ],
+      "contentHash": "sha256:2d8259db24d5db116ccb10cc383fcd66f01128006e5896fbe2f30cf52b30e3b2",
+      "source": {
+        "type": "github",
+        "hostname": "github.com",
+        "owner": "coreyhaines31",
+        "repo": "marketingskills",
+        "ref": "main",
+        "commit": "e85f3cbc2e4a79bf33b2a12e9bdd9087d414735b",
+        "path": "skills/cro",
+        "url": "https://github.com/coreyhaines31/marketingskills/tree/main/skills/cro"
+      }
+    },
+    {
+      "id": "paperclipai:optional:marketing:customer-research",
+      "key": "paperclipai/optional/marketing/customer-research",
+      "kind": "optional",
+      "category": "marketing",
+      "slug": "customer-research",
+      "name": "customer-research",
+      "description": "When the user wants to conduct, analyze, or synthesize customer research.",
+      "path": "catalog/optional/marketing/customer-research",
+      "entrypoint": "SKILL.md",
+      "trustLevel": "markdown_only",
+      "compatibility": "compatible",
+      "defaultInstall": false,
+      "recommendedForRoles": [
+        "marketer"
+      ],
+      "requires": [],
+      "tags": [
+        "marketing",
+        "customer-research",
+        "research"
+      ],
+      "files": [
+        {
+          "path": "SKILL.md",
+          "kind": "skill",
+          "sizeBytes": 15166,
+          "sha256": "905e65e67268448d88b3b96cf045c6b3615cdd87c1060e129b148a31aa627669"
+        },
+        {
+          "path": "references/interviews-and-surveys.md",
+          "kind": "reference",
+          "sizeBytes": 8640,
+          "sha256": "56adecdc40af1242464937100349fc1a161627394909551720494bc5ee537076"
+        },
+        {
+          "path": "references/source-guides.md",
+          "kind": "reference",
+          "sizeBytes": 16240,
+          "sha256": "7490a8d04f209d4c8c987530e79d0883a6b42027b86a920fc751cf8ea9904892"
+        }
+      ],
+      "contentHash": "sha256:97dfb10ca80b0473c1eba6d33df9527f757dc1ca4eaea7c368fa965700ec8df9",
+      "source": {
+        "type": "github",
+        "hostname": "github.com",
+        "owner": "coreyhaines31",
+        "repo": "marketingskills",
+        "ref": "main",
+        "commit": "e85f3cbc2e4a79bf33b2a12e9bdd9087d414735b",
+        "path": "skills/customer-research",
+        "url": "https://github.com/coreyhaines31/marketingskills/tree/main/skills/customer-research"
+      }
+    },
+    {
+      "id": "paperclipai:optional:marketing:directory-submissions",
+      "key": "paperclipai/optional/marketing/directory-submissions",
+      "kind": "optional",
+      "category": "marketing",
+      "slug": "directory-submissions",
+      "name": "directory-submissions",
+      "description": "When the user wants to submit their product to startup, SaaS, AI, agent, MCP, no-code, or review directories for backlinks, domain rating, and discovery.",
+      "path": "catalog/optional/marketing/directory-submissions",
+      "entrypoint": "SKILL.md",
+      "trustLevel": "markdown_only",
+      "compatibility": "compatible",
+      "defaultInstall": false,
+      "recommendedForRoles": [
+        "marketer"
+      ],
+      "requires": [],
+      "tags": [
+        "marketing",
+        "directory-submissions",
+        "distribution"
+      ],
+      "files": [
+        {
+          "path": "SKILL.md",
+          "kind": "skill",
+          "sizeBytes": 26981,
+          "sha256": "3fce43d598c3a7eb70c60f02266ea4c449a32401cf9faa62446da139801d0070"
+        },
+        {
+          "path": "references/directory-list.md",
+          "kind": "reference",
+          "sizeBytes": 32309,
+          "sha256": "302be8e9572f679c75b066c0653397cb7476c42a7623d49a19dbe35277606c04"
+        },
+        {
+          "path": "references/positioning-variations.md",
+          "kind": "reference",
+          "sizeBytes": 9398,
+          "sha256": "61df944313b5dc475e8e2647420ab44252e26a2acf28a45af1bf5a16737acbf6"
+        },
+        {
+          "path": "references/submission-tracker-template.csv",
+          "kind": "reference",
+          "sizeBytes": 20690,
+          "sha256": "61b4d1b2e6ad2a539986e02ef75aa7f3ce8ca34fe7a89d5f262bcb7333225a94"
+        }
+      ],
+      "contentHash": "sha256:44a3db317e60cff533a2ebc813d1d309d14e7869752b96fe02bd2ef371a396d7",
+      "source": {
+        "type": "github",
+        "hostname": "github.com",
+        "owner": "coreyhaines31",
+        "repo": "marketingskills",
+        "ref": "main",
+        "commit": "e85f3cbc2e4a79bf33b2a12e9bdd9087d414735b",
+        "path": "skills/directory-submissions",
+        "url": "https://github.com/coreyhaines31/marketingskills/tree/main/skills/directory-submissions"
+      }
+    },
+    {
+      "id": "paperclipai:optional:marketing:emails",
+      "key": "paperclipai/optional/marketing/emails",
+      "kind": "optional",
+      "category": "marketing",
+      "slug": "emails",
+      "name": "emails",
+      "description": "When the user wants to create or optimize an email sequence, drip campaign, automated email flow, or lifecycle email program.",
+      "path": "catalog/optional/marketing/emails",
+      "entrypoint": "SKILL.md",
+      "trustLevel": "markdown_only",
+      "compatibility": "compatible",
+      "defaultInstall": false,
+      "recommendedForRoles": [
+        "marketer"
+      ],
+      "requires": [],
+      "tags": [
+        "marketing",
+        "emails",
+        "email"
+      ],
+      "files": [
+        {
+          "path": "SKILL.md",
+          "kind": "skill",
+          "sizeBytes": 11548,
+          "sha256": "8709631cc21717d17db9bb7e787ea44768d77182daf9846de8718a2ae7433b91"
+        },
+        {
+          "path": "references/copy-guidelines.md",
+          "kind": "reference",
+          "sizeBytes": 2332,
+          "sha256": "02f08897e4aa99ecc4ec1893d61d0c26d0c5e62e09af26f175087455e9b68e01"
+        },
+        {
+          "path": "references/email-types.md",
+          "kind": "reference",
+          "sizeBytes": 14250,
+          "sha256": "a5dd4f0555a7b21d2ff426948d15657825b9d16265652563f5e272d2e1879bfd"
+        },
+        {
+          "path": "references/sequence-templates.md",
+          "kind": "reference",
+          "sizeBytes": 3909,
+          "sha256": "f8f318f10e29abcd009cbee29e2bd178981d96c973099b508d30af6c10ab8d79"
+        }
+      ],
+      "contentHash": "sha256:688f469fd359906402ce58a5e16ef9a8736b04ad6b50206bf03c40d0e36bef2b",
+      "source": {
+        "type": "github",
+        "hostname": "github.com",
+        "owner": "coreyhaines31",
+        "repo": "marketingskills",
+        "ref": "main",
+        "commit": "e85f3cbc2e4a79bf33b2a12e9bdd9087d414735b",
+        "path": "skills/emails",
+        "url": "https://github.com/coreyhaines31/marketingskills/tree/main/skills/emails"
+      }
+    },
+    {
+      "id": "paperclipai:optional:marketing:events",
+      "key": "paperclipai/optional/marketing/events",
+      "kind": "optional",
+      "category": "marketing",
+      "slug": "events",
+      "name": "events",
+      "description": "When the user wants to plan, run, sponsor, speak at, or get pipeline from events — webinars, conferences, trade shows, meetups, dinners, workshops, virtual summits, or user conferences.",
+      "path": "catalog/optional/marketing/events",
+      "entrypoint": "SKILL.md",
+      "trustLevel": "markdown_only",
+      "compatibility": "compatible",
+      "defaultInstall": false,
+      "recommendedForRoles": [
+        "marketer"
+      ],
+      "requires": [],
+      "tags": [
+        "marketing",
+        "events"
+      ],
+      "files": [
+        {
+          "path": "SKILL.md",
+          "kind": "skill",
+          "sizeBytes": 12140,
+          "sha256": "2861ad31d71db0f9fd067303993d3386958eba57799aa9ece902163244dcdfbd"
+        },
+        {
+          "path": "references/event-portfolio-strategy.md",
+          "kind": "reference",
+          "sizeBytes": 7981,
+          "sha256": "460429f1d0cfa50ccab66593306e68e11a73f2238f5719502f833b88a35fd4f1"
+        },
+        {
+          "path": "references/speaking.md",
+          "kind": "reference",
+          "sizeBytes": 5348,
+          "sha256": "c5b04daf23d1e884132877e0d0b3ea9d036bc7b3e002f4c78c8f0f38c99cf1e9"
+        },
+        {
+          "path": "references/sponsorship-roi.md",
+          "kind": "reference",
+          "sizeBytes": 6243,
+          "sha256": "fbf4d70b0224c4dd0b6af7c8e2ec5b15b01d80768fa251e0ff4d5e03e8be4636"
+        },
+        {
+          "path": "references/webinar-funnel.md",
+          "kind": "reference",
+          "sizeBytes": 8191,
+          "sha256": "cc66ed229d890d19dc3b212d24ee45f9b2a3b5afa0c7a69da10c70c81255bcd8"
+        }
+      ],
+      "contentHash": "sha256:7ad223eae6f850343994d56bd4c725db0bdcdb2b59bf65a32b588b5971b66d57",
+      "source": {
+        "type": "github",
+        "hostname": "github.com",
+        "owner": "coreyhaines31",
+        "repo": "marketingskills",
+        "ref": "main",
+        "commit": "e85f3cbc2e4a79bf33b2a12e9bdd9087d414735b",
+        "path": "skills/events",
+        "url": "https://github.com/coreyhaines31/marketingskills/tree/main/skills/events"
+      }
+    },
+    {
+      "id": "paperclipai:optional:marketing:free-tools",
+      "key": "paperclipai/optional/marketing/free-tools",
+      "kind": "optional",
+      "category": "marketing",
+      "slug": "free-tools",
+      "name": "free-tools",
+      "description": "When the user wants to plan, evaluate, or build a free tool for marketing purposes — lead generation, SEO value, or brand awareness.",
+      "path": "catalog/optional/marketing/free-tools",
+      "entrypoint": "SKILL.md",
+      "trustLevel": "markdown_only",
+      "compatibility": "compatible",
+      "defaultInstall": false,
+      "recommendedForRoles": [
+        "marketer"
+      ],
+      "requires": [],
+      "tags": [
+        "marketing",
+        "free-tools",
+        "growth"
+      ],
+      "files": [
+        {
+          "path": "SKILL.md",
+          "kind": "skill",
+          "sizeBytes": 7404,
+          "sha256": "77b08d1c534fa3d4513c63df51b7efe165c4d6997500f3d97f5d1ef4e0e6950b"
+        },
+        {
+          "path": "references/tool-benchmarks.md",
+          "kind": "reference",
+          "sizeBytes": 4814,
+          "sha256": "7416869dba463a40341e62d3dff70374c0ce6aafee9948ea6d10d44ed4ea82f1"
+        },
+        {
+          "path": "references/tool-types.md",
+          "kind": "reference",
+          "sizeBytes": 4012,
+          "sha256": "3869418a784ec94e95528dbe3f39cd2571cff6f7649e5e0be28d675be61d5a3f"
+        }
+      ],
+      "contentHash": "sha256:47f32dd558b97a0cae47e783eb9ae26f90bf8b12688c2999dbbd81d27a953d86",
+      "source": {
+        "type": "github",
+        "hostname": "github.com",
+        "owner": "coreyhaines31",
+        "repo": "marketingskills",
+        "ref": "main",
+        "commit": "e85f3cbc2e4a79bf33b2a12e9bdd9087d414735b",
+        "path": "skills/free-tools",
+        "url": "https://github.com/coreyhaines31/marketingskills/tree/main/skills/free-tools"
+      }
+    },
+    {
+      "id": "paperclipai:optional:marketing:image",
+      "key": "paperclipai/optional/marketing/image",
+      "kind": "optional",
+      "category": "marketing",
+      "slug": "image",
+      "name": "image",
+      "description": "When the user wants to create, generate, edit, or optimize images for marketing — blog heroes, social graphics, product mockups, profile banners, listing visuals, or brand assets.",
+      "path": "catalog/optional/marketing/image",
+      "entrypoint": "SKILL.md",
+      "trustLevel": "markdown_only",
+      "compatibility": "compatible",
+      "defaultInstall": false,
+      "recommendedForRoles": [
+        "marketer",
+        "designer"
+      ],
+      "requires": [],
+      "tags": [
+        "marketing",
+        "image",
+        "creative"
+      ],
+      "files": [
+        {
+          "path": "SKILL.md",
+          "kind": "skill",
+          "sizeBytes": 15996,
+          "sha256": "a03da6dd4aed940f2fb8df1337a8dbe0f4108b3bef864e996f759fa4d94e2600"
+        },
+        {
+          "path": "references/ai-image-prompting.md",
+          "kind": "reference",
+          "sizeBytes": 8161,
+          "sha256": "d69aee48af3727479c7802536a81c9bc04ac3579aa6e9c16c4154859fa7b2c65"
+        }
+      ],
+      "contentHash": "sha256:52f0f868a94173241ab8065bc96d390559278b0cdef5458ce575481574d58bf6",
+      "source": {
+        "type": "github",
+        "hostname": "github.com",
+        "owner": "coreyhaines31",
+        "repo": "marketingskills",
+        "ref": "main",
+        "commit": "e85f3cbc2e4a79bf33b2a12e9bdd9087d414735b",
+        "path": "skills/image",
+        "url": "https://github.com/coreyhaines31/marketingskills/tree/main/skills/image"
+      }
+    },
+    {
+      "id": "paperclipai:optional:marketing:influencer-marketing",
+      "key": "paperclipai/optional/marketing/influencer-marketing",
+      "kind": "optional",
+      "category": "marketing",
+      "slug": "influencer-marketing",
+      "name": "influencer-marketing",
+      "description": "When the user wants to run influencer, creator, or ambassador partnerships to promote their product — finding and vetting partners, structuring deals, briefing creators, disclosure compliance, and measuring ROI.",
+      "path": "catalog/optional/marketing/influencer-marketing",
+      "entrypoint": "SKILL.md",
+      "trustLevel": "markdown_only",
+      "compatibility": "compatible",
+      "defaultInstall": false,
+      "recommendedForRoles": [
+        "marketer"
+      ],
+      "requires": [],
+      "tags": [
+        "marketing",
+        "influencer-marketing",
+        "influencers"
+      ],
+      "files": [
+        {
+          "path": "SKILL.md",
+          "kind": "skill",
+          "sizeBytes": 20350,
+          "sha256": "219b2c3f68ac0416ad254a6113d2ab8023d9f2e1e3b5f9d1da94c9f2598060d1"
+        },
+        {
+          "path": "references/newsletter-sponsorships.md",
+          "kind": "reference",
+          "sizeBytes": 6166,
+          "sha256": "57b9dc26204957bf9bd53ea3e4f739bafe949b1336c3e227ce3a0b563776e46d"
+        },
+        {
+          "path": "references/paid-ads-creator-program.md",
+          "kind": "reference",
+          "sizeBytes": 7150,
+          "sha256": "85b6fde260cd1e0950dc6c54982577ed90a0262a62a7753626c0f888d0cc0a2e"
+        },
+        {
+          "path": "references/telegram-channels.md",
+          "kind": "reference",
+          "sizeBytes": 8229,
+          "sha256": "3a820b156847fe748ae47c1c783e39d6436493c2b55f428cfa19f69d78b5d8d5"
+        },
+        {
+          "path": "references/ugc-creator-program.md",
+          "kind": "reference",
+          "sizeBytes": 8908,
+          "sha256": "8bb429d14c0e6a7f631a79652152de67a19e071c82d9a7b55543fd0cc7ad038b"
+        }
+      ],
+      "contentHash": "sha256:196e93188cceda98333f1099e26eeca00c2c7a6407555b0f3cb33a199bd704c3",
+      "source": {
+        "type": "github",
+        "hostname": "github.com",
+        "owner": "coreyhaines31",
+        "repo": "marketingskills",
+        "ref": "main",
+        "commit": "e85f3cbc2e4a79bf33b2a12e9bdd9087d414735b",
+        "path": "skills/influencer-marketing",
+        "url": "https://github.com/coreyhaines31/marketingskills/tree/main/skills/influencer-marketing"
+      }
+    },
+    {
+      "id": "paperclipai:optional:marketing:launch",
+      "key": "paperclipai/optional/marketing/launch",
+      "kind": "optional",
+      "category": "marketing",
+      "slug": "launch",
+      "name": "launch",
+      "description": "When the user wants to plan a product launch, feature announcement, or release strategy.",
+      "path": "catalog/optional/marketing/launch",
+      "entrypoint": "SKILL.md",
+      "trustLevel": "markdown_only",
+      "compatibility": "compatible",
+      "defaultInstall": false,
+      "recommendedForRoles": [
+        "marketer"
+      ],
+      "requires": [],
+      "tags": [
+        "marketing",
+        "launch",
+        "gtm"
+      ],
+      "files": [
+        {
+          "path": "SKILL.md",
+          "kind": "skill",
+          "sizeBytes": 15727,
+          "sha256": "30537ad3f4b0429fcc4053cf6bf04bc0dee316b9e5f7e7ec2e74a9bc44a9ead7"
+        },
+        {
+          "path": "references/shipped-changes.md",
+          "kind": "reference",
+          "sizeBytes": 4703,
+          "sha256": "873c79d17d3f428147348a9cc2a5e3d6bb8282cf13fc8a143d539840e8abaa96"
+        },
+        {
+          "path": "references/site-launch-qa.md",
+          "kind": "reference",
+          "sizeBytes": 3793,
+          "sha256": "aac0447d0d518468e86e971f4e781b61ee05e81dada402e2edcef709cc6418ab"
+        }
+      ],
+      "contentHash": "sha256:9067f60cff48037c95b02220b842bb4278229ec29d68dfbe888ea5b2417e5756",
+      "source": {
+        "type": "github",
+        "hostname": "github.com",
+        "owner": "coreyhaines31",
+        "repo": "marketingskills",
+        "ref": "main",
+        "commit": "e85f3cbc2e4a79bf33b2a12e9bdd9087d414735b",
+        "path": "skills/launch",
+        "url": "https://github.com/coreyhaines31/marketingskills/tree/main/skills/launch"
+      }
+    },
+    {
+      "id": "paperclipai:optional:marketing:lead-magnets",
+      "key": "paperclipai/optional/marketing/lead-magnets",
+      "kind": "optional",
+      "category": "marketing",
+      "slug": "lead-magnets",
+      "name": "lead-magnets",
+      "description": "When the user wants to create, plan, or optimize a lead magnet for email capture or lead generation.",
+      "path": "catalog/optional/marketing/lead-magnets",
+      "entrypoint": "SKILL.md",
+      "trustLevel": "markdown_only",
+      "compatibility": "compatible",
+      "defaultInstall": false,
+      "recommendedForRoles": [
+        "marketer"
+      ],
+      "requires": [],
+      "tags": [
+        "marketing",
+        "lead-magnets",
+        "demand-gen"
+      ],
+      "files": [
+        {
+          "path": "SKILL.md",
+          "kind": "skill",
+          "sizeBytes": 11274,
+          "sha256": "190a64c72a9a36fdde3a6b0888798e1bb9dd4e7406b00a6bbf90dba5e64c047b"
+        },
+        {
+          "path": "references/benchmarks.md",
+          "kind": "reference",
+          "sizeBytes": 4234,
+          "sha256": "becdf4bcde17e788ead10794c797294548c712ea1074e042336da93433a61187"
+        },
+        {
+          "path": "references/content-to-skill-corpus-design.md",
+          "kind": "reference",
+          "sizeBytes": 4993,
+          "sha256": "a6db00a8298b2ce52965c40b57c01120a0f9ff4caf5ca55ede81bc2f242bae56"
+        },
+        {
+          "path": "references/content-to-skill-release.md",
+          "kind": "reference",
+          "sizeBytes": 4792,
+          "sha256": "87bcc9218232b73b824e8cebac1e64deacffa755779ce2cc0db799c92873c891"
+        },
+        {
+          "path": "references/content-to-skill.md",
+          "kind": "reference",
+          "sizeBytes": 8406,
+          "sha256": "dacbfff6d538ee37167f20034165dbf3a273d8bd1607def6450c649e40ebafa9"
+        },
+        {
+          "path": "references/format-guide.md",
+          "kind": "reference",
+          "sizeBytes": 5826,
+          "sha256": "401f65d709cefbd7ee2df11273e0b616ec50e37e71d914556c800067fdcdef8e"
+        }
+      ],
+      "contentHash": "sha256:811169bed03040bf4051b34d5a41c6c998dee35e606bc335013cae14be3eddde",
+      "source": {
+        "type": "github",
+        "hostname": "github.com",
+        "owner": "coreyhaines31",
+        "repo": "marketingskills",
+        "ref": "main",
+        "commit": "e85f3cbc2e4a79bf33b2a12e9bdd9087d414735b",
+        "path": "skills/lead-magnets",
+        "url": "https://github.com/coreyhaines31/marketingskills/tree/main/skills/lead-magnets"
+      }
+    },
+    {
+      "id": "paperclipai:optional:marketing:link-building",
+      "key": "paperclipai/optional/marketing/link-building",
+      "kind": "optional",
+      "category": "marketing",
+      "slug": "link-building",
+      "name": "link-building",
+      "description": "When the user wants to earn backlinks or third-party mentions that lift rankings and AI citations.",
+      "path": "catalog/optional/marketing/link-building",
+      "entrypoint": "SKILL.md",
+      "trustLevel": "markdown_only",
+      "compatibility": "compatible",
+      "defaultInstall": false,
+      "recommendedForRoles": [
+        "marketer"
+      ],
+      "requires": [],
+      "tags": [
+        "marketing",
+        "link-building",
+        "seo"
+      ],
+      "files": [
+        {
+          "path": "SKILL.md",
+          "kind": "skill",
+          "sizeBytes": 13842,
+          "sha256": "1ba02b7d18057351f654bdd9c4105dfbcbd94e19cf973f5ca1db6115d96ea321"
+        },
+        {
+          "path": "references/prospecting-and-outreach.md",
+          "kind": "reference",
+          "sizeBytes": 4618,
+          "sha256": "06891dbd25cf5b82d7e0cc8093e174d0eef32a3fdebd34f8dcf4bd3c2f366a34"
+        },
+        {
+          "path": "references/risk-policy.md",
+          "kind": "reference",
+          "sizeBytes": 4672,
+          "sha256": "e4e1b74c1e7c782f0c24b4ef0c68acd5969ecb5e5fb3b66840f665d414e1d3a1"
+        },
+        {
+          "path": "references/tactics.md",
+          "kind": "reference",
+          "sizeBytes": 7212,
+          "sha256": "a03af97971dbfcf92000fd4c9c874e9a2af6e035ef135390b0dedfbc620487fc"
+        }
+      ],
+      "contentHash": "sha256:96f8fda605015890c779c1b6bb3ab721b72dced5c1ffc31685abbf4d8f475541",
+      "source": {
+        "type": "github",
+        "hostname": "github.com",
+        "owner": "coreyhaines31",
+        "repo": "marketingskills",
+        "ref": "main",
+        "commit": "e85f3cbc2e4a79bf33b2a12e9bdd9087d414735b",
+        "path": "skills/link-building",
+        "url": "https://github.com/coreyhaines31/marketingskills/tree/main/skills/link-building"
+      }
+    },
+    {
+      "id": "paperclipai:optional:marketing:marketing-council",
+      "key": "paperclipai/optional/marketing/marketing-council",
+      "kind": "optional",
+      "category": "marketing",
+      "slug": "marketing-council",
+      "name": "marketing-council",
+      "description": "When the user wants multiple expert perspectives on a marketing question — a simulated board of advisors staffed by legendary marketers (Seth Godin, David Ogilvy, Eugene Schwartz, April Dunford, Rory Sutherland, Alex Hormozi, Byron Sharp, and more).",
+      "path": "catalog/optional/marketing/marketing-council",
+      "entrypoint": "SKILL.md",
+      "trustLevel": "markdown_only",
+      "compatibility": "compatible",
+      "defaultInstall": false,
+      "recommendedForRoles": [
+        "marketer"
+      ],
+      "requires": [],
+      "tags": [
+        "marketing",
+        "marketing-council",
+        "strategy"
+      ],
+      "files": [
+        {
+          "path": "SKILL.md",
+          "kind": "skill",
+          "sizeBytes": 12480,
+          "sha256": "0b94358427c344e1f5f50169770cce44e0b065ec8b05fc887a800daed008ac31"
+        },
+        {
+          "path": "references/advisor-template.md",
+          "kind": "reference",
+          "sizeBytes": 2112,
+          "sha256": "e748d9f91d5b663c3cc0165c83a117833b0392fbf6c77b5a2107c49b0edd3c51"
+        },
+        {
+          "path": "references/advisors/alex-hormozi.md",
+          "kind": "reference",
+          "sizeBytes": 3987,
+          "sha256": "18975ae41e73d1a95779f0bcffde5bd42f91bbb96a208d55a3fa4c0095a421da"
+        },
+        {
+          "path": "references/advisors/ann-handley.md",
+          "kind": "reference",
+          "sizeBytes": 4064,
+          "sha256": "b0ad24ef9ee2965a1ee35a2208ea65897ef684baafb65557e2cc3b0aa9e5ca4e"
+        },
+        {
+          "path": "references/advisors/april-dunford.md",
+          "kind": "reference",
+          "sizeBytes": 4410,
+          "sha256": "7abc28f3d3043f72bf8ca710c0390de4014486cffb1e6e82029581aa7ef5212f"
+        },
+        {
+          "path": "references/advisors/byron-sharp.md",
+          "kind": "reference",
+          "sizeBytes": 4790,
+          "sha256": "fe99260a03ca0123ae1075108cb6466b0bd60ccac1b0b8d64d7b7bf1a78e17af"
+        },
+        {
+          "path": "references/advisors/claude-hopkins.md",
+          "kind": "reference",
+          "sizeBytes": 3789,
+          "sha256": "93366c6d6b51407fdf33308537f31e7e8667a89fecd9fa1b8ea9ac398fb80942"
+        },
+        {
+          "path": "references/advisors/david-ogilvy.md",
+          "kind": "reference",
+          "sizeBytes": 4096,
+          "sha256": "868d96f850eff22a923224bf7f3b5344abdb5d4c130b77e46e4142c630c6edba"
+        },
+        {
+          "path": "references/advisors/eugene-schwartz.md",
+          "kind": "reference",
+          "sizeBytes": 4184,
+          "sha256": "fef9cc5ece0ad84d5542721f9346b18e5aa44e9f1a10e62f1ed5b7e05f6ba5a5"
+        },
+        {
+          "path": "references/advisors/gary-halbert.md",
+          "kind": "reference",
+          "sizeBytes": 3968,
+          "sha256": "0db92e69da50a6372a5dc1feae2a6824fff9f1b53df92094745810c3d8375d8b"
+        },
+        {
+          "path": "references/advisors/gary-vaynerchuk.md",
+          "kind": "reference",
+          "sizeBytes": 4399,
+          "sha256": "256f5425b602375c83d4a6e677c7ecc97e60f3dead83f8192802b6c0c65e57e4"
+        },
+        {
+          "path": "references/advisors/rory-sutherland.md",
+          "kind": "reference",
+          "sizeBytes": 4732,
+          "sha256": "07a726d3f66def9722b5b3c52acc37173edc50ac880f8d1cb072424bd9b5f235"
+        },
+        {
+          "path": "references/advisors/russell-brunson.md",
+          "kind": "reference",
+          "sizeBytes": 4331,
+          "sha256": "ae0cb018f48a734ec64fd087fd469a7e8170f5d2a2fea7623dfd58f35cfe739e"
+        },
+        {
+          "path": "references/advisors/seth-godin.md",
+          "kind": "reference",
+          "sizeBytes": 4026,
+          "sha256": "02cb1b64b1fff7eecc6ff9769b60c23ef68b03017fd3d82b1a5b544009dd79c0"
+        }
+      ],
+      "contentHash": "sha256:e436b90da3fa855bbef8fbb00a37f4921cc850ed024a1234f6a3ee9876968852",
+      "source": {
+        "type": "github",
+        "hostname": "github.com",
+        "owner": "coreyhaines31",
+        "repo": "marketingskills",
+        "ref": "main",
+        "commit": "e85f3cbc2e4a79bf33b2a12e9bdd9087d414735b",
+        "path": "skills/marketing-council",
+        "url": "https://github.com/coreyhaines31/marketingskills/tree/main/skills/marketing-council"
+      }
+    },
+    {
+      "id": "paperclipai:optional:marketing:marketing-ideas",
+      "key": "paperclipai/optional/marketing/marketing-ideas",
+      "kind": "optional",
+      "category": "marketing",
+      "slug": "marketing-ideas",
+      "name": "marketing-ideas",
+      "description": "When the user needs marketing ideas, inspiration, or strategies for their SaaS or software product.",
+      "path": "catalog/optional/marketing/marketing-ideas",
+      "entrypoint": "SKILL.md",
+      "trustLevel": "markdown_only",
+      "compatibility": "compatible",
+      "defaultInstall": false,
+      "recommendedForRoles": [
+        "marketer"
+      ],
+      "requires": [],
+      "tags": [
+        "marketing",
+        "marketing-ideas",
+        "ideation"
+      ],
+      "files": [
+        {
+          "path": "SKILL.md",
+          "kind": "skill",
+          "sizeBytes": 5789,
+          "sha256": "d5ea46d2d2eb2fb039494e8b545550a6bd5b5b9aedc5e65a228ac514deb018ff"
+        },
+        {
+          "path": "references/guerrilla-marketing.md",
+          "kind": "reference",
+          "sizeBytes": 5033,
+          "sha256": "07b0534b579ce1916a60e79ab426cd936e78b4b261802d6486ad145f7bf552ae"
+        },
+        {
+          "path": "references/ideas-by-category.md",
+          "kind": "reference",
+          "sizeBytes": 15400,
+          "sha256": "8b6aa55b3255616ea80c0ea45eca8f2bb70e528510ed76f6392e71475dd0c09b"
+        }
+      ],
+      "contentHash": "sha256:8b397d55a7411aa3299495da4cdffb3b54b33c472505c95b3508b9a444c0571d",
+      "source": {
+        "type": "github",
+        "hostname": "github.com",
+        "owner": "coreyhaines31",
+        "repo": "marketingskills",
+        "ref": "main",
+        "commit": "e85f3cbc2e4a79bf33b2a12e9bdd9087d414735b",
+        "path": "skills/marketing-ideas",
+        "url": "https://github.com/coreyhaines31/marketingskills/tree/main/skills/marketing-ideas"
+      }
+    },
+    {
+      "id": "paperclipai:optional:marketing:marketing-loops",
+      "key": "paperclipai/optional/marketing/marketing-loops",
+      "kind": "optional",
+      "category": "marketing",
+      "slug": "marketing-loops",
+      "name": "marketing-loops",
+      "description": "When the user wants to set up a recurring, self-running marketing workflow — a repeatable loop an AI agent runs on a cadence (weekly, daily, on a trigger) rather than a one-off task.",
+      "path": "catalog/optional/marketing/marketing-loops",
+      "entrypoint": "SKILL.md",
+      "trustLevel": "markdown_only",
+      "compatibility": "compatible",
+      "defaultInstall": false,
+      "recommendedForRoles": [
+        "marketer"
+      ],
+      "requires": [],
+      "tags": [
+        "marketing",
+        "marketing-loops",
+        "growth"
+      ],
+      "files": [
+        {
+          "path": "SKILL.md",
+          "kind": "skill",
+          "sizeBytes": 9964,
+          "sha256": "0257b2d5e0ce8664af9fb2d4abc9e3265744931b1d6818610437bb4812ad9fd2"
+        },
+        {
+          "path": "references/loop-catalog.md",
+          "kind": "reference",
+          "sizeBytes": 64764,
+          "sha256": "029298a9e060fce7e88f48adac0dc164846c4161d2eee9841787935ca6ab5bf1"
+        },
+        {
+          "path": "references/loop-guardrails.md",
+          "kind": "reference",
+          "sizeBytes": 4998,
+          "sha256": "a93cdb67d28773d72e789c937a26f3062129c8a0076018ac24269d52e7a31e46"
+        },
+        {
+          "path": "references/loop-orchestration.md",
+          "kind": "reference",
+          "sizeBytes": 5317,
+          "sha256": "3bfea32fe8b7be2d8972c3565864b2c7fcee2681ac4bbcad93d5ff0baf49cb92"
+        },
+        {
+          "path": "references/loop-state.md",
+          "kind": "reference",
+          "sizeBytes": 5868,
+          "sha256": "4ffe822756019407babc4a3cb337be160362ad88b41919cb70d1d039a76e2c15"
+        },
+        {
+          "path": "references/loop-template.md",
+          "kind": "reference",
+          "sizeBytes": 5122,
+          "sha256": "695fde57b9b0735e49b5fc718b0e8eb726808c08b19bea89056f8913cf1bff26"
+        },
+        {
+          "path": "references/outbound-operator.md",
+          "kind": "reference",
+          "sizeBytes": 5001,
+          "sha256": "113fae79e0852c68b929cae8711c05f9e5e53abfdfa3828553cdd1626e2d4fce"
+        },
+        {
+          "path": "references/seo-operator.md",
+          "kind": "reference",
+          "sizeBytes": 8377,
+          "sha256": "5b3b6c3bbc2af2f07d31bc23eefe2558a0b3aca23c8f88f156a4cff14d2f5a45"
+        }
+      ],
+      "contentHash": "sha256:b3d08eb1f7a50ab92d6998e0e29812bae972bdc5fcf592a48d12a9a7c469d4a4",
+      "source": {
+        "type": "github",
+        "hostname": "github.com",
+        "owner": "coreyhaines31",
+        "repo": "marketingskills",
+        "ref": "main",
+        "commit": "e85f3cbc2e4a79bf33b2a12e9bdd9087d414735b",
+        "path": "skills/marketing-loops",
+        "url": "https://github.com/coreyhaines31/marketingskills/tree/main/skills/marketing-loops"
+      }
+    },
+    {
+      "id": "paperclipai:optional:marketing:marketing-plan",
+      "key": "paperclipai/optional/marketing/marketing-plan",
+      "kind": "optional",
+      "category": "marketing",
+      "slug": "marketing-plan",
+      "name": "marketing-plan",
+      "description": "When the user needs a comprehensive marketing plan for a client, a company they advise, or their own product.",
+      "path": "catalog/optional/marketing/marketing-plan",
+      "entrypoint": "SKILL.md",
+      "trustLevel": "markdown_only",
+      "compatibility": "compatible",
+      "defaultInstall": false,
+      "recommendedForRoles": [
+        "marketer"
+      ],
+      "requires": [],
+      "tags": [
+        "marketing",
+        "marketing-plan",
+        "strategy"
+      ],
+      "files": [
+        {
+          "path": "SKILL.md",
+          "kind": "skill",
+          "sizeBytes": 25489,
+          "sha256": "2b75dfae852bdb61fd96eebe3d2b373f99f67c86ff830f796310f662ba8906e8"
+        },
+        {
+          "path": "references/aarrr-framework.md",
+          "kind": "reference",
+          "sizeBytes": 10766,
+          "sha256": "5c7bf583c2aa62e193789b6b1a88a978bf3ba9dc0c8c6653b53f7f62c0c1a0e3"
+        },
+        {
+          "path": "references/budget-planning.md",
+          "kind": "reference",
+          "sizeBytes": 10265,
+          "sha256": "4351fa1712b66e3e527b71ec9a2e01a68edb43e77b6d310bb424756c6d1a17f7"
+        },
+        {
+          "path": "references/client-types.md",
+          "kind": "reference",
+          "sizeBytes": 11386,
+          "sha256": "06e3d0a6f3e9b7195a8c0b43d5186769d1554d1dfd8b1212aca220f9ce09fc01"
+        },
+        {
+          "path": "references/current-state-rubric.md",
+          "kind": "reference",
+          "sizeBytes": 11656,
+          "sha256": "8ab1d4a4d16ec01c2bf61d83807c0abd857aadd82f3eeaf4e4842b4bbeff1f03"
+        },
+        {
+          "path": "references/example-quietude.md",
+          "kind": "reference",
+          "sizeBytes": 69116,
+          "sha256": "63c002257ee1f6eaeb7c99c4ab9c650ea8bd8f7586c75e4565c2322faef82a04"
+        },
+        {
+          "path": "references/funding-stage-unlocks.md",
+          "kind": "reference",
+          "sizeBytes": 9797,
+          "sha256": "49f073653ac32dd42b7e5e10c3deabd7adae8120c41baf0cf813ec20164c6488"
+        },
+        {
+          "path": "references/growth-patterns.md",
+          "kind": "reference",
+          "sizeBytes": 13419,
+          "sha256": "fafa84b8c3a62ed9c33c30fc25c7422e0d87b935de990d0acbf91889e1a053de"
+        },
+        {
+          "path": "references/idea-cross-reference.md",
+          "kind": "reference",
+          "sizeBytes": 13418,
+          "sha256": "350fa9c6f4cb4cd8f23698adb8479ae94cd6564a06b2b7cfcdf1430448e68d2f"
+        },
+        {
+          "path": "references/market-sizing.md",
+          "kind": "reference",
+          "sizeBytes": 9820,
+          "sha256": "e991bf2f38948ea4e829c74fea83f367fbcacb4d6c2ca0f4ca89fc8b9fb2bc0e"
+        },
+        {
+          "path": "references/measurement-framework.md",
+          "kind": "reference",
+          "sizeBytes": 10845,
+          "sha256": "93d9bf9d9e624a6031a27ce61cf1617e3aa5a8fff57e1c6f80194f847234b745"
+        },
+        {
+          "path": "references/methodology.md",
+          "kind": "reference",
+          "sizeBytes": 16806,
+          "sha256": "a5ae96ee26c800aa40eafcb525139e3dd49b2c1d24005fdcc038287ad25ede7e"
+        },
+        {
+          "path": "references/ops-stack-mapping.md",
+          "kind": "reference",
+          "sizeBytes": 12221,
+          "sha256": "9a506816d87ed176c0578d13bbf25c5f8398872d9002b3589e2dfa42ad17c907"
+        },
+        {
+          "path": "references/plan-template.md",
+          "kind": "reference",
+          "sizeBytes": 18735,
+          "sha256": "bce84c2c3c31c9163a0849a1371aadb13f6ab8b29402e64b7d5b95c316a79656"
+        },
+        {
+          "path": "references/team-and-agency-model.md",
+          "kind": "reference",
+          "sizeBytes": 14537,
+          "sha256": "0c5e55c0992de4d5d24cd299eb46765a8986cb204ebd7c65bce32c868ae0d5f7"
+        }
+      ],
+      "contentHash": "sha256:9b78311293eb99003ba2c7da131d457e34463b80df6f422676222f469e77d8b5",
+      "source": {
+        "type": "github",
+        "hostname": "github.com",
+        "owner": "coreyhaines31",
+        "repo": "marketingskills",
+        "ref": "main",
+        "commit": "e85f3cbc2e4a79bf33b2a12e9bdd9087d414735b",
+        "path": "skills/marketing-plan",
+        "url": "https://github.com/coreyhaines31/marketingskills/tree/main/skills/marketing-plan"
+      }
+    },
+    {
+      "id": "paperclipai:optional:marketing:marketing-psychology",
+      "key": "paperclipai/optional/marketing/marketing-psychology",
+      "kind": "optional",
+      "category": "marketing",
+      "slug": "marketing-psychology",
+      "name": "marketing-psychology",
+      "description": "When the user wants to apply psychological principles, mental models, or behavioral science to marketing.",
+      "path": "catalog/optional/marketing/marketing-psychology",
+      "entrypoint": "SKILL.md",
+      "trustLevel": "markdown_only",
+      "compatibility": "compatible",
+      "defaultInstall": false,
+      "recommendedForRoles": [
+        "marketer"
+      ],
+      "requires": [],
+      "tags": [
+        "marketing",
+        "marketing-psychology",
+        "psychology"
+      ],
+      "files": [
+        {
+          "path": "SKILL.md",
+          "kind": "skill",
+          "sizeBytes": 21884,
+          "sha256": "573bbe4f6e300e7fb75299e314f56e26382d284782caa2ae0e0f33eb2e646548"
+        }
+      ],
+      "contentHash": "sha256:dfaa6a6bdf706c903cfe4f2114c669304adeca2eed7cbf57b76432d0417c3c9f",
+      "source": {
+        "type": "github",
+        "hostname": "github.com",
+        "owner": "coreyhaines31",
+        "repo": "marketingskills",
+        "ref": "main",
+        "commit": "e85f3cbc2e4a79bf33b2a12e9bdd9087d414735b",
+        "path": "skills/marketing-psychology",
+        "url": "https://github.com/coreyhaines31/marketingskills/tree/main/skills/marketing-psychology"
+      }
+    },
+    {
+      "id": "paperclipai:optional:marketing:offers",
+      "key": "paperclipai/optional/marketing/offers",
+      "kind": "optional",
+      "category": "marketing",
+      "slug": "offers",
+      "name": "offers",
+      "description": "When the user wants to design, construct, or improve an offer — the thing they actually sell — including value framing, bonus stacking, guarantee design, scarcity/urgency, naming, and payment structure.",
+      "path": "catalog/optional/marketing/offers",
+      "entrypoint": "SKILL.md",
+      "trustLevel": "markdown_only",
+      "compatibility": "compatible",
+      "defaultInstall": false,
+      "recommendedForRoles": [
+        "marketer"
+      ],
+      "requires": [],
+      "tags": [
+        "marketing",
+        "offers",
+        "positioning"
+      ],
+      "files": [
+        {
+          "path": "SKILL.md",
+          "kind": "skill",
+          "sizeBytes": 10141,
+          "sha256": "40f4fa702b982dbda83c2592e2546afe6d919e95384eedc0ac8b211c728e05b2"
+        },
+        {
+          "path": "references/bonus-stacking.md",
+          "kind": "reference",
+          "sizeBytes": 7758,
+          "sha256": "872abbfd14501fd0b097f5ae62b9931571152d43b6690b57df5e65ab48aedfbd"
+        },
+        {
+          "path": "references/examples.md",
+          "kind": "reference",
+          "sizeBytes": 10203,
+          "sha256": "f1033e181845effe8c659800aaf68523686be6bdcb1c5e256c87008e8ea638af"
+        },
+        {
+          "path": "references/guarantee-design.md",
+          "kind": "reference",
+          "sizeBytes": 8173,
+          "sha256": "daa421558b664fe5a335c6cb764d47755799662c79606551a848bba864255c29"
+        },
+        {
+          "path": "references/offer-anatomy.md",
+          "kind": "reference",
+          "sizeBytes": 8857,
+          "sha256": "0810080788bedc9b40dc0aba53109991aa816397f4b45e813289985eb8a64cad"
+        },
+        {
+          "path": "references/offer-formats.md",
+          "kind": "reference",
+          "sizeBytes": 10557,
+          "sha256": "667d87198dcd3b5892151d33a917919141bc718822a2a4add3e9c100891755bb"
+        },
+        {
+          "path": "references/saas-offers.md",
+          "kind": "reference",
+          "sizeBytes": 7869,
+          "sha256": "1b21638f0fd2e623f638c13f4b82e2d8c8ecb79d1324f0183f8322db5f5ceea3"
+        },
+        {
+          "path": "references/scarcity-urgency.md",
+          "kind": "reference",
+          "sizeBytes": 7106,
+          "sha256": "4abe51a54188e6c93feb6cface92abc5c8e03212b8ade5bd9366ed159ad3f8f8"
+        },
+        {
+          "path": "references/value-equation.md",
+          "kind": "reference",
+          "sizeBytes": 7883,
+          "sha256": "4610ff358be2be643e7783884e628f01e1e0c56915a7924e5ccb92c096121eff"
+        }
+      ],
+      "contentHash": "sha256:4da5dc9970e17abb3cf14f4a03bb676079494a815abd9497e90b8e1e0144d773",
+      "source": {
+        "type": "github",
+        "hostname": "github.com",
+        "owner": "coreyhaines31",
+        "repo": "marketingskills",
+        "ref": "main",
+        "commit": "e85f3cbc2e4a79bf33b2a12e9bdd9087d414735b",
+        "path": "skills/offers",
+        "url": "https://github.com/coreyhaines31/marketingskills/tree/main/skills/offers"
+      }
+    },
+    {
+      "id": "paperclipai:optional:marketing:onboarding",
+      "key": "paperclipai/optional/marketing/onboarding",
+      "kind": "optional",
+      "category": "marketing",
+      "slug": "onboarding",
+      "name": "onboarding",
+      "description": "When the user wants to optimize post-signup onboarding, user activation, first-run experience, or time-to-value.",
+      "path": "catalog/optional/marketing/onboarding",
+      "entrypoint": "SKILL.md",
+      "trustLevel": "markdown_only",
+      "compatibility": "compatible",
+      "defaultInstall": false,
+      "recommendedForRoles": [
+        "marketer",
+        "product-manager"
+      ],
+      "requires": [],
+      "tags": [
+        "marketing",
+        "onboarding",
+        "lifecycle"
+      ],
+      "files": [
+        {
+          "path": "SKILL.md",
+          "kind": "skill",
+          "sizeBytes": 11596,
+          "sha256": "61b808c85207e6567f39e5d6b7876fdad77b5f17f5811afcd8b28cfce6dcbe31"
+        },
+        {
+          "path": "references/activation-models.md",
+          "kind": "reference",
+          "sizeBytes": 4089,
+          "sha256": "e4d396e2dacfc19bfa33b8bfaaf8639e5a2c0b8a252bf52115ecd2561a2f35e4"
+        },
+        {
+          "path": "references/experiments.md",
+          "kind": "reference",
+          "sizeBytes": 7796,
+          "sha256": "b4caad0b50ca9483a6a79846d0b24a7bab62850b45a3f2232d73f78629468932"
+        },
+        {
+          "path": "references/minimum-path-to-value.md",
+          "kind": "reference",
+          "sizeBytes": 3152,
+          "sha256": "c2b7c71b8436a1456888a26b9c8892c33cd9e1b1bf758f6fd7282c00f87dcdc3"
+        }
+      ],
+      "contentHash": "sha256:e267fe8e4c1906c69338d8d8e49c615eaccf84a267004f87eb0e315cbfd28163",
+      "source": {
+        "type": "github",
+        "hostname": "github.com",
+        "owner": "coreyhaines31",
+        "repo": "marketingskills",
+        "ref": "main",
+        "commit": "e85f3cbc2e4a79bf33b2a12e9bdd9087d414735b",
+        "path": "skills/onboarding",
+        "url": "https://github.com/coreyhaines31/marketingskills/tree/main/skills/onboarding"
+      }
+    },
+    {
+      "id": "paperclipai:optional:marketing:paywalls",
+      "key": "paperclipai/optional/marketing/paywalls",
+      "kind": "optional",
+      "category": "marketing",
+      "slug": "paywalls",
+      "name": "paywalls",
+      "description": "When the user wants to create or optimize in-app paywalls, upgrade screens, upsell modals, or feature gates.",
+      "path": "catalog/optional/marketing/paywalls",
+      "entrypoint": "SKILL.md",
+      "trustLevel": "markdown_only",
+      "compatibility": "compatible",
+      "defaultInstall": false,
+      "recommendedForRoles": [
+        "marketer"
+      ],
+      "requires": [],
+      "tags": [
+        "marketing",
+        "paywalls",
+        "monetization"
+      ],
+      "files": [
+        {
+          "path": "SKILL.md",
+          "kind": "skill",
+          "sizeBytes": 5799,
+          "sha256": "d062c03f6b99e76ffaa367a1494ba80098b2033d4d74609b895373a024a8eac1"
+        },
+        {
+          "path": "references/experiments.md",
+          "kind": "reference",
+          "sizeBytes": 5419,
+          "sha256": "5a5760e23c4809ddbc123905e0073ebca2653e7edad29482db810b825d62bd19"
+        }
+      ],
+      "contentHash": "sha256:ce960f663a40da3860421986b03626fd36c2fc1b1da972fe0f13989d4ca331db",
+      "source": {
+        "type": "github",
+        "hostname": "github.com",
+        "owner": "coreyhaines31",
+        "repo": "marketingskills",
+        "ref": "main",
+        "commit": "e85f3cbc2e4a79bf33b2a12e9bdd9087d414735b",
+        "path": "skills/paywalls",
+        "url": "https://github.com/coreyhaines31/marketingskills/tree/main/skills/paywalls"
+      }
+    },
+    {
+      "id": "paperclipai:optional:marketing:popups",
+      "key": "paperclipai/optional/marketing/popups",
+      "kind": "optional",
+      "category": "marketing",
+      "slug": "popups",
+      "name": "popups",
+      "description": "When the user wants to create or optimize popups, modals, overlays, slide-ins, or banners for conversion purposes.",
+      "path": "catalog/optional/marketing/popups",
+      "entrypoint": "SKILL.md",
+      "trustLevel": "markdown_only",
+      "compatibility": "compatible",
+      "defaultInstall": false,
+      "recommendedForRoles": [
+        "marketer"
+      ],
+      "requires": [],
+      "tags": [
+        "marketing",
+        "popups",
+        "conversion"
+      ],
+      "files": [
+        {
+          "path": "SKILL.md",
+          "kind": "skill",
+          "sizeBytes": 11805,
+          "sha256": "6c66e7f923c1eebc7eb7b94971af2e8016d3b5316e14bb1ad4b15ed3522084ce"
+        }
+      ],
+      "contentHash": "sha256:4f35b93d4fcadc25a7a528b307ffca893faf42af7a70c35fc52a75915a6e86b1",
+      "source": {
+        "type": "github",
+        "hostname": "github.com",
+        "owner": "coreyhaines31",
+        "repo": "marketingskills",
+        "ref": "main",
+        "commit": "e85f3cbc2e4a79bf33b2a12e9bdd9087d414735b",
+        "path": "skills/popups",
+        "url": "https://github.com/coreyhaines31/marketingskills/tree/main/skills/popups"
+      }
+    },
+    {
+      "id": "paperclipai:optional:marketing:pricing",
+      "key": "paperclipai/optional/marketing/pricing",
+      "kind": "optional",
+      "category": "marketing",
+      "slug": "pricing",
+      "name": "pricing",
+      "description": "When the user wants help with pricing decisions, packaging, or monetization strategy.",
+      "path": "catalog/optional/marketing/pricing",
+      "entrypoint": "SKILL.md",
+      "trustLevel": "markdown_only",
+      "compatibility": "compatible",
+      "defaultInstall": false,
+      "recommendedForRoles": [
+        "marketer",
+        "product-manager"
+      ],
+      "requires": [],
+      "tags": [
+        "marketing",
+        "pricing",
+        "monetization"
+      ],
+      "files": [
+        {
+          "path": "SKILL.md",
+          "kind": "skill",
+          "sizeBytes": 13479,
+          "sha256": "b0318f64140e60a28d0cf71b1a6bf2aa214b96ef2bc3253c60d16ae480367d25"
+        },
+        {
+          "path": "references/pricing-models.md",
+          "kind": "reference",
+          "sizeBytes": 4681,
+          "sha256": "2cdb900b74f56a796c0331725e73eff4ecd84f8021b42efbb0a5b4903d1d9b16"
+        },
+        {
+          "path": "references/pricing-page-teardown.md",
+          "kind": "reference",
+          "sizeBytes": 7283,
+          "sha256": "b58a3bffa58ae7c3a475aba33887daaa98e0dc0de57ea948314256b08aa306ad"
+        },
+        {
+          "path": "references/research-methods.md",
+          "kind": "reference",
+          "sizeBytes": 6677,
+          "sha256": "90337058da40c2fcf858bfee9ee8905ad1dc3a5f90d1878f9a8e9ab79193631b"
+        },
+        {
+          "path": "references/tier-structure.md",
+          "kind": "reference",
+          "sizeBytes": 7199,
+          "sha256": "b59910d37cceb74484f28b065963daa60f5c4fb1ffc36a0584d0f3cad11f3e30"
+        }
+      ],
+      "contentHash": "sha256:abf6025520a55688e53ae662932a8e60efef7a72bda62c10e623d2f2811154b4",
+      "source": {
+        "type": "github",
+        "hostname": "github.com",
+        "owner": "coreyhaines31",
+        "repo": "marketingskills",
+        "ref": "main",
+        "commit": "e85f3cbc2e4a79bf33b2a12e9bdd9087d414735b",
+        "path": "skills/pricing",
+        "url": "https://github.com/coreyhaines31/marketingskills/tree/main/skills/pricing"
+      }
+    },
+    {
+      "id": "paperclipai:optional:marketing:product-marketing",
+      "key": "paperclipai/optional/marketing/product-marketing",
+      "kind": "optional",
+      "category": "marketing",
+      "slug": "product-marketing",
+      "name": "product-marketing",
+      "description": "When the user wants to create or update their product marketing context document.",
+      "path": "catalog/optional/marketing/product-marketing",
+      "entrypoint": "SKILL.md",
+      "trustLevel": "markdown_only",
+      "compatibility": "compatible",
+      "defaultInstall": false,
+      "recommendedForRoles": [
+        "marketer",
+        "product-manager"
+      ],
+      "requires": [],
+      "tags": [
+        "marketing",
+        "product-marketing",
+        "pmm"
+      ],
+      "files": [
+        {
+          "path": "SKILL.md",
+          "kind": "skill",
+          "sizeBytes": 13847,
+          "sha256": "19ece0fa75c72a5a8b6e90db80f506586f54cc93bae6bffbb1bd2ef4ae7d603c"
+        },
+        {
+          "path": "references/brand-voice.md",
+          "kind": "reference",
+          "sizeBytes": 8361,
+          "sha256": "932f3453db2761f03050792e39800150495dab449750b40913a4314ea97e7672"
+        }
+      ],
+      "contentHash": "sha256:150aa9103f178d7ee8a6afdc62356cecba01e7b32b03e537b30987971adf54d8",
+      "source": {
+        "type": "github",
+        "hostname": "github.com",
+        "owner": "coreyhaines31",
+        "repo": "marketingskills",
+        "ref": "main",
+        "commit": "e85f3cbc2e4a79bf33b2a12e9bdd9087d414735b",
+        "path": "skills/product-marketing",
+        "url": "https://github.com/coreyhaines31/marketingskills/tree/main/skills/product-marketing"
+      }
+    },
+    {
+      "id": "paperclipai:optional:marketing:programmatic-seo",
+      "key": "paperclipai/optional/marketing/programmatic-seo",
+      "kind": "optional",
+      "category": "marketing",
+      "slug": "programmatic-seo",
+      "name": "programmatic-seo",
+      "description": "When the user wants to create SEO-driven pages at scale using templates and data.",
+      "path": "catalog/optional/marketing/programmatic-seo",
+      "entrypoint": "SKILL.md",
+      "trustLevel": "markdown_only",
+      "compatibility": "compatible",
+      "defaultInstall": false,
+      "recommendedForRoles": [
+        "marketer",
+        "engineer"
+      ],
+      "requires": [],
+      "tags": [
+        "marketing",
+        "programmatic-seo",
+        "seo"
+      ],
+      "files": [
+        {
+          "path": "SKILL.md",
+          "kind": "skill",
+          "sizeBytes": 7525,
+          "sha256": "b31208c88e2b018214f61f514bce9bbc7724ceef794c0bcf6a9f762cb91cf254"
+        },
+        {
+          "path": "references/implementation-platforms.md",
+          "kind": "reference",
+          "sizeBytes": 5617,
+          "sha256": "27d86221387e0880768164d4d03513c85a594d11d12c7a6dd93ac17881c131e2"
+        },
+        {
+          "path": "references/playbooks.md",
+          "kind": "reference",
+          "sizeBytes": 8304,
+          "sha256": "b2b3fd7c58c686f0670b94cf7192ff79436ccf0d602650b33a83a9d01102f11d"
+        }
+      ],
+      "contentHash": "sha256:cdd39f21a980d2b56bb122e90acd86f8381d35ea3f476063062e9598059facd2",
+      "source": {
+        "type": "github",
+        "hostname": "github.com",
+        "owner": "coreyhaines31",
+        "repo": "marketingskills",
+        "ref": "main",
+        "commit": "e85f3cbc2e4a79bf33b2a12e9bdd9087d414735b",
+        "path": "skills/programmatic-seo",
+        "url": "https://github.com/coreyhaines31/marketingskills/tree/main/skills/programmatic-seo"
+      }
+    },
+    {
+      "id": "paperclipai:optional:marketing:prospecting",
+      "key": "paperclipai/optional/marketing/prospecting",
+      "kind": "optional",
+      "category": "marketing",
+      "slug": "prospecting",
+      "name": "prospecting",
+      "description": "When the user wants to find, qualify, and build a list of prospects to reach out to, across B2B SaaS, general B2B, or local small businesses.",
+      "path": "catalog/optional/marketing/prospecting",
+      "entrypoint": "SKILL.md",
+      "trustLevel": "markdown_only",
+      "compatibility": "compatible",
+      "defaultInstall": false,
+      "recommendedForRoles": [
+        "marketer",
+        "sales"
+      ],
+      "requires": [],
+      "tags": [
+        "marketing",
+        "prospecting",
+        "sales",
+        "outbound"
+      ],
+      "files": [
+        {
+          "path": "SKILL.md",
+          "kind": "skill",
+          "sizeBytes": 20182,
+          "sha256": "3e5c72c9779948247e56d8dd71683cb8729eb2ab99555da7bc984525d7890de7"
+        },
+        {
+          "path": "references/account-research.md",
+          "kind": "reference",
+          "sizeBytes": 3771,
+          "sha256": "cf09a7f41b4963d919dcdf96d659fe898a1ade5328ab481864419f6dd1d4bba9"
+        },
+        {
+          "path": "references/b2b-prospecting.md",
+          "kind": "reference",
+          "sizeBytes": 4978,
+          "sha256": "b7a05da9d1584cc8d21432a43fe1ba802c4f9a6c601e3885d4117cc9d4d52f37"
+        },
+        {
+          "path": "references/compliance.md",
+          "kind": "reference",
+          "sizeBytes": 11065,
+          "sha256": "b7f03614af776e90259f28cc1f484ce22a86c71ef35a1e5a4b9e24b6d89aecd4"
+        },
+        {
+          "path": "references/data-sources.md",
+          "kind": "reference",
+          "sizeBytes": 13456,
+          "sha256": "2262f2172c285b98b1df73974d4cb441c8f835645b4d7ee21a340ff5df2a1182"
+        },
+        {
+          "path": "references/demand-signals.md",
+          "kind": "reference",
+          "sizeBytes": 10185,
+          "sha256": "489b8fb96a828578b6812bfabfbba8ce86d07545b21716a873501ba4d464f4ee"
+        },
+        {
+          "path": "references/enrichment-playbook.md",
+          "kind": "reference",
+          "sizeBytes": 5290,
+          "sha256": "dcdb131d83e0a010fdbb572c828b621e9db10f96b6fafd891499683ed9a4a63c"
+        },
+        {
+          "path": "references/local-prospecting.md",
+          "kind": "reference",
+          "sizeBytes": 8150,
+          "sha256": "1dd71471a3413d5b0a9d230b1e42ca95469c617285bf7e2abdfa463428367fc3"
+        },
+        {
+          "path": "references/saas-prospecting.md",
+          "kind": "reference",
+          "sizeBytes": 6045,
+          "sha256": "18be53f055f3f8a2ca647dccc8d8d8d177a0df5820193463542f87fa4eeafcf8"
+        },
+        {
+          "path": "references/signal-plays.md",
+          "kind": "reference",
+          "sizeBytes": 8150,
+          "sha256": "a10434290cb82a3d8cbccfb826b64999decc0079e54be33d1114ca8e7b150886"
+        },
+        {
+          "path": "references/sourcing-and-enrichment.md",
+          "kind": "reference",
+          "sizeBytes": 6740,
+          "sha256": "d7f47cf69ee1e78bb21c50f2b0050460899f8e9e001c40261e08e38dd6fa9fbc"
+        }
+      ],
+      "contentHash": "sha256:f872befefb5c9bc55e06073c533657ad1959dac6c74b5336ee4057b8631a7d79",
+      "source": {
+        "type": "github",
+        "hostname": "github.com",
+        "owner": "coreyhaines31",
+        "repo": "marketingskills",
+        "ref": "main",
+        "commit": "e85f3cbc2e4a79bf33b2a12e9bdd9087d414735b",
+        "path": "skills/prospecting",
+        "url": "https://github.com/coreyhaines31/marketingskills/tree/main/skills/prospecting"
+      }
+    },
+    {
+      "id": "paperclipai:optional:marketing:public-relations",
+      "key": "paperclipai/optional/marketing/public-relations",
+      "kind": "optional",
+      "category": "marketing",
+      "slug": "public-relations",
+      "name": "public-relations",
+      "description": "When the user wants help with public relations, earned media, press coverage, journalist outreach, or media strategy (not pull requests).",
+      "path": "catalog/optional/marketing/public-relations",
+      "entrypoint": "SKILL.md",
+      "trustLevel": "markdown_only",
+      "compatibility": "compatible",
+      "defaultInstall": false,
+      "recommendedForRoles": [
+        "marketer"
+      ],
+      "requires": [],
+      "tags": [
+        "marketing",
+        "public-relations",
+        "pr"
+      ],
+      "files": [
+        {
+          "path": "SKILL.md",
+          "kind": "skill",
+          "sizeBytes": 9834,
+          "sha256": "a04cd2f27e2d78e0b3851553661f377f5203eaf75fff724c5abb3e4979701c8d"
+        },
+        {
+          "path": "references/crisis-communications.md",
+          "kind": "reference",
+          "sizeBytes": 8599,
+          "sha256": "55a00b7d23af710a4fe23b695707c1cc361ac94673bcd93ca76a2be0c0834aea"
+        },
+        {
+          "path": "references/journalist-pitching.md",
+          "kind": "reference",
+          "sizeBytes": 11065,
+          "sha256": "ba0b853771cbf6eb29540694b0dee72a393cd79b46d7fd2d9b70c8bbcf85c663"
+        },
+        {
+          "path": "references/media-outlets.md",
+          "kind": "reference",
+          "sizeBytes": 9307,
+          "sha256": "49c727db10a86d0d227275b970a131d677961ef7cf16e0fc8ced588688133899"
+        },
+        {
+          "path": "references/newsjacking.md",
+          "kind": "reference",
+          "sizeBytes": 8650,
+          "sha256": "73930fd20a8fcf73f6d47c28d9a1574f241006434267b9043e8ab0461f0f2d42"
+        },
+        {
+          "path": "references/podcast-guest-prep.md",
+          "kind": "reference",
+          "sizeBytes": 5593,
+          "sha256": "cd6dba9a9961a74777a0c7e7df1e7132264aa7e04f93375f092fb826ec720b19"
+        },
+        {
+          "path": "references/press-platforms.md",
+          "kind": "reference",
+          "sizeBytes": 6909,
+          "sha256": "e999335222a30df0954e324e6d35ea269c5d9228c609c0f33bc1d2bb528fb244"
+        },
+        {
+          "path": "references/statement-templates.md",
+          "kind": "reference",
+          "sizeBytes": 5637,
+          "sha256": "65bfd1995ddcacd9dadaaa9174b586c831e857ac163b0f53ec35ff9e4f81fc52"
+        },
+        {
+          "path": "references/story-angles.md",
+          "kind": "reference",
+          "sizeBytes": 6509,
+          "sha256": "2fc3597707d8eab35dc021e2e0e79af82b56283cb8bc024011e78b995e56db07"
+        }
+      ],
+      "contentHash": "sha256:6756034578badecd3faf4927c1c7b3b2662c1625c187094facd6332802d4c83b",
+      "source": {
+        "type": "github",
+        "hostname": "github.com",
+        "owner": "coreyhaines31",
+        "repo": "marketingskills",
+        "ref": "main",
+        "commit": "e85f3cbc2e4a79bf33b2a12e9bdd9087d414735b",
+        "path": "skills/public-relations",
+        "url": "https://github.com/coreyhaines31/marketingskills/tree/main/skills/public-relations"
+      }
+    },
+    {
+      "id": "paperclipai:optional:marketing:referrals",
+      "key": "paperclipai/optional/marketing/referrals",
+      "kind": "optional",
+      "category": "marketing",
+      "slug": "referrals",
+      "name": "referrals",
+      "description": "When the user wants to create, optimize, or analyze a referral program, affiliate program, or word-of-mouth strategy.",
+      "path": "catalog/optional/marketing/referrals",
+      "entrypoint": "SKILL.md",
+      "trustLevel": "markdown_only",
+      "compatibility": "compatible",
+      "defaultInstall": false,
+      "recommendedForRoles": [
+        "marketer"
+      ],
+      "requires": [],
+      "tags": [
+        "marketing",
+        "referrals",
+        "growth"
+      ],
+      "files": [
+        {
+          "path": "SKILL.md",
+          "kind": "skill",
+          "sizeBytes": 10393,
+          "sha256": "d1b9e0840b0bc788b51decd5283fba505be29ae22ec8d92e912ebee36020d7fb"
+        },
+        {
+          "path": "references/affiliate-operations.md",
+          "kind": "reference",
+          "sizeBytes": 7098,
+          "sha256": "fc045ff9c7eba29b13219d56d28fb15c8240439acf2df7e7a6205836948513a0"
+        },
+        {
+          "path": "references/affiliate-programs.md",
+          "kind": "reference",
+          "sizeBytes": 4484,
+          "sha256": "b6fe63ca69462d28b7be74f4f5f4f237d2c9f72179dc5d3ef80f8fab37fccce7"
+        },
+        {
+          "path": "references/program-examples.md",
+          "kind": "reference",
+          "sizeBytes": 5935,
+          "sha256": "3ba131b1d6f77c115134a6d56bbf10709fe4822f65b6a3446605cadeebc6b107"
+        },
+        {
+          "path": "references/review-platform-rules.md",
+          "kind": "reference",
+          "sizeBytes": 4533,
+          "sha256": "9c537eaf4be1799d58f1c563fc660f1b4303c89feded6b2eda304c4ff2c0cb01"
+        },
+        {
+          "path": "references/review-program-operations.md",
+          "kind": "reference",
+          "sizeBytes": 4383,
+          "sha256": "9ca87ad31a59da14f525c273f2c3df90d47fedec7e38d7689529f6ea8e445192"
+        },
+        {
+          "path": "references/review-programs.md",
+          "kind": "reference",
+          "sizeBytes": 9618,
+          "sha256": "b5e3783f12da945bafd88c135e1ccebbf1cfb578715b02c0cf73b50af00aa645"
+        },
+        {
+          "path": "references/viral-mechanisms.md",
+          "kind": "reference",
+          "sizeBytes": 6057,
+          "sha256": "04224240fae94bcf9bc64c7d8cac507bdd570049144e4df33946ac4ae8a483e4"
+        }
+      ],
+      "contentHash": "sha256:58861c3ab1227eaf918879a0649ece76f2c08d871b446c3a4b76cf4134547c1a",
+      "source": {
+        "type": "github",
+        "hostname": "github.com",
+        "owner": "coreyhaines31",
+        "repo": "marketingskills",
+        "ref": "main",
+        "commit": "e85f3cbc2e4a79bf33b2a12e9bdd9087d414735b",
+        "path": "skills/referrals",
+        "url": "https://github.com/coreyhaines31/marketingskills/tree/main/skills/referrals"
+      }
+    },
+    {
+      "id": "paperclipai:optional:marketing:revops",
+      "key": "paperclipai/optional/marketing/revops",
+      "kind": "optional",
+      "category": "marketing",
+      "slug": "revops",
+      "name": "revops",
+      "description": "When the user wants help with revenue operations, lead lifecycle management, or marketing-to-sales handoff processes.",
+      "path": "catalog/optional/marketing/revops",
+      "entrypoint": "SKILL.md",
+      "trustLevel": "markdown_only",
+      "compatibility": "compatible",
+      "defaultInstall": false,
+      "recommendedForRoles": [
+        "marketer",
+        "analyst"
+      ],
+      "requires": [],
+      "tags": [
+        "marketing",
+        "revops",
+        "revenue"
+      ],
+      "files": [
+        {
+          "path": "SKILL.md",
+          "kind": "skill",
+          "sizeBytes": 16713,
+          "sha256": "d94db74be5354e758f6cd4ba41028280d56a3f8e3ce6d01d08216f8f5ed0f60a"
+        },
+        {
+          "path": "references/automation-playbooks.md",
+          "kind": "reference",
+          "sizeBytes": 10905,
+          "sha256": "a49dfd46a75092895ee5f28c89cb0bdad1afc3ec6c76d9ff200abc7babeb349a"
+        },
+        {
+          "path": "references/inbound-routing.md",
+          "kind": "reference",
+          "sizeBytes": 4642,
+          "sha256": "d177d982745142231b9ad1df715817d91cd5198dac52826902843079403105ff"
+        },
+        {
+          "path": "references/lifecycle-definitions.md",
+          "kind": "reference",
+          "sizeBytes": 9167,
+          "sha256": "89b5c51f0296977df1fccea20dc96e98e539cc1f2786b796fdb43e2a3d5b8219"
+        },
+        {
+          "path": "references/routing-rules.md",
+          "kind": "reference",
+          "sizeBytes": 6792,
+          "sha256": "9057c207550ff289e84d6b25ca9d38b436c98a517e0aa4f30c2ff8f09f5d8370"
+        },
+        {
+          "path": "references/scoring-models.md",
+          "kind": "reference",
+          "sizeBytes": 10678,
+          "sha256": "683653208039ffceef2c72b3c070c86744fe1407ac2c27483e8e3ccdbd4262a9"
+        }
+      ],
+      "contentHash": "sha256:69a989d8b39494fb0756be6d6ca2adf40e38b4c6d7a5cbfbd51401c514ab23c6",
+      "source": {
+        "type": "github",
+        "hostname": "github.com",
+        "owner": "coreyhaines31",
+        "repo": "marketingskills",
+        "ref": "main",
+        "commit": "e85f3cbc2e4a79bf33b2a12e9bdd9087d414735b",
+        "path": "skills/revops",
+        "url": "https://github.com/coreyhaines31/marketingskills/tree/main/skills/revops"
+      }
+    },
+    {
+      "id": "paperclipai:optional:marketing:sales-enablement",
+      "key": "paperclipai/optional/marketing/sales-enablement",
+      "kind": "optional",
+      "category": "marketing",
+      "slug": "sales-enablement",
+      "name": "sales-enablement",
+      "description": "When the user wants to create sales collateral, pitch decks, one-pagers, objection handling docs, or demo scripts.",
+      "path": "catalog/optional/marketing/sales-enablement",
+      "entrypoint": "SKILL.md",
+      "trustLevel": "markdown_only",
+      "compatibility": "compatible",
+      "defaultInstall": false,
+      "recommendedForRoles": [
+        "marketer",
+        "sales"
+      ],
+      "requires": [],
+      "tags": [
+        "marketing",
+        "sales-enablement",
+        "sales"
+      ],
+      "files": [
+        {
+          "path": "SKILL.md",
+          "kind": "skill",
+          "sizeBytes": 21099,
+          "sha256": "d30008d34e6a314b422e0a35cacf38aea39d39d2c48683e1ef6edcbdfca30ebd"
+        },
+        {
+          "path": "references/cold-call-scripts.md",
+          "kind": "reference",
+          "sizeBytes": 4133,
+          "sha256": "cc4e3248070804539f8c1de01fd63918d8e40a6ad858dea2a519d50a060e268f"
+        },
+        {
+          "path": "references/deck-frameworks.md",
+          "kind": "reference",
+          "sizeBytes": 7730,
+          "sha256": "265eea6c1b358d10f2dd22fd987789a9d115c14d30bf77a9086734ac60659336"
+        },
+        {
+          "path": "references/demo-scripts.md",
+          "kind": "reference",
+          "sizeBytes": 11769,
+          "sha256": "505616ebf73d30fe84a844540727ab8f3aeae29ebcda8c8ace28a18ada003da3"
+        },
+        {
+          "path": "references/objection-library.md",
+          "kind": "reference",
+          "sizeBytes": 13393,
+          "sha256": "e0cdfeffc41afbdbe2c014bcd9b3c024318eac9bd23159e871ec796aba29e0b2"
+        },
+        {
+          "path": "references/one-pager-templates.md",
+          "kind": "reference",
+          "sizeBytes": 5823,
+          "sha256": "2197326faff4ede03fb40e332e9c80a4e084d8efd48c74df8720d70817ac5ded"
+        },
+        {
+          "path": "references/win-loss-analysis.md",
+          "kind": "reference",
+          "sizeBytes": 4299,
+          "sha256": "f6f34c503f4cc506a8f24bfea6e75b260e3eff661da206399e162960141f090a"
+        }
+      ],
+      "contentHash": "sha256:27ac58fb92db540449abd6cd83f855be896e48bee2cbab2931afd22a992471fe",
+      "source": {
+        "type": "github",
+        "hostname": "github.com",
+        "owner": "coreyhaines31",
+        "repo": "marketingskills",
+        "ref": "main",
+        "commit": "e85f3cbc2e4a79bf33b2a12e9bdd9087d414735b",
+        "path": "skills/sales-enablement",
+        "url": "https://github.com/coreyhaines31/marketingskills/tree/main/skills/sales-enablement"
+      }
+    },
+    {
+      "id": "paperclipai:optional:marketing:schema",
+      "key": "paperclipai/optional/marketing/schema",
+      "kind": "optional",
+      "category": "marketing",
+      "slug": "schema",
+      "name": "schema",
+      "description": "When the user wants to add, fix, or optimize schema markup and structured data on their site.",
+      "path": "catalog/optional/marketing/schema",
+      "entrypoint": "SKILL.md",
+      "trustLevel": "markdown_only",
+      "compatibility": "compatible",
+      "defaultInstall": false,
+      "recommendedForRoles": [
+        "marketer",
+        "engineer"
+      ],
+      "requires": [],
+      "tags": [
+        "marketing",
+        "schema",
+        "seo",
+        "structured-data"
+      ],
+      "files": [
+        {
+          "path": "SKILL.md",
+          "kind": "skill",
+          "sizeBytes": 7124,
+          "sha256": "d298f5d6e1b33b6825f38ecaa05c4d33ba9e45e346b224bd86f9834e46f67a94"
+        },
+        {
+          "path": "references/schema-examples.md",
+          "kind": "reference",
+          "sizeBytes": 9298,
+          "sha256": "9b093bce816fac8494c8ccfd588eeb0c00e1308fe99bb46388ff222664ed94be"
+        }
+      ],
+      "contentHash": "sha256:641dd62613bdfc9af601d3a4fd96ac480230a48b73fa0914d5e01573926e18c2",
+      "source": {
+        "type": "github",
+        "hostname": "github.com",
+        "owner": "coreyhaines31",
+        "repo": "marketingskills",
+        "ref": "main",
+        "commit": "e85f3cbc2e4a79bf33b2a12e9bdd9087d414735b",
+        "path": "skills/schema",
+        "url": "https://github.com/coreyhaines31/marketingskills/tree/main/skills/schema"
+      }
+    },
+    {
+      "id": "paperclipai:optional:marketing:seo-audit",
+      "key": "paperclipai/optional/marketing/seo-audit",
+      "kind": "optional",
+      "category": "marketing",
+      "slug": "seo-audit",
+      "name": "seo-audit",
+      "description": "When the user wants to audit, review, or diagnose SEO issues on their site.",
+      "path": "catalog/optional/marketing/seo-audit",
+      "entrypoint": "SKILL.md",
+      "trustLevel": "markdown_only",
+      "compatibility": "compatible",
+      "defaultInstall": false,
+      "recommendedForRoles": [
+        "marketer"
+      ],
+      "requires": [],
+      "tags": [
+        "marketing",
+        "seo-audit",
+        "seo"
+      ],
+      "files": [
+        {
+          "path": "SKILL.md",
+          "kind": "skill",
+          "sizeBytes": 18192,
+          "sha256": "e0ebb5808787f2ff26b96d7b429423874d9785541cd4ab775629a5cf1137e7a9"
+        },
+        {
+          "path": "references/ai-writing-detection.md",
+          "kind": "reference",
+          "sizeBytes": 6528,
+          "sha256": "f1e273f56ce7e2215ff218bf903680ddcec0fd026ab90c3ebfb3439ed0edfaa4"
+        },
+        {
+          "path": "references/international-seo.md",
+          "kind": "reference",
+          "sizeBytes": 14898,
+          "sha256": "0603022cca968acf7889fc224221aa0e70955ba64355bc18b06f7e86b32f45e5"
+        },
+        {
+          "path": "references/local-seo-pages-and-measurement.md",
+          "kind": "reference",
+          "sizeBytes": 4036,
+          "sha256": "20607ef91c4b8b37346f42130a6f51ed4ce64dc2731b6e1328b5b14f16917fe3"
+        },
+        {
+          "path": "references/local-seo-profile-and-citations.md",
+          "kind": "reference",
+          "sizeBytes": 3971,
+          "sha256": "83b1b63eb6083e7aab1f56c4928335ea2a235e837861a9e9e8043b6af162a1f3"
+        },
+        {
+          "path": "references/local-seo.md",
+          "kind": "reference",
+          "sizeBytes": 7249,
+          "sha256": "d2666d9c225bc36f9737ce612894abbe7e263b5974e2db7c1efc50f6010bb376"
+        },
+        {
+          "path": "references/rankings-push.md",
+          "kind": "reference",
+          "sizeBytes": 4509,
+          "sha256": "c21d6d4f9faf7ce5b1dc0f8bd508e7513967492fcd8ed9510a175ce243daf8c8"
+        },
+        {
+          "path": "references/title-tags.md",
+          "kind": "reference",
+          "sizeBytes": 5533,
+          "sha256": "c40b3c6af3600ca15670db8eb81000c7ca6fa25265a6550ccc630f53db3fcf51"
+        }
+      ],
+      "contentHash": "sha256:6cc676d1885aab5de7e299e0c7b1da6c7ef4c4b61e5c6e19a2c1dbad53042018",
+      "source": {
+        "type": "github",
+        "hostname": "github.com",
+        "owner": "coreyhaines31",
+        "repo": "marketingskills",
+        "ref": "main",
+        "commit": "e85f3cbc2e4a79bf33b2a12e9bdd9087d414735b",
+        "path": "skills/seo-audit",
+        "url": "https://github.com/coreyhaines31/marketingskills/tree/main/skills/seo-audit"
+      }
+    },
+    {
+      "id": "paperclipai:optional:marketing:signup",
+      "key": "paperclipai/optional/marketing/signup",
+      "kind": "optional",
+      "category": "marketing",
+      "slug": "signup",
+      "name": "signup",
+      "description": "When the user wants to optimize signup, registration, account creation, or trial activation flows.",
+      "path": "catalog/optional/marketing/signup",
+      "entrypoint": "SKILL.md",
+      "trustLevel": "markdown_only",
+      "compatibility": "compatible",
+      "defaultInstall": false,
+      "recommendedForRoles": [
+        "marketer"
+      ],
+      "requires": [],
+      "tags": [
+        "marketing",
+        "signup",
+        "conversion"
+      ],
+      "files": [
+        {
+          "path": "SKILL.md",
+          "kind": "skill",
+          "sizeBytes": 10784,
+          "sha256": "d50b1183be692ba5ce1db31afbbd0aa2a5ec06940b22105f85ea1764b15ca930"
+        }
+      ],
+      "contentHash": "sha256:b86a60503fde38e4dbed658ebf57372ea8c0990800c3c1b282ba6d4644c3d75f",
+      "source": {
+        "type": "github",
+        "hostname": "github.com",
+        "owner": "coreyhaines31",
+        "repo": "marketingskills",
+        "ref": "main",
+        "commit": "e85f3cbc2e4a79bf33b2a12e9bdd9087d414735b",
+        "path": "skills/signup",
+        "url": "https://github.com/coreyhaines31/marketingskills/tree/main/skills/signup"
+      }
+    },
+    {
+      "id": "paperclipai:optional:marketing:site-architecture",
+      "key": "paperclipai/optional/marketing/site-architecture",
+      "kind": "optional",
+      "category": "marketing",
+      "slug": "site-architecture",
+      "name": "site-architecture",
+      "description": "When the user wants to plan, map, or restructure their website's page hierarchy, navigation, URL structure, or internal linking.",
+      "path": "catalog/optional/marketing/site-architecture",
+      "entrypoint": "SKILL.md",
+      "trustLevel": "markdown_only",
+      "compatibility": "compatible",
+      "defaultInstall": false,
+      "recommendedForRoles": [
+        "marketer",
+        "engineer"
+      ],
+      "requires": [],
+      "tags": [
+        "marketing",
+        "site-architecture",
+        "seo",
+        "ia"
+      ],
+      "files": [
+        {
+          "path": "SKILL.md",
+          "kind": "skill",
+          "sizeBytes": 14073,
+          "sha256": "55c0128ac29f628944444f8850b97913517f57131673824ebcad4d5ffb26ddd2"
+        },
+        {
+          "path": "references/mermaid-templates.md",
+          "kind": "reference",
+          "sizeBytes": 4922,
+          "sha256": "362190c7d3f419d5f445170f1fb17beecc163937d2068922893b7a69eeb25f0f"
+        },
+        {
+          "path": "references/navigation-patterns.md",
+          "kind": "reference",
+          "sizeBytes": 10733,
+          "sha256": "2efa772709b753e33d5018c007147ca30aaa95a04b04dc0df6227ea5a053078b"
+        },
+        {
+          "path": "references/platforms-and-migration.md",
+          "kind": "reference",
+          "sizeBytes": 9915,
+          "sha256": "391f12c5994e1e577db75cd6044e038a276f14eda1c2ebc7f6a92293fbc59448"
+        },
+        {
+          "path": "references/site-type-templates.md",
+          "kind": "reference",
+          "sizeBytes": 9624,
+          "sha256": "3c3cd7ce5e31c502dc071baf82bb58cb30f5edf4a2fd8ca052fbc8f3777db140"
+        }
+      ],
+      "contentHash": "sha256:e4308e0a4c527a8d0567c6839f15fdc1a4a56b37d9509e279d9d4d2d26af8721",
+      "source": {
+        "type": "github",
+        "hostname": "github.com",
+        "owner": "coreyhaines31",
+        "repo": "marketingskills",
+        "ref": "main",
+        "commit": "e85f3cbc2e4a79bf33b2a12e9bdd9087d414735b",
+        "path": "skills/site-architecture",
+        "url": "https://github.com/coreyhaines31/marketingskills/tree/main/skills/site-architecture"
+      }
+    },
+    {
+      "id": "paperclipai:optional:marketing:sms",
+      "key": "paperclipai/optional/marketing/sms",
+      "kind": "optional",
+      "category": "marketing",
+      "slug": "sms",
+      "name": "sms",
+      "description": "When the user wants to plan, build, or optimize SMS, MMS, or WhatsApp marketing — including welcome flows, abandoned cart texts, post-purchase, win-back, promotional sends, or transactional/auth SMS.",
+      "path": "catalog/optional/marketing/sms",
+      "entrypoint": "SKILL.md",
+      "trustLevel": "markdown_only",
+      "compatibility": "compatible",
+      "defaultInstall": false,
+      "recommendedForRoles": [
+        "marketer"
+      ],
+      "requires": [],
+      "tags": [
+        "marketing",
+        "sms",
+        "messaging"
+      ],
+      "files": [
+        {
+          "path": "SKILL.md",
+          "kind": "skill",
+          "sizeBytes": 18421,
+          "sha256": "b4c7365b280ce1b2cffa58cffb11ca9f0d414fbccefae3e73c52312c52afab85"
+        },
+        {
+          "path": "references/compliance.md",
+          "kind": "reference",
+          "sizeBytes": 7833,
+          "sha256": "bbfb8f7c359cad650b7b2d27108e2bb12365a6c604e464ba3e94195b3938f149"
+        },
+        {
+          "path": "references/platforms.md",
+          "kind": "reference",
+          "sizeBytes": 9865,
+          "sha256": "3f3e54cae72bb722703be6bae76dc1f6fa2312d5541105d425bcc07cd7a3ff12"
+        },
+        {
+          "path": "references/sequence-templates.md",
+          "kind": "reference",
+          "sizeBytes": 7070,
+          "sha256": "c61e72b00bfbe80e87a771840164a2a487585f202bbd3f010d8c60485339b220"
+        },
+        {
+          "path": "references/whatsapp.md",
+          "kind": "reference",
+          "sizeBytes": 16194,
+          "sha256": "359f03cd9528a5ddf19344b1ac156daed77ff3396921ffa31ede0fda4799ce63"
+        }
+      ],
+      "contentHash": "sha256:c2d3d8b81f07d5c179822f89ac0437c4fb1975d957fa2e87c7448b23a9254272",
+      "source": {
+        "type": "github",
+        "hostname": "github.com",
+        "owner": "coreyhaines31",
+        "repo": "marketingskills",
+        "ref": "main",
+        "commit": "e85f3cbc2e4a79bf33b2a12e9bdd9087d414735b",
+        "path": "skills/sms",
+        "url": "https://github.com/coreyhaines31/marketingskills/tree/main/skills/sms"
+      }
+    },
+    {
+      "id": "paperclipai:optional:marketing:social",
+      "key": "paperclipai/optional/marketing/social",
+      "kind": "optional",
+      "category": "marketing",
+      "slug": "social",
+      "name": "social",
+      "description": "When the user wants help creating, scheduling, or optimizing social media content for LinkedIn, Twitter/X, Instagram, TikTok, or Facebook, or wants to do social listening and engagement triage.",
+      "path": "catalog/optional/marketing/social",
+      "entrypoint": "SKILL.md",
+      "trustLevel": "markdown_only",
+      "compatibility": "compatible",
+      "defaultInstall": false,
+      "recommendedForRoles": [
+        "marketer"
+      ],
+      "requires": [],
+      "tags": [
+        "marketing",
+        "social",
+        "social-media"
+      ],
+      "files": [
+        {
+          "path": "SKILL.md",
+          "kind": "skill",
+          "sizeBytes": 18313,
+          "sha256": "dd4c01d0925f571562d4e8dea4af6b60bd9d491149187d94927e65280fad1bee"
+        },
+        {
+          "path": "references/carousel-frameworks.md",
+          "kind": "reference",
+          "sizeBytes": 11124,
+          "sha256": "e703aa530ec9f68cdf5b58e8e0d4d1a5cc3f22b9e2d3e3222f16a9763d423247"
+        },
+        {
+          "path": "references/listening-sources-template.md",
+          "kind": "reference",
+          "sizeBytes": 3479,
+          "sha256": "c68bc6f57b0a48c432b1ce72c9324d41a04d0e7784d0bab91afb4a6065a43e38"
+        },
+        {
+          "path": "references/listening.md",
+          "kind": "reference",
+          "sizeBytes": 13474,
+          "sha256": "52cf68aaaa57a69b69b3587ffd9b848a6f1ca7e0d51378f566339ad7f2b730e0"
+        },
+        {
+          "path": "references/platform-limits.md",
+          "kind": "reference",
+          "sizeBytes": 2830,
+          "sha256": "6ecc6b40ff82b95c48906341f7d3c58337671d4d94f624c858764f1ed5a77c3c"
+        },
+        {
+          "path": "references/platforms.md",
+          "kind": "reference",
+          "sizeBytes": 8313,
+          "sha256": "a070eda1f54bdba103a9c89613d83331fc5c53c9e8a48543e0198f1a2995cb0c"
+        },
+        {
+          "path": "references/post-templates.md",
+          "kind": "reference",
+          "sizeBytes": 4016,
+          "sha256": "9cca4680c95801daedfd8acadf9089d0083784c2567784888807569896f71d9b"
+        },
+        {
+          "path": "references/reverse-engineering.md",
+          "kind": "reference",
+          "sizeBytes": 5551,
+          "sha256": "c27bef59d463b3b11331c1770f4a23e9e6bbce7d7c8db1e7f7f4f14ba206243f"
+        },
+        {
+          "path": "references/short-form-video.md",
+          "kind": "reference",
+          "sizeBytes": 7040,
+          "sha256": "ed0976bd7ac1f85b7b8c162087e346118f2cf0ef46b3ccafc6a7a329118987d1"
+        },
+        {
+          "path": "references/x-algorithm.md",
+          "kind": "reference",
+          "sizeBytes": 7113,
+          "sha256": "943b2c5a819aad53ebf62a1652adc47956d6fdf738e18cd98eeb609819a66180"
+        }
+      ],
+      "contentHash": "sha256:d306b27019f68abdcaef46894be8a1f9f1b7f65cc74096ad5c82866d4b22f670",
+      "source": {
+        "type": "github",
+        "hostname": "github.com",
+        "owner": "coreyhaines31",
+        "repo": "marketingskills",
+        "ref": "main",
+        "commit": "e85f3cbc2e4a79bf33b2a12e9bdd9087d414735b",
+        "path": "skills/social",
+        "url": "https://github.com/coreyhaines31/marketingskills/tree/main/skills/social"
+      }
+    },
+    {
+      "id": "paperclipai:optional:marketing:video",
+      "key": "paperclipai/optional/marketing/video",
+      "kind": "optional",
+      "category": "marketing",
+      "slug": "video",
+      "name": "video",
+      "description": "When the user wants to create, generate, or produce video content using AI tools or programmatic frameworks.",
+      "path": "catalog/optional/marketing/video",
+      "entrypoint": "SKILL.md",
+      "trustLevel": "markdown_only",
+      "compatibility": "compatible",
+      "defaultInstall": false,
+      "recommendedForRoles": [
+        "marketer",
+        "designer"
+      ],
+      "requires": [],
+      "tags": [
+        "marketing",
+        "video",
+        "ai"
+      ],
+      "files": [
+        {
+          "path": "SKILL.md",
+          "kind": "skill",
+          "sizeBytes": 15128,
+          "sha256": "0a35e32dda553707996bf383c00ecf971d05127d35d5d814577457c23a3ab591"
+        },
+        {
+          "path": "references/ai-video-prompting.md",
+          "kind": "reference",
+          "sizeBytes": 5258,
+          "sha256": "210eaecc05367aacbaf35660ed7352809e31fb326123d0cfd6ab03c09681d13e"
+        },
+        {
+          "path": "references/edit-anatomy.md",
+          "kind": "reference",
+          "sizeBytes": 7593,
+          "sha256": "3d59e1f01d46eb04bcdbf88e2165bbf5aa80f626beb955522432ec4aede3c9fb"
+        },
+        {
+          "path": "references/product-demo-recording.md",
+          "kind": "reference",
+          "sizeBytes": 10635,
+          "sha256": "4bbc44e02f963df8c36e06d96ae195d3e8af911f604cb08fd7b7ea72c974fba5"
+        }
+      ],
+      "contentHash": "sha256:c9c7bdd316841f73d582818f9d6179822dbfb16a9022f9c3926a87d57d1389b6",
+      "source": {
+        "type": "github",
+        "hostname": "github.com",
+        "owner": "coreyhaines31",
+        "repo": "marketingskills",
+        "ref": "main",
+        "commit": "e85f3cbc2e4a79bf33b2a12e9bdd9087d414735b",
+        "path": "skills/video",
+        "url": "https://github.com/coreyhaines31/marketingskills/tree/main/skills/video"
+      }
     },
     {
       "id": "paperclipai:optional:product:design-critique",
