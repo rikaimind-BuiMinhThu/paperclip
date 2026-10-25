@@ -132,6 +132,10 @@ RUN find packages/paperclip-runner/runner packages/paperclip-runner/protocol -ty
 # after the stable dependency layers, before either application build.
 ARG PAPERCLIP_BUILD_COMMIT=""
 RUN pnpm --filter @paperclipai/ui build
+# Prefer freshly built UI over any stale server/ui-dist copied in via the build
+# context (rsync deploys often leave an older host tree that would otherwise win
+# at runtime — server serves server/ui-dist before ui/dist).
+RUN rm -rf server/ui-dist && cp -a ui/dist server/ui-dist
 RUN pnpm --filter @paperclipai/plugin-sdk build
 # The server build runs scripts/write-build-stamp.mjs, which stamps the built
 # commit into dist/build-info.json. The build context has no .git, so the
