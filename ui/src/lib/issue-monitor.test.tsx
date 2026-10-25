@@ -10,6 +10,7 @@ import {
   formatMonitorEta,
   formatMonitorEtaLabel,
   formatMonitorOffset,
+  resolveCheckWaitNowAction,
   useMonitorCountdown,
 } from "./issue-monitor";
 
@@ -193,6 +194,79 @@ describe("deriveMonitorState", () => {
         now,
       ),
     ).toMatchObject({ state: "retrying", source: "scheduled-retry", attemptCount: 2 });
+  });
+});
+
+describe("resolveCheckWaitNowAction", () => {
+  const now = new Date("2026-07-17T20:00:00.000Z");
+
+  it("routes actionable monitors to the monitor check-now endpoint", () => {
+    expect(
+      resolveCheckWaitNowAction(
+        {
+          executionState: {
+            monitor: {
+              status: "scheduled",
+              nextCheckAt: "2026-07-17T22:12:00.000Z",
+              attemptCount: 1,
+            },
+          },
+        },
+        now,
+      ),
+    ).toBe("monitor");
+  });
+
+  it("routes scheduled retries to the retry-now endpoint", () => {
+    expect(
+      resolveCheckWaitNowAction(
+        {
+          scheduledRetry: {
+            status: "scheduled_retry",
+            scheduledRetryAt: "2026-07-17T20:05:00.000Z",
+            scheduledRetryAttempt: 1,
+          },
+        },
+        now,
+      ),
+    ).toBe("scheduled-retry");
+  });
+
+  it("returns stale when there is no actionable wait", () => {
+    expect(resolveCheckWaitNowAction({}, now)).toBe("stale");
+    expect(
+      resolveCheckWaitNowAction(
+        { executionState: { monitor: { status: "cleared", attemptCount: 2 } } },
+        now,
+      ),
+    ).toBe("stale");
+    expect(
+      resolveCheckWaitNowAction(
+        {
+          status: "in_progress",
+          scheduledRetry: {
+            status: "running",
+            scheduledRetryAt: "2026-07-17T19:58:00.000Z",
+          },
+        },
+        now,
+      ),
+    ).toBe("stale");
+  });
+
+  it("prefers monitor over a concurrent scheduled retry", () => {
+    expect(
+      resolveCheckWaitNowAction(
+        {
+          monitorNextCheckAt: "2026-07-17T20:05:00.000Z",
+          scheduledRetry: {
+            status: "scheduled_retry",
+            scheduledRetryAt: "2026-07-17T20:10:00.000Z",
+          },
+        },
+        now,
+      ),
+    ).toBe("monitor");
   });
 });
 

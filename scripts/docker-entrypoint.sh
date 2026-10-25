@@ -45,4 +45,17 @@ if [ -d "$home_dir" ] && [ -n "$(find "$home_dir" \( ! -user node -o ! -group no
     chown -R node:node "$home_dir"
 fi
 
+# Cursor Agent CLI is not baked into the image (upstream uses curl|bash, not
+# npm). Operators may install it onto the persistent $PAPERCLIP_HOME volume
+# (e.g. /paperclip/bin/agent). Re-link into PATH on every start so image
+# rebuilds do not drop the binary that the default `cursor` adapter needs.
+if [ -x "$home_dir/bin/agent" ]; then
+    ln -sfn "$home_dir/bin/agent" /usr/local/bin/agent
+    # Keep the node-home locations the adapter prefers in sync when HOME is
+    # the image home (not a bind mount). Ignore failures on read-only layers.
+    mkdir -p /home/node/.local/bin 2>/dev/null || true
+    ln -sfn "$home_dir/bin/agent" /home/node/.local/bin/agent 2>/dev/null || true
+    chown -R node:node /home/node/.local 2>/dev/null || true
+fi
+
 exec gosu node "$@"

@@ -37,6 +37,64 @@ workspace: their independent agent copy therefore lives under the excluded
 `.paperclip-runtime/agent-files/<agent>/<run>/` area. It is not included in task
 workspace sync, Git staging, or task deliverables.
 
+### Directory ownership (Docker)
+
+The long-lived server process runs as the `node` user (uid 1000 by default). Agent
+homes under `$PAPERCLIP_HOME/.../companies/<company>/agents/<agent>/` must be
+writable by that user so the controller can create `file-sync/` and run working
+copies. Container entrypoint repairs mismatched ownership on startup, but files
+created while the container is already running keep the creator’s uid.
+
+When hiring or seeding agents via `docker exec` (or any in-container Node script
+that materializes agent homes), run as the app user:
+
+```sh
+docker exec -u node -w /app/server <server-container> \
+  node --import ./node_modules/tsx/dist/loader.mjs …
+```
+
+Do not `docker exec` those paths as root: new agent directories become `root:root`
+and the next `mkdir …/file-sync` fails with `EACCES`. If that already happened,
+fix with `chown -R node:node` on the affected `…/agents/<agent>` trees (or restart
+the container so entrypoint re-chowns `$PAPERCLIP_HOME`).
+
+### Cursor Agent CLI on Docker
+
+The platform default hire adapter is `cursor`, which runs the `agent` binary.
+The production image ships Claude/Codex/etc. via npm, but Cursor Agent is not
+an npm package. On a Docker host:
+
+1. Install once onto the persistent volume (as `node`):
+
+```sh
+docker exec -u node -e HOME=/home/node <server-container> \
+  bash -lc 'curl -fsS https://cursor.com/install | bash'
+# Persist the package so rebuilds keep it:
+docker exec <server-container> sh -c '
+  cp -a /home/node/.local/share/cursor-agent /paperclip/cursor-agent
+  ln -sfn /paperclip/cursor-agent/versions/*/cursor-agent /paperclip/bin/agent
+  ln -sfn /paperclip/bin/agent /usr/local/bin/agent
+'
+```
+
+2. Authenticate — either `CURSOR_API_KEY` on the agent / instance default model,
+   or login **with the server HOME** (Compose sets `HOME=$PAPERCLIP_HOME`, usually
+   `/paperclip`, not `/home/node`):
+
+```sh
+docker exec -u node -e HOME=/paperclip -e NO_OPEN_BROWSER=1 <server-container> \
+  agent login
+```
+
+Tokens land in `$HOME/.config/cursor/auth.json`. A login under `/home/node` will
+not be visible to heartbeat runs.
+
+Without (1), runs fail with `Command not found in PATH: "agent"`. Without (2),
+the CLI is present but not logged in.
+
+The container entrypoint re-links `$PAPERCLIP_HOME/bin/agent` into
+`/usr/local/bin/agent` on every start.
+
 Regular files (including binary bytes) and directories are supported, up to
 100,000 entries (files and folders), 256 MiB per file and 2 GiB total. Symlinks,
 hardlinks, and special

@@ -214,6 +214,8 @@ import {
   IssueMonitorComposerStrip,
   hasVisibleMonitorSurface,
 } from "../components/IssueMonitorBanner";
+import { resolveCheckWaitNowAction } from "../lib/issue-monitor";
+import { useRetryNowMutation } from "../hooks/useRetryNowMutation";
 import { IssueScheduledRetryCard } from "../components/IssueScheduledRetryCard";
 import { ExternallyConnectedTaskBanner } from "../components/chat/ExternallyConnectedTaskBanner";
 import {
@@ -4589,6 +4591,39 @@ export function TaskDetailSurface({ conversation, tasksTab }: { tasksTab?: TaskS
     },
   });
 
+  const retryScheduledRetryNow = useRetryNowMutation(issueId);
+
+  const checkMonitorNowMutate = checkIssueMonitorNow.mutate;
+  const retryScheduledRetryMutate = retryScheduledRetryNow.mutate;
+
+  const handleCheckWaitNow = useCallback(() => {
+    if (!issue) {
+      pushToast({
+        title: "Nothing to check",
+        body: "This wait is no longer scheduled.",
+        tone: "info",
+      });
+      return;
+    }
+    const action = resolveCheckWaitNowAction(issue);
+    if (action === "monitor") {
+      checkMonitorNowMutate();
+      return;
+    }
+    if (action === "scheduled-retry") {
+      retryScheduledRetryMutate();
+      return;
+    }
+    pushToast({
+      title: "Nothing to check",
+      body: "This wait is no longer scheduled.",
+      tone: "info",
+    });
+  }, [issue, checkMonitorNowMutate, retryScheduledRetryMutate, pushToast]);
+
+  const checkingWaitNow =
+    checkIssueMonitorNow.isPending || retryScheduledRetryNow.isPending;
+
   const approvalDecision = useMutation({
     mutationFn: async ({
       approvalId,
@@ -5805,8 +5840,8 @@ export function TaskDetailSurface({ conversation, tasksTab }: { tasksTab?: TaskS
       onRetryExternalObjects: externalObjectsState.isEnabled
         ? externalObjectsState.refetch
         : undefined,
-      onCheckMonitorNow: () => checkIssueMonitorNow.mutate(),
-      checkingMonitorNow: checkIssueMonitorNow.isPending,
+      onCheckMonitorNow: handleCheckWaitNow,
+      checkingMonitorNow: checkingWaitNow,
       documentDeepLink:
         documentDeepLink?.issueId === panelIssue.id ? documentDeepLink : null,
       onAttachmentOpened: handleAttachmentOpened,
@@ -5862,8 +5897,8 @@ export function TaskDetailSurface({ conversation, tasksTab }: { tasksTab?: TaskS
     relationIssueLinkState,
     streamlinedTaskDetailEnabled,
     resolvedHasActiveRun,
-    checkIssueMonitorNow.isPending,
-    checkIssueMonitorNow.mutate,
+    checkingWaitNow,
+    handleCheckWaitNow,
     externalObjectsState.isEnabled,
     externalObjectsState.groups,
     externalObjectsState.isLoading,
@@ -7507,8 +7542,8 @@ export function TaskDetailSurface({ conversation, tasksTab }: { tasksTab?: TaskS
 
       <IssueMonitorBanner
         issue={issue}
-        onCheckNow={() => checkIssueMonitorNow.mutate()}
-        checkingNow={checkIssueMonitorNow.isPending}
+        onCheckNow={handleCheckWaitNow}
+        checkingNow={checkingWaitNow}
       />
 
       {taskChatShellEnabled ? null : (
@@ -8060,8 +8095,8 @@ export function TaskDetailSurface({ conversation, tasksTab }: { tasksTab?: TaskS
                     hasVisibleMonitorSurface(issue) ? (
                       <IssueMonitorComposerStrip
                         issue={issue}
-                        onCheckNow={() => checkIssueMonitorNow.mutate()}
-                        checkingNow={checkIssueMonitorNow.isPending}
+                        onCheckNow={handleCheckWaitNow}
+                        checkingNow={checkingWaitNow}
                       />
                     ) : null
                   }
@@ -8379,8 +8414,8 @@ export function TaskDetailSurface({ conversation, tasksTab }: { tasksTab?: TaskS
                         ? externalObjectsState.refetch
                         : undefined
                     }
-                    onCheckMonitorNow={() => checkIssueMonitorNow.mutate()}
-                    checkingMonitorNow={checkIssueMonitorNow.isPending}
+                    onCheckMonitorNow={handleCheckWaitNow}
+                    checkingMonitorNow={checkingWaitNow}
                     fileTabsEnabled={fileViewerEnabled}
                     streamlinedTabs={streamlinedTaskDetailEnabled}
                     showSubtasksTab={streamlinedTaskDetailEnabled}
@@ -8444,8 +8479,8 @@ export function TaskDetailSurface({ conversation, tasksTab }: { tasksTab?: TaskS
                             ? externalObjectsState.refetch
                             : undefined
                         }
-                        onCheckMonitorNow={() => checkIssueMonitorNow.mutate()}
-                        checkingMonitorNow={checkIssueMonitorNow.isPending}
+                        onCheckMonitorNow={handleCheckWaitNow}
+                        checkingMonitorNow={checkingWaitNow}
                         documentDeepLink={
                           documentDeepLink?.issueId === issue.id
                             ? documentDeepLink

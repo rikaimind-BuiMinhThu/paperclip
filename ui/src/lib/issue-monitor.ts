@@ -226,6 +226,31 @@ export function deriveMonitorState(issue: MonitorIssueLike, now: MonitorDate = n
   };
 }
 
+const ACTIONABLE_WAIT_STATES: ReadonlySet<MonitorDisplayState> = new Set([
+  "scheduled",
+  "retrying",
+  "due-now",
+  "overdue",
+]);
+
+/**
+ * Which API "Check now" should call for the current wait surface.
+ * Returns `stale` when there is no actionable monitor or scheduled retry
+ * (avoids 409s from the wrong endpoint).
+ */
+export type CheckWaitNowAction = "monitor" | "scheduled-retry" | "stale";
+
+export function resolveCheckWaitNowAction(
+  issue: MonitorIssueLike,
+  now: MonitorDate = new Date(),
+): CheckWaitNowAction {
+  const derived = deriveMonitorState(issue, now);
+  if (!ACTIONABLE_WAIT_STATES.has(derived.state)) return "stale";
+  if (derived.source === "monitor") return "monitor";
+  if (derived.source === "scheduled-retry") return "scheduled-retry";
+  return "stale";
+}
+
 function countdownCadence(nextCheckAt: MonitorDate): number {
   const deltaMs = toTimestamp(nextCheckAt) - Date.now();
   return deltaMs > -DUE_NOW_GRACE_MS && deltaMs < DUE_NOW_GRACE_MS ? SECOND_MS : 30 * SECOND_MS;

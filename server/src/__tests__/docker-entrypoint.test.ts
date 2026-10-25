@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import { execFile } from "node:child_process";
-import { mkdtempSync, readFileSync, rmSync, writeFileSync, existsSync } from "node:fs";
+import { mkdtempSync, mkdirSync, readFileSync, rmSync, writeFileSync, existsSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -149,6 +149,21 @@ describe("docker-entrypoint.sh", () => {
     const { calls } = await runEntrypoint({ PAPERCLIP_HOME: stubDir });
 
     expect(calls).toContain(`chown -R node:node ${stubDir}`);
+  });
+
+  it("relinks a volume-persisted Cursor agent CLI into /usr/local/bin", async () => {
+    installStubs({ uid: 0, gid: 0 });
+    const binDir = join(stubDir, "bin");
+    mkdirSync(binDir, { recursive: true });
+    writeFileSync(join(binDir, "agent"), "#!/bin/sh\necho agent\n", { mode: 0o755 });
+    writeStub("ln", `echo "ln $*" >> "${logFile}"`);
+    writeStub("mkdir", `echo "mkdir $*" >> "${logFile}"`);
+
+    const { stdout, calls } = await runEntrypoint({ PAPERCLIP_HOME: stubDir });
+
+    expect(stdout).toContain("ENTRYPOINT-CMD-RAN");
+    expect(calls).toContain(`ln -sfn ${stubDir}/bin/agent /usr/local/bin/agent`);
+    expect(calls).toContain("gosu node echo ENTRYPOINT-CMD-RAN");
   });
 
   it("execs directly and silently when already running as the requested user (restricted PodSecurity)", async () => {
