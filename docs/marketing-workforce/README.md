@@ -19,13 +19,15 @@ Phases **0–4** are implemented as a teams-catalog package plus shared gate hel
 Team key: `paperclipai/optional/marketing/marketing-workforce`
 
 ```sh
-# Example (company id + URL-encoded catalog key)
+# Install / refresh package skills (skip existing agents/projects)
 curl -X POST "http://127.0.0.1:3100/api/companies/<COMPANY_ID>/teams/catalog/paperclipai%2Foptional%2Fmarketing%2Fmarketing-workforce/install" \
   -H 'Content-Type: application/json' \
-  -d '{"targetManagerAgentId":null,"collisionStrategy":"rename"}'
+  -d '{"targetManagerAgentId":null,"collisionStrategy":"skip"}'
 ```
 
-Skills appear under **Skills → Installed** after install. Team Catalog UI route may 404 in some builds; use the API.
+Then sync each specialist’s desired skills via `POST /api/agents/:id/skills/sync` with `{ "mode": "replace", "desiredSkills": [...] }` (see [PHASE-VERIFICATION.md](./PHASE-VERIFICATION.md)).
+
+Skills appear under **Skills → Installed** after install. Team Catalog UI route may 404 in some builds; use the API. `collisionStrategy: replace` is rejected by safe import.
 
 ## Gates (server-enforced)
 

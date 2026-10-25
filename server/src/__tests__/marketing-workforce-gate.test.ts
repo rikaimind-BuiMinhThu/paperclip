@@ -177,8 +177,7 @@ describeEmbeddedPostgres("assertMarketingPlanningAllowed", () => {
     });
   });
 
-  it("blocks unauthorized publish actions", async () => {
-    const { companyId, parentId } = await seedCampaign({ confirmed: true });
+  async function acceptDocument(companyId: string, parentId: string, key: string) {
     await db.insert(issueThreadInteractions).values({
       id: randomUUID(),
       companyId,
@@ -187,20 +186,25 @@ describeEmbeddedPostgres("assertMarketingPlanningAllowed", () => {
       status: "accepted",
       payload: {
         version: 1,
-        prompt: "Approve strategy?",
+        prompt: `Approve ${key}?`,
         options: [{ id: "approve", label: "Approve" }],
         target: {
           type: "issue_document",
           issueId: parentId,
           documentId: randomUUID(),
-          key: "marketing_strategy",
+          key,
           revisionId: randomUUID(),
           revisionNumber: 1,
-          label: "Strategy",
-          href: "#document-marketing_strategy",
+          label: key,
+          href: `#document-${key}`,
         },
       } as never,
     });
+  }
+
+  it("blocks unauthorized publish actions", async () => {
+    const { companyId, parentId } = await seedCampaign({ confirmed: true });
+    await acceptDocument(companyId, parentId, "marketing_strategy");
     await expect(
       assertMarketingPlanningAllowed({
         db,
@@ -218,6 +222,51 @@ describeEmbeddedPostgres("assertMarketingPlanningAllowed", () => {
       status: 422,
       details: { code: "marketing_external_action_unauthorized" },
     });
+  });
+
+  it("blocks unauthorized spend actions", async () => {
+    const { companyId, parentId } = await seedCampaign({ confirmed: true });
+    await acceptDocument(companyId, parentId, "marketing_strategy");
+    await expect(
+      assertMarketingPlanningAllowed({
+        db,
+        companyId,
+        parentId,
+        childExecutionPolicy: {
+          marketingWorkforce: {
+            workflowId: "WF-05",
+            phase: "execution",
+            externalAction: "spend",
+          },
+        },
+      }),
+    ).rejects.toMatchObject({
+      status: 422,
+      details: {
+        code: "marketing_external_action_unauthorized",
+        documentKey: "spend_authorization",
+      },
+    });
+  });
+
+  it("allows publish after publish_authorization is confirmed", async () => {
+    const { companyId, parentId } = await seedCampaign({ confirmed: true });
+    await acceptDocument(companyId, parentId, "marketing_strategy");
+    await acceptDocument(companyId, parentId, "publish_authorization");
+    await expect(
+      assertMarketingPlanningAllowed({
+        db,
+        companyId,
+        parentId,
+        childExecutionPolicy: {
+          marketingWorkforce: {
+            workflowId: "WF-05",
+            phase: "execution",
+            externalAction: "publish",
+          },
+        },
+      }),
+    ).resolves.toBeUndefined();
   });
 
   it("blocks gated children without a parent", async () => {
