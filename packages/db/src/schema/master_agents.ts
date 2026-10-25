@@ -34,6 +34,9 @@ export const masterAgents = pgTable(
     enabled: boolean("enabled").notNull().default(true),
     recommended: boolean("recommended").notNull().default(false),
     sortOrder: integer("sort_order").notNull().default(0),
+    /** When both set, hire uses these instead of instance_default_models. */
+    adapterType: text("adapter_type"),
+    model: text("model"),
     createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
     updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
   },

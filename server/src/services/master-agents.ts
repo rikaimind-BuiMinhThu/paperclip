@@ -64,7 +64,22 @@ function fillInstructions(template: string, agentName: string, organizationName:
     .replaceAll("{{organizationName}}", organizationName);
 }
 
+function normalizeModelOverride(
+  adapterType: string | null | undefined,
+  model: string | null | undefined,
+): { adapterType: MasterAgentRecord["adapterType"]; model: string | null } {
+  const trimmedModel = typeof model === "string" ? model.trim() : "";
+  if (adapterType && trimmedModel) {
+    return {
+      adapterType: adapterType as MasterAgentRecord["adapterType"],
+      model: trimmedModel,
+    };
+  }
+  return { adapterType: null, model: null };
+}
+
 function toAgentRecord(row: typeof masterAgents.$inferSelect): MasterAgentRecord {
+  const override = normalizeModelOverride(row.adapterType, row.model);
   return {
     id: row.id,
     slug: row.slug,
@@ -79,6 +94,8 @@ function toAgentRecord(row: typeof masterAgents.$inferSelect): MasterAgentRecord
     enabled: row.enabled,
     recommended: row.recommended,
     sortOrder: row.sortOrder,
+    adapterType: override.adapterType,
+    model: override.model,
   };
 }
 
@@ -301,6 +318,7 @@ export function masterAgentService(db: Db) {
     await ensureSeed();
     if (input.recommended) await clearRecommended();
     const slug = await uniqueSlug(input.title);
+    const override = normalizeModelOverride(input.adapterType, input.model);
     const [row] = await db.insert(masterAgents).values({
       slug,
       title: input.title,
@@ -314,6 +332,8 @@ export function masterAgentService(db: Db) {
       enabled: input.enabled ?? true,
       recommended: input.recommended ?? false,
       sortOrder: input.sortOrder ?? 0,
+      adapterType: override.adapterType,
+      model: override.model,
     }).returning();
     if (!row) throw unprocessable("Could not create the master agent");
     return toAgentRecord(row);
@@ -324,6 +344,12 @@ export function masterAgentService(db: Db) {
     const [current] = await db.select().from(masterAgents).where(eq(masterAgents.id, id));
     if (!current) throw notFound("Master agent not found");
     if (input.recommended) await clearRecommended(id);
+    const nextOverride = (input.adapterType !== undefined || input.model !== undefined)
+      ? normalizeModelOverride(
+        input.adapterType !== undefined ? input.adapterType : current.adapterType,
+        input.model !== undefined ? input.model : current.model,
+      )
+      : normalizeModelOverride(current.adapterType, current.model);
     const [row] = await db.update(masterAgents).set({
       title: input.title ?? current.title,
       department: input.department ?? current.department,
@@ -336,6 +362,8 @@ export function masterAgentService(db: Db) {
       enabled: input.enabled ?? current.enabled,
       recommended: input.recommended ?? current.recommended,
       sortOrder: input.sortOrder ?? current.sortOrder,
+      adapterType: nextOverride.adapterType,
+      model: nextOverride.model,
       updatedAt: new Date(),
     }).where(eq(masterAgents.id, id)).returning();
     if (!row) throw notFound("Master agent not found");
@@ -579,15 +607,19 @@ export function masterAgentService(db: Db) {
       env = { [envKey]: { type: "secret_ref", secretId: secret.id, version: "latest" } };
     }
 
-    const hireParams = {
+    const hireBase = {
       companyId,
       companyName: company.name,
-      adapterType: modelRow.adapterType,
-      model: modelRow.model,
       env,
       ownerUserId: modelRow.ownerUserId,
       credentialKind: modelRow.credentialKind,
       actor,
+    };
+    const resolveHireModel = (master: MasterAgentRecord) => {
+      if (master.adapterType && master.model) {
+        return { adapterType: master.adapterType, model: master.model };
+      }
+      return { adapterType: modelRow.adapterType, model: modelRow.model };
     };
 
     const companyAgents = await db.select().from(agents).where(eq(agents.companyId, companyId));
@@ -615,7 +647,12 @@ export function masterAgentService(db: Db) {
       if (findExistingForMaster(master)) {
         throw conflict("This starter is already hired in this organization");
       }
-      const agent = await hireOne({ ...hireParams, master, reportsTo: null });
+      const agent = await hireOne({
+        ...hireBase,
+        ...resolveHireModel(master),
+        master,
+        reportsTo: null,
+      });
       return { agents: [agent], managerAgentId: agent.id, label: agent.name };
     }
 
@@ -640,7 +677,8 @@ export function masterAgentService(db: Db) {
       markHired(managerMaster.id);
     } else {
       const hiredManager = await hireOne({
-        ...hireParams,
+        ...hireBase,
+        ...resolveHireModel(managerMaster),
         master: managerMaster,
         reportsTo: null,
       });
@@ -657,7 +695,8 @@ export function masterAgentService(db: Db) {
         continue;
       }
       const created = await hireOne({
-        ...hireParams,
+        ...hireBase,
+        ...resolveHireModel(master),
         master,
         reportsTo: managerAgentId,
       });

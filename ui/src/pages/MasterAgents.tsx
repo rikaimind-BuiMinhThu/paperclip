@@ -11,6 +11,7 @@ import {
   type MasterTeamRecord,
 } from "@paperclipai/shared";
 import { accessApi } from "@/api/access";
+import { agentsApi } from "@/api/agents";
 import { masterAgentsApi } from "@/api/masterAgents";
 import { GALLERY_DEPARTMENT_LABEL } from "@/components/onboarding/MasterAgentGallery";
 import { MasterAgentIcon } from "@/components/onboarding/master-agent-icons";
@@ -29,10 +30,14 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { ToggleSwitch } from "@/components/ui/toggle-switch";
 import { useBreadcrumbs } from "@/context/BreadcrumbContext";
+import { useCompany } from "@/context/CompanyContext";
 import { useTranslation } from "@/i18n";
 import { INSTANCE_SETTINGS_PATH_PREFIX } from "@/lib/instance-settings";
 import { queryKeys } from "@/lib/queryKeys";
 import { Link } from "@/lib/router";
+
+const CUSTOM_MODEL_VALUE = "__custom__";
+const EMPTY_MODEL_VALUE = "";
 
 type AgentDraft = {
   title: string;
@@ -45,6 +50,8 @@ type AgentDraft = {
   canCreateAgents: boolean;
   enabled: boolean;
   recommended: boolean;
+  adapterType: DefaultModelAdapterType | "";
+  model: string;
 };
 
 type TeamDraft = {
@@ -68,7 +75,97 @@ function agentDraft(agent?: MasterAgentRecord): AgentDraft {
     canCreateAgents: agent?.canCreateAgents ?? false,
     enabled: agent?.enabled ?? true,
     recommended: agent?.recommended ?? false,
+    adapterType: agent?.adapterType ?? "",
+    model: agent?.model ?? "",
   };
+}
+
+function modelOverridePayload(adapterType: DefaultModelAdapterType | "", model: string) {
+  const trimmed = model.trim();
+  if (adapterType && trimmed) {
+    return { adapterType, model: trimmed };
+  }
+  return { adapterType: null, model: null };
+}
+
+function CatalogModelSelect(props: {
+  id: string;
+  adapterType: DefaultModelAdapterType | "";
+  model: string;
+  disabled?: boolean;
+  allowEmpty?: boolean;
+  emptyLabel?: string;
+  companyId: string | null;
+  onModelChange: (model: string) => void;
+}) {
+  const { t } = useTranslation();
+  const [manualMode, setManualMode] = useState(false);
+  const modelsQuery = useQuery({
+    queryKey: props.companyId && props.adapterType
+      ? queryKeys.agents.adapterModels(props.companyId, props.adapterType, null)
+      : ["instance", "default-model", "catalog", "idle"],
+    queryFn: () => agentsApi.adapterModels(props.companyId!, props.adapterType as string, { environmentId: null }),
+    enabled: Boolean(props.companyId && props.adapterType),
+  });
+  const catalog = modelsQuery.data ?? [];
+  const modelInCatalog = catalog.some((entry) => entry.id === props.model);
+  const catalogEmpty = !modelsQuery.isLoading && !modelsQuery.isFetching && catalog.length === 0;
+  const showManual = manualMode
+    || (Boolean(props.model) && !modelInCatalog && catalog.length > 0)
+    || catalogEmpty;
+  const selectValue = !props.model
+    ? EMPTY_MODEL_VALUE
+    : showManual
+      ? CUSTOM_MODEL_VALUE
+      : props.model;
+
+  useEffect(() => {
+    if (!props.model) setManualMode(false);
+  }, [props.adapterType, props.model]);
+
+  return (
+    <div className="flex flex-col gap-2">
+      <select
+        id={props.id}
+        className="h-9 rounded-md border border-border bg-card px-3 text-sm"
+        value={selectValue}
+        disabled={props.disabled || !props.adapterType || modelsQuery.isLoading}
+        onChange={(event) => {
+          const next = event.target.value;
+          if (next === CUSTOM_MODEL_VALUE) {
+            setManualMode(true);
+            if (modelInCatalog) props.onModelChange("");
+            return;
+          }
+          setManualMode(false);
+          props.onModelChange(next);
+        }}
+      >
+        {props.allowEmpty ? (
+          <option value={EMPTY_MODEL_VALUE}>{props.emptyLabel ?? t("settings.masterAgentsPage.useInstanceDefault")}</option>
+        ) : (
+          <option value={EMPTY_MODEL_VALUE} disabled>
+            {modelsQuery.isLoading
+              ? t("settings.masterAgentsPage.loadingModels")
+              : t("settings.masterAgentsPage.model")}
+          </option>
+        )}
+        {catalog.map((entry) => (
+          <option key={entry.id} value={entry.id}>{entry.label || entry.id}</option>
+        ))}
+        <option value={CUSTOM_MODEL_VALUE}>{t("settings.masterAgentsPage.customModel")}</option>
+      </select>
+      {showManual && props.adapterType ? (
+        <Input
+          id={`${props.id}-manual`}
+          value={props.model}
+          disabled={props.disabled}
+          placeholder={t("settings.masterAgentsPage.modelManualPlaceholder")}
+          onChange={(event) => props.onModelChange(event.target.value)}
+        />
+      ) : null}
+    </div>
+  );
 }
 
 function teamDraft(team: MasterTeamRecord | undefined, department: MasterAgentDepartment): TeamDraft {
@@ -94,6 +191,7 @@ function errorMessage(error: unknown) {
 export function MasterAgents() {
   const { t } = useTranslation();
   const { setBreadcrumbs } = useBreadcrumbs();
+  const { selectedCompanyId } = useCompany();
   const queryClient = useQueryClient();
   const [modelError, setModelError] = useState<string | null>(null);
   const [adapterType, setAdapterType] = useState<DefaultModelAdapterType>("claude_local");
@@ -187,6 +285,7 @@ export function MasterAgents() {
       const icon = (MASTER_AGENT_ICONS as readonly string[]).includes(agentForm.icon)
         ? agentForm.icon as (typeof MASTER_AGENT_ICONS)[number]
         : "user" as const;
+      const override = modelOverridePayload(agentForm.adapterType, agentForm.model);
       const body = {
         title: agentForm.title,
         department: agentForm.department,
@@ -198,6 +297,8 @@ export function MasterAgents() {
         canCreateAgents: agentForm.canCreateAgents,
         enabled: agentForm.enabled,
         recommended: agentForm.recommended,
+        adapterType: override.adapterType,
+        model: override.model,
       };
       if (editingAgentId && editingAgentId !== "new") {
         return masterAgentsApi.update(editingAgentId, body);
@@ -294,18 +395,23 @@ export function MasterAgents() {
               className="h-9 rounded-md border border-border bg-card px-3 text-sm"
               value={adapterType}
               disabled={!canManage}
-              onChange={(event) => setAdapterType(event.target.value as DefaultModelAdapterType)}
+              onChange={(event) => {
+                setAdapterType(event.target.value as DefaultModelAdapterType);
+                setModel("");
+              }}
             >
               {DEFAULT_MODEL_ADAPTER_TYPES.map((value) => (
                 <option key={value} value={value}>{value}</option>
               ))}
             </select>
             <Label htmlFor="default-model">{t("settings.masterAgentsPage.model")}</Label>
-            <Input
+            <CatalogModelSelect
               id="default-model"
-              value={model}
+              adapterType={adapterType}
+              model={model}
               disabled={!canManage}
-              onChange={(event) => setModel(event.target.value)}
+              companyId={selectedCompanyId}
+              onModelChange={setModel}
             />
             <div className="flex gap-4 text-sm">
               <label className="flex items-center gap-2">
@@ -542,6 +648,32 @@ export function MasterAgents() {
               >
                 {AGENT_ROLES.map((role) => <option key={role} value={role}>{role}</option>)}
               </select>
+              <Label htmlFor="agent-adapter">{t("settings.masterAgentsPage.adapter")}</Label>
+              <select
+                id="agent-adapter"
+                className="h-9 rounded-md border border-border bg-card px-3 text-sm"
+                value={agentForm.adapterType}
+                onChange={(event) => {
+                  const next = event.target.value as DefaultModelAdapterType | "";
+                  setAgentForm({ ...agentForm, adapterType: next, model: "" });
+                }}
+              >
+                <option value="">{t("settings.masterAgentsPage.useInstanceDefault")}</option>
+                {DEFAULT_MODEL_ADAPTER_TYPES.map((value) => (
+                  <option key={value} value={value}>{value}</option>
+                ))}
+              </select>
+              <Label htmlFor="agent-model">{t("settings.masterAgentsPage.model")}</Label>
+              <CatalogModelSelect
+                id="agent-model"
+                adapterType={agentForm.adapterType}
+                model={agentForm.model}
+                allowEmpty
+                emptyLabel={t("settings.masterAgentsPage.useInstanceDefault")}
+                companyId={selectedCompanyId}
+                onModelChange={(next) => setAgentForm({ ...agentForm, model: next })}
+              />
+              <p className="text-xs text-muted-foreground">{t("settings.masterAgentsPage.modelOverrideHint")}</p>
               <Label htmlFor="agent-icon">{t("settings.masterAgentsPage.icon")}</Label>
               <select
                 id="agent-icon"
@@ -601,7 +733,13 @@ export function MasterAgents() {
                   </Button>
                   <Button
                     type="button"
-                    disabled={!agentForm.title.trim() || !agentForm.description.trim() || !agentForm.instructions.trim() || saveAgent.isPending}
+                    disabled={
+                      !agentForm.title.trim()
+                      || !agentForm.description.trim()
+                      || !agentForm.instructions.trim()
+                      || Boolean(agentForm.adapterType) !== Boolean(agentForm.model.trim())
+                      || saveAgent.isPending
+                    }
                     onClick={() => saveAgent.mutate()}
                   >
                     {t("settings.masterAgentsPage.save")}

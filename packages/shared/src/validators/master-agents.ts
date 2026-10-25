@@ -79,6 +79,8 @@ export const masterAgentSchema = z.object({
   enabled: z.boolean(),
   recommended: z.boolean(),
   sortOrder: z.number().int(),
+  adapterType: z.enum(DEFAULT_MODEL_ADAPTER_TYPES).nullable(),
+  model: z.string().nullable(),
 }).strict();
 
 export type MasterAgentRecord = z.infer<typeof masterAgentSchema>;
@@ -103,6 +105,9 @@ export const masterTeamSchema = z.object({
 
 export type MasterTeamRecord = z.infer<typeof masterTeamSchema>;
 
+const optionalAdapterType = z.enum(DEFAULT_MODEL_ADAPTER_TYPES).nullable().optional();
+const optionalModel = z.string().trim().max(200).nullable().optional();
+
 export const createMasterAgentSchema = z.object({
   title: z.string().trim().min(1).max(120),
   department: departmentSchema,
@@ -115,11 +120,50 @@ export const createMasterAgentSchema = z.object({
   enabled: z.boolean().optional(),
   recommended: z.boolean().optional(),
   sortOrder: z.number().int().min(0).max(10_000).optional(),
-}).strict();
+  adapterType: optionalAdapterType,
+  model: optionalModel,
+}).strict().superRefine((value, ctx) => {
+  const hasAdapter = value.adapterType != null;
+  const hasModel = Boolean(value.model && value.model.length > 0);
+  if (hasAdapter !== hasModel) {
+    ctx.addIssue({
+      code: z.ZodIssueCode.custom,
+      message: "Send both adapterType and model, or neither",
+      path: hasAdapter ? ["model"] : ["adapterType"],
+    });
+  }
+});
 
 export type CreateMasterAgent = z.infer<typeof createMasterAgentSchema>;
 
-export const updateMasterAgentSchema = createMasterAgentSchema.partial().strict();
+export const updateMasterAgentSchema = z.object({
+  title: z.string().trim().min(1).max(120).optional(),
+  department: departmentSchema.optional(),
+  description: z.string().trim().min(1).max(200).optional(),
+  instructions: z.string().trim().min(1).max(20_000).optional(),
+  role: roleSchema.optional(),
+  icon: iconSchema.optional(),
+  skillKeys: z.array(z.string().trim().min(1)).max(20).optional(),
+  canCreateAgents: z.boolean().optional(),
+  enabled: z.boolean().optional(),
+  recommended: z.boolean().optional(),
+  sortOrder: z.number().int().min(0).max(10_000).optional(),
+  adapterType: optionalAdapterType,
+  model: optionalModel,
+}).strict().superRefine((value, ctx) => {
+  if (value.adapterType === undefined && value.model === undefined) return;
+  const hasAdapter = value.adapterType != null;
+  const hasModel = Boolean(value.model && value.model.length > 0);
+  // Explicit null on both clears the override.
+  if (value.adapterType === null && (value.model === null || value.model === "")) return;
+  if (hasAdapter !== hasModel) {
+    ctx.addIssue({
+      code: z.ZodIssueCode.custom,
+      message: "Send both adapterType and model, or neither",
+      path: hasAdapter ? ["model"] : ["adapterType"],
+    });
+  }
+});
 
 export type UpdateMasterAgent = z.infer<typeof updateMasterAgentSchema>;
 

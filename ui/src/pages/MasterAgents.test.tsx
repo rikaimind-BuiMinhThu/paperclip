@@ -46,6 +46,19 @@ vi.mock("@/context/BreadcrumbContext", () => ({
   useBreadcrumbs: () => ({ setBreadcrumbs: mocks.setBreadcrumbs }),
 }));
 
+vi.mock("@/context/CompanyContext", () => ({
+  useCompany: () => ({ selectedCompanyId: "company-1" }),
+}));
+
+vi.mock("@/api/agents", () => ({
+  agentsApi: {
+    adapterModels: vi.fn().mockResolvedValue([
+      { id: "auto", label: "Auto" },
+      { id: "claude-sonnet-4-5", label: "Claude Sonnet 4.5" },
+    ]),
+  },
+}));
+
 vi.mock("@/lib/router", () => ({
   Link: ({ children, to }: { children: ReactNode; to: string }) => <a href={to}>{children}</a>,
 }));
@@ -86,6 +99,8 @@ const agent: MasterAgentRecord = {
   enabled: true,
   recommended: true,
   sortOrder: 0,
+  adapterType: null,
+  model: null,
 };
 
 const teams: MasterTeamRecord[] = [];

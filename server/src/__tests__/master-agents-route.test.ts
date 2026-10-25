@@ -125,6 +125,45 @@ describeEmbeddedPostgres("master agent gallery", () => {
     expect(duplicate.status).toBe(409);
   });
 
+  it("hires with a per-agent model override when set on the master agent", async () => {
+    const seeded = await seedCompanyWithBoardAccess(ctx.db, "Gallery per-agent model");
+    const admin = appFor(adminActor(seeded.actor));
+    const board = appFor(seeded.actor);
+
+    await request(admin).put("/api/instance/default-model").send({
+      adapterType: "claude_local",
+      model: "claude-sonnet-platform",
+      credential: { kind: "stored_login" },
+    });
+
+    const created = await request(admin).post("/api/instance/master-agents").send({
+      title: "Override Analyst",
+      department: "engineering",
+      description: "Uses a catalog model override.",
+      instructions: "Ship the override.",
+      adapterType: "cursor",
+      model: "composer-2",
+    });
+    expect(created.status).toBe(201);
+    expect(created.body.adapterType).toBe("cursor");
+    expect(created.body.model).toBe("composer-2");
+
+    const hired = await request(board)
+      .post(`/api/companies/${seeded.companyId}/onboarding/hires`)
+      .send({ masterAgentId: created.body.id });
+    expect(hired.status).toBe(201);
+    expect(hired.body.agents[0].adapterType).toBe("cursor");
+    expect(hired.body.agents[0].adapterConfig.model).toBe("composer-2");
+
+    const cleared = await request(admin).patch(`/api/instance/master-agents/${created.body.id}`).send({
+      adapterType: null,
+      model: null,
+    });
+    expect(cleared.status).toBe(200);
+    expect(cleared.body.adapterType).toBeNull();
+    expect(cleared.body.model).toBeNull();
+  });
+
   it("sets reportsTo on a team hire", async () => {
     const seeded = await seedCompanyWithBoardAccess(ctx.db, "Gallery team");
     const admin = appFor(adminActor(seeded.actor));
