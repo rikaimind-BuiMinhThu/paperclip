@@ -163,7 +163,7 @@ export function masterDepartmentService(db: Db) {
   }
 
   async function logInstanceChange(
-    actor: { actorType: "user" | "agent" | "system"; actorId: string | null },
+    actor: { actorType: "user" | "agent" | "system"; actorId: string },
     action: string,
     entityId: string,
   ) {
