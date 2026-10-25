@@ -2818,7 +2818,7 @@ function IssueDetailActivityTab({
                 {!issueCostSummary.hasCost &&
                 !issueCostSummary.hasTokens &&
                 !issueCostSummary.hasRuntime ? (
-                  <span>No direct cost data.</span>
+                  <span>{t("issues.detail.noDirectCost")}</span>
                 ) : null}
               </div>
               {hasIssueTreeCost && issueTreeCostSummary ? (
@@ -7144,10 +7144,10 @@ export function TaskDetailSurface({ conversation, tasksTab }: { tasksTab?: TaskS
           <Badge
             variant="outline"
             className="border-sky-500/40 bg-sky-500/10 text-(length:--text-nano) text-sky-700 dark:text-sky-300"
-            title="This task is a generated watchdog task. It verifies whether stopped work in the watched task tree is legitimate."
+            title={t("issues.detail.watchdogTaskTooltip")}
           >
             <ScanEye className="h-3 w-3" />
-            Watchdog
+            {t("issues.detail.watchdog")}
           </Badge>
         ) : null}
 
@@ -7182,10 +7182,10 @@ export function TaskDetailSurface({ conversation, tasksTab }: { tasksTab?: TaskS
             variant="outline"
             data-testid="issue-detail-parked-blocker"
             className="border-amber-500/60 bg-amber-500/15 text-(length:--text-nano) text-amber-700 dark:text-amber-300"
-            title="Blocked by parked work — at least one assigned blocker is in backlog and will not wake its assignee."
+            title={t("issues.detail.blockedByParkedTooltip")}
           >
             <Flag className="h-3 w-3" />
-            Blocked by parked work
+            {t("issues.detail.blockedByParked")}
           </Badge>
         ) : null}
 
@@ -7284,8 +7284,8 @@ export function TaskDetailSurface({ conversation, tasksTab }: { tasksTab?: TaskS
                   archiveFromInbox.mutate(issue.id);
               }}
               disabled={archivePending}
-              title="Archive from inbox"
-              aria-label="Archive from inbox"
+              title={t("issues.detail.archiveFromInbox")}
+              aria-label={t("issues.detail.archiveFromInbox")}
             >
               <Archive className="h-4 w-4" />
             </Button>

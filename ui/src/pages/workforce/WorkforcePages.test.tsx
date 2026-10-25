@@ -67,7 +67,7 @@ describe("workforce pages", () => {
     });
     const view = render(<WorkforceOverview />);
     await vi.waitFor(() => {
-      expect(view.host.textContent).toContain("No AI employees yet");
+      expect(view.host.textContent).toContain("AI従業員はまだいません");
     });
     view.cleanup();
   });

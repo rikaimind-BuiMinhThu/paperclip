@@ -10,6 +10,7 @@ import { StatusIcon } from "@/components/StatusIcon";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { useTranslation } from "@/i18n";
 import {
   applyIssueFilters,
   countActiveIssueFilters,
@@ -35,10 +36,10 @@ const ARTIFACT_MAX_PAGES = 5;
 export type AgentTaskSortField = "updated" | "created" | "status" | "title";
 
 const SORT_OPTIONS: ReadonlyArray<[AgentTaskSortField, string]> = [
-  ["updated", "Last updated"],
-  ["created", "Created"],
-  ["status", "Status"],
-  ["title", "Title"],
+  ["updated", "agentWorkPanels.lastUpdated"],
+  ["created", "agentWorkPanels.created"],
+  ["status", "agentWorkPanels.status"],
+  ["title", "agentWorkPanels.title"],
 ];
 
 export function sortAgentTasks(
@@ -114,6 +115,7 @@ export function AgentTasksPanel({
   /** The conversation issue itself, which is not one of the agent's tasks. */
   excludeIssueId?: string;
 }) {
+  const { t } = useTranslation();
   const [query, setQuery] = useState("");
   const [filters, setFilters] = useState<IssueFilterState>(defaultIssueFilterState);
   const [sortField, setSortField] = useState<AgentTaskSortField>("updated");
@@ -150,15 +152,15 @@ export function AgentTasksPanel({
   const capped = (tasksQuery.data?.length ?? 0) >= AGENT_TASK_LIMIT;
 
   return (
-    <section className="flex flex-col gap-3" aria-label="Agent tasks">
+    <section className="flex flex-col gap-3" aria-label={t("agentWorkPanels.tasksAria")}>
       <div className="flex items-center gap-1">
         <div className="relative min-w-0 flex-1">
           <Search className="pointer-events-none absolute left-2 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-muted-foreground" />
           <Input
             value={query}
             onChange={(event) => setQuery(event.target.value)}
-            placeholder="Search tasks"
-            aria-label="Search tasks"
+            placeholder={t("agentWorkPanels.searchTasks")}
+            aria-label={t("agentWorkPanels.searchTasks")}
             className="h-8 pl-7 text-sm"
           />
         </div>
@@ -174,13 +176,13 @@ export function AgentTasksPanel({
         />
         <Popover>
           <PopoverTrigger asChild>
-            <Button variant="outline" size="icon" className="h-8 w-8 shrink-0" title="Sort" aria-label="Sort tasks">
+            <Button variant="outline" size="icon" className="h-8 w-8 shrink-0" title={t("agentWorkPanels.sortTasks")} aria-label={t("agentWorkPanels.sortTasks")}>
               <ArrowUpDown className="h-3.5 w-3.5" />
             </Button>
           </PopoverTrigger>
           <PopoverContent align="end" className="w-48 p-0">
             <div className="space-y-0.5 p-2">
-              {SORT_OPTIONS.map(([field, label]) => (
+              {SORT_OPTIONS.map(([field, labelKey]) => (
                 <button
                   key={field}
                   type="button"
@@ -196,7 +198,7 @@ export function AgentTasksPanel({
                     }
                   }}
                 >
-                  <span>{label}</span>
+                  <span>{t(labelKey)}</span>
                   {sortField === field ? (
                     <span className="text-xs text-muted-foreground">{sortDir === "asc" ? "↑" : "↓"}</span>
                   ) : null}

@@ -1,7 +1,8 @@
 // @vitest-environment jsdom
 
-import { describe, expect, it } from "vitest";
+import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import type { CompanySecretProviderConfig, SecretProviderDescriptor } from "@paperclipai/shared";
+import { DEFAULT_LOCALE, i18n } from "@/i18n";
 import {
   findCreateProviderReplacement,
   getAwsManagedPathPreview,
@@ -52,6 +53,14 @@ function providerConfig(
 }
 
 describe("Secrets page provider helpers", () => {
+  beforeEach(async () => {
+    await i18n.changeLanguage("en");
+  });
+
+  afterEach(async () => {
+    await i18n.changeLanguage(DEFAULT_LOCALE);
+  });
+
   it("previews the derived AWS managed path from provider health details", () => {
     const health: SecretProviderHealthResponse = {
       providers: [

@@ -942,7 +942,7 @@ describe("IssuesList", () => {
     });
 
     const sortButton = Array.from(container.querySelectorAll("button")).find(
-      (button) => button.getAttribute("title") === "Sort",
+      (button) => button.getAttribute("title") === t("issues.list.sort.title"),
     );
     expect(sortButton).toBeTruthy();
     act(() => {
@@ -951,8 +951,8 @@ describe("IssuesList", () => {
     await waitForAssertion(() => {
       const labels = Array.from(document.body.querySelectorAll("button")).map((b) => b.textContent ?? "");
       // Status sort option renders, but the Priority option is gated off (PAP-411).
-      expect(labels.some((text) => text.includes("Status"))).toBe(true);
-      expect(labels.some((text) => text.includes("Priority"))).toBe(false);
+      expect(labels.some((text) => text.includes(t("issues.list.sort.status")))).toBe(true);
+      expect(labels.some((text) => text.includes(t("issues.list.sort.priority")))).toBe(false);
     });
 
     const groupButton = Array.from(container.querySelectorAll("button")).find(

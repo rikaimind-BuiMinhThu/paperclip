@@ -1225,12 +1225,12 @@ export function NewIssueDialog() {
     && !isUsingParentExecutionWorkspace;
   const assigneeOptionsTitle =
     assigneeAdapterType === "claude_local"
-      ? "Claude options"
+      ? t("newIssue.claudeOptions")
       : assigneeAdapterType === "codex_local"
-        ? "Codex options"
+        ? t("newIssue.codexOptions")
         : assigneeAdapterType === "opencode_local"
-          ? "OpenCode options"
-        : "Agent options";
+          ? t("newIssue.openCodeOptions")
+        : t("newIssue.agentOptions");
   const thinkingEffortOptions =
     assigneeAdapterType === "codex_local"
       ? codexReasoningEffortOptions(effectiveAssigneeModel)
@@ -1284,7 +1284,7 @@ export function NewIssueDialog() {
   const hasSavedDraft = Boolean(savedDraft?.title.trim() || savedDraft?.description.trim());
   const canDiscardDraft = hasDraft || hasSavedDraft;
   const createIssueErrorMessage =
-    createIssue.error instanceof Error ? createIssue.error.message : "Failed to create task. Try again.";
+    createIssue.error instanceof Error ? createIssue.error.message : t("newIssue.failedCreate");
   const stagedDocuments = stagedFiles.filter((file) => file.kind === "document");
   const stagedAttachments = stagedFiles.filter((file) => file.kind === "attachment");
 
@@ -1631,7 +1631,7 @@ export function NewIssueDialog() {
                   <button
                     type="button"
                     className="inline-flex items-center justify-center rounded-md p-1 text-muted-foreground hover:bg-accent/50 transition-colors"
-                    title="Add reviewer, approver, or watchdog"
+                    title={t("newIssue.addReviewerApproverWatchdog")}
                   >
                     <MoreHorizontal className="h-4 w-4" />
                   </button>
@@ -1649,7 +1649,7 @@ export function NewIssueDialog() {
                     }}
                   >
                     <Eye className="h-3 w-3" />
-                    Reviewer
+                    {t("newIssue.reviewer")}
                   </button>
                   <button
                     className={cn(
@@ -1663,7 +1663,7 @@ export function NewIssueDialog() {
                     }}
                   >
                     <ShieldCheck className="h-3 w-3" />
-                    Approver
+                    {t("newIssue.approver")}
                   </button>
                   <button
                     className={cn(
@@ -1684,7 +1684,7 @@ export function NewIssueDialog() {
                     }}
                   >
                     <ScanEye className="h-3 w-3" />
-                    Watchdog
+                    {t("newIssue.watchdog")}
                   </button>
                 </PopoverContent>
               </Popover>
@@ -1702,8 +1702,8 @@ export function NewIssueDialog() {
                 placeholder={t("issues.dialog.reviewerPlaceholder")}
                 contentStyle={entityPickerViewportStyle}
                 noneLabel={t("issues.dialog.noReviewer")}
-                searchPlaceholder="Search reviewers..."
-                emptyMessage="No reviewers found."
+                searchPlaceholder={t("newIssue.searchReviewers")}
+                emptyMessage={t("newIssue.noReviewers")}
                 onChange={setReviewerValue}
                 renderTriggerValue={(option) =>
                   option ? (
@@ -1747,8 +1747,8 @@ export function NewIssueDialog() {
                 placeholder={t("issues.dialog.approverPlaceholder")}
                 contentStyle={entityPickerViewportStyle}
                 noneLabel={t("issues.dialog.noApprover")}
-                searchPlaceholder="Search approvers..."
-                emptyMessage="No approvers found."
+                searchPlaceholder={t("newIssue.searchApprovers")}
+                emptyMessage={t("newIssue.noApprovers")}
                 onChange={setApproverValue}
                 renderTriggerValue={(option) =>
                   option ? (
@@ -1790,7 +1790,7 @@ export function NewIssueDialog() {
                     <button
                       type="button"
                       className="inline-flex max-w-full items-center gap-1.5 rounded-md border border-border px-2 py-1 text-xs hover:bg-accent/50 transition-colors min-w-0"
-                      title="Configure watchdog"
+                      title={t("newIssue.configureWatchdog")}
                     >
                       {selectedWatchdogAgent ? (
                         <>
@@ -1801,20 +1801,20 @@ export function NewIssueDialog() {
                           ) : null}
                         </>
                       ) : (
-                        <span className="text-muted-foreground">Set watchdog</span>
+                        <span className="text-muted-foreground">{t("newIssue.setWatchdog")}</span>
                       )}
                     </button>
                   </PopoverTrigger>
                   <PopoverContent className="w-80 p-3 space-y-3" align="start">
                     <div className="space-y-1.5">
-                      <div className="text-xs font-medium text-foreground">Watchdog agent</div>
+                      <div className="text-xs font-medium text-foreground">{t("newIssue.watchdogAgent")}</div>
                       <InlineEntitySelector
                         value={watchdogAgentId}
                         options={watchdogAgentOptions}
                         placeholder={t("issues.dialog.selectAgent")}
-                        noneLabel="No watchdog agent"
-                        searchPlaceholder="Search agents..."
-                        emptyMessage="No agents found."
+                        noneLabel={t("newIssue.noWatchdogAgent")}
+                        searchPlaceholder={t("newIssue.searchAgents")}
+                        emptyMessage={t("newIssue.noAgentsFound")}
                         onChange={setWatchdogAgentId}
                         renderTriggerValue={(option) =>
                           option ? (
@@ -1840,11 +1840,11 @@ export function NewIssueDialog() {
                       />
                     </div>
                     <div className="space-y-1.5">
-                      <div className="text-xs font-medium text-foreground">Instructions <span className="font-normal text-muted-foreground">(optional)</span></div>
+                      <div className="text-xs font-medium text-foreground">{t("newIssue.instructions")} <span className="font-normal text-muted-foreground">{t("newIssue.optional")}</span></div>
                       <Textarea
                         value={watchdogInstructions}
                         onChange={(event) => setWatchdogInstructions(event.target.value)}
-                        placeholder="What should the watchdog watch for and how should it keep work moving?"
+                        placeholder={t("newIssue.watchdogPlaceholder")}
                         rows={4}
                         className="text-xs"
                       />
@@ -1957,7 +1957,7 @@ export function NewIssueDialog() {
                   <div
                     className="flex w-full overflow-hidden rounded-md border border-border"
                     role="radiogroup"
-                    aria-label="Model lane"
+                    aria-label={t("newIssue.modelLane")}
                   >
                     {(["primary", "custom"] as const).map((lane) => (
                       <button
@@ -1991,8 +1991,8 @@ export function NewIssueDialog() {
                       placeholder={t("issues.dialog.defaultModel")}
                       contentStyle={entityPickerViewportStyle}
                       noneLabel={t("issues.dialog.defaultModel")}
-                      searchPlaceholder="Search models..."
-                      emptyMessage="No models found."
+                      searchPlaceholder={t("newIssue.searchModels")}
+                      emptyMessage={t("newIssue.noModelsFound")}
                       onChange={setAssigneeModelOverride}
                     />
                   </div>
@@ -2081,7 +2081,7 @@ export function NewIssueDialog() {
                           className="shrink-0 text-muted-foreground"
                           onClick={() => removeStagedFile(file.id)}
                           disabled={createIssue.isPending}
-                          title="Remove document"
+                          title={t("newIssue.removeDocument")}
                         >
                           <X className="h-3.5 w-3.5" />
                         </Button>
@@ -2112,7 +2112,7 @@ export function NewIssueDialog() {
                           className="shrink-0 text-muted-foreground"
                           onClick={() => removeStagedFile(file.id)}
                           disabled={createIssue.isPending}
-                          title="Remove attachment"
+                          title={t("newIssue.removeAttachment")}
                         >
                           <X className="h-3.5 w-3.5" />
                         </Button>

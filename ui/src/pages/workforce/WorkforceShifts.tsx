@@ -1,10 +1,12 @@
 import { useQuery } from "@tanstack/react-query";
 import { workforceApi } from "@/api/workforce";
 import { useCompany } from "@/context/CompanyContext";
+import { useTranslation } from "@/i18n";
 import { queryKeys } from "@/lib/queryKeys";
 import { Link, useParams } from "@/lib/router";
 
 export function WorkforceShifts() {
+  const { t } = useTranslation();
   const { shiftId } = useParams<{ shiftId?: string }>();
   const { selectedCompanyId } = useCompany();
   const shifts = useQuery({
@@ -20,7 +22,7 @@ export function WorkforceShifts() {
 
   return (
     <div className="flex flex-col gap-4 p-6">
-      <h1 className="text-2xl font-semibold">Shifts</h1>
+      <h1 className="text-2xl font-semibold">{t("workforce.shiftsTitle")}</h1>
       <div className="flex flex-col gap-2">
         {(shifts.data ?? []).map((shift) => (
           <Link key={shift.id} to={`/workforce/shifts/${shift.id}`} className="text-sm underline">
@@ -30,7 +32,7 @@ export function WorkforceShifts() {
       </div>
       {detail.data ? (
         <div className="flex flex-col gap-2 rounded-lg border p-4">
-          <h2 className="text-lg font-medium">Shift detail</h2>
+          <h2 className="text-lg font-medium">{t("workforce.shiftDetail")}</h2>
           <p className="text-sm">Summary: {detail.data.shift.summary ?? "none"}</p>
           <p className="text-sm">Previous: {detail.data.previous?.summary ?? "none"}</p>
           <p className="text-sm">Cost: {detail.data.shift.costCents} cents</p>

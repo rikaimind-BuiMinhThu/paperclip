@@ -4,6 +4,7 @@ import type { ReactNode } from "react";
 import { flushSync } from "react-dom";
 import { createRoot } from "react-dom/client";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { DEFAULT_LOCALE, i18n, t } from "@/i18n";
 import { MembershipAction } from "./MembershipAction";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -21,7 +22,8 @@ describe("MembershipAction", () => {
   let container: HTMLDivElement;
   let root: ReturnType<typeof createRoot> | null;
 
-  beforeEach(() => {
+  beforeEach(async () => {
+    await i18n.changeLanguage(DEFAULT_LOCALE);
     container = document.createElement("div");
     document.body.appendChild(container);
     root = null;
@@ -62,8 +64,8 @@ describe("MembershipAction", () => {
       />,
     );
 
-    expect(button().getAttribute("aria-label")).toBe("Leave Growth");
-    expect(button().textContent).toContain("Leave");
+    expect(button().getAttribute("aria-label")).toBe(t("membership.leaveNamed", { name: "Growth" }));
+    expect(button().textContent).toContain(t("membership.leave"));
   });
 
   it("renders a join action for left resources", async () => {
@@ -76,8 +78,8 @@ describe("MembershipAction", () => {
       />,
     );
 
-    expect(button().getAttribute("aria-label")).toBe("Join Growth");
-    expect(button().textContent).toContain("Join");
+    expect(button().getAttribute("aria-label")).toBe(t("membership.joinNamed", { name: "Growth" }));
+    expect(button().textContent).toContain(t("membership.join"));
   });
 
   it("prevents row navigation when clicked", async () => {
@@ -116,6 +118,6 @@ describe("MembershipAction", () => {
 
     expect(button().getAttribute("aria-busy")).toBe("true");
     expect(button().disabled).toBe(true);
-    expect(button().textContent).toContain("Joining...");
+    expect(button().textContent).toContain(t("membership.joining"));
   });
 });

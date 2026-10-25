@@ -741,4 +741,16 @@ export const queryKeys = {
   adapters: {
     all: ["adapters"] as const,
   },
+  workforce: {
+    overview: (companyId: string) => ["workforce", "overview", companyId] as const,
+    workflows: (companyId: string) => ["workforce", "workflows", companyId] as const,
+    workflow: (companyId: string, workflowId: string) =>
+      ["workforce", "workflow", companyId, workflowId] as const,
+    shifts: (companyId: string) => ["workforce", "shifts", companyId] as const,
+    shift: (companyId: string, shiftId: string) =>
+      ["workforce", "shift", companyId, shiftId] as const,
+    approvals: (companyId: string) => ["workforce", "approvals", companyId] as const,
+    run: (companyId: string, runId: string) =>
+      ["workforce", "run", companyId, runId] as const,
+  },
 };

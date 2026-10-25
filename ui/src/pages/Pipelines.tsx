@@ -129,6 +129,8 @@ import { applyLocalQueuedIssueCommentState, isQueuedIssueComment } from "../lib/
 import type { IssueChatComment } from "../lib/issue-chat-messages";
 import { Badge } from "@/components/ui/badge";
 import { useTranslation } from "@/i18n";
+import type { TFunction } from "i18next";
+import { timeAgo } from "../lib/timeAgo";
 
 type PipelineConversationActionableInteraction =
   | SuggestTasksInteraction
@@ -280,7 +282,7 @@ function RetryMetric({
 
 type RetryCleanupId = keyof PipelineAutomationRetryCleanupOptions | "keepAuditHistory";
 
-function retryCleanupItems(plan: PipelineAutomationRetryPlan): Array<{
+function retryCleanupItems(plan: PipelineAutomationRetryPlan, t: TFunction): Array<{
   id: RetryCleanupId;
   label: string;
   description: string;
@@ -291,29 +293,29 @@ function retryCleanupItems(plan: PipelineAutomationRetryPlan): Array<{
   return [
     {
       id: "retireDirectChildren",
-      label: "Retire direct child items",
-      description: "Hide child outputs from normal pipeline boards and parent rollups.",
+      label: t("pages.pipelines.cleanupRetireDirectChildren"),
+      description: t("pages.pipelines.cleanupRetireDirectChildrenDesc"),
       count: plan.effectCounts.directChildren,
       disabled: plan.effectCounts.directChildren === 0,
     },
     {
       id: "retireDescendants",
-      label: "Retire descendants",
-      description: "Hide downstream output items under those children.",
+      label: t("pages.pipelines.cleanupRetireDescendants"),
+      description: t("pages.pipelines.cleanupRetireDescendantsDesc"),
       count: plan.effectCounts.descendants,
       disabled: plan.effectCounts.descendants === 0,
     },
     {
       id: "cancelLinkedAutomationIssues",
-      label: "Cancel linked automation tasks",
-      description: "Cancel unfinished automation tasks superseded by the fresh retry.",
+      label: t("pages.pipelines.cleanupCancelLinkedTasks"),
+      description: t("pages.pipelines.cleanupCancelLinkedTasksDesc"),
       count: plan.effectCounts.linkedAutomationIssues,
       disabled: plan.effectCounts.linkedAutomationIssues === 0,
     },
     {
       id: "keepAuditHistory",
-      label: "Keep audit trail visible in item history",
-      description: "Record retry and retired outputs as history instead of deleting records.",
+      label: t("pages.pipelines.cleanupKeepAuditHistory"),
+      description: t("pages.pipelines.cleanupKeepAuditHistoryDesc"),
       required: true,
       disabled: true,
     },
@@ -336,12 +338,17 @@ function retryCleanupFromIds(ids: Set<string>): PipelineAutomationRetryCleanupOp
   };
 }
 
-function retryPrimaryActionLabel(plan: PipelineAutomationRetryPlan) {
+function retryPrimaryActionLabel(plan: PipelineAutomationRetryPlan, t: TFunction) {
   const retiredOutputCount = plan.effectCounts.directChildren + plan.effectCounts.descendants;
   if (retiredOutputCount > 0 && (plan.defaultCleanup.retireDirectChildren || plan.defaultCleanup.retireDescendants)) {
-    return `Retry and retire ${formatNumber(retiredOutputCount)} ${retiredOutputCount === 1 ? "item" : "items"}`;
+    const formatted = formatNumber(retiredOutputCount);
+    return retiredOutputCount === 1
+      ? t("pages.pipelines.retryAndRetireItem", { count: formatted })
+      : t("pages.pipelines.retryAndRetireItems", { count: formatted });
   }
-  return plan.scope === "previous_stage" ? "Retry previous step" : "Re-run this step";
+  return plan.scope === "previous_stage"
+    ? t("pages.pipelines.retryPreviousStep")
+    : t("pages.pipelines.rerunThisStep");
 }
 
 export function Pipelines() {
@@ -420,8 +427,8 @@ function descendantActiveWorkCount(value: { descendantActiveWorkCount?: number |
   return value.descendantActiveWorkCount ?? 0;
 }
 
-function formatLiveDownstream(count: number) {
-  return `${formatNumber(count)} live downstream`;
+function formatLiveDownstream(count: number, t: TFunction) {
+  return t("pages.pipelines.liveDownstream", { count: formatNumber(count) });
 }
 
 function pipelineActivityTime(pipeline: PipelineListItem) {
@@ -431,13 +438,32 @@ function pipelineActivityTime(pipeline: PipelineListItem) {
 type PipelineSortField = "name" | "activity" | "review" | "inMotion" | "openItems";
 type PipelineSortDir = "asc" | "desc";
 
-const PIPELINE_SORT_OPTIONS: ReadonlyArray<readonly [PipelineSortField, string]> = [
-  ["name", "Name"],
-  ["activity", "Last activity"],
-  ["review", "Most to review"],
-  ["inMotion", "Most in motion"],
-  ["openItems", "Most open items"],
+const PIPELINE_SORT_FIELDS: ReadonlyArray<PipelineSortField> = [
+  "name",
+  "activity",
+  "review",
+  "inMotion",
+  "openItems",
 ];
+
+function pipelineSortLabel(field: PipelineSortField, t: TFunction) {
+  switch (field) {
+    case "name":
+      return t("common.name");
+    case "activity":
+      return t("pages.pipelines.sortLastActivity");
+    case "review":
+      return t("pages.pipelines.sortMostToReview");
+    case "inMotion":
+      return t("pages.pipelines.sortMostInMotion");
+    case "openItems":
+      return t("pages.pipelines.sortMostOpenItems");
+    default: {
+      const _exhaustive: never = field;
+      return _exhaustive;
+    }
+  }
+}
 
 function comparePipelinesBySort(field: PipelineSortField, dir: PipelineSortDir) {
   const factor = dir === "asc" ? 1 : -1;
@@ -564,29 +590,19 @@ export function buildPipelineTableRows(
   return rows;
 }
 
-function formatOpenItems(count: number) {
-  return `${formatNumber(count)} open`;
+function formatOpenItems(count: number, t: TFunction) {
+  return t("pages.pipelines.openItemsCount", { count: formatNumber(count) });
 }
 
-function formatPipelineActivity(value: string | Date | null) {
-  if (!value) return "No activity";
+function formatPipelineActivity(value: string | Date | null, t: TFunction, locale?: string) {
+  if (!value) return t("pages.pipelines.noActivity");
   const then = new Date(value).getTime();
-  if (!Number.isFinite(then)) return "No activity";
-  const diffSeconds = Math.max(0, Math.round((Date.now() - then) / 1000));
-  if (diffSeconds < 60) return "just now";
-  const diffMinutes = Math.round(diffSeconds / 60);
-  if (diffMinutes < 60) return `${diffMinutes} min ago`;
-  const diffHours = Math.round(diffMinutes / 60);
-  if (diffHours < 24) return diffHours === 1 ? "1 hr ago" : `${diffHours} hr ago`;
-  const diffDays = Math.round(diffHours / 24);
-  if (diffDays === 1) return "yesterday";
-  if (diffDays < 7) return `${diffDays} days ago`;
-  if (diffDays < 14) return "last week";
-  if (diffDays < 30) return `${Math.round(diffDays / 7)} weeks ago`;
-  return new Date(value).toLocaleDateString("en-US", { month: "short", day: "numeric" });
+  if (!Number.isFinite(then)) return t("pages.pipelines.noActivity");
+  return timeAgo(value, locale);
 }
 
 function PipelineStatusChip({ archivedAt }: { archivedAt: Date | string | null }) {
+  const { t } = useTranslation();
   const paused = Boolean(archivedAt);
   return (
     <Badge variant="outline"
@@ -597,7 +613,7 @@ function PipelineStatusChip({ archivedAt }: { archivedAt: Date | string | null }
           : "border-emerald-200 bg-emerald-50 text-emerald-700 dark:border-emerald-900/60 dark:bg-emerald-950/30 dark:text-emerald-300",
       )}
     >
-      {paused ? "Paused" : "Active"}
+      {paused ? t("pages.pipelines.statusPaused") : t("pages.pipelines.statusActive")}
     </Badge>
   );
 }
@@ -619,7 +635,7 @@ export function PipelinesIndexTable({
   search,
   onSearchChange,
 }: PipelinesIndexTableProps) {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const [collapsedPipelineIds, setCollapsedPipelineIds] = useState<Set<string>>(() => new Set());
   const [sortField, setSortField] = useState<PipelineSortField>("name");
   const [sortDir, setSortDir] = useState<PipelineSortDir>("asc");
@@ -664,12 +680,12 @@ export function PipelinesIndexTable({
     <div className="space-y-4">
       <div className="flex flex-col gap-3 border-y border-border py-4 lg:flex-row lg:items-center lg:justify-between">
         <label className="relative block w-full max-w-md">
-          <span className="sr-only">Search pipelines</span>
+          <span className="sr-only">{t("pages.pipelines.searchAria")}</span>
           <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
           <Input
             value={search}
             onChange={(event) => onSearchChange(event.target.value)}
-            placeholder="Search pipelines"
+            placeholder={t("pages.pipelines.searchPlaceholder")}
             className="h-10 pl-9"
           />
         </label>
@@ -685,7 +701,7 @@ export function PipelinesIndexTable({
               )}
               disabled={!connectionsAvailable}
               onClick={() => onViewModeChange("nested")}
-              title="Nested view"
+              title={t("pages.pipelines.viewNested")}
             >
               <ListTree className="h-3.5 w-3.5" />
             </button>
@@ -698,7 +714,7 @@ export function PipelinesIndexTable({
                   : "text-muted-foreground hover:text-foreground",
               )}
               onClick={() => onViewModeChange("flat")}
-              title="Flat list"
+              title={t("pages.pipelines.viewFlat")}
             >
               <List className="h-3.5 w-3.5" />
             </button>
@@ -706,13 +722,13 @@ export function PipelinesIndexTable({
 
           <Popover>
             <PopoverTrigger asChild>
-              <Button variant="outline" size="icon" className="h-8 w-8 shrink-0" title="Sort">
+              <Button variant="outline" size="icon" className="h-8 w-8 shrink-0" title={t("pages.pipelines.sortTitle")}>
                 <ArrowUpDown className="h-3.5 w-3.5" />
               </Button>
             </PopoverTrigger>
             <PopoverContent align="end" className="w-48 p-0">
               <div className="space-y-0.5 p-2">
-                {PIPELINE_SORT_OPTIONS.map(([field, label]) => (
+                {PIPELINE_SORT_FIELDS.map((field) => (
                   <button
                     key={field}
                     type="button"
@@ -722,7 +738,7 @@ export function PipelinesIndexTable({
                     )}
                     onClick={() => selectSort(field)}
                   >
-                    <span>{label}</span>
+                    <span>{pipelineSortLabel(field, t)}</span>
                     {sortField === field && (
                       <span className="text-xs text-muted-foreground">{sortDir === "asc" ? "↑" : "↓"}</span>
                     )}
@@ -741,11 +757,11 @@ export function PipelinesIndexTable({
           <table className="w-full min-w-(--sz-780px) border-collapse text-sm">
             <thead>
               <tr className="border-b border-border text-left text-(length:--text-micro) font-semibold uppercase tracking-widest text-muted-foreground">
-                <th className="py-2 pl-3 pr-4">Name</th>
-                <th className="px-4 py-2">Attention</th>
-                <th className="px-4 py-2">Open items</th>
-                <th className="px-4 py-2">Status</th>
-                <th className="px-4 py-2">Last activity</th>
+                <th className="py-2 pl-3 pr-4">{t("pages.pipelines.columnName")}</th>
+                <th className="px-4 py-2">{t("pages.pipelines.columnAttention")}</th>
+                <th className="px-4 py-2">{t("pages.pipelines.columnOpenItems")}</th>
+                <th className="px-4 py-2">{t("pages.pipelines.columnStatus")}</th>
+                <th className="px-4 py-2">{t("pages.pipelines.columnLastActivity")}</th>
               </tr>
             </thead>
             <tbody>
@@ -761,7 +777,9 @@ export function PipelinesIndexTable({
                           <button
                             type="button"
                             className="inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-sm text-muted-foreground hover:bg-accent/60 hover:text-foreground"
-                            aria-label={row.expanded ? `Collapse ${row.pipeline.name}` : `Expand ${row.pipeline.name}`}
+                            aria-label={row.expanded
+                              ? t("pages.pipelines.collapsePipeline", { name: row.pipeline.name })
+                              : t("pages.pipelines.expandPipeline", { name: row.pipeline.name })}
                             onClick={() => togglePipeline(row.pipeline.id)}
                           >
                             {row.expanded ? <ChevronDown className="h-4 w-4" /> : <ChevronRight className="h-4 w-4" />}
@@ -777,7 +795,7 @@ export function PipelinesIndexTable({
                             {row.pipeline.name}
                           </Link>
                           {row.parentPipelineName ? (
-                            <span className="ml-2 text-muted-foreground">under {row.parentPipelineName}</span>
+                            <span className="ml-2 text-muted-foreground">{t("pages.pipelines.underParent", { name: row.parentPipelineName })}</span>
                           ) : row.pipeline.description ? (
                             <span className="ml-2 text-muted-foreground">- {row.pipeline.description}</span>
                           ) : null}
@@ -789,32 +807,35 @@ export function PipelinesIndexTable({
                         {attentionCount > 0 ? (
                           <span className="inline-flex items-center gap-1.5 font-semibold text-red-700 dark:text-red-400">
                             <span className="h-2 w-2 rounded-full bg-red-600" aria-hidden="true" />
-                            {formatNumber(attentionCount)} to review
+                            {t("pages.pipelines.toReview", { count: formatNumber(attentionCount) })}
                           </span>
                         ) : null}
                         {inMotionCount > 0 ? (
                           <span className="text-muted-foreground">
-                            {formatNumber(inMotionCount)} in motion
+                            {t("pages.pipelines.inMotion", { count: formatNumber(inMotionCount) })}
                           </span>
                         ) : null}
                         {liveDownstreamCount > 0 ? (
                           <span className="inline-flex items-center gap-1.5 text-emerald-700 dark:text-emerald-300">
                             <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" aria-hidden="true" />
-                            {formatLiveDownstream(liveDownstreamCount)}
+                            {formatLiveDownstream(liveDownstreamCount, t)}
                           </span>
                         ) : null}
                       </div>
                     </td>
-                    <td className="px-4 text-muted-foreground">{formatOpenItems(pipelineOpenItemCount(row.pipeline))}</td>
+                    <td className="px-4 text-muted-foreground">{formatOpenItems(pipelineOpenItemCount(row.pipeline), t)}</td>
                     <td className="px-4"><PipelineStatusChip archivedAt={row.pipeline.archivedAt} /></td>
-                    <td className="px-4 text-muted-foreground">{formatPipelineActivity(pipelineActivityTime(row.pipeline))}</td>
+                    <td className="px-4 text-muted-foreground">{formatPipelineActivity(pipelineActivityTime(row.pipeline), t, i18n.language)}</td>
                   </tr>
                 );
               })}
             </tbody>
           </table>
           <p className="mt-4 text-sm text-muted-foreground">
-            Showing {formatNumber(rows.length)} of {formatNumber(filteredPipelines.length)}.
+            {t("pages.pipelines.showingCount", {
+              shown: formatNumber(rows.length),
+              total: formatNumber(filteredPipelines.length),
+            })}
           </p>
         </div>
       )}
@@ -1223,6 +1244,7 @@ function PipelineCaseCard({
   caseItem: BoardCase;
   isOverlay?: boolean;
 }) {
+  const { t } = useTranslation();
   const title = getCaseTitle(caseItem);
   const isWorking = isWorkingCase(caseItem);
   const blockerCount = getOpenBlockerCount(caseItem);
@@ -1282,7 +1304,7 @@ function PipelineCaseCard({
           {liveDownstreamCount > 0 ? (
             <Badge variant="outline" className="border-emerald-400/35 bg-emerald-50 text-(length:--text-nano) text-emerald-700 dark:border-emerald-300/30 dark:bg-emerald-900/25 dark:text-emerald-300">
               <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" aria-hidden="true" />
-              {formatLiveDownstream(liveDownstreamCount)}
+              {formatLiveDownstream(liveDownstreamCount, t)}
             </Badge>
           ) : null}
         </div>
@@ -2857,14 +2879,14 @@ export function PipelineItemDetailView({ pipelineId, caseId }: { pipelineId: str
             {primaryAction}
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="outline" size="icon" aria-label="Item actions">
+                <Button variant="outline" size="icon" aria-label={t("pages.pipelines.itemActionsAria")}>
                   <MoreHorizontal className="h-4 w-4" />
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
                 <DropdownMenuItem
                   disabled={!stageAutomation || rerunCurrentStageAutomation.isPending || rerunBlockedByPermission}
-                  title={rerunBlockedByPermission ? "Permission still missing — request access first" : undefined}
+                  title={rerunBlockedByPermission ? t("pages.pipelines.permissionMissingTitle") : undefined}
                   onSelect={(event) => {
                     event.preventDefault();
                     setRetryTargetStageId(null);
@@ -2876,7 +2898,7 @@ export function PipelineItemDetailView({ pipelineId, caseId }: { pipelineId: str
                   ) : (
                     <CircleDot className="h-4 w-4" />
                   )}
-                  Re-run this step
+                  {t("pages.pipelines.rerunThisStep")}
                 </DropdownMenuItem>
                 {previousRetryPlan?.allowed ? (
                   <DropdownMenuItem
@@ -2892,7 +2914,7 @@ export function PipelineItemDetailView({ pipelineId, caseId }: { pipelineId: str
                     ) : (
                       <ArrowUpDown className="h-4 w-4" />
                     )}
-                    Retry previous step...
+                    {t("pages.pipelines.retryPreviousStepMenu")}
                   </DropdownMenuItem>
                 ) : null}
                 <DropdownMenuItem
@@ -2904,7 +2926,7 @@ export function PipelineItemDetailView({ pipelineId, caseId }: { pipelineId: str
                   }}
                 >
                   <ArrowUpDown className="h-4 w-4" />
-                  Move to stage...
+                  {t("pages.pipelines.moveToStageMenu")}
                 </DropdownMenuItem>
                 <DropdownMenuItem
                   variant="destructive"
@@ -2915,7 +2937,7 @@ export function PipelineItemDetailView({ pipelineId, caseId }: { pipelineId: str
                   }}
                 >
                   <Trash2 className="h-4 w-4" />
-                  Remove item
+                  {t("pages.pipelines.removeItem")}
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
@@ -2926,10 +2948,9 @@ export function PipelineItemDetailView({ pipelineId, caseId }: { pipelineId: str
       <Dialog open={moveDialogOpen} onOpenChange={setMoveDialogOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Move to stage</DialogTitle>
+            <DialogTitle>{t("pages.pipelines.moveToStage")}</DialogTitle>
             <DialogDescription>
-              Manual moves can bypass the normal agent handoff for this item. Let automation move work when possible;
-              use this override only when the board needs to correct the item state.
+              {t("pages.pipelines.moveToStageDescription")}
             </DialogDescription>
           </DialogHeader>
           <div className="space-y-4 py-2">
@@ -2937,16 +2958,15 @@ export function PipelineItemDetailView({ pipelineId, caseId }: { pipelineId: str
               <div className="flex gap-2">
                 <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0" />
                 <p>
-                  Moving this item may skip stage automation, review expectations, and configured transition paths.
-                  Kujira AI Harness will still enforce blockers and other hard safety checks.
+                  {t("pages.pipelines.moveToStageWarning")}
                 </p>
               </div>
             </div>
             <label className="block space-y-2">
-              <span className="text-sm font-medium text-foreground">Stage</span>
+              <span className="text-sm font-medium text-foreground">{t("pages.pipelines.stageLabel")}</span>
               <Select value={moveStageKey} onValueChange={setMoveStageKey}>
                 <SelectTrigger>
-                  <SelectValue placeholder="Choose a stage" />
+                  <SelectValue placeholder={t("pages.pipelines.chooseStage")} />
                 </SelectTrigger>
                 <SelectContent>
                   {moveStageOptions.map((stage) => (
@@ -2965,14 +2985,18 @@ export function PipelineItemDetailView({ pipelineId, caseId }: { pipelineId: str
               onClick={() => setMoveDialogOpen(false)}
               disabled={moveItemToStage.isPending}
             >
-              Cancel
+              {t("common.cancel")}
             </Button>
             <Button
               type="button"
               onClick={() => moveItemToStage.mutate()}
               disabled={!selectedMoveStage || moveItemToStage.isPending}
             >
-              {moveItemToStage.isPending ? "Moving..." : `Move to ${selectedMoveStage?.name ?? "stage"}`}
+              {moveItemToStage.isPending
+                ? t("pages.pipelines.moving")
+                : t("pages.pipelines.moveToStageButton", {
+                    name: selectedMoveStage?.name ?? t("pages.pipelines.moveToStageFallback"),
+                  })}
             </Button>
           </DialogFooter>
         </DialogContent>
@@ -2986,38 +3010,40 @@ export function PipelineItemDetailView({ pipelineId, caseId }: { pipelineId: str
       }}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>{retryDialogScope === "previous_stage" ? "Retry previous step" : "Re-run this step"}</DialogTitle>
+            <DialogTitle>{retryDialogScope === "previous_stage"
+              ? t("pages.pipelines.retryPreviousStep")
+              : t("pages.pipelines.rerunThisStep")}</DialogTitle>
             <DialogDescription>
-              Review the automation preflight before Kujira AI Harness dispatches a fresh run.
+              {t("pages.pipelines.retryDialogDescription")}
             </DialogDescription>
           </DialogHeader>
           {retryPlan.isLoading ? (
             <div className="flex items-center gap-2 py-4 text-sm text-muted-foreground">
               <Loader2 className="h-4 w-4 animate-spin" />
-              Checking retry safety...
+              {t("pages.pipelines.checkingRetrySafety")}
             </div>
           ) : retryPlan.error ? (
             <div className="rounded-sm border border-destructive/30 bg-destructive/5 p-3 text-sm text-destructive">
               {retryPlan.error instanceof ApiError && retryPlan.error.message
                 ? retryPlan.error.message
-                : "Could not check whether this automation can be retried."}
+                : t("pages.pipelines.retryPreflightFailed")}
             </div>
           ) : retryPlan.data ? (
             <div className="space-y-4 py-2">
               <div className="grid gap-3 text-sm sm:grid-cols-2">
                 <div>
-                  <div className="text-xs font-medium uppercase text-muted-foreground">From</div>
+                  <div className="text-xs font-medium uppercase text-muted-foreground">{t("pages.pipelines.retryFrom")}</div>
                   <div className="mt-1 font-medium text-foreground">{retryPlan.data.currentStage.name}</div>
                 </div>
                 <div>
-                  <div id="retry-runs-at-label" className="text-xs font-medium uppercase text-muted-foreground">Runs at</div>
+                  <div id="retry-runs-at-label" className="text-xs font-medium uppercase text-muted-foreground">{t("pages.pipelines.retryRunsAt")}</div>
                   {retryShowTargetDropdown ? (
                     <Select
                       value={retrySelectedTargetId}
                       onValueChange={(value) => setRetryTargetStageId(value)}
                     >
                       <SelectTrigger className="mt-1 w-full" aria-labelledby="retry-runs-at-label">
-                        <SelectValue placeholder="Choose a step" />
+                        <SelectValue placeholder={t("pages.pipelines.chooseStep")} />
                       </SelectTrigger>
                       <SelectContent>
                         {retryAvailableTargets.map((stage) => (
@@ -3028,11 +3054,11 @@ export function PipelineItemDetailView({ pipelineId, caseId }: { pipelineId: str
                       </SelectContent>
                     </Select>
                   ) : (
-                    <div className="mt-1 font-medium text-foreground">{retryPlan.data.targetStage?.name ?? "No retryable step"}</div>
+                    <div className="mt-1 font-medium text-foreground">{retryPlan.data.targetStage?.name ?? t("pages.pipelines.noRetryableStep")}</div>
                   )}
                 </div>
                 <div className="sm:col-span-2">
-                  <div className="text-xs font-medium uppercase text-muted-foreground">Automation</div>
+                  <div className="text-xs font-medium uppercase text-muted-foreground">{t("pages.pipelines.automationLabel")}</div>
                   <div className="mt-1 flex flex-wrap items-center gap-x-1 gap-y-1 text-foreground">
                     {retryPlan.data.routine ? (
                       <>
@@ -3042,7 +3068,7 @@ export function PipelineItemDetailView({ pipelineId, caseId }: { pipelineId: str
                         >
                           {retryPlan.data.routine.title}
                         </Link>
-                        <span className="text-muted-foreground">assigned to</span>
+                        <span className="text-muted-foreground">{t("pages.pipelines.assignedTo")}</span>
                         {retryPlan.data.routine.assigneeAgent ? (
                           <Link
                             to={`/agents/${retryPlan.data.routine.assigneeAgent.id}`}
@@ -3051,11 +3077,11 @@ export function PipelineItemDetailView({ pipelineId, caseId }: { pipelineId: str
                             {retryPlan.data.routine.assigneeAgent.name}
                           </Link>
                         ) : (
-                          <span className="font-medium text-muted-foreground">No responsible</span>
+                          <span className="font-medium text-muted-foreground">{t("pages.pipelines.noResponsible")}</span>
                         )}
                       </>
                     ) : (
-                      "No routine configured"
+                      t("pages.pipelines.noRoutineConfigured")
                     )}
                   </div>
                 </div>
@@ -3065,15 +3091,15 @@ export function PipelineItemDetailView({ pipelineId, caseId }: { pipelineId: str
                 {retryPreflightRefreshing ? (
                   <div className="absolute inset-0 z-10 flex items-center justify-center gap-2 rounded-sm bg-background/70 text-sm text-muted-foreground">
                     <Loader2 className="h-4 w-4 animate-spin" />
-                    Checking retry safety...
+                    {t("pages.pipelines.checkingRetrySafety")}
                   </div>
                 ) : null}
                 <div className={cn("space-y-4", retryPreflightRefreshing && "opacity-50")}>
                   <div className="grid gap-2 text-sm sm:grid-cols-4">
-                    <RetryMetric label="children" value={retryPlan.data.effectCounts.directChildren} />
-                    <RetryMetric label="descendants" value={retryPlan.data.effectCounts.descendants} />
-                    <RetryMetric label="linked tasks" value={retryPlan.data.effectCounts.linkedAutomationIssues} />
-                    <RetryMetric label="active work" value={retryPlan.data.effectCounts.activeDescendants} tone={retryPlan.data.effectCounts.activeDescendants > 0 ? "warning" : "default"} />
+                    <RetryMetric label={t("pages.pipelines.retryMetricChildren")} value={retryPlan.data.effectCounts.directChildren} />
+                    <RetryMetric label={t("pages.pipelines.retryMetricDescendants")} value={retryPlan.data.effectCounts.descendants} />
+                    <RetryMetric label={t("pages.pipelines.retryMetricLinkedTasks")} value={retryPlan.data.effectCounts.linkedAutomationIssues} />
+                    <RetryMetric label={t("pages.pipelines.retryMetricActiveWork")} value={retryPlan.data.effectCounts.activeDescendants} tone={retryPlan.data.effectCounts.activeDescendants > 0 ? "warning" : "default"} />
                   </div>
 
                   {retryPlan.data.blockers.length > 0 ? (
@@ -3095,12 +3121,12 @@ export function PipelineItemDetailView({ pipelineId, caseId }: { pipelineId: str
 
                   {retryIsNonImmediateTarget ? (
                     <p className="text-xs text-muted-foreground">
-                      Re-running from an earlier step affects more downstream items.
+                      {t("pages.pipelines.retryEarlierStepHint")}
                     </p>
                   ) : null}
 
                   <div className="space-y-2">
-                    {retryCleanupItems(retryPlan.data).map((option) => {
+                    {retryCleanupItems(retryPlan.data, t).map((option) => {
                       const checked = selectedRetryCleanupIds.has(option.id);
                       return (
                         <label
@@ -3149,7 +3175,7 @@ export function PipelineItemDetailView({ pipelineId, caseId }: { pipelineId: str
               onClick={() => setRetryDialogScope(null)}
               disabled={rerunCurrentStageAutomation.isPending || retryStageAutomation.isPending}
             >
-              Cancel
+              {t("common.cancel")}
             </Button>
             <Button
               type="button"
@@ -3166,8 +3192,8 @@ export function PipelineItemDetailView({ pipelineId, caseId }: { pipelineId: str
               }}
             >
               {(rerunCurrentStageAutomation.isPending || retryStageAutomation.isPending)
-                ? "Starting..."
-                : retryPlan.data ? retryPrimaryActionLabel(retryPlan.data) : "Retry"}
+                ? t("pages.pipelines.starting")
+                : retryPlan.data ? retryPrimaryActionLabel(retryPlan.data, t) : t("common.retry")}
             </Button>
           </DialogFooter>
         </DialogContent>
@@ -3418,7 +3444,7 @@ export function PipelineItemDetailView({ pipelineId, caseId }: { pipelineId: str
             )}
           </DetailSection>
 
-          <DetailSection title="Activity">
+          <DetailSection title={t("pages.pipelines.activitySection")}>
             {eventRows.length > 0 ? (
               <ol className="divide-y divide-border">
                 {eventRows.map((event) => (
@@ -3431,7 +3457,7 @@ export function PipelineItemDetailView({ pipelineId, caseId }: { pipelineId: str
                 ))}
               </ol>
             ) : (
-              <p className="py-3 text-sm text-muted-foreground">No activity yet.</p>
+              <p className="py-3 text-sm text-muted-foreground">{t("pages.pipelines.noActivityYet")}</p>
             )}
           </DetailSection>
         </aside>
@@ -3440,15 +3466,15 @@ export function PipelineItemDetailView({ pipelineId, caseId }: { pipelineId: str
       <Dialog open={removeDialogOpen} onOpenChange={setRemoveDialogOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Remove item</DialogTitle>
+            <DialogTitle>{t("pages.pipelines.removeItem")}</DialogTitle>
             <DialogDescription>
-              This moves the item out of active work. It stays visible in the pipeline history.
+              {t("pages.pipelines.removeItemDescription")}
             </DialogDescription>
           </DialogHeader>
           <DialogFooter>
-            <Button variant="outline" onClick={() => setRemoveDialogOpen(false)}>Keep item</Button>
+            <Button variant="outline" onClick={() => setRemoveDialogOpen(false)}>{t("pages.pipelines.keepItem")}</Button>
             <Button variant="destructive" onClick={() => removeItem.mutate()} disabled={removeItem.isPending || !removeStage}>
-              {removeItem.isPending ? "Removing..." : "Remove item"}
+              {removeItem.isPending ? t("pages.pipelines.removing") : t("pages.pipelines.removeItem")}
             </Button>
           </DialogFooter>
         </DialogContent>
@@ -3524,6 +3550,7 @@ function WaitingChildRow({
     descendantActiveWorkCount?: number | null;
   };
 }) {
+  const { t } = useTranslation();
   const liveDownstreamCount = descendantActiveWorkCount(row);
 
   return (
@@ -3544,7 +3571,7 @@ function WaitingChildRow({
                 </span>
               ) : null}
               {liveDownstreamCount > 0 ? (
-                <span>{formatLiveDownstream(liveDownstreamCount)}</span>
+                <span>{formatLiveDownstream(liveDownstreamCount, t)}</span>
               ) : null}
             </span>
           ) : null}
@@ -4058,6 +4085,7 @@ function ItemOutputsSection({
   error: boolean;
   onRetry: () => void;
 }) {
+  const { t } = useTranslation();
   if (!loading && !error && items.length === 0) return null;
 
   const documents = items.filter((item): item is PipelineCaseDocumentOutputItem => item.kind === "document");
@@ -4113,13 +4141,13 @@ function ItemOutputsSection({
       ) : error ? (
         <div className="flex items-center gap-2 py-2.5 text-xs text-destructive">
           <AlertTriangle className="h-4 w-4 shrink-0" />
-          <span>Couldn't load item outputs.</span>
+          <span>{t("pages.pipelines.couldNotLoadItemOutputs")}</span>
           <button
             type="button"
             onClick={onRetry}
             className="ml-auto rounded-sm border border-border px-2 py-0.5 text-muted-foreground hover:bg-accent hover:text-foreground"
           >
-            Retry
+            {t("common.retry")}
           </button>
         </div>
       ) : (
@@ -4336,6 +4364,7 @@ function DraftItemRow({
   onRemove: () => void;
   onChange: (fieldKey: string, value: string) => void;
 }) {
+  const { t } = useTranslation();
   const title = row.values.title?.trim() || `Item ${index + 1}`;
   const preview = fields
     .filter((field) => field.key !== "title")
@@ -4357,7 +4386,7 @@ function DraftItemRow({
           <Button variant="outline" size="icon" onClick={onToggle} aria-label={row.expanded ? "Collapse item" : "Expand item"}>
             {row.expanded ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
           </Button>
-          <Button variant="outline" size="icon" onClick={onRemove} aria-label="Remove item">
+          <Button variant="outline" size="icon" onClick={onRemove} aria-label={t("pages.pipelines.removeItem")}>
             <Trash2 className="h-4 w-4" />
           </Button>
         </div>

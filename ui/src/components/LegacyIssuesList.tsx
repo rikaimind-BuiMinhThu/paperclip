@@ -1816,7 +1816,7 @@ export function IssuesList({
           {viewState.viewMode === "list" && (
             <Popover>
               <PopoverTrigger asChild>
-                <Button variant="outline" size="icon" className="h-8 w-8 shrink-0" title="Sort">
+                <Button variant="outline" size="icon" className="h-8 w-8 shrink-0" title={t("issues.list.sort.title")} aria-label={t("issues.list.sort.title")}>
                   <ArrowUpDown className="h-3.5 w-3.5" />
                 </Button>
               </PopoverTrigger>
@@ -1824,15 +1824,15 @@ export function IssuesList({
                 <div className="p-2 space-y-0.5">
                   {/* PAP-411: "priority" sort option hidden behind SHOW_TASK_PRIORITY_UI (comparator stays dormant). */}
                   {([
-                    ["workflow", "Workflow"],
-                    ["status", "Status"],
-                    ["priority", "Priority"],
-                    ["title", "Title"],
-                    ["created", "Created"],
-                    ["updated", "Updated"],
+                    ["workflow", "issues.list.sort.workflow"],
+                    ["status", "issues.list.sort.status"],
+                    ["priority", "issues.list.sort.priority"],
+                    ["title", "issues.list.sort.titleField"],
+                    ["created", "issues.list.sort.created"],
+                    ["updated", "issues.list.sort.updated"],
                   ] as const)
                     .filter(([field]) => SHOW_TASK_PRIORITY_UI || field !== "priority")
-                    .map(([field, label]) => (
+                    .map(([field, labelKey]) => (
                     <button
                       key={field}
                       className={`flex items-center justify-between w-full px-2 py-1.5 text-sm rounded-sm ${
@@ -1846,7 +1846,7 @@ export function IssuesList({
                         }
                       }}
                     >
-                      <span>{label}</span>
+                      <span>{t(labelKey)}</span>
                       {viewState.sortField === field && (
                         <span className="text-xs text-muted-foreground">
                           {viewState.sortDir === "asc" ? "\u2191" : "\u2193"}

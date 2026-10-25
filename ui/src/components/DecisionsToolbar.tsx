@@ -12,6 +12,7 @@ import {
   type AttentionGroupBy,
   type AttentionSortOrder,
 } from "../lib/attention";
+import { useTranslation } from "@/i18n";
 import { cn } from "../lib/utils";
 import { Button } from "./ui/button";
 import { Checkbox } from "./ui/checkbox";
@@ -52,12 +53,13 @@ export function DecisionsToolbar({
   sortOrder,
   onSortOrderChange,
 }: DecisionsToolbarProps) {
+  const { t } = useTranslation();
   const activeFilterCount = countActiveAttentionFilters(filters);
   return (
     <div className="flex items-center gap-2">
       {visibleCount > 0 && (
         <span className="text-sm text-muted-foreground">
-          {visibleCount} {visibleCount === 1 ? "decision" : "decisions"}
+          {t("decisionsToolbar.count", { count: visibleCount })}
         </span>
       )}
       {/* Filter */}
@@ -68,8 +70,8 @@ export function DecisionsToolbar({
             variant="outline"
             size="icon"
             className={cn("h-8 w-8 shrink-0", activeFilterCount > 0 && "bg-accent")}
-            title="Filter"
-            aria-label="Filter"
+            title={t("common.filter")}
+            aria-label={t("common.filter")}
           >
             <ListFilter className="h-3.5 w-3.5" />
           </Button>
@@ -86,8 +88,8 @@ export function DecisionsToolbar({
             variant="outline"
             size="icon"
             className={cn("h-8 w-8 shrink-0", groupBy !== "none" && "bg-accent")}
-            title="Group"
-            aria-label="Group"
+            title={t("common.group")}
+            aria-label={t("common.group")}
           >
             <Layers className="h-3.5 w-3.5" />
           </Button>
@@ -119,8 +121,8 @@ export function DecisionsToolbar({
             variant="outline"
             size="icon"
             className="h-8 w-8 shrink-0"
-            title="Sort"
-            aria-label="Sort"
+            title={t("common.sort")}
+            aria-label={t("common.sort")}
           >
             <ArrowUpDown className="h-3.5 w-3.5" />
           </Button>

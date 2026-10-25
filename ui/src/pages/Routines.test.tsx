@@ -6,6 +6,7 @@ import { createRoot } from "react-dom/client";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import type { FolderListResult, Issue, RoutineListItem } from "@paperclipai/shared";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { DEFAULT_LOCALE, i18n } from "@/i18n";
 import { Routines, buildRoutineGroups, buildRoutineSections, sortRoutines } from "./Routines";
 
 let currentSearch = "";
@@ -380,7 +381,9 @@ async function flush() {
 describe("Routines page", () => {
   let container: HTMLDivElement;
 
-  beforeEach(() => {
+  beforeEach(async () => {
+    // Assertions in this file use English chrome copy; pin EN for the suite.
+    await i18n.changeLanguage("en");
     container = document.createElement("div");
     document.body.appendChild(container);
     currentSearch = "";
@@ -400,9 +403,10 @@ describe("Routines page", () => {
     localStorage.clear();
   });
 
-  afterEach(() => {
+  afterEach(async () => {
     container.remove();
     document.body.innerHTML = "";
+    await i18n.changeLanguage(DEFAULT_LOCALE);
   });
 
   it("groups routines by project using project names for the section labels", () => {
@@ -834,7 +838,7 @@ describe("Routines page", () => {
     }
 
     expect(container.textContent).toContain("This folder is empty");
-    expect(container.textContent).toContain("New routine in this folder");
+    expect(container.textContent).toContain("New routine");
 
     await act(async () => {
       secondRoot.unmount();

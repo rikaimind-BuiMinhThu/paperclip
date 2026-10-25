@@ -5,10 +5,12 @@ import { EmptyState } from "@/components/EmptyState";
 import { MetricCard } from "@/components/MetricCard";
 import { Button } from "@/components/ui/button";
 import { useCompany } from "@/context/CompanyContext";
+import { useTranslation } from "@/i18n";
 import { queryKeys } from "@/lib/queryKeys";
 import { Link } from "@/lib/router";
 
 export function WorkforceOverview() {
+  const { t } = useTranslation();
   const { selectedCompanyId } = useCompany();
   const queryClient = useQueryClient();
   const overviewQuery = useQuery({
@@ -31,41 +33,43 @@ export function WorkforceOverview() {
     <div className="flex flex-col gap-6 p-6">
       <div className="flex items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-semibold">Workforce</h1>
-          <p className="text-sm text-muted-foreground">AI employees, shifts, and approvals.</p>
+          <h1 className="text-2xl font-semibold">{t("workforce.title")}</h1>
+          <p className="text-sm text-muted-foreground">{t("workforce.subtitle")}</p>
         </div>
         <Button type="button" variant="outline" asChild>
-          <Link to="/agents">Employees</Link>
+          <Link to="/agents">{t("workforce.employees")}</Link>
         </Button>
       </div>
       {empty ? (
         <EmptyState
           icon={Users}
-          title="No AI employees yet"
-          message="Hire an employee, then start the daily sales workflow."
-          action="Create Sachi workflow"
+          title={t("workforce.emptyTitle")}
+          message={t("workforce.emptyMessage")}
+          action={t("workforce.createSachi")}
           onAction={() => createTemplate.mutate()}
         />
       ) : null}
       {overview ? (
         <>
           <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
-            <MetricCard icon={Users} value={overview.totalAgents} label="Total agents" to="/agents" />
-            <MetricCard icon={Users} value={overview.invokableAgents} label="Invokable" />
-            <MetricCard icon={Clock} value={overview.runningShifts} label="Running shifts" to="/workforce/shifts" />
-            <MetricCard icon={ShieldAlert} value={overview.waitingForHumanShifts} label="Waiting for human" to="/workforce/approvals" />
-            <MetricCard icon={ShieldAlert} value={overview.failedRunsLast7Days} label="Failed runs, 7 days" />
-            <MetricCard icon={LayoutDashboard} value={overview.completedShifts} label="Completed shifts" />
-            <MetricCard icon={LayoutDashboard} value={overview.monthSpendCents} label="Month spend, cents" />
-            <MetricCard icon={ShieldAlert} value={overview.pendingApprovals} label="Pending approvals" to="/workforce/approvals" />
+            <MetricCard icon={Users} value={overview.totalAgents} label={t("workforce.totalAgents")} to="/agents" />
+            <MetricCard icon={Users} value={overview.invokableAgents} label={t("workforce.invokable")} />
+            <MetricCard icon={Clock} value={overview.runningShifts} label={t("workforce.runningShifts")} to="/workforce/shifts" />
+            <MetricCard icon={ShieldAlert} value={overview.waitingForHumanShifts} label={t("workforce.waitingForHuman")} to="/workforce/approvals" />
+            <MetricCard icon={ShieldAlert} value={overview.failedRunsLast7Days} label={t("workforce.failedRuns7d")} />
+            <MetricCard icon={LayoutDashboard} value={overview.completedShifts} label={t("workforce.completedShifts")} />
+            <MetricCard icon={LayoutDashboard} value={overview.monthSpendCents} label={t("workforce.monthSpendCents")} />
+            <MetricCard icon={ShieldAlert} value={overview.pendingApprovals} label={t("workforce.pendingApprovals")} to="/workforce/approvals" />
           </div>
           <p className="text-sm text-muted-foreground">
-            Next routine: {overview.nextRoutine?.title ?? "none"}
-            {overview.nextRoutine?.nextRunAt ? ` at ${new Date(overview.nextRoutine.nextRunAt).toLocaleString()}` : ""}
+            {t("workforce.nextRoutine", { title: overview.nextRoutine?.title ?? t("workforce.none") })}
+            {overview.nextRoutine?.nextRunAt
+              ? ` ${t("workforce.at", { when: new Date(overview.nextRoutine.nextRunAt).toLocaleString() })}`
+              : ""}
           </p>
           <div className="flex flex-col gap-2">
-            <h2 className="text-lg font-medium">Recent shifts</h2>
-            {overview.recentShifts.length === 0 ? <p className="text-sm text-muted-foreground">No shifts yet.</p> : null}
+            <h2 className="text-lg font-medium">{t("workforce.recentShifts")}</h2>
+            {overview.recentShifts.length === 0 ? <p className="text-sm text-muted-foreground">{t("workforce.noShiftsYet")}</p> : null}
             {overview.recentShifts.map((shift) => (
               <Link key={shift.id} to={`/workforce/shifts/${shift.id}`} className="text-sm underline">
                 {shift.status} · {new Date(shift.startedAt).toLocaleString()}

@@ -1021,8 +1021,8 @@ describe("Agents", () => {
     await flushReact();
 
     // List view (default).
-    const orgAction = container.querySelector('[aria-label="Leave Alpha"]');
-    const orgStar = container.querySelector('[aria-label="Star Alpha"]');
+    const orgAction = container.querySelector(`[aria-label="${t("membership.leaveNamed", { name: "Alpha" })}"]`);
+    const orgStar = container.querySelector(`[aria-label="${t("starToggle.star", { name: "Alpha" })}"]`);
     expect(orgAction).not.toBeNull();
     expect(orgStar).not.toBeNull();
     expect(orgAction?.closest(".hidden")).toBeNull();
@@ -1037,8 +1037,8 @@ describe("Agents", () => {
     });
     await flushReact();
 
-    const listAction = container.querySelector('[aria-label="Leave Alpha"]');
-    const listStar = container.querySelector('[aria-label="Star Alpha"]');
+    const listAction = container.querySelector(`[aria-label="${t("membership.leaveNamed", { name: "Alpha" })}"]`);
+    const listStar = container.querySelector(`[aria-label="${t("starToggle.star", { name: "Alpha" })}"]`);
     expect(listAction).not.toBeNull();
     expect(listStar).not.toBeNull();
     expect(listAction?.closest(".hidden")).toBeNull();
