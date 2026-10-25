@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "packageName": "@paperclipai/teams-catalog",
   "packageVersion": "0.1.0",
-  "generatedAt": "2026-10-25T13:46:02.394Z",
+  "generatedAt": "2026-10-25T14:06:36.353Z",
   "teams": [
     {
       "id": "paperclipai:bundled:company-defaults:core-exec-team",
@@ -470,7 +470,7 @@
       "category": "marketing",
       "slug": "marketing-workforce",
       "name": "Marketing Workforce",
-      "description": "Hub-and-spoke marketing organization led by a Marketing Manager. Phase 1 ships Requirement Discovery (WF-01); specialists are scaffolded for later research, strategy, content, channel, growth, and analytics workflows.",
+      "description": "Hub-and-spoke marketing organization led by a Marketing Manager covering discovery through research, strategy, content, campaigns, growth, analytics, and optimization.",
       "path": "catalog/optional/marketing/marketing-workforce",
       "entrypoint": "TEAM.md",
       "schema": "agentcompanies/v1",
@@ -484,14 +484,18 @@
         "marketing",
         "discovery",
         "workforce",
-        "interview"
+        "research",
+        "strategy",
+        "content",
+        "growth",
+        "analytics"
       ],
       "counts": {
         "agents": 7,
         "projects": 1,
-        "tasks": 1,
+        "tasks": 8,
         "routines": 0,
-        "localSkills": 6,
+        "localSkills": 48,
         "catalogSkills": 0,
         "externalSkillSources": 0
       },
@@ -522,6 +526,15 @@
         },
         {
           "type": "local",
+          "ref": "ads-campaign-setup",
+          "agentSlugs": [
+            "channel-campaign"
+          ],
+          "resolved": true,
+          "localPath": "skills/ads-campaign-setup/SKILL.md"
+        },
+        {
+          "type": "local",
           "ref": "approval-management",
           "agentSlugs": [
             "marketing-manager"
@@ -531,12 +544,300 @@
         },
         {
           "type": "local",
+          "ref": "blog-writing",
+          "agentSlugs": [
+            "content-creative"
+          ],
+          "resolved": true,
+          "localPath": "skills/blog-writing/SKILL.md"
+        },
+        {
+          "type": "local",
+          "ref": "budget-planning",
+          "agentSlugs": [
+            "marketing-strategy"
+          ],
+          "resolved": true,
+          "localPath": "skills/budget-planning/SKILL.md"
+        },
+        {
+          "type": "local",
+          "ref": "campaign-monitoring",
+          "agentSlugs": [
+            "channel-campaign"
+          ],
+          "resolved": true,
+          "localPath": "skills/campaign-monitoring/SKILL.md"
+        },
+        {
+          "type": "local",
+          "ref": "campaign-roi-analysis",
+          "agentSlugs": [
+            "marketing-analytics"
+          ],
+          "resolved": true,
+          "localPath": "skills/campaign-roi-analysis/SKILL.md"
+        },
+        {
+          "type": "local",
+          "ref": "channel-strategy",
+          "agentSlugs": [
+            "marketing-strategy"
+          ],
+          "resolved": true,
+          "localPath": "skills/channel-strategy/SKILL.md"
+        },
+        {
+          "type": "local",
+          "ref": "competitor-discovery",
+          "agentSlugs": [
+            "market-research"
+          ],
+          "resolved": true,
+          "localPath": "skills/competitor-discovery/SKILL.md"
+        },
+        {
+          "type": "local",
+          "ref": "competitor-profile-analysis",
+          "agentSlugs": [
+            "market-research"
+          ],
+          "resolved": true,
+          "localPath": "skills/competitor-profile-analysis/SKILL.md"
+        },
+        {
+          "type": "local",
+          "ref": "content-planning",
+          "agentSlugs": [
+            "content-creative"
+          ],
+          "resolved": true,
+          "localPath": "skills/content-planning/SKILL.md"
+        },
+        {
+          "type": "local",
+          "ref": "content-quality-review",
+          "agentSlugs": [
+            "content-creative"
+          ],
+          "resolved": true,
+          "localPath": "skills/content-quality-review/SKILL.md"
+        },
+        {
+          "type": "local",
           "ref": "context-retrieval",
           "agentSlugs": [
             "marketing-manager"
           ],
           "resolved": true,
           "localPath": "skills/context-retrieval/SKILL.md"
+        },
+        {
+          "type": "local",
+          "ref": "crm-sync",
+          "agentSlugs": [
+            "growth-lead-gen"
+          ],
+          "resolved": true,
+          "localPath": "skills/crm-sync/SKILL.md"
+        },
+        {
+          "type": "local",
+          "ref": "customer-painpoint-analysis",
+          "agentSlugs": [
+            "market-research"
+          ],
+          "resolved": true,
+          "localPath": "skills/customer-painpoint-analysis/SKILL.md"
+        },
+        {
+          "type": "local",
+          "ref": "data-collection",
+          "agentSlugs": [
+            "marketing-analytics"
+          ],
+          "resolved": true,
+          "localPath": "skills/data-collection/SKILL.md"
+        },
+        {
+          "type": "local",
+          "ref": "email-campaign-execution",
+          "agentSlugs": [
+            "channel-campaign"
+          ],
+          "resolved": true,
+          "localPath": "skills/email-campaign-execution/SKILL.md"
+        },
+        {
+          "type": "local",
+          "ref": "email-copywriting",
+          "agentSlugs": [
+            "content-creative"
+          ],
+          "resolved": true,
+          "localPath": "skills/email-copywriting/SKILL.md"
+        },
+        {
+          "type": "local",
+          "ref": "funnel-analysis",
+          "agentSlugs": [
+            "marketing-analytics"
+          ],
+          "resolved": true,
+          "localPath": "skills/funnel-analysis/SKILL.md"
+        },
+        {
+          "type": "local",
+          "ref": "gtm-planning",
+          "agentSlugs": [
+            "marketing-strategy"
+          ],
+          "resolved": true,
+          "localPath": "skills/gtm-planning/SKILL.md"
+        },
+        {
+          "type": "local",
+          "ref": "icp-builder",
+          "agentSlugs": [
+            "market-research"
+          ],
+          "resolved": true,
+          "localPath": "skills/icp-builder/SKILL.md"
+        },
+        {
+          "type": "local",
+          "ref": "image-generation",
+          "agentSlugs": [
+            "content-creative"
+          ],
+          "resolved": true,
+          "localPath": "skills/image-generation/SKILL.md"
+        },
+        {
+          "type": "local",
+          "ref": "kpi-definition",
+          "agentSlugs": [
+            "marketing-strategy"
+          ],
+          "resolved": true,
+          "localPath": "skills/kpi-definition/SKILL.md"
+        },
+        {
+          "type": "local",
+          "ref": "kpi-tracking",
+          "agentSlugs": [
+            "marketing-analytics"
+          ],
+          "resolved": true,
+          "localPath": "skills/kpi-tracking/SKILL.md"
+        },
+        {
+          "type": "local",
+          "ref": "landing-page-copywriting",
+          "agentSlugs": [
+            "content-creative"
+          ],
+          "resolved": true,
+          "localPath": "skills/landing-page-copywriting/SKILL.md"
+        },
+        {
+          "type": "local",
+          "ref": "lead-capture",
+          "agentSlugs": [
+            "growth-lead-gen"
+          ],
+          "resolved": true,
+          "localPath": "skills/lead-capture/SKILL.md"
+        },
+        {
+          "type": "local",
+          "ref": "lead-enrichment",
+          "agentSlugs": [
+            "growth-lead-gen"
+          ],
+          "resolved": true,
+          "localPath": "skills/lead-enrichment/SKILL.md"
+        },
+        {
+          "type": "local",
+          "ref": "lead-nurturing",
+          "agentSlugs": [
+            "growth-lead-gen"
+          ],
+          "resolved": true,
+          "localPath": "skills/lead-nurturing/SKILL.md"
+        },
+        {
+          "type": "local",
+          "ref": "lead-scoring",
+          "agentSlugs": [
+            "growth-lead-gen"
+          ],
+          "resolved": true,
+          "localPath": "skills/lead-scoring/SKILL.md"
+        },
+        {
+          "type": "local",
+          "ref": "lead-segmentation",
+          "agentSlugs": [
+            "growth-lead-gen"
+          ],
+          "resolved": true,
+          "localPath": "skills/lead-segmentation/SKILL.md"
+        },
+        {
+          "type": "local",
+          "ref": "market-overview-research",
+          "agentSlugs": [
+            "market-research"
+          ],
+          "resolved": true,
+          "localPath": "skills/market-overview-research/SKILL.md"
+        },
+        {
+          "type": "local",
+          "ref": "market-segmentation",
+          "agentSlugs": [
+            "marketing-strategy"
+          ],
+          "resolved": true,
+          "localPath": "skills/market-segmentation/SKILL.md"
+        },
+        {
+          "type": "local",
+          "ref": "market-trend-analysis",
+          "agentSlugs": [
+            "market-research"
+          ],
+          "resolved": true,
+          "localPath": "skills/market-trend-analysis/SKILL.md"
+        },
+        {
+          "type": "local",
+          "ref": "optimization-recommendation",
+          "agentSlugs": [
+            "marketing-analytics"
+          ],
+          "resolved": true,
+          "localPath": "skills/optimization-recommendation/SKILL.md"
+        },
+        {
+          "type": "local",
+          "ref": "performance-reporting",
+          "agentSlugs": [
+            "marketing-analytics"
+          ],
+          "resolved": true,
+          "localPath": "skills/performance-reporting/SKILL.md"
+        },
+        {
+          "type": "local",
+          "ref": "positioning-strategy",
+          "agentSlugs": [
+            "marketing-strategy"
+          ],
+          "resolved": true,
+          "localPath": "skills/positioning-strategy/SKILL.md"
         },
         {
           "type": "local",
@@ -564,6 +865,87 @@
           ],
           "resolved": true,
           "localPath": "skills/requirement-gap-analysis/SKILL.md"
+        },
+        {
+          "type": "local",
+          "ref": "seo-optimization",
+          "agentSlugs": [
+            "channel-campaign"
+          ],
+          "resolved": true,
+          "localPath": "skills/seo-optimization/SKILL.md"
+        },
+        {
+          "type": "local",
+          "ref": "social-post-writing",
+          "agentSlugs": [
+            "content-creative"
+          ],
+          "resolved": true,
+          "localPath": "skills/social-post-writing/SKILL.md"
+        },
+        {
+          "type": "local",
+          "ref": "social-publishing",
+          "agentSlugs": [
+            "channel-campaign"
+          ],
+          "resolved": true,
+          "localPath": "skills/social-publishing/SKILL.md"
+        },
+        {
+          "type": "local",
+          "ref": "social-scheduling",
+          "agentSlugs": [
+            "channel-campaign"
+          ],
+          "resolved": true,
+          "localPath": "skills/social-scheduling/SKILL.md"
+        },
+        {
+          "type": "local",
+          "ref": "source-verification",
+          "agentSlugs": [
+            "market-research"
+          ],
+          "resolved": true,
+          "localPath": "skills/source-verification/SKILL.md"
+        },
+        {
+          "type": "local",
+          "ref": "task-decomposition",
+          "agentSlugs": [
+            "marketing-manager"
+          ],
+          "resolved": true,
+          "localPath": "skills/task-decomposition/SKILL.md"
+        },
+        {
+          "type": "local",
+          "ref": "task-delegation",
+          "agentSlugs": [
+            "marketing-manager"
+          ],
+          "resolved": true,
+          "localPath": "skills/task-delegation/SKILL.md"
+        },
+        {
+          "type": "local",
+          "ref": "value-proposition-design",
+          "agentSlugs": [
+            "marketing-strategy"
+          ],
+          "resolved": true,
+          "localPath": "skills/value-proposition-design/SKILL.md"
+        },
+        {
+          "type": "local",
+          "ref": "video-production",
+          "agentSlugs": [
+            "content-creative"
+          ],
+          "resolved": true,
+          "localPath": "skills/video-production/SKILL.md"
         }
       ],
       "envInputs": [],
@@ -572,56 +954,98 @@
         {
           "path": "TEAM.md",
           "kind": "team",
-          "sizeBytes": 1671,
-          "sha256": "27f1ddc540d52ca2b7d10dec245df642659d4ee7a37786abdd7f6247b63b9b7b"
+          "sizeBytes": 3772,
+          "sha256": "cf6a22c7ea960603c46e8617a8e9ec85497d4c7a19f779c7556786e7d9a1afad"
         },
         {
           "path": "agents/channel-campaign/AGENTS.md",
           "kind": "agent",
-          "sizeBytes": 341,
-          "sha256": "2f161241454e9d10fbc7772a9e99bfeca0dedb5aaf4d9ee27ba5d757a8ea43fa"
+          "sizeBytes": 522,
+          "sha256": "56983a03045853a4d2a7dbd9705a2d25772dd84a967ed84d5d2a6a1a61c73bc2"
         },
         {
           "path": "agents/content-creative/AGENTS.md",
           "kind": "agent",
-          "sizeBytes": 333,
-          "sha256": "8bbf243567f06b75b0e6273d5ff8b4040031179ed7ce0e3850399599be517dc0"
+          "sizeBytes": 574,
+          "sha256": "e008c794e6ab8e064587e6cf150bd1081c5c9504bdb843a42cd44447d6d87f88"
         },
         {
           "path": "agents/growth-lead-gen/AGENTS.md",
           "kind": "agent",
-          "sizeBytes": 391,
-          "sha256": "8754fd660c4b1c05f58b502c5726364cb7e1d0787beb9af10eedd8f809703bfa"
+          "sizeBytes": 508,
+          "sha256": "08cfdcecbe1e7894311eff67715408e8002c0c652a6a15e564a998c3b179bee1"
         },
         {
           "path": "agents/market-research/AGENTS.md",
           "kind": "agent",
-          "sizeBytes": 531,
-          "sha256": "6c701a54d64acba6635e2ac32fc5973fcf9791290601f5e34b94c8fecf420928"
+          "sizeBytes": 635,
+          "sha256": "35bd846de61fcaa62fdd86f940790748e99f444ebf85320a2a18739aa277bd47"
         },
         {
           "path": "agents/marketing-analytics/AGENTS.md",
           "kind": "agent",
-          "sizeBytes": 338,
-          "sha256": "a4ca2b8d9825980124622139b0bfb1bd4f8e0c937a4df565d752eeecf44bf289"
+          "sizeBytes": 509,
+          "sha256": "a8e9e6442d0b6d46f6744b7b6d0321fda24df75d59bf2b5bb06550a2231ddc39"
         },
         {
           "path": "agents/marketing-manager/AGENTS.md",
           "kind": "agent",
-          "sizeBytes": 1867,
-          "sha256": "cd4628fd4a6f0a95640e3993c268b7235ac38b7c33163b062c77a7373cdc796f"
+          "sizeBytes": 1558,
+          "sha256": "f2a00f64839c85f6f9f5daafa83c4c7b9551479810f0ef4c6d64509657248ab3"
         },
         {
           "path": "agents/marketing-strategy/AGENTS.md",
           "kind": "agent",
-          "sizeBytes": 422,
-          "sha256": "266fac22ba990b2021ea0004824e752b17d454f0ccde004bc4c88503461b6c8c"
+          "sizeBytes": 569,
+          "sha256": "a07ca1f81d6ced626e135a47f4d931ad442d4dab778675c9b1aa5cd161ecfb26"
         },
         {
           "path": "projects/marketing-campaigns/PROJECT.md",
           "kind": "project",
           "sizeBytes": 441,
           "sha256": "7d8d65075e8b7b881b376ae83d87e52f2b39d9417192329596f988b6e8bdf4a6"
+        },
+        {
+          "path": "projects/marketing-campaigns/tasks/campaign-execution/TASK.md",
+          "kind": "task",
+          "sizeBytes": 515,
+          "sha256": "1fe1c7040ceaf51573911dbf1b420a1e6872155ecb4dc249432d7f0a5ac1efea"
+        },
+        {
+          "path": "projects/marketing-campaigns/tasks/content-production/TASK.md",
+          "kind": "task",
+          "sizeBytes": 344,
+          "sha256": "e848880bc048400474a606c98e14183fc270cfe4dd12b9da365573a508502d59"
+        },
+        {
+          "path": "projects/marketing-campaigns/tasks/lead-generation/TASK.md",
+          "kind": "task",
+          "sizeBytes": 410,
+          "sha256": "411d2d36139c68307c98c8a5b5b0d984e500c99dd2d252608f3daf2e4e33b757"
+        },
+        {
+          "path": "projects/marketing-campaigns/tasks/market-research/TASK.md",
+          "kind": "task",
+          "sizeBytes": 507,
+          "sha256": "2237101dfaa2d77cbc6a792107a12fd633df8807e92bcb7995321c036195dd92"
+        },
+        {
+          "path": "projects/marketing-campaigns/tasks/marketing-analytics/TASK.md",
+          "kind": "task",
+          "sizeBytes": 358,
+          "sha256": "857c7181164ccc1de73e4a1d62f5693bba1956266b1d52ef3229436ec5fb3d53"
+        },
+        {
+          "path": "projects/marketing-campaigns/tasks/marketing-optimization/TASK.md",
+          "kind": "task",
+          "sizeBytes": 436,
+          "sha256": "fc6fe618b3b2f06fa8b7b4d617f553a4d57aae274024404a06bcc6f7322c212f"
+        },
+        {
+          "path": "projects/marketing-campaigns/tasks/marketing-strategy/TASK.md",
+          "kind": "task",
+          "sizeBytes": 545,
+          "sha256": "468dba5e8c3c28281b7f295cba6f7446b0a54ac45bc4331c66b90c336d33a75b"
         },
         {
           "path": "projects/marketing-campaigns/tasks/requirement-discovery/TASK.md",
@@ -636,16 +1060,214 @@
           "sha256": "6f3852ee604a91c7d150539eba120483721a9dc2f5b831627852807498ddddf6"
         },
         {
+          "path": "skills/ads-campaign-setup/SKILL.md",
+          "kind": "skill",
+          "sizeBytes": 1056,
+          "sha256": "0c64bf0780655c1f1d45dc8919877390ae18034f305748b4277b54312705a53c"
+        },
+        {
           "path": "skills/approval-management/SKILL.md",
           "kind": "skill",
           "sizeBytes": 1614,
           "sha256": "791f24bdb8d74e33a4bf2d987f7d628a07081c74cc01d15e55db85920a38299a"
         },
         {
+          "path": "skills/blog-writing/SKILL.md",
+          "kind": "skill",
+          "sizeBytes": 894,
+          "sha256": "df4eacc696b60de1fdd27c17f31901108f11945b46161094b0c99f4b23434c7c"
+        },
+        {
+          "path": "skills/budget-planning/SKILL.md",
+          "kind": "skill",
+          "sizeBytes": 1024,
+          "sha256": "e2280e045cb6b1b8dbedc10d72cdfc5e5941ae72a7e5e94e51f901bcbbc3595a"
+        },
+        {
+          "path": "skills/campaign-monitoring/SKILL.md",
+          "kind": "skill",
+          "sizeBytes": 1074,
+          "sha256": "c9bc8abc408fb84957bac302595fed147255ee0ce5a74075932c3580198ec484"
+        },
+        {
+          "path": "skills/campaign-roi-analysis/SKILL.md",
+          "kind": "skill",
+          "sizeBytes": 932,
+          "sha256": "346daa412fe9f2066aae615669d6271d811019bcee99fa5304125c7013600d4e"
+        },
+        {
+          "path": "skills/channel-strategy/SKILL.md",
+          "kind": "skill",
+          "sizeBytes": 1014,
+          "sha256": "5c15765e7a4daab70bf3d4251c46a638ee97f61a76d56dd327cfcb685e9c0bf2"
+        },
+        {
+          "path": "skills/competitor-discovery/SKILL.md",
+          "kind": "skill",
+          "sizeBytes": 1227,
+          "sha256": "3f01b9b6d92a131ba3eb798387e367837349e642e4306282eaec829d1f1e323f"
+        },
+        {
+          "path": "skills/competitor-profile-analysis/SKILL.md",
+          "kind": "skill",
+          "sizeBytes": 1259,
+          "sha256": "62de63e683df89cb3974b0bbe76de8ef95da4b54786ab59c521c1b5aecf1d488"
+        },
+        {
+          "path": "skills/content-planning/SKILL.md",
+          "kind": "skill",
+          "sizeBytes": 903,
+          "sha256": "0118b969ff2f399c6e5336e52e6cf484fb921efca3c8ccefedb22ef61579c97f"
+        },
+        {
+          "path": "skills/content-quality-review/SKILL.md",
+          "kind": "skill",
+          "sizeBytes": 931,
+          "sha256": "55a162ed61701369d88c5002251dfec07e2be45f2834aeeca0e73f152c4f6bc4"
+        },
+        {
           "path": "skills/context-retrieval/SKILL.md",
           "kind": "skill",
           "sizeBytes": 1545,
           "sha256": "369a025d2a86b561fa1a17e575c002a21ff0ba3497ed16047ff63b686878b723"
+        },
+        {
+          "path": "skills/crm-sync/SKILL.md",
+          "kind": "skill",
+          "sizeBytes": 909,
+          "sha256": "ee7199967cb7e03ea0cdb8a14ee28310980f8bd264452ede7746af57521408e5"
+        },
+        {
+          "path": "skills/customer-painpoint-analysis/SKILL.md",
+          "kind": "skill",
+          "sizeBytes": 1243,
+          "sha256": "2658b8a43fbb800997f0dfcf02e3344ee19bff4cb126430c772897e8d4af6a89"
+        },
+        {
+          "path": "skills/data-collection/SKILL.md",
+          "kind": "skill",
+          "sizeBytes": 926,
+          "sha256": "ca38c0c4d7db0cf45651be299f0bc0473babfebbceeae88d9df067b32576f4de"
+        },
+        {
+          "path": "skills/email-campaign-execution/SKILL.md",
+          "kind": "skill",
+          "sizeBytes": 1088,
+          "sha256": "c199ff2988fe3e5f6e2b16c4a6b735270ce35fca79b075b55c56095a58984951"
+        },
+        {
+          "path": "skills/email-copywriting/SKILL.md",
+          "kind": "skill",
+          "sizeBytes": 909,
+          "sha256": "4764e048dc7c5334b007c6a229c826e1894c0e4f07a89ec54763ee66de289948"
+        },
+        {
+          "path": "skills/funnel-analysis/SKILL.md",
+          "kind": "skill",
+          "sizeBytes": 910,
+          "sha256": "e52e25921fa65a38701d79ce7676d716b106555caffe1ba5267186c46997b7ff"
+        },
+        {
+          "path": "skills/gtm-planning/SKILL.md",
+          "kind": "skill",
+          "sizeBytes": 999,
+          "sha256": "d2f39171f4fd7c93fdab85dc590a10ecd9d6a4cda72470e176f1b14cd80489fe"
+        },
+        {
+          "path": "skills/icp-builder/SKILL.md",
+          "kind": "skill",
+          "sizeBytes": 1195,
+          "sha256": "284006ecc0500fa3e7f25d0c8886ef9fce4046708e87d7ff81b20ad3316f49ce"
+        },
+        {
+          "path": "skills/image-generation/SKILL.md",
+          "kind": "skill",
+          "sizeBytes": 935,
+          "sha256": "d0f14dd9e984b68491cefcadb8dbfa97acdec76ca5e4f13eb3d13cbe0361c1d8"
+        },
+        {
+          "path": "skills/kpi-definition/SKILL.md",
+          "kind": "skill",
+          "sizeBytes": 1000,
+          "sha256": "814fa2f0ca1fa8cca923f4ab77c6eac30dc9496f9f6093a5378aa60228b7f0ab"
+        },
+        {
+          "path": "skills/kpi-tracking/SKILL.md",
+          "kind": "skill",
+          "sizeBytes": 910,
+          "sha256": "fa5a05b75f9422bfa094e5cf1257f6edf4cabf0f2c577795ecfa902072ec7c55"
+        },
+        {
+          "path": "skills/landing-page-copywriting/SKILL.md",
+          "kind": "skill",
+          "sizeBytes": 908,
+          "sha256": "1d292357e7a00ad28a47082ca7be334513f404df1d78ea9132a4206325d06bde"
+        },
+        {
+          "path": "skills/lead-capture/SKILL.md",
+          "kind": "skill",
+          "sizeBytes": 905,
+          "sha256": "17e05e032b1f459db918aaae31093591ff88f81d987c91da21dd4960ca3830a9"
+        },
+        {
+          "path": "skills/lead-enrichment/SKILL.md",
+          "kind": "skill",
+          "sizeBytes": 922,
+          "sha256": "b4c26bf1ad80ce7585c0aecee0a5b53c29678b8a2d809c9780ebe6e25b523985"
+        },
+        {
+          "path": "skills/lead-nurturing/SKILL.md",
+          "kind": "skill",
+          "sizeBytes": 925,
+          "sha256": "f9d29897f755d875ef089fd2c1df632154e40a2db48804c675bf4e6b51331a9a"
+        },
+        {
+          "path": "skills/lead-scoring/SKILL.md",
+          "kind": "skill",
+          "sizeBytes": 897,
+          "sha256": "85ccbee7e20b4ee444db48e4678d95b02cbf04ebafc273a939b7e93631f45cf9"
+        },
+        {
+          "path": "skills/lead-segmentation/SKILL.md",
+          "kind": "skill",
+          "sizeBytes": 890,
+          "sha256": "1f8654103bfa0c6aab125fbba9abdd2d7dc82cb4f197ce03fb78444db85c4874"
+        },
+        {
+          "path": "skills/market-overview-research/SKILL.md",
+          "kind": "skill",
+          "sizeBytes": 1278,
+          "sha256": "68f5b48ab6ed8b4d8fff1e770806dd5d7e8f70d588d122625c550aaebe826d29"
+        },
+        {
+          "path": "skills/market-segmentation/SKILL.md",
+          "kind": "skill",
+          "sizeBytes": 1027,
+          "sha256": "4da6b174651a878df851f01151cdb7751af0fd10c8dc6e9bff57955a6dffc856"
+        },
+        {
+          "path": "skills/market-trend-analysis/SKILL.md",
+          "kind": "skill",
+          "sizeBytes": 1242,
+          "sha256": "f2ad1a0aeacc91f26cac987106822ffc9c4c831fd694c20e5804f2912fd1ee1d"
+        },
+        {
+          "path": "skills/optimization-recommendation/SKILL.md",
+          "kind": "skill",
+          "sizeBytes": 948,
+          "sha256": "ff6312f76c0b20f595fad48d42ea0d3ecf9a6beb07a118954f7317e22c64331b"
+        },
+        {
+          "path": "skills/performance-reporting/SKILL.md",
+          "kind": "skill",
+          "sizeBytes": 931,
+          "sha256": "1fb51d0c4da8e1a15bd33fde05f4f924286c7067e3042bde0d015f83aa3b09b3"
+        },
+        {
+          "path": "skills/positioning-strategy/SKILL.md",
+          "kind": "skill",
+          "sizeBytes": 1016,
+          "sha256": "85d2df4a4c5ce7ffa3640cfe3bc80d8c66631611c50bb681b5bd1e5d4c5bc1e7"
         },
         {
           "path": "skills/requirement-brief-generation/SKILL.md",
@@ -664,11 +1286,65 @@
           "kind": "skill",
           "sizeBytes": 1393,
           "sha256": "4e10fa17edfb8d33d4f66bda63fb8a92fd58560d8df27bda4c02683227d1b4b5"
+        },
+        {
+          "path": "skills/seo-optimization/SKILL.md",
+          "kind": "skill",
+          "sizeBytes": 1035,
+          "sha256": "bd45cf729388ca5dc3bf180f3e22558664102781dbd502651c1b514be514f95d"
+        },
+        {
+          "path": "skills/social-post-writing/SKILL.md",
+          "kind": "skill",
+          "sizeBytes": 917,
+          "sha256": "43a86fcb5ec176e544f079be455fc26525a69e621ec6a6a91c40d1e7b468ed04"
+        },
+        {
+          "path": "skills/social-publishing/SKILL.md",
+          "kind": "skill",
+          "sizeBytes": 1062,
+          "sha256": "96740df53dbad6cb1b06366ecf994c2c1e1ab0ef8a2ca07e341b452d64e16200"
+        },
+        {
+          "path": "skills/social-scheduling/SKILL.md",
+          "kind": "skill",
+          "sizeBytes": 1057,
+          "sha256": "6ba94c9ef79e46a33008ea8a74fe84681b725dba2565742f7324277e26637889"
+        },
+        {
+          "path": "skills/source-verification/SKILL.md",
+          "kind": "skill",
+          "sizeBytes": 1231,
+          "sha256": "05b00f823ad99fe32b46766a055035785a94c4cf0d3ffc5c6cc52144f07da154"
+        },
+        {
+          "path": "skills/task-decomposition/SKILL.md",
+          "kind": "skill",
+          "sizeBytes": 1360,
+          "sha256": "a6d212b6922c31328edba4b12b523dd05608c9b9ba046cd7382b2be87c61cd23"
+        },
+        {
+          "path": "skills/task-delegation/SKILL.md",
+          "kind": "skill",
+          "sizeBytes": 1139,
+          "sha256": "fb8dc389d6b521bdc42128fd9d8f1b2af4704b6269a0efc60c7bb004cd34fc39"
+        },
+        {
+          "path": "skills/value-proposition-design/SKILL.md",
+          "kind": "skill",
+          "sizeBytes": 1030,
+          "sha256": "a97b06693cdf1cd7f89419b636c6b0c4f9d724204f0c4137c02e70d489ba6cea"
+        },
+        {
+          "path": "skills/video-production/SKILL.md",
+          "kind": "skill",
+          "sizeBytes": 925,
+          "sha256": "e75cf28b7c734e187f575e5503b9c1ec92824f8afcd3fc58964832aca34a8695"
         }
       ],
       "trustLevel": "markdown_only",
       "compatibility": "compatible",
-      "contentHash": "sha256:af934857aa98c2a7c565280fe8dd7c6fcebf48924390532a9f872fffa4f01cfc"
+      "contentHash": "sha256:cf4da300576a50ffca66389945fc997b886777c7cb85d7ce0413dab2c49d2c33"
     }
   ]
 }

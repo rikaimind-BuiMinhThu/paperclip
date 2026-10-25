@@ -28,6 +28,10 @@ export const MARKETING_PLANNING_WORKFLOW_IDS = [
 export const MARKETING_REQUIREMENT_DOCUMENT_KEYS = {
   state: "requirement_state",
   brief: "requirement_brief",
+  strategy: "marketing_strategy",
+  publishAuthorization: "publish_authorization",
+  spendAuthorization: "spend_authorization",
+  outboundAuthorization: "outbound_authorization",
 } as const;
 
 export const MARKETING_WORKFORCE_PHASES = [
@@ -38,14 +42,76 @@ export const MARKETING_WORKFORCE_PHASES = [
 
 export type MarketingWorkforcePhase = (typeof MARKETING_WORKFORCE_PHASES)[number];
 
+/** Consequential external actions that require explicit human authorization. */
+export const MARKETING_EXTERNAL_ACTIONS = [
+  "publish",
+  "spend",
+  "outbound",
+] as const;
+
+export type MarketingExternalAction = (typeof MARKETING_EXTERNAL_ACTIONS)[number];
+
+export const MARKETING_EXTERNAL_ACTION_DOCUMENT_KEYS = {
+  publish: MARKETING_REQUIREMENT_DOCUMENT_KEYS.publishAuthorization,
+  spend: MARKETING_REQUIREMENT_DOCUMENT_KEYS.spendAuthorization,
+  outbound: MARKETING_REQUIREMENT_DOCUMENT_KEYS.outboundAuthorization,
+} as const satisfies Record<MarketingExternalAction, string>;
+
+/** Workflows that should wait for an approved marketing strategy on the parent. */
+export const MARKETING_STRATEGY_GATED_WORKFLOW_IDS = [
+  "WF-04",
+  "WF-05",
+  "WF-06",
+  "WF-07",
+  "WF-08",
+] as const satisfies ReadonlyArray<MarketingWorkflowId>;
+
 export const marketingWorkforceMarkerSchema = z
   .object({
     workflowId: z.enum(MARKETING_WORKFLOW_IDS),
     phase: z.enum(MARKETING_WORKFORCE_PHASES).optional(),
+    externalAction: z.enum(MARKETING_EXTERNAL_ACTIONS).optional(),
   })
   .strict();
 
 export type MarketingWorkforceMarker = z.infer<typeof marketingWorkforceMarkerSchema>;
+
+export function requiresMarketingStrategyApproval(
+  marker: MarketingWorkforceMarker | null | undefined,
+): boolean {
+  if (!marker) return false;
+  return (MARKETING_STRATEGY_GATED_WORKFLOW_IDS as readonly string[]).includes(
+    marker.workflowId,
+  );
+}
+
+export function requiredAuthorizationDocumentKey(
+  marker: MarketingWorkforceMarker | null | undefined,
+): string | null {
+  if (!marker?.externalAction) return null;
+  return MARKETING_EXTERNAL_ACTION_DOCUMENT_KEYS[marker.externalAction];
+}
+
+/** Standard unavailable integration payload when credentials/APIs are missing. */
+export function marketingIntegrationUnavailable(args: {
+  integration: string;
+  requiredFields?: string[];
+  reason?: string;
+}): {
+  status: "not_configured";
+  integration: string;
+  requiredFields: string[];
+  reason: string;
+} {
+  return {
+    status: "not_configured",
+    integration: args.integration,
+    requiredFields: args.requiredFields ?? [],
+    reason:
+      args.reason ??
+      `${args.integration} is not configured for this company. Connect credentials before execution.`,
+  };
+}
 
 export const MARKETING_REQUIREMENT_STATUSES = [
   "created",

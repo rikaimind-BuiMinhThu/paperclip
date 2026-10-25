@@ -190,13 +190,15 @@ Later phases may add approval types or connectors; still prefer documents + exec
 
 ## Implementation phases
 
-| Phase | Scope |
-|-------|-------|
-| **0** | This assessment |
-| **1** | Manager + WF-01 + skills + gate + tests |
-| **2** | Research + Strategy agents, WF-02/03, plan approval |
-| **3** | Content + Channel, publish authorization |
-| **4** | Growth + Analytics, optimization |
+| Phase | Scope | Status |
+|-------|-------|--------|
+| **0** | This assessment | Done |
+| **1** | Manager + WF-01 + skills + gate + tests | Done |
+| **2** | Research + Strategy agents, WF-02/03, plan approval | Done |
+| **3** | Content + Channel, publish authorization | Done |
+| **4** | Growth + Analytics, optimization | Done |
+
+Phases 2–4 ship as skill packs + workflow TASK.md templates inside the same `marketing-workforce` team package, with server gates for `marketing_strategy` confirmation and `publish` / `spend` / `outbound` authorizations. External connectors remain policy-gated and return `not_configured` when credentials are missing.
 
 ---
 

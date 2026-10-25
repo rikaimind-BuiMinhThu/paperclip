@@ -160,6 +160,66 @@ describeEmbeddedPostgres("assertMarketingPlanningAllowed", () => {
     ).resolves.toBeUndefined();
   });
 
+  it("blocks WF-04 until marketing_strategy is confirmed", async () => {
+    const { companyId, parentId } = await seedCampaign({ confirmed: true });
+    await expect(
+      assertMarketingPlanningAllowed({
+        db,
+        companyId,
+        parentId,
+        childExecutionPolicy: {
+          marketingWorkforce: { workflowId: "WF-04", phase: "execution" },
+        },
+      }),
+    ).rejects.toMatchObject({
+      status: 422,
+      details: { code: "marketing_strategy_unconfirmed" },
+    });
+  });
+
+  it("blocks unauthorized publish actions", async () => {
+    const { companyId, parentId } = await seedCampaign({ confirmed: true });
+    await db.insert(issueThreadInteractions).values({
+      id: randomUUID(),
+      companyId,
+      issueId: parentId,
+      kind: "request_checkbox_confirmation",
+      status: "accepted",
+      payload: {
+        version: 1,
+        prompt: "Approve strategy?",
+        options: [{ id: "approve", label: "Approve" }],
+        target: {
+          type: "issue_document",
+          issueId: parentId,
+          documentId: randomUUID(),
+          key: "marketing_strategy",
+          revisionId: randomUUID(),
+          revisionNumber: 1,
+          label: "Strategy",
+          href: "#document-marketing_strategy",
+        },
+      } as never,
+    });
+    await expect(
+      assertMarketingPlanningAllowed({
+        db,
+        companyId,
+        parentId,
+        childExecutionPolicy: {
+          marketingWorkforce: {
+            workflowId: "WF-05",
+            phase: "execution",
+            externalAction: "publish",
+          },
+        },
+      }),
+    ).rejects.toMatchObject({
+      status: 422,
+      details: { code: "marketing_external_action_unauthorized" },
+    });
+  });
+
   it("blocks gated children without a parent", async () => {
     const companyId = randomUUID();
     await db.insert(companies).values({

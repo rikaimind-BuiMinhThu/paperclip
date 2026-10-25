@@ -4,7 +4,9 @@ import { issueDocuments, issueThreadInteractions, issues } from "@paperclipai/db
 import {
   MARKETING_REQUIREMENT_DOCUMENT_KEYS,
   readMarketingWorkforceMarker,
+  requiredAuthorizationDocumentKey,
   requiresApprovedRequirementBrief,
+  requiresMarketingStrategyApproval,
   type MarketingWorkforceMarker,
 } from "@paperclipai/shared/validators/marketing-requirement";
 import { unprocessable } from "../errors.js";
@@ -19,11 +21,14 @@ export function extractConfirmationTargetKey(payload: unknown): string | null {
   return typeof key === "string" && key.trim() ? key : null;
 }
 
-export function interactionConfirmsRequirementBrief(row: {
-  kind: string;
-  status: string;
-  payload: unknown;
-}): boolean {
+export function interactionConfirmsDocumentKey(
+  row: {
+    kind: string;
+    status: string;
+    payload: unknown;
+  },
+  documentKey: string,
+): boolean {
   if (row.status !== "accepted") return false;
   if (
     row.kind !== "request_confirmation" &&
@@ -31,15 +36,76 @@ export function interactionConfirmsRequirementBrief(row: {
   ) {
     return false;
   }
-  return (
-    extractConfirmationTargetKey(row.payload) ===
-    MARKETING_REQUIREMENT_DOCUMENT_KEYS.brief
+  return extractConfirmationTargetKey(row.payload) === documentKey;
+}
+
+export function interactionConfirmsRequirementBrief(row: {
+  kind: string;
+  status: string;
+  payload: unknown;
+}): boolean {
+  return interactionConfirmsDocumentKey(
+    row,
+    MARKETING_REQUIREMENT_DOCUMENT_KEYS.brief,
   );
+}
+
+async function listAcceptedConfirmations(args: {
+  db: DbLike;
+  companyId: string;
+  issueId: string;
+}) {
+  return args.db
+    .select({
+      kind: issueThreadInteractions.kind,
+      status: issueThreadInteractions.status,
+      payload: issueThreadInteractions.payload,
+    })
+    .from(issueThreadInteractions)
+    .where(
+      and(
+        eq(issueThreadInteractions.companyId, args.companyId),
+        eq(issueThreadInteractions.issueId, args.issueId),
+        eq(issueThreadInteractions.status, "accepted"),
+        inArray(issueThreadInteractions.kind, [
+          "request_confirmation",
+          "request_checkbox_confirmation",
+        ]),
+      ),
+    );
+}
+
+async function assertAcceptedDocumentConfirmation(args: {
+  db: DbLike;
+  companyId: string;
+  issueId: string;
+  documentKey: string;
+  code: string;
+  message: string;
+  details?: Record<string, unknown>;
+}): Promise<void> {
+  const interactions = await listAcceptedConfirmations({
+    db: args.db,
+    companyId: args.companyId,
+    issueId: args.issueId,
+  });
+  const confirmed = interactions.some((row) =>
+    interactionConfirmsDocumentKey(row, args.documentKey),
+  );
+  if (!confirmed) {
+    throw unprocessable(args.message, {
+      code: args.code,
+      documentKey: args.documentKey,
+      issueId: args.issueId,
+      ...args.details,
+    });
+  }
 }
 
 /**
  * Assert marketing planning/execution children are only created after the
- * campaign parent's requirement brief confirmation is accepted.
+ * campaign parent's requirement brief confirmation is accepted. Also enforce
+ * strategy approval for later workflows and external-action authorizations.
  */
 export async function assertMarketingPlanningAllowed(args: {
   db: DbLike;
@@ -48,7 +114,13 @@ export async function assertMarketingPlanningAllowed(args: {
   childExecutionPolicy: unknown;
 }): Promise<void> {
   const childMarker = readMarketingWorkforceMarker(args.childExecutionPolicy);
-  if (!requiresApprovedRequirementBrief(childMarker)) return;
+  if (!childMarker) return;
+
+  const needsBrief = requiresApprovedRequirementBrief(childMarker);
+  const needsStrategy = requiresMarketingStrategyApproval(childMarker);
+  const authDocKey = requiredAuthorizationDocumentKey(childMarker);
+  if (!needsBrief && !needsStrategy && !authDocKey) return;
+
   if (!args.parentId) {
     throw unprocessable(
       "Marketing planning/execution issues require a campaign parent with a confirmed requirement brief",
@@ -98,38 +170,50 @@ export async function assertMarketingPlanningAllowed(args: {
     );
   }
 
-  const interactions = await args.db
-    .select({
-      kind: issueThreadInteractions.kind,
-      status: issueThreadInteractions.status,
-      payload: issueThreadInteractions.payload,
-    })
-    .from(issueThreadInteractions)
-    .where(
-      and(
-        eq(issueThreadInteractions.companyId, args.companyId),
-        eq(issueThreadInteractions.issueId, args.parentId),
-        eq(issueThreadInteractions.status, "accepted"),
-        inArray(issueThreadInteractions.kind, [
-          "request_confirmation",
-          "request_checkbox_confirmation",
-        ]),
-      ),
-    );
-
-  const confirmed = interactions.some((row) =>
-    interactionConfirmsRequirementBrief(row),
-  );
-
-  if (!confirmed) {
-    throw unprocessable(
-      "Marketing planning is blocked until the requirement brief is confirmed on the campaign parent",
-      {
-        code: "marketing_requirement_brief_unconfirmed",
+  if (needsBrief) {
+    await assertAcceptedDocumentConfirmation({
+      db: args.db,
+      companyId: args.companyId,
+      issueId: args.parentId,
+      documentKey: MARKETING_REQUIREMENT_DOCUMENT_KEYS.brief,
+      code: "marketing_requirement_brief_unconfirmed",
+      message:
+        "Marketing planning is blocked until the requirement brief is confirmed on the campaign parent",
+      details: {
         parentIssueId: args.parentId,
-        childWorkflowId: (childMarker as MarketingWorkforceMarker | null)
-          ?.workflowId,
+        childWorkflowId: (childMarker as MarketingWorkforceMarker).workflowId,
       },
-    );
+    });
+  }
+
+  if (needsStrategy) {
+    await assertAcceptedDocumentConfirmation({
+      db: args.db,
+      companyId: args.companyId,
+      issueId: args.parentId,
+      documentKey: MARKETING_REQUIREMENT_DOCUMENT_KEYS.strategy,
+      code: "marketing_strategy_unconfirmed",
+      message:
+        "Content/campaign/growth work is blocked until marketing_strategy is confirmed on the campaign parent",
+      details: {
+        parentIssueId: args.parentId,
+        childWorkflowId: childMarker.workflowId,
+      },
+    });
+  }
+
+  if (authDocKey) {
+    await assertAcceptedDocumentConfirmation({
+      db: args.db,
+      companyId: args.companyId,
+      issueId: args.parentId,
+      documentKey: authDocKey,
+      code: "marketing_external_action_unauthorized",
+      message: `Unauthorized marketing ${childMarker.externalAction} action is blocked until ${authDocKey} is confirmed`,
+      details: {
+        parentIssueId: args.parentId,
+        externalAction: childMarker.externalAction,
+      },
+    });
   }
 }

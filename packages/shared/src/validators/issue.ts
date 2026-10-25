@@ -461,6 +461,7 @@ export const issueExecutionPolicySchema = z.object({
         "WF-08",
       ]),
       phase: z.enum(["discovery", "planning", "execution"]).optional(),
+      externalAction: z.enum(["publish", "spend", "outbound"]).optional(),
     })
     .strict()
     .optional(),

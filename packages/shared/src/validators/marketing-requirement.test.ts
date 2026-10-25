@@ -4,10 +4,13 @@ import {
   createEmptyMarketingRequirementState,
   generateRequirementBriefMarkdown,
   isRequirementBriefReady,
+  marketingIntegrationUnavailable,
   missingCriticalCategories,
   parseInterviewAnswer,
   readMarketingWorkforceMarker,
+  requiredAuthorizationDocumentKey,
   requiresApprovedRequirementBrief,
+  requiresMarketingStrategyApproval,
   selectNextInterviewQuestion,
 } from "./marketing-requirement.js";
 
@@ -180,6 +183,36 @@ describe("planning gate helpers", () => {
     ).toBe(false);
   });
 
+  it("requires strategy approval for content/campaign workflows", () => {
+    expect(requiresMarketingStrategyApproval({ workflowId: "WF-02" })).toBe(
+      false,
+    );
+    expect(requiresMarketingStrategyApproval({ workflowId: "WF-04" })).toBe(
+      true,
+    );
+    expect(requiresMarketingStrategyApproval({ workflowId: "WF-05" })).toBe(
+      true,
+    );
+  });
+
+  it("maps external actions to authorization document keys", () => {
+    expect(
+      requiredAuthorizationDocumentKey({
+        workflowId: "WF-05",
+        externalAction: "publish",
+      }),
+    ).toBe("publish_authorization");
+    expect(
+      requiredAuthorizationDocumentKey({
+        workflowId: "WF-05",
+        externalAction: "spend",
+      }),
+    ).toBe("spend_authorization");
+    expect(
+      requiredAuthorizationDocumentKey({ workflowId: "WF-05" }),
+    ).toBeNull();
+  });
+
   it("reads marker from executionPolicy", () => {
     expect(
       readMarketingWorkforceMarker({
@@ -187,5 +220,18 @@ describe("planning gate helpers", () => {
       }),
     ).toEqual({ workflowId: "WF-02" });
     expect(readMarketingWorkforceMarker({})).toBeNull();
+  });
+
+  it("describes unavailable integrations without inventing connectivity", () => {
+    expect(
+      marketingIntegrationUnavailable({
+        integration: "hubspot",
+        requiredFields: ["apiKey"],
+      }),
+    ).toMatchObject({
+      status: "not_configured",
+      integration: "hubspot",
+      requiredFields: ["apiKey"],
+    });
   });
 });
