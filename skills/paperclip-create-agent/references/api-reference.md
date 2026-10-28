@@ -1,4 +1,4 @@
-# Kujira AI Harness Create Agent API Reference
+# Kujira AI Workforce Create Agent API Reference
 
 ## Core Endpoints
 

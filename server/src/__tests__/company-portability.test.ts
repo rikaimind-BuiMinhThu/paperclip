@@ -564,7 +564,7 @@ describe("company portability", () => {
       },
     });
 
-    expect(asTextFile(exported.files["COMPANY.md"])).toContain('name: "Kujira AI Harness"');
+    expect(asTextFile(exported.files["COMPANY.md"])).toContain('name: "Kujira AI Workforce"');
     expect(asTextFile(exported.files["COMPANY.md"])).toContain('schema: "agentcompanies/v1"');
     expect(asTextFile(exported.files["agents/claudecoder/AGENTS.md"])).toContain("You are ClaudeCoder.");
     expect(asTextFile(exported.files["agents/claudecoder/AGENTS.md"])).toContain("skills:");
@@ -898,7 +898,7 @@ describe("company portability", () => {
       expandReferencedSkills: true,
     });
 
-    expect(asTextFile(exported.files["skills/paperclipai/paperclip/paperclip/SKILL.md"])).toContain("# Kujira AI Harness");
+    expect(asTextFile(exported.files["skills/paperclipai/paperclip/paperclip/SKILL.md"])).toContain("# Kujira AI Workforce");
     expect(asTextFile(exported.files["skills/paperclipai/paperclip/paperclip/SKILL.md"])).toContain("metadata:");
     expect(asTextFile(exported.files["skills/paperclipai/paperclip/paperclip/references/api.md"])).toContain("# API");
   });
@@ -5307,7 +5307,7 @@ describe("company portability", () => {
         authorType: "system",
         authorAgentId: null,
         authorUserId: null,
-        body: "Kujira AI Harness needs a disposition before this issue can continue.",
+        body: "Kujira AI Workforce needs a disposition before this issue can continue.",
         presentation,
         metadata,
         createdAt: new Date("2026-05-04T12:00:00.000Z"),
@@ -5340,7 +5340,7 @@ describe("company portability", () => {
 
     expect(issueSvc.addImportedComments).toHaveBeenCalledWith(expect.arrayContaining([
       expect.objectContaining({
-        body: "Kujira AI Harness needs a disposition before this issue can continue.",
+        body: "Kujira AI Workforce needs a disposition before this issue can continue.",
         authorType: "system",
         authorAgentId: null,
         authorUserId: null,
@@ -6134,8 +6134,8 @@ describe("company portability", () => {
 
 describe("dedupeImportedCompanyName", () => {
   it("returns the base name when nothing collides", () => {
-    expect(dedupeImportedCompanyName("Paperclip", ["Other Co"])).toBe("Kujira AI Harness");
-    expect(dedupeImportedCompanyName("Paperclip", [])).toBe("Kujira AI Harness");
+    expect(dedupeImportedCompanyName("Paperclip", ["Other Co"])).toBe("Kujira AI Workforce");
+    expect(dedupeImportedCompanyName("Paperclip", [])).toBe("Kujira AI Workforce");
   });
 
   it("suffixes past every taken candidate, case-insensitively", () => {

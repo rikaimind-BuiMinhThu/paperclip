@@ -245,7 +245,7 @@ export function InvitesSection() {
                 ) : null}
               </div>
               <div className="text-sm text-muted-foreground">
-                This URL includes the current Kujira AI Harness domain returned by the server.
+                This URL includes the current Kujira AI Workforce domain returned by the server.
               </div>
             </div>
             <label className="block space-y-1">

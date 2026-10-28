@@ -1,7 +1,7 @@
 # Marketing Workforce — Architecture Assessment
 
 **Date:** 2026-10-25  
-**Scope:** Paperclip / Kujira AI Harness control-plane reuse for an AI Marketing Workforce  
+**Scope:** Paperclip / Kujira AI Workforce control-plane reuse for an AI Marketing Workforce  
 **Phase:** 0 assessment + Phase 1 Discovery MVP design lock
 
 ## Executive summary

@@ -355,7 +355,7 @@ describe("issue validators", () => {
 
   it("accepts structured issue comment presentation and metadata", () => {
     const parsed = addIssueCommentSchema.parse({
-      body: "Kujira AI Harness needs a disposition before this issue can continue.",
+      body: "Kujira AI Workforce needs a disposition before this issue can continue.",
       authorType: "system",
       presentation: {
         kind: "system_notice",

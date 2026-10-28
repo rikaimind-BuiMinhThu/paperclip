@@ -142,7 +142,7 @@ export function printStartupBanner(opts: StartupBannerOptions): void {
     color("██╔═██╗ ██║   ██║██   ██║██║██╔══██╗██╔══██║", "cyan"),
     color("██║  ██╗╚██████╔╝╚█████╔╝██║██║  ██║██║  ██║", "cyan"),
     color("╚═╝  ╚═╝ ╚═════╝  ╚════╝ ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝", "cyan"),
-    color("  Kujira AI Harness", "white"),
+    color("  Kujira AI Workforce", "white"),
   ];
 
   const lines = [

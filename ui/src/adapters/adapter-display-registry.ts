@@ -81,7 +81,7 @@ const adapterDisplayMap: Record<string, AdapterDisplayInfo> = {
     recommended: true,
   },
   paperclip_runner: {
-    label: "Kujira AI Harness Runner",
+    label: "Kujira AI Workforce Runner",
     description: "Experimental Rust runner with a Codex provider",
     icon: Cpu,
     experimental: true,

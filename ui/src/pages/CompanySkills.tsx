@@ -769,7 +769,7 @@ export function buildDiscoveryCards(
       catalogRef: entry.id,
       name: entry.name,
       slug: entry.slug,
-      author: entry.packageName ?? "Kujira AI Harness",
+      author: entry.packageName ?? "Kujira AI Workforce",
       version: discoveryVersionLabel({ packageVersion: entry.packageVersion ?? null, sourceRef: null }, required),
       tagline: null,
       description: entry.description,

@@ -70,8 +70,8 @@ interface EnvironmentDescriptor {
 
 const localEnvironmentDescriptor: EnvironmentDescriptor = {
   label: "Local",
-  detail: "Kujira AI Harness host",
-  title: "Local - Kujira AI Harness host",
+  detail: "Kujira AI Workforce host",
+  title: "Local - Kujira AI Workforce host",
 };
 
 const loadingEnvironmentDescriptor: EnvironmentDescriptor = {
@@ -132,11 +132,11 @@ function describeEnvironment(
   capabilities?: EnvironmentCapabilities | null,
 ): EnvironmentDescriptor {
   const detail = isPlatformManagedEnvironment(environment)
-    ? "Managed by Kujira AI Harness"
+    ? "Managed by Kujira AI Workforce"
     : environment.driver === "sandbox"
       ? `${getSandboxProviderLabel(environment, capabilities)} sandbox provider`
       : environment.driver === "local"
-        ? "Kujira AI Harness host"
+        ? "Kujira AI Workforce host"
         : formatEnvironmentDriver(environment.driver);
 
   return {

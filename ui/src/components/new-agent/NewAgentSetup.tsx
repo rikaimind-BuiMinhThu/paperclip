@@ -644,7 +644,7 @@ function Setup({
                   ·{" "}
                   {runnerProvider === "codex"
                     ? "Native app server runner"
-                    : "Kujira AI Harness Runner"}
+                    : "Kujira AI Workforce Runner"}
                 </span>
               )}
             </div>

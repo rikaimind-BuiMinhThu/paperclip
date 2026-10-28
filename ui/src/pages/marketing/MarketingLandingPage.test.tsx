@@ -100,7 +100,7 @@ describe("MarketingLandingPage", () => {
     globalThis.ResizeObserver = originalResizeObserver!;
   });
 
-  it("renders the Kujira AI Harness hero and primary auth CTA", async () => {
+  it("renders the Kujira AI Workforce hero and primary auth CTA", async () => {
     container = document.createElement("div");
     document.body.appendChild(container);
     root = createRoot(container);

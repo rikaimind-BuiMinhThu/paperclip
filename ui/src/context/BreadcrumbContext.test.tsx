@@ -105,18 +105,18 @@ describe("BreadcrumbContext", () => {
 
   it("builds page titles with the selected company name before the product name", () => {
     expect(buildDocumentTitle([{ label: "Inbox" }], "Anachronist Wiki")).toBe(
-      "Inbox • Anachronist Wiki • Kujira AI Harness",
+      "Inbox • Anachronist Wiki • Kujira AI Workforce",
     );
     expect(
       buildDocumentTitle(
         [{ label: "Issues", href: "/issues" }, { label: "PAP-3515" }],
         "Anachronist Wiki",
       ),
-    ).toBe("PAP-3515 • Issues • Anachronist Wiki • Kujira AI Harness");
+    ).toBe("PAP-3515 • Issues • Anachronist Wiki • Kujira AI Workforce");
   });
 
   it("omits blank company names from page titles", () => {
-    expect(buildDocumentTitle([{ label: "Inbox" }], "  ")).toBe("Inbox • Kujira AI Harness");
-    expect(buildDocumentTitle([], null)).toBe("Kujira AI Harness");
+    expect(buildDocumentTitle([{ label: "Inbox" }], "  ")).toBe("Inbox • Kujira AI Workforce");
+    expect(buildDocumentTitle([], null)).toBe("Kujira AI Workforce");
   });
 });

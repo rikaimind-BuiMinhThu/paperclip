@@ -107,7 +107,7 @@ export function ConnectModelPreview({
           <OnboardingHeading
             center
             title="Connect a model"
-            lede="Kujira AI Harness works with your existing subscription or API keys."
+            lede="Kujira AI Workforce works with your existing subscription or API keys."
           />
         </div>
 

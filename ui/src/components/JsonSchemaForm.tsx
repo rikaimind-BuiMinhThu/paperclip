@@ -708,7 +708,7 @@ const SecretField = React.memo(({
       label={label}
       description={
         description ||
-        "Pick an existing organization secret, or paste a raw value (Kujira AI Harness will store it as a secret on save)."
+        "Pick an existing organization secret, or paste a raw value (Kujira AI Workforce will store it as a secret on save)."
       }
       required={isRequired}
       error={error}

@@ -103,12 +103,12 @@ export function discordPaperclipCommandDefinition(publicOwnerId: string) {
   return {
     type: 1,
     name: "paperclip",
-    description: `Kujira AI Harness session controls [pc:${publicOwnerId}]`,
+    description: `Kujira AI Workforce session controls [pc:${publicOwnerId}]`,
     options: [
       {
         type: 1,
         name: "status",
-        description: "Show the current Kujira AI Harness task",
+        description: "Show the current Kujira AI Workforce task",
       },
       {
         type: 1,
@@ -132,7 +132,7 @@ export function discordPaperclipCommandDefinition(publicOwnerId: string) {
 // it never enables command handling before a current definition is confirmed.
 function priorCloseCopyDefinition(id: string) {
   const definition = discordPaperclipCommandDefinition(id);
-  definition.options[2]!.description = "Close the current Kujira AI Harness task";
+  definition.options[2]!.description = "Close the current Kujira AI Workforce task";
   return definition;
 }
 

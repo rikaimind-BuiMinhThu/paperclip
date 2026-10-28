@@ -64,7 +64,7 @@ function ManagedByCloudBadge() {
   return (
     <Badge variant="outline" className="text-muted-foreground">
       <Lock aria-hidden="true" />
-      Managed by Kujira AI Harness Cloud
+      Managed by Kujira AI Workforce Cloud
     </Badge>
   );
 }

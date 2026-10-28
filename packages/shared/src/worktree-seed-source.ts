@@ -31,7 +31,7 @@ function readInstanceId(configPath: string, label: "source" | "target"): string 
     if (path.basename(path.dirname(configDir)) === "instances") {
       return resolvePaperclipInstanceId(path.basename(configDir));
     }
-    throw new Error(`Registered ${label} Kujira AI Harness config is missing its adjacent .env instance pointer.`);
+    throw new Error(`Registered ${label} Kujira AI Workforce config is missing its adjacent .env instance pointer.`);
   }
   const contents = readFileSync(envPath, "utf8");
   for (const rawLine of contents.split(/\r?\n/)) {
@@ -41,7 +41,7 @@ function readInstanceId(configPath: string, label: "source" | "target"): string 
     const value = (match?.[1] ?? match?.[2] ?? match?.[3] ?? "").trim();
     if (value) return value;
   }
-  throw new Error(`Registered ${label} Kujira AI Harness config has no PAPERCLIP_INSTANCE_ID binding.`);
+  throw new Error(`Registered ${label} Kujira AI Workforce config has no PAPERCLIP_INSTANCE_ID binding.`);
 }
 
 function errorCode(error: unknown): string {
@@ -60,7 +60,7 @@ function inspectDeclaredEntry(entryPath: string, configPath: string, detail?: st
   } catch (error) {
     if (errorCode(error) === "ENOENT") return null;
     throw new Error(
-      `Registered base project workspace Kujira AI Harness config at ${configPath} cannot be inspected (${errorCode(error)}${detail ?? ""}).`,
+      `Registered base project workspace Kujira AI Workforce config at ${configPath} cannot be inspected (${errorCode(error)}${detail ?? ""}).`,
     );
   }
 }
@@ -87,7 +87,7 @@ export function baseWorkspaceDeclaresInstanceConfig(baseWorkspaceCwd: string): b
       statSync(configDir);
     } catch (error) {
       throw new Error(
-        `Registered base project workspace Kujira AI Harness config at ${configPath} cannot be inspected (${errorCode(error)} on its .paperclip symlink target).`,
+        `Registered base project workspace Kujira AI Workforce config at ${configPath} cannot be inspected (${errorCode(error)} on its .paperclip symlink target).`,
       );
     }
   }
@@ -148,36 +148,36 @@ export function resolveRegisteredWorktreeSeedSource(
   const selectedPath = registeredConfigPath ?? explicitSource;
   if (!selectedPath) {
     throw new Error(
-      "Registered base project workspace has no Kujira AI Harness config of its own and no explicit source was provided.",
+      "Registered base project workspace has no Kujira AI Workforce config of its own and no explicit source was provided.",
     );
   }
-  const canonicalSourceConfigPath = canonicalRegularFile(selectedPath, "Registered source Kujira AI Harness config");
+  const canonicalSourceConfigPath = canonicalRegularFile(selectedPath, "Registered source Kujira AI Workforce config");
   if (registeredConfigPath && canonicalSourceConfigPath !== registeredConfigPath) {
-    throw new Error("Registered source Kujira AI Harness config escapes the base project workspace or uses a symlink alias.");
+    throw new Error("Registered source Kujira AI Workforce config escapes the base project workspace or uses a symlink alias.");
   }
 
   if (explicitSource) {
-    const canonicalExplicitSource = canonicalRegularFile(explicitSource, "Explicit source Kujira AI Harness config");
+    const canonicalExplicitSource = canonicalRegularFile(explicitSource, "Explicit source Kujira AI Workforce config");
     if (canonicalExplicitSource !== canonicalSourceConfigPath) {
-      throw new Error("Explicit source Kujira AI Harness config does not match the registered base project workspace.");
+      throw new Error("Explicit source Kujira AI Workforce config does not match the registered base project workspace.");
     }
   }
 
   const canonicalTargetConfigPath = canonicalRegularFile(
     input.targetConfigPath,
-    "Target worktree Kujira AI Harness config",
+    "Target worktree Kujira AI Workforce config",
   );
   if (canonicalSourceConfigPath === canonicalTargetConfigPath) {
-    throw new Error("Source and target Kujira AI Harness configs are the same canonical file.");
+    throw new Error("Source and target Kujira AI Workforce configs are the same canonical file.");
   }
 
   const sourceInstanceId = readInstanceId(canonicalSourceConfigPath, "source");
   const targetInstanceId = readInstanceId(canonicalTargetConfigPath, "target");
   if (targetInstanceId !== input.expectedTargetInstanceId) {
-    throw new Error("Target Kujira AI Harness instance does not match the registered worktree instance.");
+    throw new Error("Target Kujira AI Workforce instance does not match the registered worktree instance.");
   }
   if (sourceInstanceId === targetInstanceId) {
-    throw new Error("Source and target Kujira AI Harness configs name the same instance.");
+    throw new Error("Source and target Kujira AI Workforce configs name the same instance.");
   }
 
   return {

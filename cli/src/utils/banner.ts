@@ -15,7 +15,7 @@ export function printPaperclipCliBanner(): void {
   const lines = [
     "",
     ...KUJIRA_ART.map((line) => pc.cyan(line)),
-    pc.bold(pc.white("  Kujira AI Harness")),
+    pc.bold(pc.white("  Kujira AI Workforce")),
     pc.blue("  ───────────────────────────────────────────────────────"),
     pc.bold(pc.white(`  ${TAGLINE}`)),
     "",

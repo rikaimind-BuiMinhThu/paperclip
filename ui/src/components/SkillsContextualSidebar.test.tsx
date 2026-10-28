@@ -68,7 +68,7 @@ describe("SkillsContextualSidebar", () => {
     expect(container.textContent).toContain("Discover");
     expect(container.textContent).toContain("My Skills");
     expect(container.textContent).toContain("Skills you create, edit, and test.");
-    expect(container.textContent).not.toContain("Kujira AI Harness");
+    expect(container.textContent).not.toContain("Kujira AI Workforce");
     expect(container.querySelector('[aria-label="Back from Skills"]')).toBeNull();
     expect(container.querySelector('[aria-current="page"]')?.textContent).toBe("Installed");
 

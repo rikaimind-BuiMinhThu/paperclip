@@ -1768,7 +1768,7 @@ function applyDocumentFixups(document: any): any {
       in: "cookie",
       name: "paperclip_session",
       description:
-        "Board session cookie in authenticated mode. Kujira AI Harness uses Better Auth; cookie transport may vary by deployment.",
+        "Board session cookie in authenticated mode. Kujira AI Workforce uses Better Auth; cookie transport may vary by deployment.",
     },
     [BOARD_API_KEY_AUTH_SCHEME]: {
       type: "http",
@@ -1782,7 +1782,7 @@ function applyDocumentFixups(document: any): any {
       scheme: "bearer",
       bearerFormat: "Agent API Key or Agent JWT",
       description:
-        "Agent API key or Kujira AI Harness-issued local agent JWT presented in the Authorization bearer header.",
+        "Agent API key or Kujira AI Workforce-issued local agent JWT presented in the Authorization bearer header.",
     },
     [RUNTIME_TOOLS_BEARER_AUTH_SCHEME]: {
       type: "http",
@@ -1795,7 +1795,7 @@ function applyDocumentFixups(document: any): any {
       type: "http",
       scheme: "bearer",
       bearerFormat: "Task-bound agent JWT",
-      description: "Kujira AI Harness-issued JWT bound to an active task run. Agent API keys, board sessions, and connection-only tokens are rejected.",
+      description: "Kujira AI Workforce-issued JWT bound to an active task run. Agent API keys, board sessions, and connection-only tokens are rejected.",
     },
     [API_CUSTOMER_BEARER_AUTH_SCHEME]: {
       type: "http",
@@ -2303,7 +2303,7 @@ registry.registerPath({
   tags: ["chat-channels"],
   summary: "Create a chat endpoint",
   description:
-    "Creates one provider bot endpoint bound permanently to one Kujira AI Harness agent. Provider setup and verification happen in later calls.",
+    "Creates one provider bot endpoint bound permanently to one Kujira AI Workforce agent. Provider setup and verification happen in later calls.",
   request: {
     params: z.object({ companyId: z.string().uuid() }),
     body: jsonBody(createChatEndpointSchema),
@@ -2374,8 +2374,8 @@ const githubBotOperations: Array<{
     response: chatEndpointResponseSchema,
   },
   {
-    method: "get", suffix: "reviews", summary: "List review evidence attached to Kujira AI Harness tasks",
-    description: "Returns up to 100 newest review records for this endpoint. Each review references ordinary Kujira AI Harness tasks and runs; it is not an independent scheduler.",
+    method: "get", suffix: "reviews", summary: "List review evidence attached to Kujira AI Workforce tasks",
+    description: "Returns up to 100 newest review records for this endpoint. Each review references ordinary Kujira AI Workforce tasks and runs; it is not an independent scheduler.",
     response: z.array(z.object({
       id: z.string().uuid(), companyId: z.string().uuid(), endpointId: z.string().uuid(),
       issueId: z.string().uuid(), runId: z.string().uuid().nullable(), repositoryId: z.string(),
@@ -2417,7 +2417,7 @@ const githubBotOperations: Array<{
   },
   {
     method: "post", suffix: "repositories/refresh", summary: "Refresh repositories available to the bot installation",
-    description: "Fetches current installation access from GitHub and reconciles resources while preserving Kujira AI Harness repository enablement. Return parameters alone never prove installation access.",
+    description: "Fetches current installation access from GitHub and reconciles resources while preserving Kujira AI Workforce repository enablement. Return parameters alone never prove installation access.",
     response: z.array(chatEndpointResourceResponseSchema),
   },
 ];
@@ -2465,7 +2465,7 @@ registry.registerPath({
   tags: ["chat-channels"],
   summary: "Configure or change chat endpoint lifecycle state",
   description:
-    "Runs a setup or lifecycle action. `configure` and `reconnect` accept provider credentials (Slack: `botToken`, `signingSecret`; GitHub: `appId`, `privateKey` after Kujira AI Harness generates the webhook secret; Discord: `applicationId`, `guildId`, `botToken`; Microsoft Teams: `clientId`, `tenantId`, `clientSecret`; Telegram: `botToken`; iMessage Photon: `projectSecret`, with nonsecret `photon.projectId` and `photon.lineId` configuration). Credentials are stored as Kujira AI Harness secret references and are never returned. Other actions do not require credentials.",
+    "Runs a setup or lifecycle action. `configure` and `reconnect` accept provider credentials (Slack: `botToken`, `signingSecret`; GitHub: `appId`, `privateKey` after Kujira AI Workforce generates the webhook secret; Discord: `applicationId`, `guildId`, `botToken`; Microsoft Teams: `clientId`, `tenantId`, `clientSecret`; Telegram: `botToken`; iMessage Photon: `projectSecret`, with nonsecret `photon.projectId` and `photon.lineId` configuration). Credentials are stored as Kujira AI Workforce secret references and are never returned. Other actions do not require credentials.",
   request: {
     params: z.object({ endpointId: z.string().uuid() }),
     body: jsonBody(configureChatEndpointSchema),
@@ -2564,7 +2564,7 @@ registry.registerPath({
   tags: ["chat-channels"],
   summary: "Complete a chat endpoint setup test",
   description:
-    "Activates a verifying endpoint only after Kujira AI Harness has received a real provider event since the server-issued setup test boundary. iMessage Photon additionally requires a fresh linked sender's task and a successful outbound agent publication.",
+    "Activates a verifying endpoint only after Kujira AI Workforce has received a real provider event since the server-issued setup test boundary. iMessage Photon additionally requires a fresh linked sender's task and a successful outbound agent publication.",
   request: { params: z.object({ endpointId: z.string().uuid() }) },
   responses: {
     200: r.ok(chatEndpointResponseSchema),
@@ -2619,7 +2619,7 @@ registry.registerPath({
   tags: ["chat-channels"],
   summary: "List external identities seen by a chat endpoint",
   description:
-    "Lists provider identities and their explicit Kujira AI Harness identity-link status for this endpoint's provider account.",
+    "Lists provider identities and their explicit Kujira AI Workforce identity-link status for this endpoint's provider account.",
   request: { params: z.object({ endpointId: z.string().uuid() }) },
   responses: {
     200: r.ok(z.array(chatPrincipalLinkResponseSchema)),
@@ -2635,7 +2635,7 @@ registry.registerPath({
   tags: ["chat-channels"],
   summary: "Create an external identity-link intent",
   description:
-    "Creates a short-lived confirmation URL for a human external identity belonging to this endpoint. The signed-in Kujira AI Harness user must confirm the link separately.",
+    "Creates a short-lived confirmation URL for a human external identity belonging to this endpoint. The signed-in Kujira AI Workforce user must confirm the link separately.",
   request: {
     params: z.object({
       endpointId: z.string().uuid(),
@@ -2700,7 +2700,7 @@ registry.registerPath({
   tags: ["chat-channels"],
   summary: "Confirm an external identity link",
   description:
-    "Links the token's external identity to the currently signed-in Kujira AI Harness user after rechecking active company membership and canonical-link conflicts.",
+    "Links the token's external identity to the currently signed-in Kujira AI Workforce user after rechecking active company membership and canonical-link conflicts.",
   request: { body: jsonBody(confirmChatIdentityLinkSchema) },
   responses: {
     200: r.ok(chatIdentityLinkConfirmationResponseSchema),
@@ -2718,7 +2718,7 @@ registry.registerPath({
   tags: ["chat-channels"],
   summary: "List external conversations and bound tasks",
   description:
-    "Lists each durable provider conversation-to-Kujira AI Harness-task binding for the endpoint, including provider and task links and the latest publication state.",
+    "Lists each durable provider conversation-to-Kujira AI Workforce-task binding for the endpoint, including provider and task links and the latest publication state.",
   request: { params: z.object({ endpointId: z.string().uuid() }) },
   responses: {
     200: r.ok(z.array(chatConversationResponseSchema)),
@@ -2820,7 +2820,7 @@ registry.registerPath({
   tags: ["chat-channels"],
   summary: "Resolve an unconfirmed provider action",
   description:
-    "After checking the provider, an operator may mark an ambiguous durable provider reply delivered, retry it while accepting duplicate risk, or cancel it. Slack slash-command task starts support explicit retry or cancel only. Kujira AI Harness never replays an ambiguous provider action automatically, and every resolution is audited.",
+    "After checking the provider, an operator may mark an ambiguous durable provider reply delivered, retry it while accepting duplicate risk, or cancel it. Slack slash-command task starts support explicit retry or cancel only. Kujira AI Workforce never replays an ambiguous provider action automatically, and every resolution is audited.",
   request: {
     params: z.object({
       endpointId: z.string().uuid(),
@@ -2843,9 +2843,9 @@ registry.registerPath({
   method: "post",
   path: "/api/chat-endpoints/{endpointId}/conversations/{conversationId}/publications",
   tags: ["chat-channels"],
-  summary: "Publish a Kujira AI Harness task comment to an external conversation",
+  summary: "Publish a Kujira AI Workforce task comment to an external conversation",
   description:
-    "Explicitly projects an eligible comment from the bound Kujira AI Harness task into the provider conversation. The endpoint, conversation, and comment must belong to the same binding. A Board send with an already-bound attachment returns 409 with code chat_board_send_attachments_already_bound and request-scoped details (endpointId, conversationId, idempotencyKey, attachmentIds). This durable rejection queues no publication and is replayed for the same key even if the file later becomes unbound. Correcting it requires an explicit new send identity. Other errors do not establish non-delivery.",
+    "Explicitly projects an eligible comment from the bound Kujira AI Workforce task into the provider conversation. The endpoint, conversation, and comment must belong to the same binding. A Board send with an already-bound attachment returns 409 with code chat_board_send_attachments_already_bound and request-scoped details (endpointId, conversationId, idempotencyKey, attachmentIds). This durable rejection queues no publication and is replayed for the same key even if the file later becomes unbound. Correcting it requires an explicit new send identity. Other errors do not establish non-delivery.",
   request: {
     params: z.object({
       endpointId: z.string().uuid(),
@@ -3845,7 +3845,7 @@ registry.registerPath({
   tags: ["agents"],
   summary: "Wake up an agent",
   description:
-    "Board failed-run retries supply failedRunId with reason retry_failed_run. Kujira AI Harness derives the exact request and current authorization; a chat retry may return a durable queued/deferred receipt before a run exists. Caller task/comment markers and fresh-session overrides do not authorize replay.",
+    "Board failed-run retries supply failedRunId with reason retry_failed_run. Kujira AI Workforce derives the exact request and current authorization; a chat retry may return a durable queued/deferred receipt before a run exists. Caller task/comment markers and fresh-session overrides do not authorize replay.",
   request: {
     params: z.object({ id: z.string() }),
     body: jsonBody(wakeAgentSchema),
@@ -7252,7 +7252,7 @@ registry.registerPath({
   method: "post",
   path: "/api/heartbeat-runs/{runId}/runtime-requests/{requestId}/resolve",
   tags: ["runs"],
-  summary: "Resolve a pending Kujira AI Harness runner runtime request",
+  summary: "Resolve a pending Kujira AI Workforce runner runtime request",
   request: {
     params: z.object({ runId: heartbeatRunIdParamSchema, requestId: z.string() }),
     body: jsonBody(
@@ -7803,7 +7803,7 @@ registry.registerPath({
   method: "post",
   path: "/api/companies/{companyId}/onboarding-seed",
   tags: ["companies"],
-  summary: "Apply the onboarding seed Kujira AI Harness Cloud collected at signup",
+  summary: "Apply the onboarding seed Kujira AI Workforce Cloud collected at signup",
   request: { params: z.object({ companyId: z.string() }) },
   responses: { 200: r.ok(), 401: r.unauthorized, 422: r.unprocessable },
 });
@@ -10994,28 +10994,28 @@ registerCurrentRoute({
   method: "get",
   path: "/api/tools/oauth/cloud-connector/callback",
   tags: ["tool-access"],
-  summary: "Handle a brokered Kujira AI Harness Cloud OAuth callback",
+  summary: "Handle a brokered Kujira AI Workforce Cloud OAuth callback",
 });
 
 registerCurrentRoute({
   method: "get",
   path: "/api/tools/oauth/paperclip-id/callback",
   tags: ["tool-access"],
-  summary: "Handle a legacy brokered Kujira AI Harness ID OAuth callback",
+  summary: "Handle a legacy brokered Kujira AI Workforce ID OAuth callback",
 });
 
 registerCurrentRoute({
   method: "get",
   path: "/api/tools/oauth/cloud-connector/enrollment",
   tags: ["tool-access"],
-  summary: "Get Kujira AI Harness Cloud connector enrollment status",
+  summary: "Get Kujira AI Workforce Cloud connector enrollment status",
 });
 
 registerCurrentRoute({
   method: "post",
   path: "/api/tools/oauth/cloud-connector/enrollment",
   tags: ["tool-access"],
-  summary: "Start Kujira AI Harness Cloud connector enrollment",
+  summary: "Start Kujira AI Workforce Cloud connector enrollment",
   body: z
     .object({ companyId: z.string().min(1), label: z.string().optional() })
     .strict(),
@@ -11032,7 +11032,7 @@ registerCurrentRoute({
   method: "get",
   path: "/api/tools/oauth/cloud-connector/enrollment-callback",
   tags: ["tool-access"],
-  summary: "Complete Kujira AI Harness Cloud connector enrollment",
+  summary: "Complete Kujira AI Workforce Cloud connector enrollment",
   query: z
     .object({
       enrollment_id: z.string().min(1),
@@ -11963,9 +11963,9 @@ export function buildOpenApiDocument(): any {
   return applyDocumentFixups({
     openapi: "3.0.0",
     info: {
-      title: "Kujira AI Harness API",
+      title: "Kujira AI Workforce API",
       version: "1.0.0",
-      description: "REST API for the Kujira AI Harness AI agent management platform",
+      description: "REST API for the Kujira AI Workforce AI agent management platform",
     },
     servers: [{ url: "/" }],
     components: registry.buildComponents(),

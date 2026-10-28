@@ -97,10 +97,10 @@ async function handleMcpGatewayProtocol(
         result: {
           protocolVersion: "2025-03-26",
           capabilities: { tools: {}, resources: {}, prompts: {} },
-          serverInfo: { name: "Kujira AI Harness MCP Gateway", version: "1.0.0" },
+          serverInfo: { name: "Kujira AI Workforce MCP Gateway", version: "1.0.0" },
           _meta: {
             "paperclip/mcp-app-ui": "unsupported",
-            "paperclip/mcp-app-ui-detail": "Interactive ui:// iframe hosting is not available in Kujira AI Harness Runner.",
+            "paperclip/mcp-app-ui-detail": "Interactive ui:// iframe hosting is not available in Kujira AI Workforce Runner.",
           },
         },
       });

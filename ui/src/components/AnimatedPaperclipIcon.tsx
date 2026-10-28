@@ -2,7 +2,7 @@ import { cn } from "../lib/utils";
 import { KujiraLockup } from "./KujiraLockup";
 
 /**
- * Full-page loading state: animated Kujira AI Harness lockup.
+ * Full-page loading state: animated Kujira AI Workforce lockup.
  * Export name kept for call-site stability across App / auth gates.
  */
 export function PaperclipLoading({ className }: { className?: string }) {

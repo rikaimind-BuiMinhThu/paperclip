@@ -83,8 +83,8 @@ export async function uninstallCommand(
   }, paths, { initialize: !hadStore });
 
   if (!shimRemoved) {
-    console.log(pc.yellow(`Left ${paths.shimPath} unchanged because it is not a Kujira AI Harness-managed shim.`));
+    console.log(pc.yellow(`Left ${paths.shimPath} unchanged because it is not a Kujira AI Workforce-managed shim.`));
   }
-  console.log(pc.green("Removed the managed Kujira AI Harness CLI install."));
+  console.log(pc.green("Removed the managed Kujira AI Workforce CLI install."));
   console.log(pc.dim(`User data was left untouched under ${paths.paperclipHome}.`));
 }

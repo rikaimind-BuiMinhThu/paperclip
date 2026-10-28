@@ -660,7 +660,7 @@ describe("codex_local ACP lane", () => {
       expect.objectContaining({
         code: "codex_acp_credentials_missing",
         level: "warn",
-        message: expect.stringContaining("Kujira AI Harness server"),
+        message: expect.stringContaining("Kujira AI Workforce server"),
         hint: expect.stringContaining("separate Codex/chat session"),
       }),
     );
@@ -811,7 +811,7 @@ describe("codex_local ACP lane", () => {
     // The adapter receives server-rendered fields. Keep the server builder's
     // own tests in the server package; adapter packages compile independently.
     const assignmentMarkdown = [
-      "Kujira AI Harness task context:",
+      "Kujira AI Workforce task context:",
       `- Issue: ${JSON.stringify(issue.identifier)}`,
       `- Title: ${JSON.stringify(issue.title)}`,
       "", "Issue description:", "```text", issue.description, "```",

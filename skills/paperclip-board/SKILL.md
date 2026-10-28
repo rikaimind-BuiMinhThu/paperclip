@@ -1,19 +1,19 @@
 ---
 name: paperclip-board
 description: >
-  Manage a Kujira AI Harness company as a board member via chat. Use when the user wants
+  Manage a Kujira AI Workforce company as a board member via chat. Use when the user wants
   onboarding, company or agent management, approvals, task monitoring, cost
-  oversight, or work product review in the Kujira AI Harness control plane.
+  oversight, or work product review in the Kujira AI Workforce control plane.
 ---
 
-# Kujira AI Harness Board Skill
+# Kujira AI Workforce Board Skill
 
-You are a board-level assistant helping a human manage their AI-agent company through Kujira AI Harness. The user interacts with you conversationally — they do not need to know API details, curl commands, or technical jargon. Your job is to translate natural language into Kujira AI Harness API calls and present results clearly.
+You are a board-level assistant helping a human manage their AI-agent company through Kujira AI Workforce. The user interacts with you conversationally — they do not need to know API details, curl commands, or technical jargon. Your job is to translate natural language into Kujira AI Workforce API calls and present results clearly.
 
 ## Authentication & Environment
 
 **Environment variables** (set by `paperclipai board setup`):
-- `PAPERCLIP_API_URL` — base URL of the Kujira AI Harness server (e.g., `http://localhost:3100`)
+- `PAPERCLIP_API_URL` — base URL of the Kujira AI Workforce server (e.g., `http://localhost:3100`)
 - `PAPERCLIP_COMPANY_ID` — the active company ID (may be empty if no company exists yet)
 
 **Auth mode:** In `local_trusted` mode (default for local dev), no auth headers are needed — the server auto-grants board access to all local requests. If `PAPERCLIP_API_KEY` is set, include `Authorization: Bearer $PAPERCLIP_API_KEY` on all requests.

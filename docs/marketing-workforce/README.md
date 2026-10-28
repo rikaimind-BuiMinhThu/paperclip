@@ -1,6 +1,6 @@
 # Marketing Workforce
 
-AI Marketing Workforce on Paperclip / Kujira AI Harness.
+AI Marketing Workforce on Paperclip / Kujira AI Workforce.
 
 ## Status
 

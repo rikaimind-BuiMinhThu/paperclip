@@ -139,7 +139,7 @@ export function PasteConfigTab({ companyId }: { companyId: string }) {
       navigateTopLevel(target.url);
     } catch (error) {
       setOAuthPhase("error");
-      setOAuthError(error instanceof Error ? error.message : "Kujira AI Harness couldn’t start secure sign-in. Try again.");
+      setOAuthError(error instanceof Error ? error.message : "Kujira AI Workforce couldn’t start secure sign-in. Try again.");
     }
   };
 
@@ -151,7 +151,7 @@ export function PasteConfigTab({ companyId }: { companyId: string }) {
       setOAuthError(
         error instanceof Error
           ? error.message
-          : "Kujira AI Harness couldn’t start secure sign-in. Try again.",
+          : "Kujira AI Workforce couldn’t start secure sign-in. Try again.",
       );
     },
   });
@@ -340,7 +340,7 @@ export function PasteConfigTab({ companyId }: { companyId: string }) {
             })}
             {drafts.some((d) => draftConnectUrl(d)) ? (
               <p className="text-xs text-muted-foreground">
-                Checking a remote app creates a draft connection, stores any header replacements as Kujira AI Harness secrets,
+                Checking a remote app creates a draft connection, stores any header replacements as Kujira AI Workforce secrets,
                 and runs health/catalog discovery before activation.
               </p>
             ) : (

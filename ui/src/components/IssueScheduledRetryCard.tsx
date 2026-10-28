@@ -115,7 +115,7 @@ export function IssueScheduledRetryCard({
           ) : null}
           {scheduledRetry.error ? (
             <div className="mt-1 text-xs text-muted-foreground">
-              Last attempt failed: {scheduledRetry.error}. Kujira AI Harness will retry automatically.
+              Last attempt failed: {scheduledRetry.error}. Kujira AI Workforce will retry automatically.
             </div>
           ) : null}
           {isError ? (

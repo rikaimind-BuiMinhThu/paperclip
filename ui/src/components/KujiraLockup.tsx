@@ -7,13 +7,13 @@ interface KujiraLockupProps {
 }
 
 /**
- * Kujira AI Harness lockup — theme-paired raster marks (light / dark).
+ * Kujira AI Workforce lockup — theme-paired raster marks (light / dark).
  * Size with a height class (`h-16 w-auto`); width follows the aspect.
  */
 export function KujiraLockup({
   className,
   decorative = false,
-  title = "Kujira AI Harness",
+  title = "Kujira AI Workforce",
 }: KujiraLockupProps) {
   return (
     <span

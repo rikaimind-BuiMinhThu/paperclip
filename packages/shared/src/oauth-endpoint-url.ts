@@ -146,15 +146,15 @@ export function oauthEndpointUrlRejectionMessage(
     case "missing":
       return `This server did not provide a ${label} address.`;
     case "malformed":
-      return `This server's ${label} address is not a valid URL, so Kujira AI Harness stopped.`;
+      return `This server's ${label} address is not a valid URL, so Kujira AI Workforce stopped.`;
     case "unsupported_scheme":
-      return `This server's ${label} address does not use https, so Kujira AI Harness stopped.`;
+      return `This server's ${label} address does not use https, so Kujira AI Workforce stopped.`;
     case "insecure_transport":
-      return `This server's ${label} address is not secure (https), so Kujira AI Harness stopped.`;
+      return `This server's ${label} address is not secure (https), so Kujira AI Workforce stopped.`;
     case "embedded_credentials":
-      return `This server's ${label} address hides a different site behind a username, so Kujira AI Harness stopped.`;
+      return `This server's ${label} address hides a different site behind a username, so Kujira AI Workforce stopped.`;
     case "fragment":
-      return `This server's ${label} address is malformed for sign-in, so Kujira AI Harness stopped.`;
+      return `This server's ${label} address is malformed for sign-in, so Kujira AI Workforce stopped.`;
   }
 }
 

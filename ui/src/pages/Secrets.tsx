@@ -3201,7 +3201,7 @@ export function Secrets() {
                 className="font-mono text-xs"
               />
               <p className="mt-1 text-(length:--text-micro) text-muted-foreground">
-                Rotate the actual value in the provider before changing this Kujira AI Harness reference.
+                Rotate the actual value in the provider before changing this Kujira AI Workforce reference.
               </p>
             </div>
           ) : (

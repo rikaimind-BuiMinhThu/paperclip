@@ -1,6 +1,6 @@
 {
   "$schema": "https://mintlify.com/docs.json",
-  "name": "Kujira AI Harness",
+  "name": "Kujira AI Workforce",
   "description": "The control plane for autonomous AI companies",
   "theme": "mint",
   "colors": {

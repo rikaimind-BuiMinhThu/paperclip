@@ -85,7 +85,7 @@ export const issueChatUxMentions: MentionOption[] = [
   },
   {
     id: "mention-project-1",
-    name: "Kujira AI Harness Board UI",
+    name: "Kujira AI Workforce Board UI",
     kind: "project",
     projectId: "project-1",
     projectColor: "#0f766e",

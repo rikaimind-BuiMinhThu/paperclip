@@ -163,7 +163,7 @@ export function artifactReviewDocumentService(db: Db, storage: StorageService) {
       }
       const metadata = getAttachmentArtifactWorkProductMetadata(workProduct);
       if (!metadata) {
-        throw unprocessable("Work product is not an attachment-backed Kujira AI Harness artifact", {
+        throw unprocessable("Work product is not an attachment-backed Kujira AI Workforce artifact", {
           code: "not_attachment_backed_artifact",
           workProductId: workProduct.id,
         });

@@ -58,7 +58,7 @@ export function cloudControlMiddleware(): RequestHandler {
     req.actor = {
       type: "board",
       userId: "paperclip-cloud",
-      userName: "Kujira AI Harness Cloud",
+      userName: "Kujira AI Workforce Cloud",
       userEmail: null,
       isInstanceAdmin: true,
       source: "cloud_control",

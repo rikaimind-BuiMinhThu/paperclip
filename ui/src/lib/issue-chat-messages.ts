@@ -541,10 +541,10 @@ function authorNameForComment(
 ) {
   const authorAgentId = effectiveCommentAuthorAgentId(comment);
   if (authorAgentId) {
-    return agentMap?.get(authorAgentId)?.name ?? (options?.isSystemNotice ? "Kujira AI Harness" : authorAgentId.slice(0, 8));
+    return agentMap?.get(authorAgentId)?.name ?? (options?.isSystemNotice ? "Kujira AI Workforce" : authorAgentId.slice(0, 8));
   }
   const authorUserId = comment.authorUserId ?? null;
-  if (!authorUserId) return options?.isSystemNotice ? "Kujira AI Harness" : "You";
+  if (!authorUserId) return options?.isSystemNotice ? "Kujira AI Workforce" : "You";
   const userLabel = userLabelMap?.get(authorUserId)?.trim();
   if (userLabel) return userLabel;
   return formatAssigneeUserLabel(authorUserId, currentUserId, userLabelMap) ?? "You";

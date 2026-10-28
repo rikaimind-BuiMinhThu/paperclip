@@ -226,7 +226,7 @@ const EXACT_ACTIONS: Record<string, ExactAction> = {
   decide_approval: { action: "update", running: "Deciding an approval", completed: "Decided an approval" },
   comment_on_approval: { action: "post", running: "Commenting on an approval", completed: "Commented on an approval" },
   schedule_wake: { action: "create", running: "Scheduling a wake-up", completed: "Scheduled a wake-up", family: "wait" },
-  generic_api_request: { action: "request", running: "Calling the Kujira AI Harness API", completed: "Called the Kujira AI Harness API" },
+  generic_api_request: { action: "request", running: "Calling the Kujira AI Workforce API", completed: "Called the Kujira AI Workforce API" },
 };
 
 const ACTION_PREFIXES: Record<Action, readonly string[]> = {
@@ -351,7 +351,7 @@ function defaultSummaryGroup(action: Action): ToolSummaryGroup {
 }
 
 function paperclipSummaryGroup(action: Action): ToolSummaryGroup {
-  if (action === "read" || action === "list") return group("paperclip_read", "Kujira AI Harness read", "Kujira AI Harness reads");
+  if (action === "read" || action === "list") return group("paperclip_read", "Kujira AI Workforce read", "Kujira AI Workforce reads");
   return group("task_operation", "task operation", "task operations");
 }
 
