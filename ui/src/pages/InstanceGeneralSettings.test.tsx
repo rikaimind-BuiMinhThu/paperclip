@@ -5,6 +5,7 @@ import { createRoot, type Root } from "react-dom/client";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { queryKeys } from "@/lib/queryKeys";
+import { t } from "@/i18n";
 import { InstanceGeneralSettings } from "./InstanceGeneralSettings";
 
 const mockAuthApi = vi.hoisted(() => ({ signOut: vi.fn() }));
@@ -82,13 +83,15 @@ describe("InstanceGeneralSettings sign-out", () => {
         </QueryClientProvider>,
       );
     });
-    await vi.waitFor(() => expect(container.textContent).toContain("Deployment and auth"));
+    await vi.waitFor(() =>
+      expect(container.textContent).toContain(t("pages.instanceGeneral.deploymentAndAuth")),
+    );
     expect(container.querySelector('[data-slot="card"]')).toBeNull();
   }
 
   function signOutButton() {
     return Array.from(container.querySelectorAll("button"))
-      .find((button) => button.textContent?.trim() === "Sign out");
+      .find((button) => button.textContent?.trim() === t("pages.instanceGeneral.signOut"));
   }
 
   it("uses the Cloud-managed top-level logout without calling local auth", async () => {
@@ -131,7 +134,7 @@ describe("InstanceGeneralSettings sign-out", () => {
     await renderPage(SELF_HOSTED_HEALTH);
 
     const censorToggle = container.querySelector<HTMLButtonElement>(
-      '[aria-label="Toggle username log censoring"]',
+      `[aria-label="${t("pages.instanceGeneral.censorUsernameToggleAria")}"]`,
     );
     flushSync(() => censorToggle?.click());
     await vi.waitFor(() => expect(container.textContent).toContain("Settings update failed"));
@@ -150,7 +153,7 @@ describe("InstanceGeneralSettings sign-out", () => {
     await vi.waitFor(() => expect(container.textContent).toContain("Sign-out request failed"));
 
     const censorToggle = container.querySelector<HTMLButtonElement>(
-      '[aria-label="Toggle username log censoring"]',
+      `[aria-label="${t("pages.instanceGeneral.censorUsernameToggleAria")}"]`,
     );
     flushSync(() => censorToggle?.click());
 
@@ -168,7 +171,7 @@ describe("InstanceGeneralSettings sign-out", () => {
     await renderPage(SELF_HOSTED_HEALTH);
 
     const censorToggle = container.querySelector<HTMLButtonElement>(
-      '[aria-label="Toggle username log censoring"]',
+      `[aria-label="${t("pages.instanceGeneral.censorUsernameToggleAria")}"]`,
     );
     flushSync(() => signOutButton()?.click());
     await vi.waitFor(() => expect(mockAuthApi.signOut).toHaveBeenCalledOnce());
@@ -191,7 +194,7 @@ describe("InstanceGeneralSettings sign-out", () => {
     await renderPage(SELF_HOSTED_HEALTH);
 
     const censorToggle = container.querySelector<HTMLButtonElement>(
-      '[aria-label="Toggle username log censoring"]',
+      `[aria-label="${t("pages.instanceGeneral.censorUsernameToggleAria")}"]`,
     );
     flushSync(() => censorToggle?.click());
     await vi.waitFor(() => expect(mockInstanceSettingsApi.updateGeneral).toHaveBeenCalledOnce());
@@ -240,7 +243,9 @@ describe("InstanceGeneralSettings operator-hidden sections", () => {
         </QueryClientProvider>,
       );
     });
-    await vi.waitFor(() => expect(container.textContent).toContain("Backup retention"));
+    await vi.waitFor(() =>
+      expect(container.textContent).toContain(t("pages.instanceGeneral.backupRetentionTitle")),
+    );
   }
 
   it("hides an operator-hidden field-backed section and a UI-only section", async () => {
@@ -252,18 +257,18 @@ describe("InstanceGeneralSettings operator-hidden sections", () => {
       ],
     });
 
-    expect(container.textContent).not.toContain("Censor username in logs");
-    expect(container.textContent).not.toContain("Deployment and auth");
-    expect(container.textContent).toContain("Backup retention");
-    expect(container.textContent).toContain("AI feedback sharing");
-    expect(container.textContent).toContain("Sign out");
+    expect(container.textContent).not.toContain(t("pages.instanceGeneral.censorUsername"));
+    expect(container.textContent).not.toContain(t("pages.instanceGeneral.deploymentAndAuth"));
+    expect(container.textContent).toContain(t("pages.instanceGeneral.backupRetentionTitle"));
+    expect(container.textContent).toContain(t("pages.instanceGeneral.feedbackSharingTitle"));
+    expect(container.textContent).toContain(t("pages.instanceGeneral.signOut"));
   });
 
   it("shows every section when nothing is hidden", async () => {
     await renderPage(SELF_HOSTED_HEALTH);
 
-    expect(container.textContent).toContain("Deployment and auth");
-    expect(container.textContent).toContain("Censor username in logs");
-    expect(container.textContent).toContain("Backup retention");
+    expect(container.textContent).toContain(t("pages.instanceGeneral.deploymentAndAuth"));
+    expect(container.textContent).toContain(t("pages.instanceGeneral.censorUsername"));
+    expect(container.textContent).toContain(t("pages.instanceGeneral.backupRetentionTitle"));
   });
 });

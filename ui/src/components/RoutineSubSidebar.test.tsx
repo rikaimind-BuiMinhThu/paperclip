@@ -20,6 +20,7 @@ vi.mock("@/lib/router", () => ({
   },
 }));
 
+import { t } from "@/i18n";
 import { RoutineSubSidebar } from "./RoutineSubSidebar";
 import type { RoutineSectionKey } from "./routine-sections/context";
 
@@ -70,44 +71,44 @@ describe("RoutineSubSidebar", () => {
     const links = Array.from(container.querySelectorAll("a"));
     const labels = links.map((link) => link.textContent?.trim());
     expect(labels).toEqual([
-      "Overview",
-      "Triggers",
-      "Variables",
-      "Secrets",
-      "Delivery",
-      "Runs",
-      "Activity",
-      "History",
+      t("pages.routineDetail.sectionOverview"),
+      t("pages.routineDetail.sectionTriggers"),
+      t("pages.routineDetail.sectionVariables"),
+      t("pages.routineDetail.sectionSecrets"),
+      t("pages.routineDetail.sectionDelivery"),
+      t("pages.routineDetail.sectionRuns"),
+      t("pages.routineDetail.sectionActivity"),
+      t("pages.routineDetail.sectionHistoryShort"),
     ]);
     const groupLabels = Array.from(container.querySelectorAll("p")).map((p) => p.textContent);
-    expect(groupLabels).toContain("Routine");
-    expect(groupLabels).toContain("Operate");
+    expect(groupLabels).toContain(t("pages.routineDetail.groupRoutine"));
+    expect(groupLabels).toContain(t("pages.routineDetail.groupOperate"));
   });
 
   it("marks the active section with aria-current=page", () => {
     renderSidebar({ activeSection: "secrets" });
     const active = container.querySelector('a[aria-current="page"]');
-    expect(active?.textContent?.trim()).toBe("Secrets");
+    expect(active?.textContent?.trim()).toBe(t("pages.routineDetail.sectionSecrets"));
   });
 
   it("links each section to its section URL", () => {
     renderSidebar();
     const variables = Array.from(container.querySelectorAll("a")).find(
-      (link) => link.textContent?.trim() === "Variables",
+      (link) => link.textContent?.trim() === t("pages.routineDetail.sectionVariables"),
     );
     expect(variables?.getAttribute("href")).toBe("/routines/r1/variables");
   });
 
   it("shows a dirty marker only on dirty editable sections", () => {
     renderSidebar({ dirty: ["overview", "delivery"] });
-    const dirtyMarkers = container.querySelectorAll('[aria-label="Unsaved changes"]');
+    const dirtyMarkers = container.querySelectorAll(`[aria-label="${t("pages.routineDetail.unsavedChangesAria")}"]`);
     expect(dirtyMarkers.length).toBe(2);
   });
 
   it("fires onNavigate when a section is clicked", () => {
     const { onNavigate } = renderSidebar();
     const triggers = Array.from(container.querySelectorAll("a")).find(
-      (link) => link.textContent?.trim() === "Triggers",
+      (link) => link.textContent?.trim() === t("pages.routineDetail.sectionTriggers"),
     ) as HTMLAnchorElement;
     act(() => {
       triggers.dispatchEvent(new MouseEvent("click", { bubbles: true }));

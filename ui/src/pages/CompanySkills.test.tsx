@@ -16,6 +16,7 @@ import {
   skillDetailBreadcrumbs,
 } from "./CompanySkills";
 import { skillStudioNewRoute } from "../lib/company-skill-routes";
+import { t } from "@/i18n";
 
 vi.mock("@/lib/router", () => ({
   Link: ({ children, to, ...props }: { children: ReactNode; to: string }) => (
@@ -559,7 +560,9 @@ describe("DiscoveryGrid IA presentation", () => {
       onMoveCard: vi.fn(),
       onCreateFolderAndMoveCard: vi.fn(),
     });
-    const actionsButton = node.querySelector<HTMLButtonElement>('[aria-label="More actions for Demo Skill"]');
+    const actionsButton = node.querySelector<HTMLButtonElement>(
+      `[aria-label="${t("a11y.moreActionsFor", { name: "Demo Skill" })}"]`,
+    );
 
     await act(async () => {
       actionsButton?.dispatchEvent(new KeyboardEvent("keydown", { key: "Enter", bubbles: true }));
@@ -621,7 +624,7 @@ describe("DiscoveryGrid IA presentation", () => {
       onOpenMoveCard: vi.fn(),
     });
 
-    expect(node.querySelector('[aria-label="More actions for Bundled Skill"]')).toBeNull();
+    expect(node.querySelector(`[aria-label="${t("a11y.moreActionsFor", { name: "Bundled Skill" })}"]`)).toBeNull();
     expect(node.querySelector('input[type="checkbox"]')).toBeNull();
     expect(node.textContent).not.toContain("Move to folder");
   });

@@ -71,7 +71,7 @@ export function SkillSources() {
             </div></div>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button size="icon-sm" variant="ghost" className="shrink-0" aria-label={`More actions for ${source.fullName}`}><MoreVertical className="size-4" /></Button>
+                <Button size="icon-sm" variant="ghost" className="shrink-0" aria-label={t("a11y.moreActionsFor", { name: source.fullName })}><MoreVertical className="size-4" /></Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
                 <DropdownMenuItem disabled={!source.enabled || refresh.isPending} onSelect={() => refresh.mutate(source.id)}>{refresh.isPending && refresh.variables === source.id ? t('pages.skills.refreshing') : t('pages.skills.refresh')}</DropdownMenuItem>

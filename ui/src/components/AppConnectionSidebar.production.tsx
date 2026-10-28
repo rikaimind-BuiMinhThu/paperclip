@@ -20,6 +20,7 @@ import {
   appDefinitionSlug,
   type AppGalleryDisplayEntry,
 } from "@/pages/apps/app-definition-display";
+import { useTranslation } from "@/i18n";
 import { SidebarNavItem } from "./SidebarNavItem.production";
 
 type AppDetailSidebarProps =
@@ -27,6 +28,7 @@ type AppDetailSidebarProps =
   | { kind: "application"; applicationId: string };
 
 export function AppDetailSidebar(props: AppDetailSidebarProps) {
+  const { t } = useTranslation();
   const { selectedCompanyId } = useCompany();
   const { isMobile, setSidebarOpen } = useSidebar();
 
@@ -104,12 +106,12 @@ export function AppDetailSidebar(props: AppDetailSidebarProps) {
             <SidebarNavItem
               key={tab.key}
               to={tabHref(props, tab.key)}
-              label={tab.label}
+              label={t(tab.labelKey)}
               icon={tab.icon}
               end
               badge={tab.key === "review" && reviewCount > 0 ? reviewCount : undefined}
               badgeTone="danger"
-              badgeLabel="needing review"
+              badgeLabel={t("apps.needingReview")}
             />
           ))}
         </div>

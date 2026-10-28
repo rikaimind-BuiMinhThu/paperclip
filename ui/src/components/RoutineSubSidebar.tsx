@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { useMemo, useRef } from "react";
 import {
   Activity as ActivityIcon,
   Circle,
@@ -13,6 +13,7 @@ import {
 import type { LucideIcon } from "lucide-react";
 import { Link } from "@/lib/router";
 import { cn } from "@/lib/utils";
+import { useTranslation } from "@/i18n";
 import {
   ROUTINE_SECTION_KEYS,
   type RoutineSectionKey,
@@ -27,39 +28,53 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
-type NavItem = {
+type NavItemDef = {
   key: RoutineSectionKey;
-  label: string;
+  labelKey: string;
   icon: LucideIcon;
 };
 
-type NavGroup = {
-  label: string;
-  items: NavItem[];
+type NavGroupDef = {
+  groupLabelKey: string;
+  items: NavItemDef[];
 };
 
-const NAV_GROUPS: NavGroup[] = [
+const NAV_GROUP_DEFS: NavGroupDef[] = [
   {
-    label: "Routine",
+    groupLabelKey: "pages.routineDetail.groupRoutine",
     items: [
-      { key: "overview", label: "Overview", icon: Circle },
-      { key: "triggers", label: "Triggers", icon: Clock3 },
-      { key: "variables", label: "Variables", icon: LayoutGrid },
-      { key: "secrets", label: "Secrets", icon: KeyRound },
-      { key: "delivery", label: "Delivery", icon: Send },
+      { key: "overview", labelKey: "pages.routineDetail.sectionOverview", icon: Circle },
+      { key: "triggers", labelKey: "pages.routineDetail.sectionTriggers", icon: Clock3 },
+      { key: "variables", labelKey: "pages.routineDetail.sectionVariables", icon: LayoutGrid },
+      { key: "secrets", labelKey: "pages.routineDetail.sectionSecrets", icon: KeyRound },
+      { key: "delivery", labelKey: "pages.routineDetail.sectionDelivery", icon: Send },
     ],
   },
   {
-    label: "Operate",
+    groupLabelKey: "pages.routineDetail.groupOperate",
     items: [
-      { key: "runs", label: "Runs", icon: Play },
-      { key: "activity", label: "Activity", icon: ActivityIcon },
-      { key: "history", label: "History", icon: HistoryIcon },
+      { key: "runs", labelKey: "pages.routineDetail.sectionRuns", icon: Play },
+      { key: "activity", labelKey: "pages.routineDetail.sectionActivity", icon: ActivityIcon },
+      { key: "history", labelKey: "pages.routineDetail.sectionHistoryShort", icon: HistoryIcon },
     ],
   },
 ];
 
-const ALL_ITEMS: NavItem[] = NAV_GROUPS.flatMap((group) => group.items);
+function useRoutineNavGroups() {
+  const { t } = useTranslation();
+  return useMemo(
+    () =>
+      NAV_GROUP_DEFS.map((group) => ({
+        label: t(group.groupLabelKey),
+        items: group.items.map((item) => ({
+          key: item.key,
+          label: t(item.labelKey),
+          icon: item.icon,
+        })),
+      })),
+    [t],
+  );
+}
 
 export function RoutineSubSidebar({
   activeSection,
@@ -74,12 +89,15 @@ export function RoutineSubSidebar({
   hasLiveRun: boolean;
   onNavigate: (section: RoutineSectionKey) => void;
 }) {
+  const { t } = useTranslation();
+  const navGroups = useRoutineNavGroups();
+  const allItems = useMemo(() => navGroups.flatMap((group) => group.items), [navGroups]);
   const itemRefs = useRef<Array<HTMLAnchorElement | null>>([]);
 
   const focusItem = (index: number) => {
-    const clamped = (index + ALL_ITEMS.length) % ALL_ITEMS.length;
+    const clamped = (index + allItems.length) % allItems.length;
     itemRefs.current[clamped]?.focus();
-    onNavigate(ALL_ITEMS[clamped].key);
+    onNavigate(allItems[clamped].key);
   };
 
   const handleKeyDown = (event: React.KeyboardEvent, index: number) => {
@@ -98,7 +116,7 @@ export function RoutineSubSidebar({
         break;
       case "End":
         event.preventDefault();
-        focusItem(ALL_ITEMS.length - 1);
+        focusItem(allItems.length - 1);
         break;
       default:
         break;
@@ -109,10 +127,10 @@ export function RoutineSubSidebar({
 
   return (
     <nav
-      aria-label="Routine sections"
+      aria-label={t("pages.routineDetail.sectionsAria")}
       className="hidden h-full w-52 shrink-0 flex-col gap-4 overflow-y-auto border-r border-border bg-background px-3 py-4 md:flex"
     >
-      {NAV_GROUPS.map((group) => (
+      {navGroups.map((group) => (
         <div key={group.label} className="flex flex-col gap-0.5">
           <p className="mx-2 px-2 pb-1 text-(length:--text-nano) font-medium uppercase tracking-widest font-mono text-muted-foreground/60">
             {group.label}
@@ -152,7 +170,7 @@ export function RoutineSubSidebar({
                   <span className="ml-auto h-1.5 w-1.5 shrink-0 rounded-full bg-blue-500 motion-safe:animate-pulse" />
                 ) : dirty ? (
                   <span
-                    aria-label="Unsaved changes"
+                    aria-label={t("pages.routineDetail.unsavedChangesAria")}
                     className="ml-auto h-1.5 w-1.5 shrink-0 rounded-full bg-amber-500 ring-2 ring-background"
                   />
                 ) : null}
@@ -175,6 +193,9 @@ export function RoutineSectionPicker({
   onNavigate: (section: RoutineSectionKey) => void;
   isSectionDirty: (section: RoutineSectionKey) => boolean;
 }) {
+  const { t } = useTranslation();
+  const navGroups = useRoutineNavGroups();
+
   return (
     <div className="sticky top-0 z-10 border-b border-border bg-background px-4 py-2 md:hidden">
       <Select
@@ -185,11 +206,11 @@ export function RoutineSectionPicker({
           }
         }}
       >
-        <SelectTrigger className="h-11 w-full" aria-label="Routine section">
+        <SelectTrigger className="h-11 w-full" aria-label={t("pages.routineDetail.sectionPickerAria")}>
           <SelectValue />
         </SelectTrigger>
         <SelectContent>
-          {NAV_GROUPS.map((group) => (
+          {navGroups.map((group) => (
             <SelectGroup key={group.label}>
               <SelectLabel className="uppercase tracking-(--tracking-eyebrow) text-(length:--text-micro)">
                 {group.label}
@@ -213,4 +234,6 @@ export function RoutineSectionPicker({
   );
 }
 
-export { ALL_ITEMS as ROUTINE_NAV_ITEMS };
+const ALL_ITEMS_DEF = NAV_GROUP_DEFS.flatMap((group) => group.items);
+
+export { ALL_ITEMS_DEF as ROUTINE_NAV_ITEMS };

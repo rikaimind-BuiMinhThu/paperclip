@@ -16,6 +16,18 @@
       "start": "オンボーディングを開始"
     }
   },
+  "access": {
+    "gate": {
+      "reconnectingTitle": "Kujira AI Harness に再接続中",
+      "unableToLoadTitle": "Kujira AI Harness を読み込めません",
+      "reconnectingBody": "サーバーが再起動中か、接続が切断された可能性があります。数秒ごとに再試行し、自動的に再接続します。",
+      "unableToLoadBody": "このインスタンスへのアクセスを確認できませんでした。再試行するか、続く場合はインスタンス管理者に連絡してください。",
+      "noOrgAccessTitle": "組織へのアクセスがありません",
+      "noOrgAccessBody1": "このアカウントはサインインしていますが、この Kujira AI Harness インスタンスで有効な組織メンバーシップまたはインスタンス管理者アクセスがありません。",
+      "noOrgAccessBody2": "組織の招待を使うか、この組織に既に所属しているアカウントでサインインしてください。",
+      "connectionInterrupted": "接続が切断されました。自動的に再接続しています…"
+    }
+  },
   "common": {
     "save": "保存",
     "saveAndExit": "保存して終了",
@@ -951,6 +963,8 @@
     "installed": "インストール済み",
     "catalog": "カタログ",
     "permissions": "権限",
+    "allConnectors": "すべてのコネクタ",
+    "needingReview": "要レビュー",
     "tools": "ツール",
     "gateway": "ゲートウェイ",
     "gateways": {
@@ -1309,6 +1323,31 @@
     "pendingInvites": "保留中の招待",
     "role": "ロール",
     "removeMember": "メンバーを外す",
+    "interactionGovernance": {
+      "title": "インタラクションのガバナンス",
+      "introBeforeAnyone": "スレッドのインタラクションはデフォルトで開いています:",
+      "anyone": "誰でも",
+      "introAfterAnyone": "組織内のボードまたはどのエージェント（質問した本人を含む）も応答できます。必要なときだけ種類を絞ってください。",
+      "defaultPolicy": "デフォルト方針",
+      "introAfterDefaultPolicy": "は、依頼者が指定しなかったときに新しいカードに付く対象です。",
+      "cap": "上限",
+      "introAfterCap": "はその種類のすべてのリクエストを狭め、広げることはできません。ツール承認の確認は常に",
+      "humanOnly": "人間のみ",
+      "introEnd": "です。",
+      "kindColumn": "種類",
+      "defaultPolicyColumn": "デフォルト方針",
+      "capColumn": "上限",
+      "defaultResolverAudienceAria": "{{kind}} のデフォルト解決者対象",
+      "resolverCapAria": "{{kind}} の解決者上限",
+      "kinds": {
+        "suggest_tasks": "提案タスク",
+        "ask_user_questions": "ユーザーへの質問",
+        "request_confirmation": "確認",
+        "request_checkbox_confirmation": "チェックボックス確認",
+        "request_item_verdicts": "項目の判定",
+        "connection_intent": "接続リクエスト"
+      }
+    },
     "dangerZone": "危険な操作",
     "archiveOrganization": "組織をアーカイブ",
     "companyName": "組織名",
@@ -3048,6 +3087,11 @@
     },
     "toolsAccess": {
       "selectOrganization": "高度なセットアップを開く組織を選択してください。",
+      "adminGateTitle": "高度なセットアップは管理者向けです",
+      "adminGateBodyBeforeLink": "ギャラリーにないツールを管理者が接続するための領域です。新しいアプリの接続が必要な場合は管理者に依頼するか、",
+      "adminGateYourApps": "アプリ一覧",
+      "profilesAdminGateTitle": "アクセスプロファイルは管理者向けです",
+      "profilesAdminGateBodyBeforeLink": "アクセスプロファイルはエージェントが使えるツールを決めます。設定は管理者に依頼するか、",
       "title": "高度なセットアップ",
       "advancedBadge": "高度",
       "description": "ギャラリーにないツール向けです。ツールのドキュメントから詳細が必要です。多くの人は不要です — 使いたいアプリがギャラリーにある場合は、",
@@ -4567,6 +4611,10 @@
       "deleting": "削除中…"
     },
     "routineDetail": {
+      "groupRoutine": "ルーティン",
+      "groupOperate": "運用",
+      "sectionsAria": "ルーティンセクション",
+      "sectionPickerAria": "ルーティンセクション",
       "sectionOverview": "概要",
       "sectionTriggers": "トリガー",
       "sectionVariables": "変数",
@@ -4575,6 +4623,8 @@
       "sectionRuns": "実行",
       "sectionActivity": "アクティビティ",
       "sectionHistory": "バージョン履歴",
+      "sectionHistoryShort": "履歴",
+      "unsavedChangesAria": "未保存の変更",
       "selectOrganization": "ルーティンを表示する組織を選択してください。",
       "loadFailed": "このルーティンを読み込めませんでした。",
       "statusArchived": "アーカイブ済み",
@@ -4753,7 +4803,19 @@
       "retentionWeekOne": "1 週間",
       "retentionWeeks": "{{count}} 週間",
       "retentionMonthOne": "1 か月",
-      "retentionMonths": "{{count}} か月"
+      "retentionMonths": "{{count}} か月",
+      "censorUsernameDescription": "ホームディレクトリのパスなど、オペレーター向けログ出力のユーザー名部分を隠します。パス外の単独のユーザー名言及は、ライブトランスクリプトではまだマスクされません。デフォルトではオフです。",
+      "censorUsernameToggleAria": "ログのユーザー名伏せ字を切り替え",
+      "feedbackSharingTitle": "AI フィードバック共有",
+      "feedbackSharingDescription": "高評価・低評価の投票時に、投票対象の AI 出力を Kujira AI Harness Labs に送信するかどうかを制御します。投票は常にローカルに保存されます。",
+      "feedbackTermsLink": "利用規約を読む",
+      "feedbackPromptNotice": "デフォルトはまだ保存されていません。次の高評価または低評価の選択時に一度だけ確認し、回答をここに保存します。",
+      "feedbackAlwaysAllow": "常に許可",
+      "feedbackAlwaysAllowDescription": "投票した AI 出力を自動的に共有します。",
+      "feedbackDontAllow": "許可しない",
+      "feedbackDontAllowDescription": "投票した AI 出力はローカルのみに保持します。",
+      "feedbackDevPromptNotice": "ローカル開発で初回プロンプトを再テストするには、このインスタンスの instance_settings.general JSON 行から feedbackDataSharingPreference キーを削除するか、「prompt」に戻してください。未設定と「prompt」の両方が、まだデフォルトが選ばれていないことを意味します。",
+      "signOutDescription": "この Kujira AI Harness インスタンスからサインアウトします。ログインページにリダイレクトされます。"
     },
     "myIssues": {
       "title": "マイタスク",

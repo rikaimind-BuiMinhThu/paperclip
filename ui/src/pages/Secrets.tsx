@@ -2356,7 +2356,7 @@ export function Secrets() {
                 </Button>
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
-                    <Button variant="outline" size="sm" aria-label={`More actions for ${selectedSecret.name}`}>
+                    <Button variant="outline" size="sm" aria-label={t("a11y.moreActionsFor", { name: selectedSecret.name })}>
                       <MoreHorizontal className="mr-1 h-3.5 w-3.5" /> More
                     </Button>
                   </DropdownMenuTrigger>
@@ -2490,7 +2490,7 @@ export function Secrets() {
                 </Button>
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
-                    <Button variant="outline" size="sm" aria-label={`More actions for ${selectedDefinition.name}`}>
+                    <Button variant="outline" size="sm" aria-label={t("a11y.moreActionsFor", { name: selectedDefinition.name })}>
                       <MoreHorizontal className="mr-1 h-3.5 w-3.5" /> More
                     </Button>
                   </DropdownMenuTrigger>

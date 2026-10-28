@@ -4,6 +4,8 @@ import { flushSync } from "react-dom";
 import { createRoot } from "react-dom/client";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { t } from "@/i18n";
+import { appTabLabel } from "@/pages/apps/app-tabs";
 import { AppDetailSidebar } from "./AppConnectionSidebar";
 
 const sidebarNavItemMock = vi.hoisted(() => vi.fn());
@@ -189,11 +191,11 @@ describe("AppConnectionSidebar", () => {
   it("renders the consolidated connected app tabs", async () => {
     await renderSidebar();
 
-    expect(container.querySelector('a[href="/apps"]')?.textContent).toContain("All connectors");
+    expect(container.querySelector('a[href="/apps"]')?.textContent).toContain(t("apps.allConnectors"));
     expect(container.textContent).toContain("GitHub");
     expect(container.querySelectorAll("[data-to]").length).toBe(2);
-    expect(sidebarNavItemMock).toHaveBeenCalledWith(expect.objectContaining({ to: "/apps/conn-1/review", label: "Review", badge: 3, badgeTone: "danger" }));
-    expect(sidebarNavItemMock).toHaveBeenCalledWith(expect.objectContaining({ to: "/apps/conn-1/permissions", label: "Permissions", end: true }));
+    expect(sidebarNavItemMock).toHaveBeenCalledWith(expect.objectContaining({ to: "/apps/conn-1/review", label: appTabLabel("review"), badge: 3, badgeTone: "danger" }));
+    expect(sidebarNavItemMock).toHaveBeenCalledWith(expect.objectContaining({ to: "/apps/conn-1/permissions", label: appTabLabel("permissions"), end: true }));
     expect(sidebarNavItemMock).not.toHaveBeenCalledWith(expect.objectContaining({ label: "Test" }));
     expect(sidebarNavItemMock).not.toHaveBeenCalledWith(expect.objectContaining({ label: "Activity" }));
     expect(sidebarNavItemMock).not.toHaveBeenCalledWith(expect.objectContaining({ label: "Advanced" }));
@@ -269,11 +271,11 @@ describe("AppConnectionSidebar", () => {
 
     await renderSidebar(<AppDetailSidebar kind="application" applicationId="app-1" />);
 
-    expect(container.querySelector('a[href="/apps"]')?.textContent).toContain("All connectors");
+    expect(container.querySelector('a[href="/apps"]')?.textContent).toContain(t("apps.allConnectors"));
     expect(container.textContent).toContain("GitHub");
     expect(mockToolsApi.getConnection).not.toHaveBeenCalled();
-    expect(sidebarNavItemMock).toHaveBeenCalledWith(expect.objectContaining({ to: "/apps/app/app-1/review", label: "Review", end: true }));
-    expect(sidebarNavItemMock).toHaveBeenCalledWith(expect.objectContaining({ to: "/apps/app/app-1/permissions", label: "Permissions", end: true }));
+    expect(sidebarNavItemMock).toHaveBeenCalledWith(expect.objectContaining({ to: "/apps/app/app-1/review", label: appTabLabel("review"), end: true }));
+    expect(sidebarNavItemMock).toHaveBeenCalledWith(expect.objectContaining({ to: "/apps/app/app-1/permissions", label: appTabLabel("permissions"), end: true }));
     expect(sidebarNavItemMock).not.toHaveBeenCalledWith(expect.objectContaining({ label: "Activity" }));
     expect(sidebarNavItemMock).not.toHaveBeenCalledWith(expect.objectContaining({ label: "Advanced" }));
     expect(sidebarNavItemMock).not.toHaveBeenCalledWith(expect.objectContaining({ label: "Setup" }));
@@ -291,7 +293,7 @@ describe("AppConnectionSidebar", () => {
     await renderSidebar();
 
     expect(container.textContent).toContain("App");
-    expect(container.querySelector('a[href="/apps"]')?.textContent).toContain("All connectors");
+    expect(container.querySelector('a[href="/apps"]')?.textContent).toContain(t("apps.allConnectors"));
     expect(container.querySelectorAll("[data-to]").length).toBe(2);
   });
 
@@ -304,7 +306,7 @@ describe("AppConnectionSidebar", () => {
     await renderSidebar(<AppDetailSidebar kind="application" applicationId="missing-app" />);
 
     expect(container.textContent).toContain("App");
-    expect(container.querySelector('a[href="/apps"]')?.textContent).toContain("All connectors");
+    expect(container.querySelector('a[href="/apps"]')?.textContent).toContain(t("apps.allConnectors"));
     expect(container.querySelectorAll("[data-to]").length).toBe(2);
   });
 });

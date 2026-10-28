@@ -8,6 +8,7 @@ import {
   ISSUE_THREAD_INTERACTION_KINDS as INTERACTION_KINDS,
   type InteractionResolverGovernance,
 } from "@paperclipai/shared";
+import { t } from "@/i18n";
 import {
   GOVERNANCE_UNSET,
   InteractionGovernancePanel,
@@ -77,13 +78,13 @@ describe("InteractionGovernancePanel", () => {
     const { host } = renderPanel();
     const copy = host.textContent ?? "";
 
-    expect(copy).toContain("Thread interactions are open by default");
-    expect(copy).toContain("the board or any agent, including the one that asked");
+    expect(copy).toContain(t("settings.interactionGovernance.introBeforeAnyone"));
+    expect(copy).toContain(t("settings.interactionGovernance.introAfterAnyone"));
     expect(copy).not.toContain("Board only");
     expect(copy).not.toContain("always require the board");
     // Governed tool approvals keep their human-only guarantee.
-    expect(copy).toContain("Tool-approval confirmations always stay");
-    expect(copy).toContain("Human only");
+    expect(copy).toContain(t("settings.interactionGovernance.introAfterCap"));
+    expect(copy).toContain(t("settings.interactionGovernance.humanOnly"));
   });
 
   it("shows a stored narrowing override on the matching row", () => {

@@ -16,6 +16,18 @@
       "start": "Start Onboarding"
     }
   },
+  "access": {
+    "gate": {
+      "reconnectingTitle": "Reconnecting to Kujira AI Harness",
+      "unableToLoadTitle": "Unable to load Kujira AI Harness",
+      "reconnectingBody": "The server may be restarting or your connection was interrupted. We’ll try again every few seconds and reconnect automatically.",
+      "unableToLoadBody": "We couldn’t check your access to this instance. Try again, or contact your instance administrator if this continues.",
+      "noOrgAccessTitle": "No organization access",
+      "noOrgAccessBody1": "This account is signed in, but it does not have an active organization membership or instance-admin access on this Kujira AI Harness instance.",
+      "noOrgAccessBody2": "Use an organization invite or sign in with an account that already belongs to this org.",
+      "connectionInterrupted": "Connection interrupted. Reconnecting automatically…"
+    }
+  },
   "common": {
     "save": "Save",
     "saveAndExit": "Save & exit",
@@ -951,6 +963,8 @@
     "installed": "Installed",
     "catalog": "Catalog",
     "permissions": "Permissions",
+    "allConnectors": "All connectors",
+    "needingReview": "needing review",
     "tools": "Tools",
     "gateway": "Gateway",
     "gateways": {
@@ -1309,6 +1323,31 @@
     "pendingInvites": "Pending invites",
     "role": "Role",
     "removeMember": "Remove member",
+    "interactionGovernance": {
+      "title": "Interaction governance",
+      "introBeforeAnyone": "Thread interactions are open by default:",
+      "anyone": "Anyone",
+      "introAfterAnyone": "in the organization — the board or any agent, including the one that asked — can respond. Narrow a kind only when you need to.",
+      "defaultPolicy": "Default policy",
+      "introAfterDefaultPolicy": "is the audience new cards get when the requester does not ask for one;",
+      "cap": "Cap",
+      "introAfterCap": "narrows every request of that kind and can never widen one. Tool-approval confirmations always stay",
+      "humanOnly": "Human only",
+      "introEnd": ".",
+      "kindColumn": "Kind",
+      "defaultPolicyColumn": "Default policy",
+      "capColumn": "Cap",
+      "defaultResolverAudienceAria": "Default resolver audience for {{kind}}",
+      "resolverCapAria": "Resolver cap for {{kind}}",
+      "kinds": {
+        "suggest_tasks": "Suggested tasks",
+        "ask_user_questions": "Ask user questions",
+        "request_confirmation": "Confirmations",
+        "request_checkbox_confirmation": "Checkbox confirmations",
+        "request_item_verdicts": "Item verdicts",
+        "connection_intent": "Connection requests"
+      }
+    },
     "dangerZone": "Danger zone",
     "archiveOrganization": "Archive organization",
     "companyName": "Organization name",
@@ -3048,6 +3087,11 @@
     },
     "toolsAccess": {
       "selectOrganization": "Select an organization to open advanced setup.",
+      "adminGateTitle": "Advanced setup is for administrators",
+      "adminGateBodyBeforeLink": "This area lets administrators wire up tools that aren't in the gallery. Ask an administrator if you need a new app connected, or head back to",
+      "adminGateYourApps": "your apps",
+      "profilesAdminGateTitle": "Access profiles are for administrators",
+      "profilesAdminGateBodyBeforeLink": "Access profiles decide which tools your agents can use. Ask an administrator to set these up, or head back to",
       "title": "Advanced setup",
       "advancedBadge": "Advanced",
       "description": "For tools that aren't in the gallery. You'll need details from the tool's documentation. Most people never need this — if the app you want is in the gallery,",
@@ -4567,6 +4611,10 @@
       "deleting": "Deleting…"
     },
     "routineDetail": {
+      "groupRoutine": "Routine",
+      "groupOperate": "Operate",
+      "sectionsAria": "Routine sections",
+      "sectionPickerAria": "Routine section",
       "sectionOverview": "Overview",
       "sectionTriggers": "Triggers",
       "sectionVariables": "Variables",
@@ -4575,6 +4623,8 @@
       "sectionRuns": "Runs",
       "sectionActivity": "Activity",
       "sectionHistory": "Version history",
+      "sectionHistoryShort": "History",
+      "unsavedChangesAria": "Unsaved changes",
       "selectOrganization": "Select an organization to view routines.",
       "loadFailed": "We couldn't load this routine.",
       "statusArchived": "Archived",
@@ -4753,7 +4803,19 @@
       "retentionWeekOne": "1 week",
       "retentionWeeks": "{{count}} weeks",
       "retentionMonthOne": "1 month",
-      "retentionMonths": "{{count}} months"
+      "retentionMonths": "{{count}} months",
+      "censorUsernameDescription": "Hide the username segment in home-directory paths and similar operator-visible log output. Standalone username mentions outside of paths are not yet masked in the live transcript view. This is off by default.",
+      "censorUsernameToggleAria": "Toggle username log censoring",
+      "feedbackSharingTitle": "AI feedback sharing",
+      "feedbackSharingDescription": "Control whether thumbs up and thumbs down votes can send the voted AI output to Kujira AI Harness Labs. Votes are always saved locally.",
+      "feedbackTermsLink": "Read our terms of service",
+      "feedbackPromptNotice": "No default is saved yet. The next thumbs up or thumbs down choice will ask once and then save the answer here.",
+      "feedbackAlwaysAllow": "Always allow",
+      "feedbackAlwaysAllowDescription": "Share voted AI outputs automatically.",
+      "feedbackDontAllow": "Don't allow",
+      "feedbackDontAllowDescription": "Keep voted AI outputs local only.",
+      "feedbackDevPromptNotice": "To retest the first-use prompt in local dev, remove the feedbackDataSharingPreference key from the instance_settings.general JSON row for this instance, or set it back to \"prompt\". Unset and \"prompt\" both mean no default has been chosen yet.",
+      "signOutDescription": "Sign out of this Kujira AI Harness instance. You will be redirected to the login page."
     },
     "myIssues": {
       "title": "My Tasks",
