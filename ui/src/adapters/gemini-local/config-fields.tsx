@@ -6,6 +6,7 @@ import {
   Field,
 } from "../../components/agent-config-primitives";
 import { ChoosePathButton } from "../../components/PathInstructionsModal";
+import { t as i18nT } from "@/i18n";
 
 const inputClass =
   "w-full rounded-md border border-border px-2.5 py-1.5 bg-transparent outline-none text-sm font-mono placeholder:text-muted-foreground/40";
@@ -47,9 +48,9 @@ export function GeminiLocalConfigFields({
               : mark("adapterConfig", "engine", value === "auto" ? undefined : value);
           }}
         >
-          <option value="auto">Default (ACP)</option>
-          <option value="cli">Gemini CLI</option>
-          <option value="acp">ACP</option>
+          <option value="auto">{i18nT("scan.s0384")}</option>
+          <option value="cli">{i18nT("scan.s0555")}</option>
+          <option value="acp">{i18nT("scan.s0004")}</option>
         </select>
       </Field>}
       {acpSelected && (
@@ -91,8 +92,8 @@ export function GeminiLocalConfigFields({
                   : mark("adapterConfig", "mode", value);
               }}
             >
-              <option value="persistent">Persistent</option>
-              <option value="oneshot">One-shot</option>
+              <option value="persistent">{i18nT("scan.s0951")}</option>
+              <option value="oneshot">{i18nT("scan.s0870")}</option>
             </select>
           </Field>
           <Field
@@ -113,8 +114,8 @@ export function GeminiLocalConfigFields({
                   : mark("adapterConfig", "nonInteractivePermissions", value);
               }}
             >
-              <option value="deny">Deny</option>
-              <option value="fail">Fail</option>
+              <option value="deny">{i18nT("scan.s0402")}</option>
+              <option value="fail">{i18nT("scan.s0491")}</option>
             </select>
           </Field>
           {!managedSandboxOnly && (

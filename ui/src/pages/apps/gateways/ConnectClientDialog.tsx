@@ -39,6 +39,7 @@ import {
   tokenStatus,
 } from "./gateway-helpers";
 import { gatewaysQueryKey } from "./NewGatewayDialog";
+import { t as i18nT } from "@/i18n";
 
 type PanelKey = string;
 type ClientIcon = ComponentType<{ className?: string }>;
@@ -91,7 +92,7 @@ export function ConnectClientDialog({
   );
   const tokenGroups = useMemo<SearchableSelectGroup<string, TokenOption>[]>(() => [{
     id: "tokens",
-    label: "Available this session",
+    label: i18nT("scan.s0117"),
     options: availableTokens.map((token) => ({
       key: token.id,
       value: token.id,
@@ -129,14 +130,14 @@ export function ConnectClientDialog({
       onTokenCreated(token);
       setSelectedTokenId(token.id);
       pushToast({
-        title: "Token issued",
+        title: i18nT("apps.gateways.panels.tokens.tokenIssuedTitle"),
         body: "The copy buttons now include its full Authorization header.",
         tone: "success",
       });
       await queryClient.invalidateQueries({ queryKey: gatewaysQueryKey(gateway.companyId) });
     },
     onError: (error) => pushToast({
-      title: "Token was not issued",
+      title: i18nT("apps.gateways.panels.tokens.tokenNotIssuedTitle"),
       body: error instanceof Error ? error.message : String(error),
       tone: "error",
     }),
@@ -145,10 +146,10 @@ export function ConnectClientDialog({
   async function copyText(value: string, label: string) {
     try {
       await copyTextToClipboard(value);
-      pushToast({ title: "Copied", body: label, tone: "success" });
+      pushToast({ title: i18nT("common.copied"), body: label, tone: "success" });
     } catch (error) {
       pushToast({
-        title: "Copy failed",
+        title: i18nT("issues.detail.copyFailed"),
         body: error instanceof Error ? error.message : "Clipboard access is unavailable.",
         tone: "error",
       });
@@ -199,13 +200,13 @@ export function ConnectClientDialog({
         </DialogHeader>
 
         <div className="flex flex-wrap items-center gap-2 border-b border-border pb-3">
-          <span className="text-xs font-medium text-muted-foreground">Authorization</span>
+          <span className="text-xs font-medium text-muted-foreground">{i18nT("scan.s0105")}</span>
           {availableTokens.length > 0 ? (
             <SearchableSelect<string, TokenOption>
               value={selectedTokenId}
               groups={tokenGroups}
               onValueChange={setSelectedTokenId}
-              placeholder="Issue a token"
+              placeholder={i18nT("scan.s0634")}
               searchPlaceholder="Search tokens…"
               emptyMessage="No copyable tokens."
               contentWidth="auto"
@@ -251,7 +252,7 @@ export function ConnectClientDialog({
 
         {!selectedToken ? (
           <p className="text-xs text-muted-foreground">
-            Issue a token before copying a snippet; the full <code>Authorization: Bearer …</code> header is
+            Issue a token before copying a snippet; the full <code>{i18nT("scan.s0108")}</code> header is
             required. Existing token secrets cannot be retrieved again, so only tokens issued in this page
             session can fill a snippet.
           </p>
@@ -297,7 +298,7 @@ export function ConnectClientDialog({
             {active === "raw_url" ? (
               <div className="space-y-3">
                 <div className="space-y-1.5">
-                  <div className="text-sm font-medium text-foreground">Endpoint URL</div>
+                  <div className="text-sm font-medium text-foreground">{i18nT("pages.tools.connections.endpointUrl")}</div>
                   <div className="flex items-center gap-2">
                     <code className="min-w-0 flex-1 truncate rounded-md bg-muted px-3 py-2 font-mono text-xs text-muted-foreground">
                       {endpoint}
@@ -309,7 +310,7 @@ export function ConnectClientDialog({
                   </div>
                 </div>
                 <div className="space-y-1.5">
-                  <div className="text-sm font-medium text-foreground">Authorization header</div>
+                  <div className="text-sm font-medium text-foreground">{i18nT("scan.s0107")}</div>
                   <code className="block truncate rounded-md bg-muted px-3 py-2 font-mono text-xs text-muted-foreground">
                     {selectedToken ? `Authorization: Bearer ${maskedTokenLabel(selectedToken)}` : "Authorization: Bearer pcgw_•••"}
                   </code>
@@ -339,7 +340,7 @@ export function ConnectClientDialog({
                 ) : null}
               </div>
             ) : (
-              <p className="text-sm text-muted-foreground">No client snippets available for this gateway.</p>
+              <p className="text-sm text-muted-foreground">{i18nT("scan.s0792")}</p>
             )}
 
             <p className="text-xs text-muted-foreground">

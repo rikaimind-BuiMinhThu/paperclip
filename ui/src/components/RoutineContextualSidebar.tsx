@@ -15,6 +15,7 @@ import { queryKeys } from "@/lib/queryKeys";
 import { useParams } from "@/lib/router";
 import { ContextualSidebarFrame } from "./ContextualSidebarFrame";
 import { SidebarNavItem } from "./SidebarNavItem";
+import { t as i18nT } from "@/i18n";
 
 export const ROUTINE_DETAIL_VIEWS = [
   "overview",
@@ -36,11 +37,11 @@ export type RoutineContextualNavItem = {
 };
 
 export const ROUTINE_CONTEXTUAL_NAV_ITEMS: readonly RoutineContextualNavItem[] = [
-  { view: "overview", label: "Overview", icon: LayoutDashboard },
-  { view: "triggers", label: "Triggers", icon: CalendarClock },
-  { view: "variables", label: "Variables", icon: Braces },
-  { view: "delivery", label: "Delivery", icon: Send },
-  { view: "secrets", label: "Secrets", icon: KeyRound },
+  { view: "overview", label: i18nT("common.overview"), icon: LayoutDashboard },
+  { view: "triggers", label: i18nT("routines.triggers"), icon: CalendarClock },
+  { view: "variables", label: i18nT("routines.variables"), icon: Braces },
+  { view: "delivery", label: i18nT("pages.routineDetail.sectionDelivery"), icon: Send },
+  { view: "secrets", label: i18nT("settings.secrets"), icon: KeyRound },
 ];
 
 export function isRoutineDetailView(value: string | null | undefined): value is RoutineDetailView {

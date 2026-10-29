@@ -210,23 +210,23 @@ export function AgentTasksPanel({
       </div>
 
       {tasksQuery.isPending ? (
-        <PanelMessage>Loading tasks…</PanelMessage>
+        <PanelMessage>{t("chat.loadingTasks")}</PanelMessage>
       ) : tasksQuery.isError ? (
-        <PanelMessage tone="error">Could not load this agent's tasks.</PanelMessage>
+        <PanelMessage tone="error">{t("chat.tasksLoadFailed")}</PanelMessage>
       ) : total === 0 ? (
-        <PanelMessage>This agent hasn't worked on any tasks yet.</PanelMessage>
+        <PanelMessage>{t("chat.noAgentTasks")}</PanelMessage>
       ) : visible.length === 0 ? (
         <PanelMessage>
           {capped
-            ? `No tasks match these filters among the ${AGENT_TASK_LIMIT} most recently updated.`
-            : "No tasks match these filters."}
+            ? t("issues.noTasksMatchCapped", { limit: AGENT_TASK_LIMIT })
+            : t("issues.noTasksMatch")}
         </PanelMessage>
       ) : (
         <div className="flex flex-col gap-2">
           {visible.map((task) => <AgentTaskCard key={task.id} task={task} />)}
           {capped ? (
             <p className="px-1 text-xs text-muted-foreground">
-              Showing the {AGENT_TASK_LIMIT} most recently updated tasks.
+              {t("chat.showingRecentTasks", { limit: AGENT_TASK_LIMIT })}
             </p>
           ) : null}
         </div>
@@ -247,6 +247,7 @@ function ArtifactKindIcon({ artifact }: { artifact: CompanyArtifact }) {
 }
 
 export function AgentArtifactCard({ artifact }: { artifact: CompanyArtifact }) {
+  const { t } = useTranslation();
   return (
     <Link
       // design-allow(card-pattern): navigation <Link> card; Card renders a div and would break anchor semantics
@@ -264,7 +265,7 @@ export function AgentArtifactCard({ artifact }: { artifact: CompanyArtifact }) {
         </span>
       </div>
       <div className="flex items-center gap-1.5 pl-6 text-xs text-muted-foreground">
-        <span>Updated {formatDate(artifact.updatedAt)}</span>
+        <span>{t("pages.artifacts.updated", { date: formatDate(artifact.updatedAt) })}</span>
         <span aria-hidden>·</span>
         <span className="font-mono">{artifact.issue.identifier}</span>
       </div>
@@ -295,15 +296,16 @@ export function AgentArtifactsPanel({ companyId, agentId }: { companyId: string;
     queryFn: () => listAgentArtifacts(companyId, agentId),
   });
 
-  if (artifactsQuery.isPending) return <PanelMessage>Loading artifacts…</PanelMessage>;
-  if (artifactsQuery.isError) return <PanelMessage tone="error">Could not load this agent's artifacts.</PanelMessage>;
+  const { t } = useTranslation();
+  if (artifactsQuery.isPending) return <PanelMessage>{t("chat.loadingArtifacts")}</PanelMessage>;
+  if (artifactsQuery.isError) return <PanelMessage tone="error">{t("chat.artifactsLoadFailed")}</PanelMessage>;
   const { artifacts, truncated } = artifactsQuery.data;
-  if (artifacts.length === 0) return <PanelMessage>This agent hasn't produced any artifacts yet.</PanelMessage>;
+  if (artifacts.length === 0) return <PanelMessage>{t("chat.noAgentArtifacts")}</PanelMessage>;
   return (
-    <section className="flex flex-col gap-2" aria-label="Agent artifacts">
+    <section className="flex flex-col gap-2" aria-label={t("chat.agentArtifactsAria")}>
       {artifacts.map((artifact) => <AgentArtifactCard key={artifact.id} artifact={artifact} />)}
       {truncated ? (
-        <p className="px-1 text-xs text-muted-foreground">Showing this agent's {artifacts.length} most recent artifacts.</p>
+        <p className="px-1 text-xs text-muted-foreground">{t("chat.showingRecentArtifacts", { count: artifacts.length })}</p>
       ) : null}
     </section>
   );

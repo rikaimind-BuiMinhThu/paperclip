@@ -44,6 +44,7 @@ import { useTranslation } from "@/i18n";
 import { CompanyPatternIcon } from "./CompanyPatternIcon";
 
 import { PluginOrganizationSwitcher } from "./PluginOrganizationSwitcher";
+import { t as i18nT } from "@/i18n";
 
 interface SidebarCompanyMenuProps {
   open?: boolean;
@@ -342,7 +343,7 @@ function BuiltinCompanyMenu({ open: controlledOpen, onOpenChange }: SidebarCompa
             // offer the way back.
             companyListUnavailable ? (
               <>
-                <DropdownMenuItem disabled>Couldn&apos;t load organizations</DropdownMenuItem>
+                <DropdownMenuItem disabled>{i18nT("scan.s0320")}</DropdownMenuItem>
                 <DropdownMenuItem
                   onSelect={(event) => {
                     // Keep the menu open so the result of the retry is visible.
@@ -355,7 +356,7 @@ function BuiltinCompanyMenu({ open: controlledOpen, onOpenChange }: SidebarCompa
                 </DropdownMenuItem>
               </>
             ) : (
-              <DropdownMenuItem disabled>No organizations</DropdownMenuItem>
+              <DropdownMenuItem disabled>{i18nT("scan.s0819")}</DropdownMenuItem>
             )
           ) : null}
         </div>
@@ -369,7 +370,7 @@ function BuiltinCompanyMenu({ open: controlledOpen, onOpenChange }: SidebarCompa
               <span className="flex size-5 shrink-0 items-center justify-center text-muted-foreground">
                 <Plus className="size-4" />
               </span>
-              <span className="min-w-0 flex-1 truncate">Create organization</span>
+              <span className="min-w-0 flex-1 truncate">{i18nT("scan.s0365")}</span>
             </DropdownMenuItem>
           )}
           {showInvitePeople ? (

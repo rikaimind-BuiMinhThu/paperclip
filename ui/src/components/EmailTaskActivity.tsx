@@ -6,6 +6,7 @@ import { useEmailThread } from "@/hooks/useEmailThread";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import type { EmailPublicationSummary } from "@paperclipai/shared";
+import { t as i18nT } from "@/i18n";
 
 // Email actions belong to the agent's task conversation. Only surface mail
 // without a task comment yet and delivery outcomes that need attention here.
@@ -105,7 +106,7 @@ function EmailDelivery({
               aria-label="Provider message ID"
               value={messageId}
               onChange={(e) => setMessageId(e.target.value)}
-              placeholder="Provider message ID"
+              placeholder={i18nT("scan.s1006")}
             />
             <div className="flex gap-2">
               <Button

@@ -14,6 +14,7 @@ import {
   LONG_THREAD_COMMENT_COUNT,
   LONG_THREAD_MARKDOWN_COMMENT_COUNT,
 } from "../fixtures/issueChatLongThreadFixture";
+import { t as i18nT } from "@/i18n";
 
 const noop = async () => {};
 
@@ -132,7 +133,7 @@ export function IssueChatLongThreadPerf() {
         <main className="min-w-0 space-y-4">
           <Card className="border-border/70">
             <CardHeader className="pb-2">
-              <CardTitle className="text-base">Issue documents</CardTitle>
+              <CardTitle className="text-base">{i18nT("scan.s0637")}</CardTitle>
             </CardHeader>
             <CardContent className="grid gap-2 sm:grid-cols-2">
               {fixture.documents.map((document) => (
@@ -145,7 +146,7 @@ export function IssueChatLongThreadPerf() {
 
           <Card className="border-border/70">
             <CardHeader className="pb-2">
-              <CardTitle className="text-base">Sub-issues</CardTitle>
+              <CardTitle className="text-base">{i18nT("scan.s1312")}</CardTitle>
             </CardHeader>
             <CardContent className="space-y-2">
               {fixture.subIssues.map((subIssue, index) => (
@@ -179,7 +180,7 @@ export function IssueChatLongThreadPerf() {
         <aside className="space-y-4 xl:sticky xl:top-4 xl:self-start">
           <Card className="border-border/70">
             <CardHeader className="pb-2">
-              <CardTitle className="text-base">Baseline metrics</CardTitle>
+              <CardTitle className="text-base">{i18nT("scan.s0126")}</CardTitle>
             </CardHeader>
             <CardContent className="grid gap-2">
               <MetricTile label="Profiler commits" value={String(metrics.commitCount)} testId="perf-commit-count" />
@@ -192,7 +193,7 @@ export function IssueChatLongThreadPerf() {
 
           <Card className="border-border/70">
             <CardHeader className="pb-2">
-              <CardTitle className="text-base">Fixture shape</CardTitle>
+              <CardTitle className="text-base">{i18nT("scan.s0535")}</CardTitle>
             </CardHeader>
             <CardContent className="space-y-2">
               {fixture.sidebarStats.map(([label, value]) => (

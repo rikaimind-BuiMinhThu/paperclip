@@ -4,6 +4,7 @@ import { ExternalObjectPill } from "./ExternalObjectPill";
 import type { IssueExternalObjectGroup } from "../hooks/useIssueExternalObjects";
 import { externalObjectToneSeverity } from "../lib/external-objects";
 import { Badge } from "@/components/ui/badge";
+import { t as i18nT } from "@/i18n";
 
 type GroupedSource = {
   label: string;
@@ -111,7 +112,7 @@ function ExternalObjectsSection({
   return (
     <section className="space-y-3 rounded-lg border border-border p-3">
       <div className="space-y-1">
-        <h3 className="text-sm font-semibold">External objects</h3>
+        <h3 className="text-sm font-semibold">{i18nT("scan.s0486")}</h3>
         <p className="text-xs text-muted-foreground">
           Remote work referenced from this issue — pull requests, deployments, tickets in other systems, and more.
         </p>
@@ -131,7 +132,7 @@ function ExternalObjectsSection({
           ) : null}
         </p>
       ) : isLoading ? (
-        <p className="text-xs text-muted-foreground">Loading external objects…</p>
+        <p className="text-xs text-muted-foreground">{i18nT("scan.s0710")}</p>
       ) : sorted.length === 0 ? (
         <p className="text-xs text-muted-foreground">
           This issue does not reference any external objects yet.

@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { useCompany } from "@/context/CompanyContext";
 import { queryKeys } from "@/lib/queryKeys";
 import { Link, useParams } from "@/lib/router";
+import { t as i18nT } from "@/i18n";
 
 export function WorkforceRunDetail() {
   const { runId = "" } = useParams<{ runId: string }>();
@@ -32,7 +33,7 @@ export function WorkforceRunDetail() {
           Cancel
         </Button>
       </div>
-      {run?.issueId ? <Link to={`/issues/${run.issueId}`} className="text-sm underline">Open issue</Link> : null}
+      {run?.issueId ? <Link to={`/issues/${run.issueId}`} className="text-sm underline">{i18nT("scan.s0887")}</Link> : null}
       {run?.errorCode ? <p className="text-sm text-destructive">{run.errorCode}</p> : null}
       <ol className="flex flex-col gap-3">
         {steps.map((step) => {
@@ -44,7 +45,7 @@ export function WorkforceRunDetail() {
               {payload?.subject ? <p className="text-sm">Subject: {payload.subject}</p> : null}
               {contentPath ? (
                 <div className="mt-3 flex flex-col gap-2">
-                  <a className="text-sm underline" href={contentPath}>Open artifact</a>
+                  <a className="text-sm underline" href={contentPath}>{i18nT("scan.s0883")}</a>
                   <iframe title="Shift report" sandbox="" src={contentPath} className="h-40 w-full rounded-md border" />
                 </div>
               ) : null}

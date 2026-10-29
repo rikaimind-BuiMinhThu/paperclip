@@ -9,6 +9,7 @@ import { Input } from "@/components/ui/input";
 import { useToast } from "@/context/ToastContext";
 import { copyTextToClipboard } from "@/lib/clipboard";
 import { gatewaysQueryKey } from "../NewGatewayDialog";
+import { t as i18nT } from "@/i18n";
 
 /**
  * Advanced tab — raw protocol/transport details, config JSON and the archive
@@ -51,13 +52,13 @@ export function GatewayAdvancedPanel({
   const archiveMutation = useMutation({
     mutationFn: () => toolsApi.updateGateway(companyId, gateway.id, { status: "archived" }),
     onSuccess: async () => {
-      pushToast({ title: "Gateway archived", body: `${gateway.name} is no longer reachable.`, tone: "success" });
+      pushToast({ title: i18nT("scan.s0548"), body: `${gateway.name} is no longer reachable.`, tone: "success" });
       await queryClient.invalidateQueries({ queryKey: gatewaysQueryKey(companyId) });
       navigate("/apps/gateways");
     },
     onError: (error) =>
       pushToast({
-        title: "Couldn't archive the gateway",
+        title: i18nT("scan.s0321"),
         body: error instanceof Error ? error.message : String(error),
         tone: "error",
       }),
@@ -66,16 +67,16 @@ export function GatewayAdvancedPanel({
   async function copy(value: string, label: string) {
     try {
       await copyTextToClipboard(value);
-      pushToast({ title: "Copied", body: label, tone: "success" });
+      pushToast({ title: i18nT("common.copied"), body: label, tone: "success" });
     } catch {
-      pushToast({ title: "Copy failed", body: "Clipboard access is unavailable.", tone: "error" });
+      pushToast({ title: i18nT("issues.detail.copyFailed"), body: "Clipboard access is unavailable.", tone: "error" });
     }
   }
 
   return (
     <div className="space-y-5">
       <section className="space-y-2">
-        <h3 className="text-sm font-semibold text-foreground">Transport</h3>
+        <h3 className="text-sm font-semibold text-foreground">{i18nT("pages.tools.connections.transport")}</h3>
         <dl className="grid gap-x-6 gap-y-2 text-sm sm:grid-cols-2">
           <Row label="Transport" value="streamable_http" />
           <Row label="Authentication" value="bearer" />
@@ -95,7 +96,7 @@ export function GatewayAdvancedPanel({
 
       <section className="space-y-2">
         <div className="flex items-center justify-between">
-          <h3 className="text-sm font-semibold text-foreground">Raw configuration</h3>
+          <h3 className="text-sm font-semibold text-foreground">{i18nT("scan.s1033")}</h3>
           <Button variant="outline" size="sm" onClick={() => void copy(rawConfig, "Gateway config JSON")}>
             <Copy className="mr-1 h-3.5 w-3.5" />
             Copy JSON
@@ -107,7 +108,7 @@ export function GatewayAdvancedPanel({
       </section>
 
       <section className="space-y-2 rounded-lg border border-destructive/40 p-4">
-        <h3 className="text-sm font-semibold text-destructive">Danger zone</h3>
+        <h3 className="text-sm font-semibold text-destructive">{i18nT("settings.dangerZone")}</h3>
         <p className="text-sm text-muted-foreground">
           Archiving takes the gateway offline for every client. Existing tokens stop working. Type the
           gateway name to confirm.

@@ -172,6 +172,7 @@ import {
   relativeTime,
   cn,
   formatDurationMs,
+  displayedInferenceCents,
   formatTokens,
   visibleRunCostUsd,
 } from "../lib/utils";
@@ -367,6 +368,7 @@ import {
   type WorkspaceFileRef,
   workspaceFileRefSchema,
 } from "@paperclipai/shared";
+import { t as i18nT } from "@/i18n";
 
 // Stable empty array for React Query `data` defaults. A literal `= []` default
 // creates a new array reference on every render while `data` is undefined
@@ -1607,7 +1609,7 @@ const IssueDetailChatTab = memo(function IssueDetailChatTab({
     onSuccess: (result) => {
       if (!result.runId) {
         pushToast({
-          title: "Retry queued",
+          title: i18nT("scan.s1129"),
           body: "The exact request will retry when this task is ready.",
           tone: "success",
         });
@@ -1626,7 +1628,7 @@ const IssueDetailChatTab = memo(function IssueDetailChatTab({
     },
     onError: (error) => {
       pushToast({
-        title: "Run retry failed",
+        title: i18nT("inbox.runRetryFailed"),
         body: error instanceof Error ? error.message : "Unable to retry run",
         tone: "error",
       });
@@ -2367,7 +2369,7 @@ const IssueDetailChatTab = memo(function IssueDetailChatTab({
               : null;
         if (code === "queued_comment_already_dispatching") {
           pushToast({
-            title: "Message is already being sent",
+            title: i18nT("scan.s0748"),
             body: "The continuation started before the discard was confirmed, so Kujira AI Workforce could not unsend it.",
             tone: "error",
             ttlMs: 15_000,
@@ -2827,7 +2829,7 @@ function IssueDetailActivityTab({
                 <div className="flex flex-wrap gap-3">
                   <span className="font-medium text-foreground">
                     Including sub-tasks{" "}
-                    {(issueTreeCostSummary.costCents / 100).toLocaleString(
+                    {(displayedInferenceCents(issueTreeCostSummary.costCents) / 100).toLocaleString(
                       undefined,
                       {
                         style: "currency",
@@ -3835,7 +3837,7 @@ export function TaskDetailSurface({ conversation, tasksTab }: { tasksTab?: TaskS
       options.push({ id: `agent:${agent.id}`, label: agent.name });
     }
     if (currentUserId) {
-      options.push({ id: `user:${currentUserId}`, label: "Me" });
+      options.push({ id: `user:${currentUserId}`, label: i18nT("common.me") });
     }
     return options;
   }, [agents, companyMembers?.users, currentUserId]);
@@ -4031,7 +4033,7 @@ export function TaskDetailSurface({ conversation, tasksTab }: { tasksTab?: TaskS
 
       try {
         await issuesApi.unarchiveFromInbox(id);
-        pushToast({ title: "Task restored to inbox", tone: "success" });
+        pushToast({ title: i18nT("scan.s1339"), tone: "success" });
       } catch (error) {
         if (companyId) {
           beginLocalInboxArchive(companyId, id);
@@ -4039,7 +4041,7 @@ export function TaskDetailSurface({ conversation, tasksTab }: { tasksTab?: TaskS
           boundLocalInboxArchive(companyId, id);
         }
         pushToast({
-          title: "Undo failed",
+          title: i18nT("scan.s1407"),
           body:
             error instanceof Error
               ? error.message
@@ -4204,7 +4206,7 @@ export function TaskDetailSurface({ conversation, tasksTab }: { tasksTab?: TaskS
         );
       }
       pushToast({
-        title: "Task update failed",
+        title: i18nT("scan.s1340"),
         body:
           err instanceof Error ? err.message : "Unable to save task changes",
         tone: "error",
@@ -4239,7 +4241,7 @@ export function TaskDetailSurface({ conversation, tasksTab }: { tasksTab?: TaskS
     },
     onError: (err) => {
       pushToast({
-        title: "Recovery resolution failed",
+        title: i18nT("scan.s1064"),
         body:
           err instanceof Error
             ? err.message
@@ -4507,7 +4509,7 @@ export function TaskDetailSurface({ conversation, tasksTab }: { tasksTab?: TaskS
     },
     onError: (err) => {
       pushToast({
-        title: "Task update failed",
+        title: i18nT("scan.s1340"),
         body:
           err instanceof Error
             ? err.message
@@ -4575,13 +4577,13 @@ export function TaskDetailSurface({ conversation, tasksTab }: { tasksTab?: TaskS
       invalidateIssueRunState();
       invalidateIssueCollections();
       pushToast({
-        title: "Monitor check queued",
+        title: i18nT("scan.s0758"),
         tone: "success",
       });
     },
     onError: (err) => {
       pushToast({
-        title: "Monitor check failed",
+        title: i18nT("scan.s0757"),
         body:
           err instanceof Error
             ? err.message
@@ -4599,7 +4601,7 @@ export function TaskDetailSurface({ conversation, tasksTab }: { tasksTab?: TaskS
   const handleCheckWaitNow = useCallback(() => {
     if (!issue) {
       pushToast({
-        title: "Nothing to check",
+        title: i18nT("scan.s0862"),
         body: "This wait is no longer scheduled.",
         tone: "info",
       });
@@ -4615,7 +4617,7 @@ export function TaskDetailSurface({ conversation, tasksTab }: { tasksTab?: TaskS
       return;
     }
     pushToast({
-      title: "Nothing to check",
+      title: i18nT("scan.s0862"),
       body: "This wait is no longer scheduled.",
       tone: "info",
     });
@@ -4755,7 +4757,7 @@ export function TaskDetailSurface({ conversation, tasksTab }: { tasksTab?: TaskS
           return;
         } catch (err) {
           pushToast({
-            title: "Cancel failed",
+            title: i18nT("scan.s0167"),
             body:
               err instanceof Error
                 ? err.message
@@ -4901,7 +4903,7 @@ export function TaskDetailSurface({ conversation, tasksTab }: { tasksTab?: TaskS
     },
     onError: (err) => {
       pushToast({
-        title: "Accept failed",
+        title: i18nT("scan.s0011"),
         body:
           err instanceof Error
             ? err.message
@@ -4932,7 +4934,7 @@ export function TaskDetailSurface({ conversation, tasksTab }: { tasksTab?: TaskS
     },
     onError: (err) => {
       pushToast({
-        title: "Reject failed",
+        title: i18nT("scan.s1073"),
         body:
           err instanceof Error
             ? err.message
@@ -4954,13 +4956,13 @@ export function TaskDetailSurface({ conversation, tasksTab }: { tasksTab?: TaskS
       invalidateIssueDetail();
       invalidateIssueCollections();
       pushToast({
-        title: "Answers submitted",
+        title: i18nT("scan.s0072"),
         tone: "success",
       });
     },
     onError: (err) => {
       pushToast({
-        title: "Submit failed",
+        title: i18nT("scan.s1314"),
         body: err instanceof Error ? err.message : "Unable to submit answers",
         tone: "error",
       });
@@ -4998,7 +5000,7 @@ export function TaskDetailSurface({ conversation, tasksTab }: { tasksTab?: TaskS
     },
     onError: (err) => {
       pushToast({
-        title: "Apply failed",
+        title: i18nT("scan.s0082"),
         body:
           err instanceof Error ? err.message : "Unable to apply the verdicts",
         tone: "error",
@@ -5017,13 +5019,13 @@ export function TaskDetailSurface({ conversation, tasksTab }: { tasksTab?: TaskS
       invalidateIssueDetail();
       invalidateIssueCollections();
       pushToast({
-        title: "Question cancelled",
+        title: i18nT("scan.s1020"),
         tone: "success",
       });
     },
     onError: (err) => {
       pushToast({
-        title: "Cancel failed",
+        title: i18nT("scan.s0167"),
         body:
           err instanceof Error ? err.message : "Unable to cancel the question",
         tone: "error",
@@ -5041,7 +5043,7 @@ export function TaskDetailSurface({ conversation, tasksTab }: { tasksTab?: TaskS
     },
     onError: (err) => {
       pushToast({
-        title: "Skip failed",
+        title: i18nT("scan.s1264"),
         body:
           err instanceof Error ? err.message : "Unable to skip this request",
         tone: "error",
@@ -5164,7 +5166,7 @@ export function TaskDetailSurface({ conversation, tasksTab }: { tasksTab?: TaskS
           return;
         } catch (err) {
           pushToast({
-            title: "Cancel failed",
+            title: i18nT("scan.s0167"),
             body:
               err instanceof Error
                 ? err.message
@@ -5279,14 +5281,14 @@ export function TaskDetailSurface({ conversation, tasksTab }: { tasksTab?: TaskS
       invalidateIssueThreadLazily();
       invalidateIssueCollections();
       pushToast({
-        title: "Queued comment canceled",
+        title: i18nT("scan.s1022"),
         body: "The queued message was restored to the composer.",
         tone: "success",
       });
     },
     onError: (err) => {
       pushToast({
-        title: "Cancel failed",
+        title: i18nT("scan.s0167"),
         body:
           err instanceof Error
             ? err.message
@@ -5307,14 +5309,14 @@ export function TaskDetailSurface({ conversation, tasksTab }: { tasksTab?: TaskS
       invalidateIssueCollections();
       invalidateIssueDocumentAnnotationState();
       pushToast({
-        title: "Comment deleted",
+        title: i18nT("scan.s0241"),
         body: "The thread now shows a deleted-comment marker.",
         tone: "success",
       });
     },
     onError: (err) => {
       pushToast({
-        title: "Delete failed",
+        title: i18nT("pages.secrets.toast.deleteFailed"),
         body:
           err instanceof Error ? err.message : "Unable to delete the comment",
         tone: "error",
@@ -5335,7 +5337,7 @@ export function TaskDetailSurface({ conversation, tasksTab }: { tasksTab?: TaskS
         if (cancelledCommentBody) {
           restoreQueuedCommentDraft(cancelledCommentBody);
           pushToast({
-            title: "Queued comment canceled",
+            title: i18nT("scan.s1022"),
             body: "The queued message was restored to the composer.",
             tone: "success",
           });
@@ -5415,7 +5417,7 @@ export function TaskDetailSurface({ conversation, tasksTab }: { tasksTab?: TaskS
         );
       }
       pushToast({
-        title: "Failed to save feedback",
+        title: i18nT("scan.s0507"),
         body: err instanceof Error ? err.message : "Unknown error",
         tone: "error",
       });
@@ -5520,10 +5522,10 @@ export function TaskDetailSurface({ conversation, tasksTab }: { tasksTab?: TaskS
         { replace: true },
       );
       pushToast({
-        title: "Task archived from inbox",
+        title: i18nT("scan.s1330"),
         tone: "success",
         action: {
-          label: "Undo",
+          label: i18nT("common.undo"),
           onClick: () => {
             void undoInboxArchive(
               id,
@@ -5540,7 +5542,7 @@ export function TaskDetailSurface({ conversation, tasksTab }: { tasksTab?: TaskS
         restoreIssueToInboxCaches(queryClient, context.previousData, id);
       }
       pushToast({
-        title: "Archive failed",
+        title: i18nT("scan.s0086"),
         body:
           err instanceof Error
             ? err.message
@@ -6471,7 +6473,7 @@ export function TaskDetailSurface({ conversation, tasksTab }: { tasksTab?: TaskS
     () => [
       {
         id: "cancel",
-        label: "Stop and cancel",
+        label: i18nT("scan.s1306"),
         pendingLabel: "Stopping and cancelling...",
         isPending:
           stopAndFinalizeRun.isPending &&
@@ -6485,7 +6487,7 @@ export function TaskDetailSurface({ conversation, tasksTab }: { tasksTab?: TaskS
       },
       {
         id: "done",
-        label: "Stop and done",
+        label: i18nT("scan.s1307"),
         pendingLabel: "Stopping and marking done...",
         isPending:
           stopAndFinalizeRun.isPending &&
@@ -6711,7 +6713,7 @@ export function TaskDetailSurface({ conversation, tasksTab }: { tasksTab?: TaskS
     onSuccess: (created) => {
       invalidateIssueCollections();
       pushToast({
-        title: "Isolated re-issue created",
+        title: i18nT("scan.s0628"),
         body: created.identifier
           ? `${created.identifier} will run on a fresh isolated workspace.`
           : "A fresh isolated re-issue was created.",
@@ -6723,7 +6725,7 @@ export function TaskDetailSurface({ conversation, tasksTab }: { tasksTab?: TaskS
     },
     onError: (err) => {
       pushToast({
-        title: "Re-issue failed",
+        title: i18nT("scan.s1036"),
         body:
           err instanceof Error
             ? err.message
@@ -6767,12 +6769,12 @@ export function TaskDetailSurface({ conversation, tasksTab }: { tasksTab?: TaskS
       pushToast(
         variables.mode === "quarantine_restore"
           ? {
-              title: "Workspace repaired",
+              title: i18nT("scan.s1520"),
               body: "Dirty changes were quarantined onto a rescue branch and the recorded branch restored; the task will resume.",
               tone: "success",
             }
           : {
-              title: "Workspace branch reconciled",
+              title: i18nT("scan.s1511"),
               body: "The recorded branch now matches the live branch; the task will resume.",
               tone: "success",
             },
@@ -6780,7 +6782,7 @@ export function TaskDetailSurface({ conversation, tasksTab }: { tasksTab?: TaskS
     },
     onError: (err) => {
       pushToast({
-        title: "Reconcile failed",
+        title: i18nT("scan.s1053"),
         body:
           err instanceof Error
             ? err.message
@@ -6802,7 +6804,7 @@ export function TaskDetailSurface({ conversation, tasksTab }: { tasksTab?: TaskS
   const handleReconcileForwardRecoveryAction = useCallback(() => {
     if (!reconcileExecutionWorkspaceId) {
       pushToast({
-        title: "Reconcile failed",
+        title: i18nT("scan.s1053"),
         body: "This task has no execution workspace to reconcile.",
         tone: "error",
       });
@@ -6821,7 +6823,7 @@ export function TaskDetailSurface({ conversation, tasksTab }: { tasksTab?: TaskS
     (reason: string) => {
       if (!reconcileExecutionWorkspaceId) {
         pushToast({
-          title: "Reconcile failed",
+          title: i18nT("scan.s1053"),
           body: "This task has no execution workspace to reconcile.",
           tone: "error",
         });
@@ -6844,7 +6846,7 @@ export function TaskDetailSurface({ conversation, tasksTab }: { tasksTab?: TaskS
   const handleQuarantineRestoreRecoveryAction = useCallback(() => {
     if (!reconcileExecutionWorkspaceId) {
       pushToast({
-        title: "Repair failed",
+        title: i18nT("scan.s1091"),
         body: "This task has no execution workspace to repair.",
         tone: "error",
       });
@@ -7552,7 +7554,7 @@ export function TaskDetailSurface({ conversation, tasksTab }: { tasksTab?: TaskS
           onSave={(description) => updateIssue.mutateAsync({ description })}
           as="p"
           className="text-sm leading-7 text-foreground"
-          placeholder="Add a description..."
+          placeholder={i18nT("projects.addDescription")}
           multiline
           foldable
           mentions={mentionOptions}
@@ -7658,7 +7660,7 @@ export function TaskDetailSurface({ conversation, tasksTab }: { tasksTab?: TaskS
           />
 
           {issue.status === "in_review" && issue.externalConversationState === "waiting" && (
-            <p role="status" className="text-sm text-muted-foreground">Reply sent. Send a message to continue.</p>
+            <p role="status" className="text-sm text-muted-foreground">{i18nT("scan.s1095")}</p>
           )}
 
           {issue.hiddenAt && (

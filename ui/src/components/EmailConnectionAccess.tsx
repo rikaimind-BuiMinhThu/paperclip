@@ -4,6 +4,7 @@ import { toolsApi } from "@/api/tools";
 import { queryKeys } from "@/lib/queryKeys";
 import { AgentMultiSelect } from "@/components/AgentMultiSelect";
 import { RadioCardGroup } from "@/components/ui/radio-card";
+import { t as i18nT } from "@/i18n";
 
 export function EmailConnectionAccess({
   companyId,
@@ -34,7 +35,7 @@ export function EmailConnectionAccess({
     },
   });
   if (grants.isLoading || installs.isLoading)
-    return <p className="text-sm text-muted-foreground">Loading access…</p>;
+    return <p className="text-sm text-muted-foreground">{i18nT("scan.s0703")}</p>;
   if (grants.error || installs.error)
     return (
       <p role="alert" className="text-sm text-destructive">
@@ -77,8 +78,8 @@ export function EmailConnectionAccess({
           disabled={disabled}
           className="sm:grid-cols-2"
           options={[
-            { value: "selected", title: "Just agents I pick" },
-            { value: "all", title: "Any agent" },
+            { value: "selected", title: i18nT("apps.detail.permissions.justAgentsTitle") },
+            { value: "all", title: i18nT("apps.detail.permissions.anyAgentTitle") },
           ]}
           onValueChange={(value) =>
             save.mutate(

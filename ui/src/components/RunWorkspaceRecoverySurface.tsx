@@ -16,6 +16,7 @@ import {
   canBoardManageRuntime,
   readRecoveryReconcileWorkspaceId,
 } from "../lib/recovery-reconcile";
+import { t as i18nT } from "@/i18n";
 
 /** The run errorCode Kujira AI Workforce stamps when it declines a run over a git workspace it can't validate. */
 export const WORKSPACE_VALIDATION_RUN_ERROR_CODE = "workspace_validation_failed";
@@ -103,12 +104,12 @@ export function RunWorkspaceRecoverySurface({ run }: { run: HeartbeatRun }) {
       pushToast(
         variables.mode === "quarantine_restore"
           ? {
-              title: "Workspace repaired",
+              title: i18nT("scan.s1520"),
               body: "Dirty changes were quarantined onto a rescue branch and the recorded branch restored; the task will resume.",
               tone: "success",
             }
           : {
-              title: "Workspace branch reconciled",
+              title: i18nT("scan.s1511"),
               body: "The recorded branch now matches the live branch; the task will resume.",
               tone: "success",
             },
@@ -116,7 +117,7 @@ export function RunWorkspaceRecoverySurface({ run }: { run: HeartbeatRun }) {
     },
     onError: (err) => {
       pushToast({
-        title: "Reconcile failed",
+        title: i18nT("scan.s1053"),
         body: err instanceof Error ? err.message : "Unable to reconcile the workspace branch.",
         tone: "error",
       });
@@ -158,7 +159,7 @@ export function RunWorkspaceRecoverySurface({ run }: { run: HeartbeatRun }) {
     onSuccess: (created) => {
       invalidate();
       pushToast({
-        title: "Isolated re-issue created",
+        title: i18nT("scan.s0628"),
         body: created.identifier
           ? `${created.identifier} will run on a fresh isolated workspace.`
           : "A fresh isolated re-issue was created.",
@@ -170,7 +171,7 @@ export function RunWorkspaceRecoverySurface({ run }: { run: HeartbeatRun }) {
     },
     onError: (err) => {
       pushToast({
-        title: "Re-issue failed",
+        title: i18nT("scan.s1036"),
         body: err instanceof Error ? err.message : "Unable to create an isolated re-issue.",
         tone: "error",
       });
@@ -194,7 +195,7 @@ export function RunWorkspaceRecoverySurface({ run }: { run: HeartbeatRun }) {
     },
     onError: (err) => {
       pushToast({
-        title: "Recovery resolution failed",
+        title: i18nT("scan.s1064"),
         body: err instanceof Error ? err.message : "Unable to resolve recovery action",
         tone: "error",
       });
@@ -255,7 +256,7 @@ export function RunWorkspaceRecoverySurface({ run }: { run: HeartbeatRun }) {
   return (
     <div className="space-y-2" data-testid="run-workspace-recovery-surface">
       <div className="flex items-center justify-between gap-2">
-        <span className="text-xs font-medium text-muted-foreground">Workspace recovery</span>
+        <span className="text-xs font-medium text-muted-foreground">{i18nT("scan.s1519")}</span>
         {issue?.identifier ? (
           <a
             href={`/issues/${issue.identifier}`}

@@ -30,6 +30,7 @@ import type { PendingAnchor } from "./DocumentAnnotationLayer";
 import type { Agent } from "@paperclipai/shared";
 import type { CompanyUserProfile } from "@/lib/company-members";
 import { useDocumentAnnotationMutations } from "@/hooks/useDocumentAnnotationMutations";
+import { t as i18nT } from "@/i18n";
 
 export interface AnnotationPanelProps {
   open: boolean;
@@ -279,7 +280,7 @@ export function AnnotationPanelBody(props: AnnotationPanelProps) {
                 }
               }
             }}
-            placeholder="Write a comment…"
+            placeholder={i18nT("scan.s1525")}
             disabled={props.newCommentDisabled}
             className="resize-y rounded-none text-sm"
           />
@@ -383,7 +384,7 @@ export function ThreadCard(props: {
                   }
                 }
               }}
-              placeholder="Reply…"
+              placeholder={i18nT("scan.s1097")}
               className="resize-y rounded-none text-sm"
               disabled={props.pendingReply}
             />

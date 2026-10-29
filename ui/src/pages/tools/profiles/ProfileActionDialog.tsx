@@ -9,6 +9,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { t as i18nT } from "@/i18n";
 
 export type ProfileActionDialogKind = "archive" | "delete" | "restore";
 
@@ -34,19 +35,19 @@ export function ProfileActionDialog({
   const defaultDeleteBlocked = kind === "delete" && profile.summary.isCompanyDefault;
   const copy = {
     archive: {
-      title: "Archive profile",
+      title: i18nT("scan.s0089"),
       body: `This profile stops applying to ${profile.summary.appliesToAgentCount} ${profile.summary.appliesToAgentCount === 1 ? "agent" : "agents"}. You can restore it later.`,
       confirm: "Archive",
       action: onArchive,
     },
     restore: {
-      title: "Restore profile",
+      title: i18nT("scan.s1121"),
       body: "This profile will be active again and can be assigned to agents.",
       confirm: "Restore",
       action: onRestore,
     },
     delete: {
-      title: "Delete profile",
+      title: i18nT("scan.s0392"),
       body: defaultDeleteBlocked
         ? "This profile is the organization default. Reassign the organization default to another profile before deleting it."
         : `This permanently deletes the profile and removes ${profile.summary.assignmentCount} ${profile.summary.assignmentCount === 1 ? "assignment" : "assignments"}.`,
@@ -69,7 +70,7 @@ export function ProfileActionDialog({
           </div>
         ) : null}
         <DialogFooter>
-          <Button variant="ghost" onClick={onClose}>Cancel</Button>
+          <Button variant="ghost" onClick={onClose}>{i18nT("common.cancel")}</Button>
           <Button
             variant={kind === "delete" ? "destructive" : "default"}
             disabled={pending || defaultDeleteBlocked}

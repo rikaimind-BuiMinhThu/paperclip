@@ -7,6 +7,7 @@ import {
   formatSilenceAgeMs,
   shortenEvidenceId,
 } from "@/lib/source-resolved-watchdog-fold";
+import { t as i18nT } from "@/i18n";
 
 export interface SourceResolvedFoldCalloutProps {
   fold: SourceResolvedWatchdogFold;
@@ -81,7 +82,7 @@ export function SourceResolvedFoldCallout({
         </span>
         <div className="min-w-0 flex-1">
           <div className="flex flex-wrap items-center gap-x-2 gap-y-0.5 text-(length:--text-micro) font-semibold uppercase tracking-(--tracking-eyebrow)">
-            <span className="text-emerald-900 dark:text-emerald-200">SOURCE-RESOLVED FOLD</span>
+            <span className="text-emerald-900 dark:text-emerald-200">{i18nT("scan.s1173")}</span>
             <span className="text-muted-foreground/60" aria-hidden>·</span>
             <span className="font-medium normal-case tracking-normal text-muted-foreground">
               system audit

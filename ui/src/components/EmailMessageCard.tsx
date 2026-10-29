@@ -8,6 +8,7 @@ import type {
 } from "@paperclipai/shared";
 import { useEmailThread } from "@/hooks/useEmailThread";
 import { issuesApi } from "@/api/issues";
+import { t as i18nT } from "@/i18n";
 const EmailContext = createContext<EmailThreadSummary | null>(null);
 export function EmailThreadProvider({
   companyId,
@@ -110,7 +111,7 @@ export function EmailMessageCard({
         </div>
       )}
       <details className="text-xs text-muted-foreground">
-        <summary className="cursor-pointer">Email details</summary>
+        <summary className="cursor-pointer">{i18nT("scan.s0447")}</summary>
         <div className="space-y-2 pt-3">
           {!!message.bcc?.length && <p>Bcc: {message.bcc.join(", ")}</p>}
           <p className="break-all">Message ID: {message.providerMessageId}</p>

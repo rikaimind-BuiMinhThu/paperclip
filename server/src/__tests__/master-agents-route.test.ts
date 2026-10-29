@@ -178,11 +178,17 @@ describeEmbeddedPostgres("master agent gallery", () => {
     const catalog = await request(board).get("/api/instance/master-agents");
     const cmo = catalog.body.find((row: { slug: string }) => row.slug === "cmo");
     expect(cmo.skillKeys).toEqual(expect.arrayContaining([
+      "paperclipai/bundled/marketing/cmo-campaign-planning",
       "paperclipai/bundled/paperclip-operations/task-planning",
       "paperclipai/bundled/paperclip-operations/issue-triage",
+      "paperclipai/optional/marketing/customer-research",
       "paperclipai/optional/marketing/marketing-plan",
       "paperclipai/optional/marketing/content-strategy",
     ]));
+    expect(cmo.description).toMatch(/ask/i);
+    expect(cmo.instructions).toMatch(/ask_user_questions/);
+    expect(cmo.instructions).toMatch(/request_confirmation/);
+    expect(cmo.instructions).toMatch(/campaign_deliverables/);
     const contentWriter = catalog.body.find((row: { slug: string }) => row.slug === "content-writer");
     expect(contentWriter.skillKeys).toEqual(expect.arrayContaining([
       "paperclipai/optional/marketing/copywriting",

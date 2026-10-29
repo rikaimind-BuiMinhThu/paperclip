@@ -11,6 +11,7 @@ import {
   PayloadTemplateJsonField,
   RuntimeServicesJsonField,
 } from "../runtime-json-fields";
+import { t as i18nT } from "@/i18n";
 
 const inputClass =
   "w-full rounded-md border border-border px-2.5 py-1.5 bg-transparent outline-none text-sm font-mono placeholder:text-muted-foreground/40";
@@ -183,7 +184,7 @@ export function OpenClawGatewayConfigFields({
             ? set!({ authToken: v })
             : commitGatewayToken(v)
         }
-        placeholder="OpenClaw gateway token"
+        placeholder={i18nT("scan.s0897")}
       />
 
       <Field label="Agent ID">
@@ -218,9 +219,9 @@ export function OpenClawGatewayConfigFields({
           }
           className={inputClass}
         >
-          <option value="fixed">Fixed</option>
-          <option value="issue">Per issue</option>
-          <option value="run">Per run</option>
+          <option value="fixed">{i18nT("scan.s0533")}</option>
+          <option value="issue">{i18nT("scan.s0948")}</option>
+          <option value="run">{i18nT("scan.s0949")}</option>
         </select>
       </Field>
 
@@ -256,7 +257,7 @@ export function OpenClawGatewayConfigFields({
             ? set!({ password: v })
             : mark("adapterConfig", "password", v || undefined)
         }
-        placeholder="Gateway shared password"
+        placeholder={i18nT("scan.s0551")}
       />
 
       <Field label="Role">

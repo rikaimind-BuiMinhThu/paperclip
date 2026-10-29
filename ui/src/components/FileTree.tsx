@@ -13,6 +13,7 @@ import { statusBadge, statusBadgeDefault } from "../lib/status-colors";
 import { Button } from "./ui/button";
 import { Skeleton } from "./ui/skeleton";
 import { Badge } from "@/components/ui/badge";
+import { t as i18nT } from "@/i18n";
 
 // -- Tree types --------------------------------------------------------------
 
@@ -216,7 +217,7 @@ export function parseFrontmatter(content: string): { data: FrontmatterData; body
 
 export const FRONTMATTER_FIELD_LABELS: Record<string, string> = {
   name: "Name",
-  title: "Title",
+  title: i18nT("common.title"),
   kind: "Kind",
   reportsTo: "Reports to",
   skills: "Skills",

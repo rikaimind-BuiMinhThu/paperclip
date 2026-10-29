@@ -43,6 +43,7 @@ import {
   GitHubToggle,
   githubSelectClass,
 } from "./GitHubBotConfiguration";
+import { t as i18nT } from "@/i18n";
 
 const steps = [
   "Choose agent",
@@ -124,8 +125,8 @@ export function GitHubChatSetup() {
   const selectedAgent = agents.data?.find((agent) => agent.id === agentId);
   useEffect(() => {
     setBreadcrumbs([
-      { label: "Connectors", href: "/apps" },
-      { label: "GitHub Code Review Bot" },
+      { label: i18nT("nav.connectors"), href: "/apps" },
+      { label: i18nT("scan.s0565") },
     ]);
     return () => setBreadcrumbs([]);
   }, [setBreadcrumbs]);
@@ -276,7 +277,7 @@ export function GitHubChatSetup() {
               )}
               value={agentId}
               onChange={setAgentId}
-              placeholder="Choose an agent"
+              placeholder={i18nT("agents.chooseAgent")}
               emptyMessage="No agents available"
             />
           )}
@@ -312,7 +313,7 @@ export function GitHubChatSetup() {
               A publicly reachable HTTPS address is required before App
               registration. Configure the instance’s public URL or an explicit
               webhook ingress URL, then refresh. {" "}
-              <a className="underline" href="https://docs.paperclip.ing/reference/deploy/https/" target="_blank" rel="noreferrer">Learn how to set up HTTPS</a>
+              <a className="underline" href="https://docs.paperclip.ing/reference/deploy/https/" target="_blank" rel="noreferrer">{i18nT("scan.s0681")}</a>
             </div>
           )}
           <p className="text-sm">
@@ -345,7 +346,7 @@ export function GitHubChatSetup() {
           {existing ? (
             <div className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="github-app-id">App ID</Label>
+                <Label htmlFor="github-app-id">{i18nT("scan.s0077")}</Label>
                 <Input
                   id="github-app-id"
                   value={credentials.appId}
@@ -358,7 +359,7 @@ export function GitHubChatSetup() {
                 </p>
               </div>
               <div className="space-y-2">
-                <Label htmlFor="github-private-key">Private key</Label>
+                <Label htmlFor="github-private-key">{i18nT("scan.s0990")}</Label>
                 <Textarea
                   id="github-private-key"
                   autoComplete="off"
@@ -375,7 +376,7 @@ export function GitHubChatSetup() {
                 </p>
               </div>
               <div className="space-y-2">
-                <Label htmlFor="github-webhook-secret">Webhook secret</Label>
+                <Label htmlFor="github-webhook-secret">{i18nT("scan.s1471")}</Label>
                 <Input
                   id="github-webhook-secret"
                   type="password"
@@ -396,10 +397,10 @@ export function GitHubChatSetup() {
                     const generated = await chatEndpointsApi.generateSetupSecret(endpoint.id);
                     setCredentials(current => ({ ...current, webhookSecret: generated.webhookSecret }));
                     setSecretCopy("idle");
-                  })}>Generate webhook secret</Button>
+                  })}>{i18nT("scan.s0558")}</Button>
                   {credentials.webhookSecret && <Button variant="outline" onClick={async () => {
                     try { await copyTextToClipboard(credentials.webhookSecret); setSecretCopy("copied"); }
-                    catch { setSecretCopy("failed"); pushToast({ title: "Couldn't copy to clipboard", body: "Select and copy the value manually.", tone: "error" }); }
+                    catch { setSecretCopy("failed"); pushToast({ title: i18nT("scan.s0326"), body: "Select and copy the value manually.", tone: "error" }); }
                   }}>{secretCopy === "copied" ? "Webhook secret copied" : secretCopy === "failed" ? "Couldn’t copy — select it manually" : "Copy webhook secret"}</Button>}
                 </div>}
 
@@ -407,7 +408,7 @@ export function GitHubChatSetup() {
             </div>
           ) : (
             <div className="space-y-3">
-              <Label htmlFor="github-app-name">GitHub App name</Label>
+              <Label htmlFor="github-app-name">{i18nT("scan.s0564")}</Label>
               <Input
                 id="github-app-name"
                 maxLength={34}
@@ -454,7 +455,7 @@ export function GitHubChatSetup() {
             <p className="mt-2 break-all text-xs">
               {endpoint.setup?.webhookUrl ?? "Public webhook URL unavailable"}
             </p>
-            {endpoint.setup?.webhookUrl && <Button variant="outline" size="sm" className="mt-2" onClick={() => void run(async () => { await copyTextToClipboard(endpoint.setup!.webhookUrl!); pushToast({ title: "Webhook URL copied", tone: "success" }); })}>Copy webhook URL</Button>}
+            {endpoint.setup?.webhookUrl && <Button variant="outline" size="sm" className="mt-2" onClick={() => void run(async () => { await copyTextToClipboard(endpoint.setup!.webhookUrl!); pushToast({ title: i18nT("scan.s1470"), tone: "success" }); })}>{i18nT("scan.s0288")}</Button>}
             {registration && (
               <pre className="mt-3 overflow-auto text-xs">
                 {JSON.stringify(registration.manifest, null, 2)}
@@ -731,7 +732,7 @@ export function GitHubChatSetup() {
                 setIdentity(null);
               }}
             >
-              <option value="">Choose a personal connection</option>
+              <option value="">{i18nT("scan.s0203")}</option>
               {accounts.data?.map((account) => (
                 <option
                   key={account.connectionId}

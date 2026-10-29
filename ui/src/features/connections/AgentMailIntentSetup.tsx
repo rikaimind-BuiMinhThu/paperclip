@@ -4,6 +4,7 @@ import { isUuidLike } from "@paperclipai/shared";
 import { emailApi } from "@/api/email";
 import { Button } from "@/components/ui/button";
 import { AgentMailCredentialField } from "./AgentMailCredentialField";
+import { t as i18nT } from "@/i18n";
 
 interface InlineEmailDraft {
   setupRequestId: string;
@@ -106,7 +107,7 @@ export function AgentMailIntentSetup({ companyId, agentId, requestId, savedCrede
     {changeKey.error && <p className="text-sm text-destructive" role="alert">{changeKey.error.message}</p>}
     {setup.error && <p className="text-sm text-destructive" role="alert">{setup.error.message}</p>}
     <div className="flex items-center justify-between gap-2">
-      <Button type="button" variant="ghost" disabled={setup.isPending || changeKey.isPending || declining} onClick={onDecline}>Not now</Button>
+      <Button type="button" variant="ghost" disabled={setup.isPending || changeKey.isPending || declining} onClick={onDecline}>{i18nT("common.notNow")}</Button>
       <Button type="submit" disabled={setup.isPending || changeKey.isPending || declining || (!credentialId && !selectedCredentialId && !inboxConnectionId && !apiKey.trim())}>
         {setup.isPending ? "Connecting…" : inboxConnectionId ? "Continue" : credentialId ? "Finish setup" : "Connect AgentMail"}
       </Button>

@@ -7,6 +7,7 @@ import { ClaudeSubscriptionPanel } from "./ClaudeSubscriptionPanel";
 import { CodexSubscriptionPanel } from "./CodexSubscriptionPanel";
 import {
   billingTypeDisplayName,
+  displayedInferenceCents,
   formatCents,
   formatTokens,
   providerDisplayName,
@@ -153,7 +154,7 @@ export function ProviderQuotaCard({
             </CardDescription>
           </div>
           <span className="text-xl font-bold tabular-nums shrink-0">
-            {formatCents(totalCostCents)}
+            {formatCents(displayedInferenceCents(totalCostCents))}
           </span>
         </div>
       </CardHeader>
@@ -164,14 +165,14 @@ export function ProviderQuotaCard({
             <QuotaBar
               label="Period spend"
               percentUsed={budgetPct}
-              leftLabel={formatCents(totalCostCents)}
+              leftLabel={formatCents(displayedInferenceCents(totalCostCents))}
               rightLabel={`${Math.round(budgetPct)}% of allocation`}
               showDeficitNotch={showDeficitNotch}
             />
             <QuotaBar
               label="This week"
               percentUsed={weekPct}
-              leftLabel={formatCents(weekSpendCents)}
+              leftLabel={formatCents(displayedInferenceCents(weekSpendCents))}
               rightLabel={`~${formatCents(Math.round(weeklyBudgetShare))} / wk`}
               showDeficitNotch={weekPct >= 100}
             />
@@ -201,7 +202,7 @@ export function ProviderQuotaCard({
                         <span className="text-muted-foreground font-mono flex-1">
                           {formatTokens(tokens)} tok
                         </span>
-                        <span className="font-medium tabular-nums">{formatCents(cents)}</span>
+                        <span className="font-medium tabular-nums">{formatCents(displayedInferenceCents(cents))}</span>
                       </div>
                       <div className="h-2 w-full border border-border overflow-hidden">
                         <div
@@ -280,7 +281,7 @@ export function ProviderQuotaCard({
                         <span className="text-muted-foreground">
                           {formatTokens(rowTokens)} tok
                         </span>
-                        <span className="font-medium">{formatCents(row.costCents)}</span>
+                        <span className="font-medium">{formatCents(displayedInferenceCents(row.costCents))}</span>
                       </div>
                     </div>
                     {/* token share bar */}

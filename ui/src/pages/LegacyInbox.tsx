@@ -182,6 +182,7 @@ import {
   reconcileInboxOrderPin,
   type InboxOrderPin,
 } from "../lib/inboxOrderPin";
+import { t as i18nT } from "@/i18n";
 
 const INBOX_HEARTBEAT_RUN_LIMIT = 200;
 const INBOX_ISSUE_LIST_LIMIT = 500;
@@ -773,7 +774,7 @@ export function Inbox() {
   });
 
   useEffect(() => {
-    setBreadcrumbs([{ label: "Inbox" }]);
+    setBreadcrumbs([{ label: i18nT("nav.inbox") }]);
   }, [setBreadcrumbs]);
 
   useEffect(() => {
@@ -1690,7 +1691,7 @@ export function Inbox() {
     },
     onError: (error) => {
       pushToast({
-        title: "Run retry failed",
+        title: i18nT("inbox.runRetryFailed"),
         body: error instanceof Error ? error.message : "Unable to retry run",
         tone: "error",
       });
@@ -2267,7 +2268,7 @@ export function Inbox() {
           <Search className="pointer-events-none absolute left-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-muted-foreground" />
           <Input
             type="search"
-            placeholder="Search inbox…"
+            placeholder={i18nT("scan.s1192")}
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             onKeyDown={(e) => {
@@ -2297,15 +2298,15 @@ export function Inbox() {
             items={[
               {
                 value: "mine",
-                label: "Mine",
+                label: i18nT("inbox.mine"),
               },
               {
                 value: "recent",
-                label: "Recent",
+                label: i18nT("inbox.recent"),
               },
-              { value: "unread", label: "Unread" },
-              { value: "blocked", label: "Blocked" },
-              { value: "all", label: "All" },
+              { value: "unread", label: i18nT("status.unread") },
+              { value: "blocked", label: i18nT("status.blocked") },
+              { value: "all", label: i18nT("common.all") },
             ]}
           />
         </Tabs>
@@ -2315,7 +2316,7 @@ export function Inbox() {
             <Search className="pointer-events-none absolute left-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-muted-foreground" />
             <Input
               type="search"
-              placeholder="Search inbox…"
+              placeholder={i18nT("scan.s1192")}
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               onKeyDown={(e) => {
@@ -2516,7 +2517,7 @@ export function Inbox() {
                   <Dialog open={showMarkAllReadConfirm} onOpenChange={setShowMarkAllReadConfirm}>
                     <DialogContent className="sm:max-w-md">
                       <DialogHeader>
-                        <DialogTitle>Mark all as read?</DialogTitle>
+                        <DialogTitle>{i18nT("inbox.markAllReadTitle")}</DialogTitle>
                         <DialogDescription>
                           This will mark {unreadIssueIds.length} unread {unreadIssueIds.length === 1 ? "item" : "items"} as read.
                         </DialogDescription>
@@ -2551,15 +2552,15 @@ export function Inbox() {
             onValueChange={(value) => updateAllCategoryFilter(value as InboxCategoryFilter)}
           >
             <SelectTrigger className="h-8 w-(--sz-170px) text-xs">
-              <SelectValue placeholder="Category" />
+              <SelectValue placeholder={i18nT("issues.filters.category")} />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="everything">All categories</SelectItem>
-              <SelectItem value="issues_i_touched">My recent tasks</SelectItem>
-              <SelectItem value="join_requests">Join requests</SelectItem>
-              <SelectItem value="approvals">Approvals</SelectItem>
-              <SelectItem value="failed_runs">Failed runs</SelectItem>
-              <SelectItem value="alerts">Alerts</SelectItem>
+              <SelectItem value="everything">{i18nT("issues.filters.everything")}</SelectItem>
+              <SelectItem value="issues_i_touched">{i18nT("issues.filters.myRecent")}</SelectItem>
+              <SelectItem value="join_requests">{i18nT("issues.filters.joinRequests")}</SelectItem>
+              <SelectItem value="approvals">{i18nT("inbox.approvals")}</SelectItem>
+              <SelectItem value="failed_runs">{i18nT("inbox.failedRuns")}</SelectItem>
+              <SelectItem value="alerts">{i18nT("inbox.alertsTitle")}</SelectItem>
             </SelectContent>
           </Select>
 
@@ -2569,12 +2570,12 @@ export function Inbox() {
               onValueChange={(value) => updateAllApprovalFilter(value as InboxApprovalFilter)}
             >
               <SelectTrigger className="h-8 w-(--sz-170px) text-xs">
-                <SelectValue placeholder="Approval status" />
+                <SelectValue placeholder={i18nT("issues.filters.approvalStatus")} />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">All approval statuses</SelectItem>
-                <SelectItem value="actionable">Needs action</SelectItem>
-                <SelectItem value="resolved">Resolved</SelectItem>
+                <SelectItem value="all">{i18nT("issues.filters.allApprovalStatuses")}</SelectItem>
+                <SelectItem value="actionable">{i18nT("issues.filters.needsAction")}</SelectItem>
+                <SelectItem value="resolved">{i18nT("issues.filters.resolved")}</SelectItem>
               </SelectContent>
             </Select>
           )}

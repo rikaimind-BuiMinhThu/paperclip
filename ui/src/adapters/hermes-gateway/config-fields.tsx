@@ -9,6 +9,7 @@ import {
   Field,
   ToggleField,
 } from "../../components/agent-config-primitives";
+import { t as i18nT } from "@/i18n";
 
 const inputClass =
   "w-full rounded-md border border-border px-2.5 py-1.5 bg-transparent outline-none text-sm font-mono placeholder:text-muted-foreground/40";
@@ -159,7 +160,7 @@ export function HermesGatewayConfigFields({
         label="API key"
         value={isCreate ? String(readCreateValue(values, "apiKey", "") ?? "") : editApiKeyValue}
         onCommit={(v) => writeValue("apiKey", v || undefined)}
-        placeholder="Hermes API_SERVER_KEY, not PAPERCLIP_API_KEY"
+        placeholder={i18nT("scan.s0586")}
         stored={!isCreate && hasStoredApiKey && !editApiKeyValue}
       />
 
@@ -185,10 +186,10 @@ export function HermesGatewayConfigFields({
           onChange={(event) => writeValue("sessionKeyStrategy", event.target.value)}
           className={inputClass}
         >
-          <option value="issue">Issue scoped</option>
-          <option value="agent">Agent scoped</option>
-          <option value="run">Run scoped</option>
-          <option value="none">None</option>
+          <option value="issue">{i18nT("scan.s0638")}</option>
+          <option value="agent">{i18nT("scan.s0050")}</option>
+          <option value="run">{i18nT("scan.s1160")}</option>
+          <option value="none">{i18nT("common.none")}</option>
         </select>
       </Field>
 

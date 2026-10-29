@@ -1,4 +1,5 @@
 import { useState, type ReactNode } from "react";
+import { useTranslation } from "@/i18n";
 import ReactMarkdown from "react-markdown";
 import {
   ArrowRight,
@@ -183,6 +184,7 @@ const stateLabel = {
 };
 
 export function PullRequestCard(props: PullRequestCardProps) {
+  const { t } = useTranslation();
   const {
     number,
     repository,
@@ -262,7 +264,7 @@ export function PullRequestCard(props: PullRequestCardProps) {
       </div>
       <Footer
         {...props}
-        action={<SourceLink url={url}>Open pull request</SourceLink>}
+        action={<SourceLink url={url}>{t("pages.artifacts.openPullRequest")}</SourceLink>}
       />
     </Card>
   );
@@ -275,6 +277,7 @@ export interface CommitCardProps extends ArtifactIdentity, DiffProps {
   url: string;
 }
 export function CommitCard(props: CommitCardProps) {
+  const { t } = useTranslation();
   return (
     <Card>
       <div className="flex flex-col gap-4 p-5">
@@ -296,7 +299,7 @@ export function CommitCard(props: CommitCardProps) {
       </div>
       <Footer
         {...props}
-        action={<SourceLink url={props.url}>View commit</SourceLink>}
+        action={<SourceLink url={props.url}>{t("pages.artifacts.viewCommit")}</SourceLink>}
       />
     </Card>
   );
@@ -435,6 +438,7 @@ export interface DataCardProps extends ArtifactIdentity {
   actions?: ReactNode;
 }
 function DataTable({ columns, rows }: Pick<DataCardProps, "columns" | "rows">) {
+  const { t } = useTranslation();
   return (
     <div className="overflow-x-auto">
       <table className="w-full text-left text-xs">
@@ -463,7 +467,7 @@ function DataTable({ columns, rows }: Pick<DataCardProps, "columns" | "rows">) {
         </tbody>
       </table>
       {rows.length === 0 && (
-        <p className="p-4 text-xs text-muted-foreground">No rows</p>
+        <p className="p-4 text-xs text-muted-foreground">{t("pages.artifacts.noRows")}</p>
       )}
     </div>
   );
@@ -522,6 +526,7 @@ export function DataCard(props: DataCardProps) {
 }
 
 function ImageContent({ src, alt }: { src: string; alt: string }) {
+  const { t } = useTranslation();
   const [failedUrl, setFailedUrl] = useState<string | null>(null);
   return src && failedUrl !== src ? (
     <img
@@ -534,7 +539,7 @@ function ImageContent({ src, alt }: { src: string; alt: string }) {
   ) : (
     <div className="flex aspect-video flex-col items-center justify-center gap-3 text-muted-foreground">
       <ImageIcon className="size-8" />
-      <span className="text-xs">No preview available</span>
+      <span className="text-xs">{t("pages.artifacts.noPreview")}</span>
     </div>
   );
 }
@@ -600,6 +605,7 @@ export interface VideoCardProps extends ArtifactIdentity {
   onOpen?: () => void;
 }
 export function VideoCard(props: VideoCardProps) {
+  const { t } = useTranslation();
   return (
     <Card>
       <video
@@ -634,7 +640,7 @@ export function VideoCard(props: VideoCardProps) {
               Open video
             </Button>
           ) : (
-            <SourceLink url={props.videoUrl}>Open video</SourceLink>
+            <SourceLink url={props.videoUrl}>{t("pages.artifacts.openVideo")}</SourceLink>
           )
         }
       />
@@ -648,6 +654,7 @@ export interface LinkPreviewCardProps extends ArtifactIdentity {
   imageAlt: string;
 }
 export function LinkPreviewCard(props: LinkPreviewCardProps) {
+  const { t } = useTranslation();
   return (
     <Card>
       {props.imageUrl && (
@@ -666,7 +673,7 @@ export function LinkPreviewCard(props: LinkPreviewCardProps) {
       </div>
       <Footer
         {...props}
-        action={<SourceLink url={props.url}>Open link</SourceLink>}
+        action={<SourceLink url={props.url}>{t("pages.artifacts.openLink")}</SourceLink>}
       />
     </Card>
   );
@@ -682,6 +689,7 @@ export interface FileCardProps extends ArtifactIdentity {
   actions?: ReactNode;
 }
 export function FileCard(props: FileCardProps) {
+  const { t } = useTranslation();
   return (
     <Card>
       <div className="flex flex-col gap-4 p-5">
@@ -716,7 +724,7 @@ export function FileCard(props: FileCardProps) {
           <div className="flex flex-wrap items-center gap-2">
             {props.actions}
             {props.openUrl && (
-              <SourceLink url={props.openUrl}>Open file</SourceLink>
+              <SourceLink url={props.openUrl}>{t("pages.artifacts.openFile")}</SourceLink>
             )}
             {props.downloadUrl ? (
               <Button asChild size="sm" variant="outline">

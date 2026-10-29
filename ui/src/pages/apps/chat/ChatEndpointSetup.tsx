@@ -51,6 +51,7 @@ import {
   createGitHubPrivateKeyReadGuard,
   readGitHubPrivateKeyFile,
 } from "./github-private-key-file";
+import { t as i18nT } from "@/i18n";
 
 const providerNames: Record<ChatProvider, string> = {
   agentmail: "AgentMail",
@@ -290,7 +291,7 @@ function ChatSdkEndpointSetup() {
     },
     onError: (error) =>
       pushToast({
-        title: "Couldn't start setup",
+        title: i18nT("scan.s0341"),
         body: error instanceof Error ? error.message : "Try again.",
         tone: "error",
       }),
@@ -390,7 +391,7 @@ function ChatSdkEndpointSetup() {
     },
     onError: (error) =>
       pushToast({
-        title: "Couldn't generate webhook secret",
+        title: i18nT("scan.s0329"),
         body: error instanceof Error ? error.message : "Try again.",
         tone: "error",
       }),
@@ -403,7 +404,7 @@ function ChatSdkEndpointSetup() {
     },
     onError: (error) =>
       pushToast({
-        title: "Test not complete",
+        title: i18nT("scan.s1353"),
         body:
           error instanceof Error
             ? error.message
@@ -505,7 +506,7 @@ function ChatSdkEndpointSetup() {
               agents={activeAgents}
               value={agentId}
               onChange={setAgentId}
-              placeholder="Choose an active agent"
+              placeholder={i18nT("scan.s0206")}
               emptyMessage="No active agents are available."
             />}
             {provider === "github" && <GitHubAgentTrustWarning agent={selectedAgent} />}
@@ -529,7 +530,7 @@ function ChatSdkEndpointSetup() {
                 role="alert"
                 className="rounded-lg border border-destructive/30 bg-destructive/10 p-4 text-sm text-destructive"
               >
-                <p className="font-medium">Connection failed</p>
+                <p className="font-medium">{i18nT("scan.s0274")}</p>
                 <p className="mt-1">{setupError}</p>
               </div>
             ) : null}
@@ -566,8 +567,8 @@ function ChatSdkEndpointSetup() {
         )}
         {endpoint && isSlack && step === 4 && (
           <div className="space-y-4">
-            {avatarAgent.isPending ? <p role="status" className="text-sm text-muted-foreground">Loading agent avatar…</p>
-              : avatarAgent.isError ? <p role="alert" className="text-sm text-destructive">Couldn’t load the agent’s avatar. <button className="underline" onClick={() => void avatarAgent.refetch()}>Try again</button></p>
+            {avatarAgent.isPending ? <p role="status" className="text-sm text-muted-foreground">{i18nT("scan.s0704")}</p>
+              : avatarAgent.isError ? <p role="alert" className="text-sm text-destructive">{i18nT("scan.s0352")}<button className="underline" onClick={() => void avatarAgent.refetch()}>{i18nT("common.tryAgain")}</button></p>
               : <SlackAvatarStep
                   agentName={avatarAgent.data?.name ?? endpoint.assignedAgentName}
                   appName={endpoint.setup?.slackApp?.appName ?? defaultSlackAppName(avatarAgent.data?.name ?? endpoint.assignedAgentName)}
@@ -680,7 +681,7 @@ function ProviderConnectStep({
     !slackBotToken && !credentials.signingSecret?.trim();
   const reportCopyFailure = () =>
     pushToast({
-      title: "Couldn't copy to clipboard",
+      title: i18nT("scan.s0326"),
       body: "Select and copy the value manually.",
       tone: "error",
     });
@@ -1024,7 +1025,7 @@ settings:
           <li>
             Open BotFather and send <code>/newbot</code>.
           </li>
-          <li>Enter the bot display name.</li>
+          <li>{i18nT("scan.s0461")}</li>
           <li>
             Choose an available username ending in <code>bot</code>.
           </li>
@@ -1155,45 +1156,45 @@ settings:
           </div>
           <ol className="list-decimal space-y-3 pl-5 text-sm">
             <li>
-              <strong>Microsoft Entra admin center · App registrations</strong>:
-              select <strong>New registration</strong>, choose{" "}
+              <strong>{i18nT("scan.s0751")}</strong>:
+              select <strong>{i18nT("scan.s0776")}</strong>, choose{" "}
               <strong>
                 Accounts in this organizational directory only (Single tenant)
               </strong>
-              , then select <strong>Register</strong>. Copy{" "}
-              <strong>Application (client) ID</strong> and{" "}
-              <strong>Directory (tenant) ID</strong>. Under{" "}
-              <strong>Certificates &amp; secrets · Client secrets</strong>,
-              select <strong>New client secret</strong> and copy its{" "}
-              <strong>Value</strong>, not its Secret ID.
+              , then select <strong>{i18nT("scan.s1072")}</strong>. Copy{" "}
+              <strong>{i18nT("scan.s0081")}</strong> and{" "}
+              <strong>{i18nT("scan.s0412")}</strong>. Under{" "}
+              <strong>{i18nT("scan.s0180")}</strong>,
+              select <strong>{i18nT("scan.s0774")}</strong> and copy its{" "}
+              <strong>{i18nT("pages.secrets.createDialog.value")}</strong>, not its Secret ID.
             </li>
             <li>
-              <strong>Azure · Create Azure Bot</strong>: set{" "}
-              <strong>Microsoft App ID</strong> to{" "}
-              <strong>Single Tenant</strong>, set <strong>Creation type</strong>{" "}
-              to <strong>Use existing app registration</strong>, and enter the
+              <strong>{i18nT("scan.s0120")}</strong>: set{" "}
+              <strong>{i18nT("scan.s0750")}</strong> to{" "}
+              <strong>{i18nT("scan.s1259")}</strong>, set <strong>{i18nT("scan.s0366")}</strong>{" "}
+              to <strong>{i18nT("scan.s1435")}</strong>, and enter the
               Application ID and Tenant ID above. After creation, open{" "}
-              <strong>Settings · Configuration</strong> and paste the Kujira AI Workforce{" "}
-              <strong>Messaging endpoint</strong>; then open{" "}
-              <strong>Settings · Channels</strong> and enable{" "}
-              <strong>Microsoft Teams</strong>.
+              <strong>{i18nT("scan.s1240")}</strong> and paste the Kujira AI Workforce{" "}
+              <strong>{i18nT("scan.s0749")}</strong>; then open{" "}
+              <strong>{i18nT("scan.s1239")}</strong> and enable{" "}
+              <strong>{i18nT("scan.s0752")}</strong>.
             </li>
             <li>
-              <strong>Teams Developer Portal · Apps</strong>: select{" "}
-              <strong>New app</strong>. Under{" "}
-              <strong>Configure · App features · Bot</strong>, add an existing
+              <strong>{i18nT("scan.s1343")}</strong>: select{" "}
+              <strong>{i18nT("scan.s0773")}</strong>. Under{" "}
+              <strong>{i18nT("scan.s0255")}</strong>, add an existing
               bot using the same Application ID; enable{" "}
-              <strong>Personal</strong>, <strong>Team</strong>, and{" "}
-              <strong>Group chat</strong> scopes plus file support. Under{" "}
-              <strong>Configure · Permissions</strong>, add the two RSC{" "}
-              <strong>Application</strong> permissions shown below. Complete the
+              <strong>{i18nT("scan.s0952")}</strong>, <strong>{i18nT("scan.s1341")}</strong>, and{" "}
+              <strong>{i18nT("scan.s0577")}</strong> scopes plus file support. Under{" "}
+              <strong>{i18nT("scan.s0256")}</strong>, add the two RSC{" "}
+              <strong>{i18nT("pages.tools.connections.application")}</strong> permissions shown below. Complete the
               required app details and icons, explain that the app can receive
               every message in an installed team or group chat, then download
               the app package.
             </li>
             <li>
-              <strong>Microsoft Teams · Apps · Manage your apps</strong>: select{" "}
-              <strong>Upload an app · Upload a custom app</strong>, choose the
+              <strong>{i18nT("scan.s0753")}</strong>: select{" "}
+              <strong>{i18nT("scan.s1427")}</strong>, choose the
               downloaded package, and install it in each intended personal chat,
               group chat, or team. One team install covers its standard
               channels. Private and shared channels require a separate app
@@ -1305,27 +1306,27 @@ settings:
               Kujira AI Workforce homepage URL below, and leave user authorization off.
             </li>
             <li>
-              Keep <strong>Webhooks · Active</strong> on. Enter the Kujira AI Workforce
+              Keep <strong>{i18nT("scan.s1472")}</strong> on. Enter the Kujira AI Workforce
               webhook URL and the Kujira AI Workforce-generated webhook secret below, and
-              keep <strong>Enable SSL verification</strong> selected.
+              keep <strong>{i18nT("scan.s0453")}</strong> selected.
             </li>
             <li>
-              Under Repository permissions, set <strong>Issues</strong> and{" "}
-              <strong>Pull requests</strong> to{" "}
-              <strong>Read &amp; write</strong>. Leave every other permission at
+              Under Repository permissions, set <strong>{i18nT("scan.s0640")}</strong> and{" "}
+              <strong>{i18nT("scan.s1018")}</strong> to{" "}
+              <strong>{i18nT("scan.s1037")}</strong>. Leave every other permission at
               its default; Metadata remains read-only.
             </li>
             <li>
-              Subscribe to <strong>Issue comment</strong> (
+              Subscribe to <strong>{i18nT("scan.s0636")}</strong> (
               <code>issue_comment</code>),{" "}
-              <strong>Pull request review comment</strong> (
+              <strong>{i18nT("scan.s1017")}</strong> (
               <code>pull_request_review_comment</code>). GitHub sends{" "}
               <code>installation</code> and{" "}
               <code>installation_repositories</code> to every GitHub App
               automatically; they are not selectable here.
             </li>
             <li>
-              Choose <strong>Only on this account</strong>, create the App, copy
+              Choose <strong>{i18nT("scan.s0873")}</strong>, create the App, copy
               its App ID, generate one private key, then install it on the
               selected repositories.
             </li>
@@ -1354,7 +1355,7 @@ settings:
         </Button>
         {field("appId", "GitHub App ID", "text")}
         <div className="grid gap-2 text-sm font-medium">
-          <label htmlFor="github-private-key">Private key (PEM)</label>
+          <label htmlFor="github-private-key">{i18nT("scan.s0991")}</label>
           <div className="relative">
             {privateKeyVisible ? (
               <Textarea
@@ -1430,7 +1431,7 @@ settings:
           ) : null}
         </div>
         <div className="grid gap-2">
-          <p className="text-sm font-medium">Webhook secret</p>
+          <p className="text-sm font-medium">{i18nT("scan.s1471")}</p>
           {generatedWebhookSecret ? (
             <>
               <Input
@@ -1536,15 +1537,15 @@ settings:
     return (
       <div className="space-y-5">
         <div>
-          <h1 className="text-xl font-bold">Verify Slack connection</h1>
+          <h1 className="text-xl font-bold">{i18nT("scan.s1443")}</h1>
           <p className="mt-1 text-sm text-muted-foreground">
             Slack needs to confirm that it can reach your Kujira AI Workforce instance.
           </p>
         </div>
         <ol className="list-decimal space-y-2 pl-5 text-sm">
-          <li><a className="underline underline-offset-4" href="https://api.slack.com/apps" target="_blank" rel="noopener noreferrer">Open Slack app Settings <ExternalLink className="inline size-3" /></a> and choose <strong>{slackApp.appName}</strong>.</li>
-          <li>Choose <strong>Event Subscriptions</strong>.</li>
-          <li>Beside the prefilled <strong>Request URL</strong>, click <strong>Retry</strong> if it isn&apos;t verified. Save changes if Slack asks.</li>
+          <li><a className="underline underline-offset-4" href="https://api.slack.com/apps" target="_blank" rel="noopener noreferrer">{i18nT("scan.s0882")}<ExternalLink className="inline size-3" /></a> and choose <strong>{slackApp.appName}</strong>.</li>
+          <li>{i18nT("apps.chatSetup.steps.choose")}<strong>{i18nT("scan.s0469")}</strong>.</li>
+          <li>{i18nT("scan.s0129")}<strong>{i18nT("scan.s1104")}</strong>, click <strong>{i18nT("common.retry")}</strong> if it isn&apos;t verified. Save changes if Slack asks.</li>
         </ol>
         {endpoint.setup?.webhookVerifiedAt ? (
           <p role="status" className="flex items-center gap-2 text-sm">
@@ -1559,7 +1560,7 @@ settings:
           </p>
         )}
         <details className="text-sm">
-          <summary className="cursor-pointer text-muted-foreground">Troubleshooting</summary>
+          <summary className="cursor-pointer text-muted-foreground">{i18nT("scan.s1393")}</summary>
           <div className="mt-3 space-y-3">
             <p className="text-muted-foreground">If the Request URL is missing or different, paste this URL into Event Subscriptions. If verification fails, check that your public HTTPS server is reachable and your Signing Secret is correct.</p>
             {endpointValue("Kujira AI Workforce webhook URL", endpoint.setup?.webhookUrl)}
@@ -1583,7 +1584,7 @@ settings:
         <div role="alert" className="flex items-start gap-3 rounded-lg border border-destructive/30 bg-destructive/10 p-4">
           <AlertTriangle className="size-5 shrink-0 text-destructive" />
           <div className="space-y-1">
-            <p className="text-sm font-semibold">Public HTTPS URL required</p>
+            <p className="text-sm font-semibold">{i18nT("scan.s1013")}</p>
             <p className="text-sm">
               Slack needs a public HTTPS URL to send messages to Kujira AI Workforce.
               Configure one for this instance before creating or connecting your Slack app.
@@ -1648,7 +1649,7 @@ settings:
           {saveSlackApp.isError && (
             <div role="alert" className="space-y-2 text-sm text-destructive">
               <p>Couldn&apos;t save the Slack app details. Try again before connecting.</p>
-              <Button variant="outline" size="sm" onClick={persistSlackApp}>Retry saving</Button>
+              <Button variant="outline" size="sm" onClick={persistSlackApp}>{i18nT("scan.s1130")}</Button>
             </div>
           )}
           <div className="flex justify-end">
@@ -1660,7 +1661,7 @@ settings:
               </DialogTrigger>
               <DialogContent className="sm:max-w-2xl">
                 <DialogHeader>
-                  <DialogTitle>Slack app manifest</DialogTitle>
+                  <DialogTitle>{i18nT("scan.s1266")}</DialogTitle>
                   <DialogDescription>
                     Generated from your app name, bot name, and slash command. Edit those fields to update the manifest.
                   </DialogDescription>
@@ -1725,15 +1726,15 @@ settings:
           <p className="text-sm text-muted-foreground">Your credentials are saved. Leave the fields blank to keep them, or enter replacements.</p>
         )}
         <section className="space-y-3">
-          <h2 className="text-sm font-semibold"><label htmlFor="slack-bot-token">Bot User OAuth Token</label></h2>
+          <h2 className="text-sm font-semibold"><label htmlFor="slack-bot-token">{i18nT("scan.s0147")}</label></h2>
           <ul id="slack-bot-token-help" className="list-disc space-y-1 pl-5 text-sm">
             <li>
               <a href="https://api.slack.com/apps" target="_blank" rel="noopener noreferrer" className="underline underline-offset-4">
                 Open Slack app Settings <ExternalLink className="inline size-3" />
               </a> and choose <strong>{slackApp.appName}</strong>.
             </li>
-            <li>Choose <strong>OAuth &amp; Permissions</strong></li>
-            <li>Copy and paste your <strong>Bot OAuth Token</strong></li>
+            <li>{i18nT("apps.chatSetup.steps.choose")}<strong>{i18nT("scan.s0864")}</strong></li>
+            <li>{i18nT("scan.s0286")}<strong>{i18nT("scan.s0146")}</strong></li>
           </ul>
           <Input
             id="slack-bot-token"
@@ -1746,20 +1747,20 @@ settings:
           />
           {slackBotTokenInvalid && (
             <p id="slack-bot-token-warning" role="alert" className="text-sm text-destructive">
-              Your Bot User OAuth Token must start with <code>xoxb-</code>. Copy it from <strong>OAuth &amp; Permissions</strong>.
+              Your Bot User OAuth Token must start with <code>xoxb-</code>. Copy it from <strong>{i18nT("scan.s0864")}</strong>.
             </p>
           )}
         </section>
         <section className="space-y-3">
-          <h2 className="text-sm font-semibold"><label htmlFor="slack-signing-secret">Signing Secret</label></h2>
+          <h2 className="text-sm font-semibold"><label htmlFor="slack-signing-secret">{i18nT("scan.s1256")}</label></h2>
           <ul id="slack-signing-secret-help" className="list-disc space-y-1 pl-5 text-sm">
             <li>
               <a href="https://api.slack.com/apps" target="_blank" rel="noopener noreferrer" className="underline underline-offset-4">
                 Open Slack app Settings <ExternalLink className="inline size-3" />
               </a> and choose <strong>{slackApp.appName}</strong>.
             </li>
-            <li>Choose <strong>Basic Information</strong></li>
-            <li>Copy and paste your <strong>Signing Secret</strong></li>
+            <li>{i18nT("apps.chatSetup.steps.choose")}<strong>{i18nT("scan.s0127")}</strong></li>
+            <li>{i18nT("scan.s0286")}<strong>{i18nT("scan.s1256")}</strong></li>
           </ul>
           <Input
             id="slack-signing-secret"
@@ -1772,7 +1773,7 @@ settings:
           />
           {slackSigningSecretHasTokenPrefix && (
             <p id="slack-signing-secret-warning" role="alert" className="text-sm text-destructive">
-              Use the <strong>Signing Secret</strong>, NOT an app or bot token. The Signing Secret has no token prefix.
+              Use the <strong>{i18nT("scan.s1256")}</strong>, NOT an app or bot token. The Signing Secret has no token prefix.
             </p>
           )}
         </section>
@@ -1855,11 +1856,11 @@ function TryStep({
           ? "start a new channel post and mention the agent again"
           : "send a new root mention to the agent";
   const identityGuidance = provider === "slack" ? null : provider === "imessage-photon" && principalsQuery.isSuccess && (identities.length === 0 || unlinkedIdentities.length > 0)
-    ? { tone: "info" as const, title: "Link your Messages identity", body: "Send one message to discover your phone number or Apple account address, then link that exact identity in Access. Send a fresh request after linking; earlier messages do not start work." }
+    ? { tone: "info" as const, title: i18nT("scan.s0692"), body: "Send one message to discover your phone number or Apple account address, then link that exact identity in Access. Send a fresh request after linking; earlier messages do not start work." }
     : principalsQuery.isError
     ? {
         tone: "warning" as const,
-        title: "Identity readiness could not be checked",
+        title: i18nT("scan.s0600"),
         body: `Review Access before expecting an agent reply. After linking the account you are testing, ${freshConversationInstruction}.`,
       }
     : !principalsQuery.isSuccess || guestIsolationState === "loading"
@@ -1868,7 +1869,7 @@ function TryStep({
         ? guestIsolationState === "disabled"
           ? {
               tone: "warning" as const,
-              title: "Link the account you’re testing",
+              title: i18nT("scan.s0691"),
               body:
                 provider === "telegram"
                   ? "Tap Start in Telegram to discover your account; the welcome does not start an agent run. Link the account privately in Access, then return and send the test message."
@@ -1876,7 +1877,7 @@ function TryStep({
             }
           : {
               tone: "info" as const,
-              title: "Your first message identifies your account",
+              title: i18nT("scan.s1542"),
               body:
                 provider === "telegram"
                   ? "Tap Start in Telegram to discover your account. Until linked, it is a restricted guest and still needs a sandbox-backed isolated run; test that path intentionally, or link it in Access and then send the test message."
@@ -1886,12 +1887,12 @@ function TryStep({
           ? guestIsolationState === "disabled"
             ? {
                 tone: "warning" as const,
-                title: "Link the account you’re testing",
+                title: i18nT("scan.s0691"),
                 body: `An observed external account is unlinked, and isolated guest work is off, so it cannot safely start ${agentName}. Link the account in Access, then ${freshConversationInstruction}; Kujira AI Workforce does not replay the refused request.`,
               }
             : {
                 tone: "info" as const,
-                title: "Unlinked identity detected",
+                title: i18nT("scan.s1414"),
                 body: `An unlinked account is a restricted guest and still needs a sandbox-backed isolated run. Test guest access intentionally, or link the account in Access and then ${freshConversationInstruction}.`,
               }
           : null;
@@ -1988,12 +1989,12 @@ function TryStep({
                   void copyTextToClipboard(slackTestMessage).then(() => { setCommandCopied(true); setCommandCopyError(false); }, () => setCommandCopyError(true));
                 }}><Copy className="size-4" />{commandCopied ? "Copied" : "Copy message"}</Button>
               </div>
-              <p className="mt-2 text-muted-foreground">Select the bot from Slack’s @mention suggestions.</p>
+              <p className="mt-2 text-muted-foreground">{i18nT("scan.s1219")}</p>
             </li>
-            <li>Continue the conversation in the thread.</li>
+            <li>{i18nT("scan.s0281")}</li>
           </ol>
-          {commandCopyError && <p role="alert" className="text-sm text-destructive">Couldn&apos;t copy. Select and copy the command above.</p>}
-          {messageStatus.data?.messageReceivedAt ? <p role="status" className="flex items-center gap-2 text-sm"><CheckCircle2 className="size-4 text-(--status-task-done)" />Received your Slack message.</p>
+          {commandCopyError && <p role="alert" className="text-sm text-destructive">{i18nT("scan.s0319")}</p>}
+          {messageStatus.data?.messageReceivedAt ? <p role="status" className="flex items-center gap-2 text-sm"><CheckCircle2 className="size-4 text-(--status-task-done)" />{i18nT("scan.s1042")}</p>
             : <p role={messageStatus.isError ? "alert" : "status"} className="text-sm text-muted-foreground">{messageStatus.isError ? "Couldn’t check for your message. You can still finish setup." : "We’ll check for your message automatically. This test is optional."}</p>}
           <div className="flex items-center justify-between gap-3">
             <Button variant="ghost" className="text-muted-foreground" onClick={onSaveExit}>{t("common.saveAndExit")}</Button>

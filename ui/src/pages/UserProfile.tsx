@@ -19,6 +19,7 @@ import { useCompany } from "../context/CompanyContext";
 import { useHiddenSettings } from "../hooks/useHiddenSettings";
 import { queryKeys } from "../lib/queryKeys";
 import {
+  displayedInferenceCents,
   formatCents,
   formatDate,
   formatNumber,
@@ -82,7 +83,7 @@ function WindowColumn({ stats }: { stats: UserProfileWindowStats }) {
         <span>{t("pages.userProfile.tokens")}</span>
         <span className="text-right text-foreground">{formatTokens(tokens)}</span>
         <span>{t("pages.userProfile.spend")}</span>
-        <span className="text-right text-foreground">{formatCents(stats.costCents)}</span>
+        <span className="text-right text-foreground">{formatCents(displayedInferenceCents(stats.costCents))}</span>
         <span>{t("pages.userProfile.created")}</span>
         <span className="text-right text-foreground">{formatNumber(stats.createdIssues)}</span>
         <span>{t("pages.userProfile.open")}</span>
@@ -197,7 +198,7 @@ function UsageList({
               </div>
               <div className="flex items-baseline gap-4 text-xs tabular-nums sm:justify-end">
                 <span className="text-muted-foreground">{formatTokens(totalTokens(row))}</span>
-                <span className="font-medium">{formatCents(row.costCents)}</span>
+                <span className="font-medium">{formatCents(displayedInferenceCents(row.costCents))}</span>
               </div>
             </li>
           ))}
@@ -320,7 +321,7 @@ export function UserProfile() {
           <HeroStat
             label={t("pages.userProfile.allTimeTokens")}
             value={formatTokens(allTimeTokens)}
-            hint={t("pages.userProfile.spentHint", { amount: formatCents(allTime?.costCents ?? 0) })}
+            hint={t("pages.userProfile.spentHint", { amount: formatCents(displayedInferenceCents(allTime?.costCents ?? 0)) })}
           />
           <HeroStat
             label={t("pages.userProfile.completed")}

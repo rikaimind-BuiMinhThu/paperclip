@@ -19,6 +19,7 @@ import {
   DialogDescription,
   DialogTitle,
 } from "../ui/dialog";
+import { t as i18nT } from "@/i18n";
 
 export type AgentBasics = {
   name: string;
@@ -215,7 +216,7 @@ export function AgentBasicsDialog({
               </div>
             ) : (
               <fieldset className="space-y-4">
-                <legend className="sr-only">Adapter</legend>
+                <legend className="sr-only">{i18nT("agents.adapter")}</legend>
                 {isPending && (
                   <p role="status" className="text-sm text-muted-foreground">
                     Loading adapters…
@@ -272,10 +273,10 @@ export function AgentBasicsDialog({
                         setRunnerProvider(event.target.value)
                       }
                     >
-                      <option value="codex">Codex (app server)</option>
-                      <option value="claude">Claude (ACPX)</option>
-                      <option value="grok">Grok Build (ACPX)</option>
-                      <option value="opencode">OpenCode</option>
+                      <option value="codex">{i18nT("scan.s0237")}</option>
+                      <option value="claude">{i18nT("scan.s0219")}</option>
+                      <option value="grok">{i18nT("scan.s0576")}</option>
+                      <option value="opencode">{i18nT("scan.s0898")}</option>
                     </select>
                   </label>
                 )}

@@ -3,6 +3,7 @@ import { useInfiniteQuery, useMutation, useQuery } from "@tanstack/react-query";
 import type { AgentInstructionsFileDetail } from "@paperclipai/shared";
 import { agentsApi } from "../api/agents";
 import { Button } from "./ui/button";
+import { t as i18nT } from "@/i18n";
 
 export function InstructionHistory({
   agentId,
@@ -68,7 +69,7 @@ export function InstructionHistory({
       {open && (
         <div className="space-y-3">
           {history.isLoading && (
-            <p className="text-sm text-muted-foreground">Loading revisions…</p>
+            <p className="text-sm text-muted-foreground">{i18nT("scan.s0722")}</p>
           )}
           {error && (
             <p role="alert" className="text-sm text-destructive">
@@ -106,7 +107,7 @@ export function InstructionHistory({
           )}
           {diff.data && (
             <>
-              <p className="text-sm text-muted-foreground">Selected revision</p>
+              <p className="text-sm text-muted-foreground">{i18nT("scan.s1223")}</p>
               <pre className="whitespace-pre-wrap break-words rounded-md border border-border p-3 font-mono text-sm">
                 {diff.data.from.content}
               </pre>

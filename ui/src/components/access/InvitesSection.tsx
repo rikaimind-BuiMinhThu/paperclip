@@ -11,6 +11,7 @@ import { queryKeys } from "@/lib/queryKeys";
 import { copyTextToClipboard } from "@/lib/clipboard";
 import { Badge } from "@/components/ui/badge";
 import { useTranslation } from "@/i18n";
+import { t as i18nT } from "@/i18n";
 
 const inviteRoleOptions = [
   {
@@ -78,7 +79,7 @@ export function InvitesSection() {
       afterFallback?.();
     }
     pushToast({
-      title: "Clipboard unavailable",
+      title: i18nT("scan.s0232"),
       body: unavailableBody,
       tone: "warn",
     });
@@ -123,14 +124,14 @@ export function InvitesSection() {
 
       await queryClient.invalidateQueries({ queryKey: inviteHistoryQueryKey });
       pushToast({
-        title: "Invite created",
+        title: i18nT("scan.s0622"),
         body: copied ? "Invite ready below and copied to clipboard." : "Invite ready below.",
         tone: "success",
       });
     },
     onError: (error) => {
       pushToast({
-        title: "Failed to create invite",
+        title: i18nT("scan.s0496"),
         body: error instanceof Error ? error.message : "Unknown error",
         tone: "error",
       });
@@ -141,11 +142,11 @@ export function InvitesSection() {
     mutationFn: (inviteId: string) => accessApi.revokeInvite(inviteId),
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: inviteHistoryQueryKey });
-      pushToast({ title: "Invite revoked", tone: "success" });
+      pushToast({ title: i18nT("scan.s0626"), tone: "success" });
     },
     onError: (error) => {
       pushToast({
-        title: "Failed to revoke invite",
+        title: i18nT("scan.s0503"),
         body: error instanceof Error ? error.message : "Unknown error",
         tone: "error",
       });
@@ -249,7 +250,7 @@ export function InvitesSection() {
               </div>
             </div>
             <label className="block space-y-1">
-              <span className="sr-only">Latest invite URL</span>
+              <span className="sr-only">{i18nT("scan.s0679")}</span>
               <input
                 ref={latestInviteInputRef}
                 readOnly
@@ -281,7 +282,7 @@ export function InvitesSection() {
       <section className="rounded-xl border border-border">
         <div className="flex flex-wrap items-center justify-between gap-4 px-5 py-4">
           <div className="space-y-1">
-            <h2 className="text-sm font-semibold">Invite history</h2>
+            <h2 className="text-sm font-semibold">{i18nT("scan.s0624")}</h2>
             <p className="text-sm text-muted-foreground">
               Review invite status, audience, inviter, and any linked join request.
             </p>
@@ -301,12 +302,12 @@ export function InvitesSection() {
               <table className="min-w-full text-left text-sm">
                 <thead>
                   <tr className="border-b border-border">
-                    <th className="px-5 py-3 font-medium text-muted-foreground">State</th>
-                    <th className="px-5 py-3 font-medium text-muted-foreground">For</th>
-                    <th className="px-5 py-3 font-medium text-muted-foreground">Invited by</th>
-                    <th className="px-5 py-3 font-medium text-muted-foreground">Created</th>
-                    <th className="px-5 py-3 font-medium text-muted-foreground">Join request</th>
-                    <th className="px-5 py-3 text-right font-medium text-muted-foreground">Action</th>
+                    <th className="px-5 py-3 font-medium text-muted-foreground">{i18nT("pages.routineDetail.overview.state")}</th>
+                    <th className="px-5 py-3 font-medium text-muted-foreground">{i18nT("issues.dialog.forLabel")}</th>
+                    <th className="px-5 py-3 font-medium text-muted-foreground">{i18nT("scan.s0627")}</th>
+                    <th className="px-5 py-3 font-medium text-muted-foreground">{i18nT("common.created")}</th>
+                    <th className="px-5 py-3 font-medium text-muted-foreground">{i18nT("scan.s0657")}</th>
+                    <th className="px-5 py-3 text-right font-medium text-muted-foreground">{i18nT("pages.companyAccess.action")}</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -347,7 +348,7 @@ export function InvitesSection() {
                             Revoke
                           </Button>
                         ) : (
-                          <span className="text-xs text-muted-foreground">Inactive</span>
+                          <span className="text-xs text-muted-foreground">{i18nT("pages.secrets.coverage.inactive")}</span>
                         )}
                       </td>
                     </tr>

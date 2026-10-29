@@ -6,6 +6,7 @@ import { issuesApi } from "../api/issues";
 import { Button } from "./ui/button";
 import { Label } from "./ui/label";
 import { Textarea } from "./ui/textarea";
+import { t as i18nT } from "@/i18n";
 
 /** Copyback repair preserves the accepted result and never wakes the provider. */
 export function WorkspaceExportRecovery({ issueId, action, canManage, onQueued }: {
@@ -24,13 +25,13 @@ export function WorkspaceExportRecovery({ issueId, action, canManage, onQueued }
     || !["active", "escalated"].includes(action.status) || typeof action.evidence.runId !== "string") return null;
   const queued = queuedActionVersion === String(action.updatedAt) || action.wakePolicy?.kind === "resume_native_run";
   return <section aria-label="Workspace export repair" className="flex flex-col gap-2 p-4 text-sm">
-    <p className="font-medium">Workspace export needs repair</p>
+    <p className="font-medium">{i18nT("scan.s1514")}</p>
     {queued ? <p role="status">Export is queued for the saved result. The agent will not repeat its work.</p> : <>
       <p className="text-muted-foreground">{"Automatic workspace export retries stopped. Inspect the export failure, restore provider or destination availability, and preserve the saved files in the retained sandbox. Retry export here when the cause is resolved."}</p>
       {canManage ? <>
-        <Label htmlFor={noteId}>Repair performed</Label>
+        <Label htmlFor={noteId}>{i18nT("scan.s1092")}</Label>
         <Textarea id={noteId} value={repairNote} onChange={event => setRepairNote(event.target.value)} maxLength={12_000}
-          placeholder="Describe the repair and how the saved workspace files were preserved." disabled={retry.isPending} />
+          placeholder={i18nT("scan.s0404")} disabled={retry.isPending} />
         <div className="flex justify-end">
           <Button onClick={() => retry.mutate()} disabled={retry.isPending || repairNote.trim().length < 20}>
             {retry.isPending ? "Queueing export…" : "Retry workspace export"}

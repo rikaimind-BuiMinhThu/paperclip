@@ -14,6 +14,7 @@ import type {
   TaskChatItem,
   TaskChatMessageItem,
 } from "@/components/task-chat/task-chat-model";
+import { t as i18nT } from "@/i18n";
 
 /**
  * Demo binding for the agent-bubble copy · 👍 · 👎 cluster (PAP-413). The live
@@ -145,10 +146,10 @@ function useStreamingReplay(
  * page-surface treatment.
  */
 const BUBBLE_VARIANTS = [
-  { id: "", label: "Chosen · C · On bg" },
-  { id: "former", label: "Former" },
-  { id: "darker", label: "A · Darker" },
-  { id: "hairline", label: "B · Hairline" },
+  { id: "", label: i18nT("scan.s0215") },
+  { id: "former", label: i18nT("scan.s0541") },
+  { id: "darker", label: i18nT("scan.s0003") },
+  { id: "hairline", label: i18nT("scan.s0121") },
 ] as const;
 type BubbleVariantId = (typeof BUBBLE_VARIANTS)[number]["id"];
 
@@ -168,7 +169,7 @@ export function TaskChatLab() {
   return (
     <div className="flex h-full min-h-0 flex-col">
       <header className="border-b border-border px-4 py-2">
-        <h1 className="text-sm font-semibold">Task Chat Lab</h1>
+        <h1 className="text-sm font-semibold">{i18nT("scan.s1328")}</h1>
         <p className="text-xs text-muted-foreground">
           Synthetic harness for the task chat redesign · every state renders here with no live agent.
         </p>
@@ -226,7 +227,7 @@ export function TaskChatLab() {
               Replay
             </button>
             <label className="flex items-center gap-2">
-              <span className="text-muted-foreground">Speed</span>
+              <span className="text-muted-foreground">{i18nT("scan.s1286")}</span>
               <input
                 type="range"
                 min={0.1}
@@ -240,7 +241,7 @@ export function TaskChatLab() {
               <span className="w-10 tabular-nums">{speed.toFixed(1)}×</span>
             </label>
             <div className="ml-auto flex items-center gap-2">
-              <span className="text-muted-foreground">Agent bubble</span>
+              <span className="text-muted-foreground">{i18nT("scan.s0047")}</span>
               <div className="flex items-center gap-0.5 rounded border border-border p-0.5" role="group" aria-label="Agent bubble treatment">
                 {BUBBLE_VARIANTS.map((v) => (
                   <button

@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { EmptyState } from "./EmptyState";
 import { EnvironmentVariablesEditor } from "./environment-variables-editor";
 import { AgentAvatar, type AvatarAgent } from "./AgentAvatar";
+import { t as i18nT } from "@/i18n";
 
 export interface StageSecretsPanelProps {
   /** Whether the stage has a backing automation routine with an assignee. */
@@ -74,13 +75,13 @@ export function StageSecretsPanel({
         <p>
           These env vars are injected when{" "}
           <span className="font-medium text-foreground">{displayName}</span> runs this step. They override
-          matching project and agent env on collisions. <span className="font-mono">PAPERCLIP_*</span> names
+          matching project and agent env on collisions. <span className="font-mono">{i18nT("scan.s0924")}</span> names
           are reserved.
         </p>
       </div>
 
       {secretsLoading ? (
-        <p className="text-sm text-muted-foreground">Loading secrets…</p>
+        <p className="text-sm text-muted-foreground">{i18nT("pages.secrets.loading")}</p>
       ) : (
         <EnvironmentVariablesEditor
           value={value}
@@ -95,7 +96,7 @@ export function StageSecretsPanel({
           <Save className="h-4 w-4 mr-1.5" />
           {saving ? "Saving…" : "Save secrets"}
         </Button>
-        {dirty && !saving ? <span className="text-xs text-muted-foreground">Unsaved changes</span> : null}
+        {dirty && !saving ? <span className="text-xs text-muted-foreground">{i18nT("pages.routineDetail.unsavedChangesAria")}</span> : null}
       </div>
     </div>
   );

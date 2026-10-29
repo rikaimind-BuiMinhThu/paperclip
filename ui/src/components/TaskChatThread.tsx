@@ -129,6 +129,7 @@ import { issuesApi } from "@/api/issues";
 import { queryKeys } from "@/lib/queryKeys";
 import { useQueryClient } from "@tanstack/react-query";
 import { TaskChatPresentationProvider } from "@/components/task-chat/presentation-mode";
+import { t as i18nT } from "@/i18n";
 
 const EMPTY_BROWSERS: TaskBrowser[] = [];
 
@@ -1507,6 +1508,15 @@ export function TaskChatThread(props: TaskChatThreadProps) {
       const entries = transcriptByRun.get(source.id) ?? [];
       const meta = linkedRunMetaById.get(source.id);
       const historical = statusRelevance.isHistoricalRun(source.id);
+      // Completion-delivery races cancel (or historically failed as setup_failed)
+      // when another wake already owns the outbox. Keep them in the run log only.
+      if (
+        meta?.errorCode === "chat_completion_superseded" ||
+        meta?.error === "chat_completion_superseded"
+      ) {
+        settledRunIds.add(source.id);
+        continue;
+      }
       // A workspace admission attempt never started provider work. Its live
       // successor owns the waiting indicator; retain this attempt in the run log.
       if (source.status === "cancelled" && meta?.errorCode === "workspace_busy") {
@@ -1552,7 +1562,7 @@ export function TaskChatThread(props: TaskChatThreadProps) {
             id,
             item: {
               id, kind: "marker", variant: "interrupted", tone: "neutral",
-              label: "Waiting to resume",
+              label: i18nT("scan.s1463"),
               detail: "The previous execution needs to be checked before work can continue. See the task’s execution hold for the next action. Individual checks remain in the run history.",
             },
           });
@@ -1847,7 +1857,7 @@ export function TaskChatThread(props: TaskChatThreadProps) {
             id,
             kind: "marker",
             variant: "turn_boundary",
-            label: "Run completed",
+            label: i18nT("scan.s1158"),
             detail: "The runner returned no user-facing response.",
           },
         });

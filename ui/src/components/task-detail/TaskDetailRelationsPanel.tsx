@@ -8,6 +8,7 @@ import {
   rememberIssueDetailLocationState,
 } from "@/lib/issueDetailBreadcrumb";
 import { Link } from "@/lib/router";
+import { t as i18nT } from "@/i18n";
 
 export interface TaskDetailRelationItem {
   id: string;
@@ -129,7 +130,7 @@ export function TaskDetailSubtasksPanel({
     <section className="flex flex-col gap-4" aria-label="Subtasks">
       <div className="flex flex-col gap-2">
         <div className="flex items-center justify-between gap-3 text-xs text-muted-foreground">
-          <span>Progress</span>
+          <span>{i18nT("goals.progress")}</span>
           <span className="font-mono">{completed} of {items.length} complete</span>
         </div>
         <div
@@ -177,7 +178,7 @@ export function TaskDetailSubtasksPanel({
           {allCompleted ? "All subtasks are complete." : "No remaining subtask actions."}
         </p>
       ) : (
-        <p className="py-6 text-center text-sm text-muted-foreground">No subtasks yet.</p>
+        <p className="py-6 text-center text-sm text-muted-foreground">{i18nT("issueProperties.noSubtasksYet")}</p>
       )}
 
       {remainingItems.length > 0 ? (

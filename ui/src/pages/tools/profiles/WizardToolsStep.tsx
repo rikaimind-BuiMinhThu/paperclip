@@ -29,6 +29,7 @@ import {
   type WizardSelections,
 } from "./profile-model";
 import { LoadingState } from "../shared";
+import { t as i18nT } from "@/i18n";
 
 type NewToolsAction = "deny" | "allow";
 
@@ -82,14 +83,14 @@ export function WizardToolsStep(props: WizardToolsStepProps) {
       <div className="flex flex-col items-center gap-3 rounded-lg border border-dashed border-border py-12 text-center">
         <Plug className="h-6 w-6 text-muted-foreground" />
         <div>
-          <p className="text-sm font-medium text-foreground">App connections are coming soon</p>
+          <p className="text-sm font-medium text-foreground">{i18nT("scan.s0078")}</p>
           <p className="mx-auto max-w-sm text-sm text-muted-foreground">
             Profiles will be available once app connections are ready. Browse the planned integrations in the
             meantime.
           </p>
         </div>
         <Button asChild variant="outline">
-          <Link to="/apps">Browse app connections</Link>
+          <Link to="/apps">{i18nT("scan.s0152")}</Link>
         </Button>
       </div>
     );
@@ -103,7 +104,7 @@ export function WizardToolsStep(props: WizardToolsStepProps) {
           <Input
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            placeholder="Search tools…"
+            placeholder={i18nT("scan.s1199")}
             className="pl-8"
           />
         </div>
@@ -258,19 +259,19 @@ function NewToolsRadio({
   const options: Array<{ value: NewToolsAction; label: string; hint: string; recommended?: boolean }> = [
     {
       value: "deny",
-      label: "Stay blocked until someone allows them",
+      label: i18nT("scan.s1301"),
       hint: "New tools an app adds later won't be usable until you review them.",
       recommended: true,
     },
     {
       value: "allow",
-      label: "Allowed automatically",
+      label: i18nT("pages.profiles.detail.allowedAutoTitle"),
       hint: "Any tool an app adds later becomes usable right away.",
     },
   ];
   return (
     <fieldset className="space-y-2 rounded-lg border border-border p-4">
-      <legend className="px-1 text-sm font-medium text-foreground">New tools that appear later</legend>
+      <legend className="px-1 text-sm font-medium text-foreground">{i18nT("scan.s0777")}</legend>
       <div className="space-y-2">
         {options.map((opt) => (
           <label key={opt.value} className="flex cursor-pointer items-start gap-2.5">
@@ -302,9 +303,9 @@ function NewToolsRadio({
 }
 
 const RULE_KIND_OPTIONS: Array<{ value: AdvancedRuleKind; label: string }> = [
-  { value: "tool_name", label: "Tool name pattern" },
-  { value: "risk_level", label: "Risk level" },
-  { value: "catalog_entry", label: "By tool ID" },
+  { value: "tool_name", label: i18nT("scan.s1387") },
+  { value: "risk_level", label: i18nT("scan.s1146") },
+  { value: "catalog_entry", label: i18nT("scan.s0162") },
 ];
 
 function createAdvancedRuleId() {
@@ -349,7 +350,7 @@ function AdvancedRules({
   return (
     <Collapsible open={open} onOpenChange={setOpen} className="rounded-lg border border-border">
       <CollapsibleTrigger className="flex w-full items-center justify-between px-4 py-3 text-left">
-        <span className="text-sm font-medium text-foreground">Advanced rules</span>
+        <span className="text-sm font-medium text-foreground">{i18nT("scan.s0041")}</span>
         <ChevronDown className={cn("h-4 w-4 text-muted-foreground transition-transform", open && "rotate-180")} />
       </CollapsibleTrigger>
       <CollapsibleContent className="space-y-3 border-t border-border px-4 py-3">
@@ -385,8 +386,8 @@ function AdvancedRules({
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="include">Allow</SelectItem>
-              <SelectItem value="exclude">Block</SelectItem>
+              <SelectItem value="include">{i18nT("scan.s0060")}</SelectItem>
+              <SelectItem value="exclude">{i18nT("scan.s0138")}</SelectItem>
             </SelectContent>
           </Select>
           <Select value={kind} onValueChange={(v) => setKind(v as AdvancedRuleKind)}>
@@ -407,9 +408,9 @@ function AdvancedRules({
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="read">Read-only</SelectItem>
-                <SelectItem value="write">Makes changes</SelectItem>
-                <SelectItem value="destructive">Destructive</SelectItem>
+                <SelectItem value="read">{i18nT("pages.skills.studio.readOnly")}</SelectItem>
+                <SelectItem value="write">{i18nT("scan.s0733")}</SelectItem>
+                <SelectItem value="destructive">{i18nT("pages.profiles.detail.capabilityDestructive")}</SelectItem>
               </SelectContent>
             </Select>
           ) : (

@@ -62,7 +62,7 @@ describe("routine operations", () => {
 
   it("distinguishes activity loading and failures from an empty timeline", () => {
     render(<ActivitySection isLoading />);
-    expect(container.textContent).toContain("Loading activity");
+    expect(container.textContent).toContain("アクティビティを読み込み中");
     expect(container.textContent).not.toContain("No activity yet");
     render(<ActivitySection error={new Error("Activity unavailable")} />);
     expect(container.querySelector('[role="alert"]')?.textContent).toBe("Activity unavailable");

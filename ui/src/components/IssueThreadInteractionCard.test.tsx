@@ -780,8 +780,8 @@ describe("IssueThreadInteractionCard", () => {
 
     const targetLinks = host.querySelectorAll("a");
     expect(host.textContent).toContain("Expired by target change");
-    expect(host.textContent).toContain("Plan v3");
-    expect(host.textContent).toContain("Plan v4");
+    expect(host.textContent).toContain("計画 v3");
+    expect(host.textContent).toContain("計画 v4");
     expect(targetLinks[0]?.getAttribute("href")).toContain("#document-plan");
     expect(targetLinks[1]?.getAttribute("href")).toContain("#document-plan");
     expect(host.textContent).not.toContain("Approve plan");
@@ -841,7 +841,7 @@ describe("IssueThreadInteractionCard", () => {
     const pendingShell = pending.firstElementChild as HTMLElement;
     expect(pendingShell.className).toContain("border-violet-500/80");
     expect(pendingShell.className).not.toContain("border-l-");
-    expect(pending.textContent).toContain("Plan");
+    expect(pending.textContent).toContain("計画");
     expect(pending.textContent).toContain("In review");
     // Approve is a neutral CTA (foreground/background), not the blue primary.
     const approve = Array.from(pending.querySelectorAll("button")).find((button) =>

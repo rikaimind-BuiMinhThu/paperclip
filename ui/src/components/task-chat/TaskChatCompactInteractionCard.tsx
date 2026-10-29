@@ -67,6 +67,7 @@ import {
 } from "./TaskChatComposerTakeoverContext";
 import { TaskChatPlanPreviewCard } from "./TaskChatPlanPreviewCard";
 import { TaskChatRichInput } from "./TaskChatRichInput";
+import { t as i18nT } from "@/i18n";
 
 const TAKEOVER_TEXTAREA_CLASS =
   "min-h-16 resize-y border-0 bg-muted/35 text-sm shadow-none focus-visible:ring-0 focus-visible:ring-offset-0";
@@ -88,32 +89,32 @@ export interface TaskChatCompactInteractionCardProps extends SharedInteractionPr
 const KIND_COPY = {
   suggest_tasks: {
     fallbackTitle: "Suggested tasks",
-    label: "Tasks",
+    label: i18nT("nav.tasks"),
     icon: GitBranch,
   },
   ask_user_questions: {
     fallbackTitle: "Questions",
-    label: "Questions",
+    label: i18nT("scan.s1021"),
     icon: CircleHelp,
   },
   request_confirmation: {
     fallbackTitle: "Confirmation",
-    label: "Confirmation",
+    label: i18nT("scan.s0259"),
     icon: CheckCircle2,
   },
   request_checkbox_confirmation: {
     fallbackTitle: "Choose options",
-    label: "Selection",
+    label: i18nT("scan.s1225"),
     icon: ListChecks,
   },
   request_item_verdicts: {
     fallbackTitle: "Review items",
-    label: "Review",
+    label: i18nT("common.review"),
     icon: MessageSquareQuote,
   },
   connection_intent: {
     fallbackTitle: "Connect service",
-    label: "Connection",
+    label: i18nT("apps.connection"),
     icon: Plug,
   },
 } as const;
@@ -554,22 +555,22 @@ function ReceiptDisclosure({
         {interaction.payload.secretProposal ? (
           <dl className="grid gap-1 rounded-sm bg-muted/45 px-3 py-2.5 text-sm">
             <div>
-              <dt className="text-xs text-muted-foreground">Secret</dt>
+              <dt className="text-xs text-muted-foreground">{i18nT("pages.secrets.list.colSecret")}</dt>
               <dd>{interaction.payload.secretProposal.sourceSecretLabel}</dd>
             </div>
             <div>
-              <dt className="text-xs text-muted-foreground">Binding</dt>
+              <dt className="text-xs text-muted-foreground">{i18nT("scan.s0134")}</dt>
               <dd className="font-mono text-xs">
                 {interaction.payload.secretProposal.configPath} →{" "}
                 {interaction.payload.secretProposal.targetAgentName}
               </dd>
             </div>
             <div>
-              <dt className="text-xs text-muted-foreground">Why</dt>
+              <dt className="text-xs text-muted-foreground">{i18nT("scan.s1498")}</dt>
               <dd>{interaction.payload.secretProposal.justification}</dd>
             </div>
             <div>
-              <dt className="text-xs text-muted-foreground">Expires</dt>
+              <dt className="text-xs text-muted-foreground">{i18nT("apps.gateways.panels.tokens.expires")}</dt>
               <dd>
                 {new Date(
                   interaction.payload.secretProposal.expiresAt,
@@ -593,7 +594,7 @@ function ReceiptDisclosure({
       {request}
       {answerReason ? (
         <p className="text-sm text-muted-foreground">
-          <span className="font-medium">Reason:</span> {answerReason}
+          <span className="font-medium">{i18nT("scan.s1041")}</span> {answerReason}
         </p>
       ) : null}
     </div>
@@ -920,22 +921,22 @@ function ConfirmationCard({
       {interaction.payload.secretProposal ? (
         <dl className="mt-3 grid gap-2 rounded-sm bg-muted/45 px-3 py-2.5 text-sm">
           <div>
-            <dt className="text-xs text-muted-foreground">Secret</dt>
+            <dt className="text-xs text-muted-foreground">{i18nT("pages.secrets.list.colSecret")}</dt>
             <dd>{interaction.payload.secretProposal.sourceSecretLabel}</dd>
           </div>
           <div>
-            <dt className="text-xs text-muted-foreground">Binding</dt>
+            <dt className="text-xs text-muted-foreground">{i18nT("scan.s0134")}</dt>
             <dd className="font-mono text-xs">
               {interaction.payload.secretProposal.configPath} →{" "}
               {interaction.payload.secretProposal.targetAgentName}
             </dd>
           </div>
           <div>
-            <dt className="text-xs text-muted-foreground">Why</dt>
+            <dt className="text-xs text-muted-foreground">{i18nT("scan.s1498")}</dt>
             <dd>{interaction.payload.secretProposal.justification}</dd>
           </div>
           <div>
-            <dt className="text-xs text-muted-foreground">Expires</dt>
+            <dt className="text-xs text-muted-foreground">{i18nT("apps.gateways.panels.tokens.expires")}</dt>
             <dd>
               {new Date(
                 interaction.payload.secretProposal.expiresAt,
@@ -1172,7 +1173,7 @@ function CheckboxConfirmationCard({
             <Input
               value={filter}
               onChange={(event) => setFilter(event.target.value)}
-              placeholder="Filter options"
+              placeholder={i18nT("scan.s0523")}
               aria-label="Filter options"
               className="pl-8"
             />
@@ -1454,7 +1455,7 @@ function SuggestedTasksCard({
           <Input
             value={filter}
             onChange={(event) => setFilter(event.target.value)}
-            placeholder="Filter suggested tasks"
+            placeholder={i18nT("scan.s0524")}
             aria-label="Filter suggested tasks"
             className="pl-8"
           />
@@ -1485,7 +1486,7 @@ function SuggestedTasksCard({
             id={`${interaction.id}-reject-reason`}
             value={reason}
             onChange={(event) => setReason(event.target.value)}
-            placeholder="Add a short note"
+            placeholder={i18nT("scan.s0029")}
             className={TAKEOVER_TEXTAREA_CLASS}
             autoFocus
           />
@@ -1831,7 +1832,7 @@ function ItemVerdictsCard({
             id={`${interaction.id}-${item.id}-reason`}
             value={draft.reason}
             onChange={(event) => setReason(event.target.value)}
-            placeholder="Add a short reason"
+            placeholder={i18nT("scan.s0030")}
             className={TAKEOVER_TEXTAREA_CLASS}
             autoFocus
           />

@@ -108,10 +108,10 @@ describe("ProjectProperties — local folder under the managed-sandbox-only poli
   it("shows the folder path and its controls when the policy is off", () => {
     render(makeProject(makeCodebase()), { enableIsolatedWorkspaces: true });
 
-    expect(container.textContent).toContain("Local folder");
+    expect(container.textContent).toContain("ローカルフォルダ");
     expect(container.textContent).toContain(LOCAL_FOLDER);
-    expect(buttonLabels()).toContain("Change local folder");
-    expect(container.querySelector('button[aria-label="Clear local folder"]')).not.toBeNull();
+    expect(buttonLabels()).toContain("ローカルフォルダを変更");
+    expect(container.querySelector('button[aria-label="ローカルフォルダをクリア"]')).not.toBeNull();
   });
 
   it("hides the folder path and its controls when the policy is on", () => {
@@ -125,7 +125,7 @@ describe("ProjectProperties — local folder under the managed-sandbox-only poli
     expect(buttonLabels()).not.toContain("Change local folder");
     expect(container.querySelector('button[aria-label="Clear local folder"]')).toBeNull();
     // The repo row is unrelated to the host filesystem, so it stays.
-    expect(container.textContent).toContain("Source repos");
+    expect(container.textContent).toContain("ソースリポジトリ");
   });
 
   it("omits the host codebase section for a managed checkout when the policy is on", () => {
@@ -151,7 +151,7 @@ describe("ProjectProperties — local folder under the managed-sandbox-only poli
 
     expect(container.textContent).not.toContain("Local folder");
     expect(container.textContent).not.toContain(LOCAL_FOLDER);
-    expect(container.textContent).toContain("Source repos");
+    expect(container.textContent).toContain("ソースリポジトリ");
   });
 
   it("never opens the absolute-path edit panel when the policy is on", () => {

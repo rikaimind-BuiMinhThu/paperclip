@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/button";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { cn } from "../lib/utils";
 import { Badge } from "@/components/ui/badge";
+import { t as i18nT } from "@/i18n";
 
 /**
  * Compact revisions panel for a per-stage instructions document. Mirrors the
@@ -63,7 +64,7 @@ export function PipelineStageHistoryPanel({
     },
     onError: (error) => {
       pushToast({
-        title: "Failed to restore revision",
+        title: i18nT("pages.routines.history.restoreFailed"),
         body: error instanceof Error ? error.message : "Kujira AI Workforce could not restore the revision.",
         tone: "error",
       });
@@ -78,8 +79,8 @@ export function PipelineStageHistoryPanel({
         <div className="flex items-center gap-2">
           <History className="h-4 w-4 text-muted-foreground" />
           <div>
-            <p className="text-sm font-medium">History</p>
-            <p className="text-xs text-muted-foreground">Past versions of these instructions.</p>
+            <p className="text-sm font-medium">{i18nT("routines.history")}</p>
+            <p className="text-xs text-muted-foreground">{i18nT("scan.s0935")}</p>
           </div>
         </div>
         {open ? (
@@ -94,13 +95,13 @@ export function PipelineStageHistoryPanel({
             No history yet. Save the instructions to create the first revision.
           </p>
         ) : revisionsQuery.isLoading ? (
-          <p className="px-4 py-3 text-xs text-muted-foreground">Loading revisions…</p>
+          <p className="px-4 py-3 text-xs text-muted-foreground">{i18nT("scan.s0722")}</p>
         ) : revisionsQuery.error ? (
           <p className="px-4 py-3 text-xs text-destructive">
             {revisionsQuery.error instanceof Error ? revisionsQuery.error.message : "Could not load revisions."}
           </p>
         ) : revisions.length === 0 ? (
-          <p className="px-4 py-3 text-xs text-muted-foreground">No revisions recorded yet.</p>
+          <p className="px-4 py-3 text-xs text-muted-foreground">{i18nT("scan.s0827")}</p>
         ) : (
           <ul className="divide-y divide-border/70">
             {revisions.map((revision) => {

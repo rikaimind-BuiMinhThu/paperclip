@@ -2,6 +2,7 @@ import { Copy } from "lucide-react";
 import { useToast } from "@/context/ToastContext";
 import { copyTextToClipboard } from "@/lib/clipboard";
 import { cn } from "@/lib/utils";
+import { t as i18nT } from "@/i18n";
 
 export function gatewayEndpointUrl(endpointPath: string): string {
   if (typeof window === "undefined") return endpointPath;
@@ -25,10 +26,10 @@ export function CopyableGatewayUrl({
   async function copy() {
     try {
       await copyTextToClipboard(url);
-      pushToast({ title: "Gateway URL copied", tone: "success" });
+      pushToast({ title: i18nT("scan.s0547"), tone: "success" });
     } catch {
       pushToast({
-        title: "Copy failed",
+        title: i18nT("issues.detail.copyFailed"),
         body: "Clipboard access is unavailable.",
         tone: "error",
       });

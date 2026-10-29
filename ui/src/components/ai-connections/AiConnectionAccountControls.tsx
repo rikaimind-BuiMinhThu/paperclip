@@ -5,6 +5,7 @@ import { RevokeGrantDialog } from "@/pages/apps/app-detail/IdentitiesSection";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import type { AiConnectionSummary } from "./model";
+import { t as i18nT } from "@/i18n";
 
 /** AI-only account controls; identity, access and navigation belong to AppDetail. */
 export function AiConnectionAccountControls({
@@ -37,8 +38,8 @@ export function AiConnectionAccountControls({
             <h3 role={account.isDefault ? "status" : undefined} className={cn("text-sm font-semibold", account.isDefault && !available && "text-destructive")}>{account.isDefault && !available ? "Default unavailable" : "Personal default"}</h3>
           </div>
           {!account.isDefault && (!readOnly ? (
-            <Button variant="outline" size="sm" disabled={!available} onClick={onMakeDefault}>Make default</Button>
-          ) : <span className="text-xs text-muted-foreground">Not default</span>)}
+            <Button variant="outline" size="sm" disabled={!available} onClick={onMakeDefault}>{i18nT("pages.secrets.providerVaultCard.makeDefault")}</Button>
+          ) : <span className="text-xs text-muted-foreground">{i18nT("scan.s0859")}</span>)}
         </div>
       )}
       <div className="flex flex-wrap items-center justify-between gap-3">
@@ -47,8 +48,8 @@ export function AiConnectionAccountControls({
         </div>
         {!readOnly && grant.capabilities?.canRevoke && (
           <div className="flex flex-wrap items-center gap-2">
-            {<Button variant="outline" size="sm" onClick={onReconnect}><RefreshCw className="size-4" aria-hidden />Reconnect</Button>}
-            {account.status !== "revoked" && <Button variant="ghost" size="sm" className="text-destructive" onClick={() => setRevoking(true)}><Unplug className="size-4" aria-hidden />Revoke identity</Button>}
+            {<Button variant="outline" size="sm" onClick={onReconnect}><RefreshCw className="size-4" aria-hidden />{i18nT("pages.appsBrowse.reconnect")}</Button>}
+            {account.status !== "revoked" && <Button variant="ghost" size="sm" className="text-destructive" onClick={() => setRevoking(true)}><Unplug className="size-4" aria-hidden />{i18nT("scan.s1143")}</Button>}
           </div>
         )}
       </div>

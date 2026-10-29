@@ -10,6 +10,7 @@ import { PageSkeleton } from "../components/PageSkeleton";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { StatusBadge } from "../components/StatusBadge";
+import { t as i18nT } from "@/i18n";
 
 export function ApiAppsList() {
   const { selectedCompanyId } = useCompany();
@@ -20,8 +21,8 @@ export function ApiAppsList() {
 
   useEffect(() => {
     setBreadcrumbs([
-      { label: "Settings", href: "/company/settings" },
-      { label: "API Apps" },
+      { label: i18nT("common.settings"), href: "/company/settings" },
+      { label: i18nT("settings.apiApps") },
     ]);
   }, [setBreadcrumbs]);
 
@@ -63,7 +64,7 @@ export function ApiAppsList() {
     <div className="mx-auto max-w-4xl space-y-6 p-6">
       <div className="flex items-start justify-between gap-4">
         <div>
-          <h1 className="text-xl font-semibold">API Apps</h1>
+          <h1 className="text-xl font-semibold">{i18nT("settings.apiApps")}</h1>
           <p className="mt-1 text-sm text-muted-foreground">
             Partner channels. Each app has customers with plans, keys, and custom billable units.
           </p>
@@ -83,7 +84,7 @@ export function ApiAppsList() {
           }}
         >
           <div className="min-w-48 flex-1 space-y-1">
-            <label className="text-xs font-medium text-muted-foreground">Name</label>
+            <label className="text-xs font-medium text-muted-foreground">{i18nT("common.name")}</label>
             <Input value={name} onChange={(e) => setName(e.target.value)} autoFocus />
           </div>
           <Button type="button" variant="ghost" onClick={() => setCreating(false)}>
@@ -108,9 +109,9 @@ export function ApiAppsList() {
           <table className="w-full text-sm">
             <thead className="bg-muted/40 text-left text-muted-foreground">
               <tr>
-                <th className="px-3 py-2 font-medium">Name</th>
-                <th className="px-3 py-2 font-medium">Status</th>
-                <th className="px-3 py-2 font-medium">Updated</th>
+                <th className="px-3 py-2 font-medium">{i18nT("common.name")}</th>
+                <th className="px-3 py-2 font-medium">{i18nT("common.status")}</th>
+                <th className="px-3 py-2 font-medium">{i18nT("common.updated")}</th>
               </tr>
             </thead>
             <tbody>

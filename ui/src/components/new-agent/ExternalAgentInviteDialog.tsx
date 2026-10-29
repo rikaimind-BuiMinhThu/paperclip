@@ -8,6 +8,7 @@ import { AgentSetupPrompt } from "@/components/AgentSetupPrompt";
 import { Button } from "../ui/button";
 import { Textarea } from "../ui/textarea";
 import { Dialog, DialogContent, DialogDescription, DialogTitle } from "../ui/dialog";
+import { t as i18nT } from "@/i18n";
 
 /** Preserve the existing agent-only invitation path beside the setup wizard. */
 export function ExternalAgentInviteDialog({ companyId, onClose, onBack }: {
@@ -65,7 +66,7 @@ export function ExternalAgentInviteDialog({ companyId, onClose, onBack }: {
         <Textarea aria-label="Agent onboarding prompt" readOnly value={prompt} className="min-h-64 font-mono text-xs" />
         {result?.copyStatus === "failed" && <p role="alert" className="text-sm text-muted-foreground">Clipboard unavailable. Copy the prompt manually from the field above, or use the button below to try again.</p>}
         <div className="flex flex-wrap items-center justify-between gap-4">
-          <Button variant="ghost" onClick={onClose}>Done</Button>
+          <Button variant="ghost" onClick={onClose}>{i18nT("common.done")}</Button>
           <AgentSetupPrompt
             prompt={prompt}
             label="Copy onboarding prompt"
@@ -77,12 +78,12 @@ export function ExternalAgentInviteDialog({ companyId, onClose, onBack }: {
         </div>
       </> : <>
         <label className="space-y-2 text-sm">
-          <span>Optional message for the agent</span>
+          <span>{i18nT("scan.s0906")}</span>
           <Textarea value={message} onChange={(event) => setMessage(event.target.value)} maxLength={4000} className="min-h-24" />
         </label>
         {createInvite.error && <p role="alert" className="text-sm text-destructive">{createInvite.error.message}</p>}
         <div className="flex justify-between gap-4">
-          <Button variant="ghost" onClick={onBack}>Back</Button>
+          <Button variant="ghost" onClick={onBack}>{i18nT("common.back")}</Button>
           <Button disabled={createInvite.isPending} onClick={() => createInvite.mutate()}>
             {createInvite.isPending ? "Generating…" : "Generate onboarding prompt"}
           </Button>

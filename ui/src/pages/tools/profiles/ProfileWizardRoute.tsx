@@ -6,6 +6,7 @@ import { advancedTabHref } from "../tool-tabs";
 import { ToolsAdminGate } from "./ToolsAdminGate";
 import { ProfileWizard } from "./ProfileWizard";
 import { TEMPLATES, type TemplateKey } from "./profile-model";
+import { t as i18nT } from "@/i18n";
 
 /**
  * Full-page host for the access-profile create/resume wizard (PAP-10997 §B).
@@ -29,15 +30,15 @@ export function ProfileWizardRoute({ mode }: { mode: "new" | "edit" }) {
   useEffect(() => {
     setBreadcrumbs([
       { label: selectedCompany?.name ?? "Organization", href: "/dashboard" },
-      { label: "Apps", href: "/apps" },
-      { label: "Access profiles", href: advancedTabHref("profiles") },
+      { label: i18nT("nav.apps"), href: "/apps" },
+      { label: i18nT("nav.accessProfiles"), href: advancedTabHref("profiles") },
       { label: mode === "edit" ? "Resume draft" : "New profile" },
     ]);
     return () => setBreadcrumbs([]);
   }, [setBreadcrumbs, selectedCompany?.name, mode]);
 
   if (!selectedCompanyId) {
-    return <div className="p-6 text-sm text-muted-foreground">Select an organization to create a profile.</div>;
+    return <div className="p-6 text-sm text-muted-foreground">{i18nT("scan.s1213")}</div>;
   }
 
   return (

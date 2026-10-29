@@ -15,6 +15,7 @@ import { OnboardingHeading } from "./OnboardingPrimitives";
 import { PillGuy } from "./PillGuy";
 import { SleepingZs } from "./SleepingZs";
 import { Stepper } from "./Stepper";
+import { t as i18nT } from "@/i18n";
 
 /**
  * A prototype of the connect step, from the PCLP-Onboarding file (nodes
@@ -47,12 +48,12 @@ import { Stepper } from "./Stepper";
 const MODEL_SOURCES: ModelSource[] = [
   {
     id: "claude_local",
-    label: "Claude Code",
+    label: i18nT("scan.s0222"),
     icon: <img src="/brands/claude-color.svg" alt="" className="size-full" />,
   },
   {
     id: "codex_local",
-    label: "Codex",
+    label: i18nT("scan.s0236"),
     icon: <img src="/brands/codex-color.svg" alt="" className="size-full" />,
   },
 ];

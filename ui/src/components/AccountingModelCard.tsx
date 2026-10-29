@@ -1,23 +1,24 @@
 import { Database, Gauge, ReceiptText } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { t as i18nT } from "@/i18n";
 
 const SURFACES = [
   {
-    title: "Inference ledger",
+    title: i18nT("pages.costs.inferenceLedger"),
     description: "Request-scoped usage and billed runs from cost_events.",
     icon: Database,
     points: ["tokens + billed dollars", "provider, biller, model", "subscription and overage aware"],
     tone: "from-sky-500/12 via-sky-500/6 to-transparent",
   },
   {
-    title: "Finance ledger",
+    title: i18nT("pages.costs.financeLedger"),
     description: "Account-level charges that are not one prompt-response pair.",
     icon: ReceiptText,
     points: ["top-ups, refunds, fees", "Bedrock provisioned or training charges", "credit expiries and adjustments"],
     tone: "from-amber-500/14 via-amber-500/6 to-transparent",
   },
   {
-    title: "Live quotas",
+    title: i18nT("scan.s0699"),
     description: "Provider or biller windows that can stop traffic in real time.",
     icon: Gauge,
     points: ["provider quota windows", "biller credit systems", "errors surfaced directly"],

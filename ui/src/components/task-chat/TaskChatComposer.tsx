@@ -66,6 +66,7 @@ import { ComposerRunSettingsPicker } from "./ComposerRunSettingsPicker";
 import { ComposerAddMenu, ComposerModeChip } from "./ComposerAddMenu";
 import type { ComposerRunSettings } from "./composer-run-settings";
 import type { Agent, IssueAssigneeAdapterOverrides } from "@paperclipai/shared";
+import { t as i18nT } from "@/i18n";
 
 /** Structurally identical to IssueChatThread's module-private CommentReassignment. */
 export interface CommentReassignment {
@@ -1204,7 +1205,7 @@ export function TaskChatComposer({
             {t("taskChat.reviewConversation")}
           </Button>
           {reviewError ? (
-            <p>Couldn’t refresh the conversation. Try reviewing it again.</p>
+            <p>{i18nT("scan.s0354")}</p>
           ) : null}
           {uncertainSubmission.reviewed ? (
             <Button

@@ -3,6 +3,7 @@ import { Loader2, ShieldCheck, Terminal, TriangleAlert } from "lucide-react";
 import { BOOTSTRAP_FALLBACK_COMMAND } from "@/bootstrapSetup";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { t as i18nT } from "@/i18n";
 
 type LabFixtureKey =
   | "signed-out-private"
@@ -35,7 +36,7 @@ function CliFallback({ hasActiveInvite }: { hasActiveInvite: boolean }) {
     <div className="mt-6 border-t border-border pt-5">
       <div className="flex items-center gap-2 text-sm font-medium">
         <Terminal className="size-4 text-muted-foreground" aria-hidden />
-        <span>Prefer to finish setup from the host?</span>
+        <span>{i18nT("scan.s0975")}</span>
       </div>
       <p className="mt-2 text-sm text-muted-foreground">
         {hasActiveInvite
@@ -60,14 +61,14 @@ function StateChrome({ children }: { children: ReactNode }) {
 function SignedOutPrivate() {
   return (
     <StateChrome>
-      <h1 className="text-xl font-semibold">Finish setting up this Kujira AI Workforce</h1>
+      <h1 className="text-xl font-semibold">{i18nT("scan.s0530")}</h1>
       <p className="mt-2 text-sm text-muted-foreground">
         No admin has claimed this instance yet. Sign in or create your Kujira AI Workforce account to become the first
         admin from this browser.
       </p>
       <div className="mt-5">
         <Button asChild>
-          <a href="/auth?next=/">Sign in / Create account</a>
+          <a href="/auth?next=/">{i18nT("auth.signInOrCreate")}</a>
         </Button>
       </div>
       <CliFallback hasActiveInvite={false} />
@@ -78,12 +79,12 @@ function SignedOutPrivate() {
 function SignedInPrivate() {
   return (
     <StateChrome>
-      <h1 className="text-xl font-semibold">Finish setting up this Kujira AI Workforce</h1>
+      <h1 className="text-xl font-semibold">{i18nT("scan.s0530")}</h1>
       <p className="mt-2 text-sm text-muted-foreground">
         No admin has claimed this instance yet. Claim it now to become the first admin and start onboarding.
       </p>
       <div className="mt-5 flex flex-wrap items-center gap-3">
-        <Button>Claim this instance</Button>
+        <Button>{i18nT("scan.s0217")}</Button>
         <span className="text-sm text-muted-foreground">
           Signed in as <span className="font-medium text-foreground">jane@appliance.local</span>
         </span>
@@ -103,7 +104,7 @@ function SignedInPrivate() {
 function ClaimingPrivate() {
   return (
     <StateChrome>
-      <h1 className="text-xl font-semibold">Finish setting up this Kujira AI Workforce</h1>
+      <h1 className="text-xl font-semibold">{i18nT("scan.s0530")}</h1>
       <p className="mt-2 text-sm text-muted-foreground">
         No admin has claimed this instance yet. Claim it now to become the first admin and start onboarding.
       </p>
@@ -124,12 +125,12 @@ function ClaimingPrivate() {
 function ClaimErrorPrivate() {
   return (
     <StateChrome>
-      <h1 className="text-xl font-semibold">Finish setting up this Kujira AI Workforce</h1>
+      <h1 className="text-xl font-semibold">{i18nT("scan.s0530")}</h1>
       <p className="mt-2 text-sm text-muted-foreground">
         No admin has claimed this instance yet. Claim it now to become the first admin and start onboarding.
       </p>
       <div className="mt-5 flex flex-wrap items-center gap-3">
-        <Button>Claim this instance</Button>
+        <Button>{i18nT("scan.s0217")}</Button>
         <span className="text-sm text-muted-foreground">
           Signed in as <span className="font-medium text-foreground">jane@appliance.local</span>
         </span>
@@ -140,10 +141,10 @@ function ClaimErrorPrivate() {
       >
         <TriangleAlert className="mt-0.5 size-4 flex-shrink-0" aria-hidden />
         <div>
-          <p className="font-medium">Someone else has already claimed this instance.</p>
+          <p className="font-medium">{i18nT("scan.s1278")}</p>
           <p className="mt-1 text-destructive/90">
             Refresh to sign in, or ask the existing admin to invite you from{" "}
-            <span className="font-mono">Settings → Access</span>.
+            <span className="font-mono">{i18nT("scan.s1241")}</span>.
           </p>
         </div>
       </div>
@@ -160,7 +161,7 @@ function ClaimSuccess() {
           <ShieldCheck className="size-5" aria-hidden />
         </div>
         <div>
-          <h1 className="text-xl font-semibold">You&rsquo;re the instance admin</h1>
+          <h1 className="text-xl font-semibold">{i18nT("scan.s1537")}</h1>
           <p className="mt-2 text-sm text-muted-foreground">
             Setup is complete. Taking you to onboarding to create your first organization&hellip;
           </p>
@@ -168,11 +169,11 @@ function ClaimSuccess() {
       </div>
       <div className="mt-5 flex items-center gap-3">
         <Loader2 className="size-4 animate-spin text-muted-foreground" aria-hidden />
-        <span className="text-sm text-muted-foreground">Redirecting&hellip;</span>
+        <span className="text-sm text-muted-foreground">{i18nT("scan.s1068")}</span>
       </div>
       <div className="mt-5">
         <Button asChild variant="outline">
-          <a href="/">Continue to dashboard</a>
+          <a href="/">{i18nT("scan.s0283")}</a>
         </Button>
       </div>
     </StateChrome>
@@ -182,7 +183,7 @@ function ClaimSuccess() {
 function PublicInviteOnly() {
   return (
     <StateChrome>
-      <h1 className="text-xl font-semibold">This Kujira AI Workforce is waiting on its first admin</h1>
+      <h1 className="text-xl font-semibold">{i18nT("scan.s1365")}</h1>
       <p className="mt-2 text-sm text-muted-foreground">
         This instance runs in invite‑only mode. The operator must generate a one‑time first‑admin invite URL
         from the host. Once you have the link, open it from this browser to finish setup.
@@ -210,10 +211,10 @@ export function BootstrapSetupUxLab() {
     <div className="bg-background min-h-screen pb-16">
       <header className="border-b border-border bg-muted/20">
         <div className="mx-auto max-w-3xl px-6 py-6">
-          <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground">UX Lab</p>
-          <h1 className="mt-1 text-2xl font-semibold">Bootstrap-pending setup states</h1>
+          <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground">{i18nT("scan.s1401")}</p>
+          <h1 className="mt-1 text-2xl font-semibold">{i18nT("scan.s0145")}</h1>
           <p className="mt-2 max-w-2xl text-sm text-muted-foreground">
-            Fixtures for the bootstrap-pending screen in <span className="font-mono">CloudAccessGate</span>. Used
+            Fixtures for the bootstrap-pending screen in <span className="font-mono">{i18nT("scan.s0235")}</span>. Used
             as the UX spec for{" "}
             <a className="underline underline-offset-2" href="/PAP/issues/PAP-10113">
               PAP-10113

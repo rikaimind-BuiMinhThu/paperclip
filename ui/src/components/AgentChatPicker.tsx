@@ -5,6 +5,7 @@ import { AgentIcon } from "@/components/AgentIconPicker";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { Command, CommandInput, CommandList, CommandEmpty, CommandGroup, CommandItem } from "@/components/ui/command";
+import { t as i18nT } from "@/i18n";
 
 export interface AgentChatPickerProps {
   agents: Agent[];
@@ -23,8 +24,8 @@ export function AgentChatPicker({ open, onOpenChange, ...props }: AgentChatPicke
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent aria-describedby={undefined} className="gap-0 overflow-hidden p-0 sm:max-w-md">
         <div className="px-4 pt-4 pb-3">
-          <DialogTitle>Chat with an agent</DialogTitle>
-          {props.existingChatAgentIds && <p className="mt-2 text-sm text-muted-foreground">One conversation per agent. Pick up where you left off.</p>}
+          <DialogTitle>{i18nT("scan.s0189")}</DialogTitle>
+          {props.existingChatAgentIds && <p className="mt-2 text-sm text-muted-foreground">{i18nT("scan.s0869")}</p>}
         </div>
         {/* The dialog unmounts its content on close, so each search starts empty. */}
         <AgentChatPickerResults key={String(open)} {...props} onComplete={() => onOpenChange(false)} />
@@ -63,28 +64,28 @@ function AgentChatPickerResults({ agents, onSelect, onComplete, loading, error, 
     <Command>
       <CommandInput
         aria-label="Search agents by name or role"
-        placeholder="Search by name or role…"
+        placeholder={i18nT("scan.s1187")}
         value={search}
         onValueChange={setSearch}
       />
       {selectionError && <p role="alert" className="px-4 py-3 text-sm text-destructive">{selectionError}</p>}
-      {openingId && <p role="status" className="sr-only">Opening conversation…</p>}
+      {openingId && <p role="status" className="sr-only">{i18nT("scan.s0900")}</p>}
       {error ? (
         <div role="alert" className="flex flex-col items-start gap-2 p-4 text-sm">
-          <p>Couldn’t load agents. Try again.</p>
-          {onRetry && <Button variant="outline" size="sm" onClick={onRetry}>Retry</Button>}
+          <p>{i18nT("scan.s0350")}</p>
+          {onRetry && <Button variant="outline" size="sm" onClick={onRetry}>{i18nT("common.retry")}</Button>}
         </div>
       ) : loading ? (
-        <p role="status" className="p-4 text-sm text-muted-foreground">Loading agents…</p>
+        <p role="status" className="p-4 text-sm text-muted-foreground">{i18nT("pages.chats.loadingAgents")}</p>
       ) : (
         <CommandList>
           <CommandEmpty>
             <div className="flex flex-col items-center gap-2 px-4">
               <span>{agents.length ? `No agents match “${search}”` : t("empty.noAgents")}</span>
               {agents.length ? <>
-                <span className="text-xs text-muted-foreground">Try another name or role.</span>
-                <Button variant="ghost" size="sm" onClick={() => setSearch("")}>Clear search</Button>
-              </> : <span className="text-xs text-muted-foreground">Create an agent from the Agents page to start chatting.</span>}
+                <span className="text-xs text-muted-foreground">{i18nT("pages.chats.sidebar.tryAnotherName")}</span>
+                <Button variant="ghost" size="sm" onClick={() => setSearch("")}>{i18nT("search.clear")}</Button>
+              </> : <span className="text-xs text-muted-foreground">{i18nT("scan.s0360")}</span>}
             </div>
           </CommandEmpty>
           <CommandGroup>
@@ -103,9 +104,9 @@ function AgentChatPickerResults({ agents, onSelect, onComplete, loading, error, 
                   <span className="truncate text-xs text-muted-foreground">{agent.title ?? agent.role}</span>
                 </span>
                 {existingChatAgentIds && <span className="shrink-0 text-xs text-muted-foreground">{existingChatAgentIds.includes(agent.id) ? "Open chat" : "New chat"}</span>}
-                {agent.status === "paused" && <span className="text-xs text-(--status-agent-paused)">Paused</span>}
-                {agent.status === "terminated" && <span className="text-xs text-muted-foreground">Terminated</span>}
-                {agent.status === "pending_approval" && <span className="text-xs text-muted-foreground">Awaiting approval</span>}
+                {agent.status === "paused" && <span className="text-xs text-(--status-agent-paused)">{i18nT("status.paused")}</span>}
+                {agent.status === "terminated" && <span className="text-xs text-muted-foreground">{i18nT("status.terminated")}</span>}
+                {agent.status === "pending_approval" && <span className="text-xs text-muted-foreground">{i18nT("scan.s0119")}</span>}
               </CommandItem>
             ))}
           </CommandGroup>

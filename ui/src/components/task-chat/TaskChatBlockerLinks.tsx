@@ -11,6 +11,7 @@ import {
 } from "@/lib/issue-blockers";
 import { Link } from "@/lib/router";
 import { useStreamlinedTaskChatPresentation } from "./presentation-mode";
+import { t as i18nT } from "@/i18n";
 
 function isUnresolved(blocker: IssueRelationIssueSummary): boolean {
   return blocker.status !== "done" && blocker.status !== "cancelled";
@@ -257,7 +258,7 @@ export function TaskChatLiveWorkLinks({
         <LiveWorkLink key={blocker.id} blocker={blocker} status="running" label="Now running" />
       ) : (
         <div key={blocker.id} className="flex min-w-0 items-center gap-1.5 whitespace-nowrap">
-          <span className="shrink-0 font-medium">Now running</span>
+          <span className="shrink-0 font-medium">{i18nT("scan.s0863")}</span>
           <LiveWorkLink blocker={blocker} status="running" />
         </div>
       ))}

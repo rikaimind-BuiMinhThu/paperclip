@@ -1,6 +1,7 @@
 import type { WorkforceApproval } from "@/api/workforce";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { t as i18nT } from "@/i18n";
 
 export function ApprovalCard({
   approval,
@@ -29,8 +30,8 @@ export function ApprovalCard({
         <p>Expires: {approval.expiresAt ? new Date(approval.expiresAt).toLocaleString() : "none"}</p>
       </CardContent>
       <CardFooter className="flex items-center justify-between">
-        <Button type="button" variant="outline" disabled={pending} onClick={onReject}>Reject</Button>
-        <Button type="button" disabled={pending} onClick={onApprove}>Approve</Button>
+        <Button type="button" variant="outline" disabled={pending} onClick={onReject}>{i18nT("common.reject")}</Button>
+        <Button type="button" disabled={pending} onClick={onApprove}>{i18nT("common.approve")}</Button>
       </CardFooter>
     </Card>
   );

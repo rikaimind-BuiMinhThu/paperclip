@@ -31,6 +31,7 @@ import { AgentCharacter } from "./components/AgentCharacter";
 import { SleepingZs } from "./components/onboarding/SleepingZs";
 import { Stepper } from "./components/onboarding/Stepper";
 import "./index.css";
+import { t as i18nT } from "@/i18n";
 
 /**
  * Backend-free walkthrough of the connect step's sign-in, deployed so the flow
@@ -72,10 +73,10 @@ function OpenAiBlossom({ className }: { className?: string }) {
 const MODEL_SOURCES: ModelSource[] = [
   {
     id: "claude_local",
-    label: "Claude",
+    label: i18nT("scan.s0218"),
     icon: <img src="/brands/claude-color.svg" alt="" className="size-full" />,
   },
-  { id: "codex_local", label: "OpenAI", icon: <OpenAiBlossom className="size-full" /> },
+  { id: "codex_local", label: i18nT("scan.s0896"), icon: <OpenAiBlossom className="size-full" /> },
 ];
 
 /**
@@ -277,18 +278,18 @@ function ConnectFlowPreview({
     phase === "unwindCard"
       ? { label: signInLabel, icon: "none" as const, disabled: true }
       : done
-      ? { label: "Start over", icon: "arrow" as const, disabled: false }
+      ? { label: i18nT("scan.s1298"), icon: "arrow" as const, disabled: false }
       : phase === "ready" && apiMode
         ? // A key is typed here rather than fetched elsewhere, so the button is
           // the submit and stays dead until there is something to submit.
-          { label: "Connect", icon: "arrow" as const, disabled: !apiKey.trim() }
+          { label: i18nT("common.connect"), icon: "arrow" as const, disabled: !apiKey.trim() }
         : phase === "ready"
         ? { label: signInLabel, icon: "none" as const, disabled: false }
         : phase === "waiting"
-          ? { label: "Waiting for code", icon: "spinner" as const, disabled: true }
+          ? { label: i18nT("onboarding.wizard.connect.cta.waitingForCode"), icon: "spinner" as const, disabled: true }
           : phase === "connecting"
-            ? { label: "Connecting", icon: "spinner" as const, disabled: true }
-            : { label: "Next", icon: "arrow" as const, disabled: true };
+            ? { label: i18nT("onboarding.wizard.footer.connecting"), icon: "spinner" as const, disabled: true }
+            : { label: i18nT("common.next"), icon: "arrow" as const, disabled: true };
 
   return (
     <MotionConfig reducedMotion="user">
@@ -421,7 +422,7 @@ function ConnectFlowPreview({
                     {apiMode ? (
                       <OnboardingCardField
                         label="API key"
-                        placeholder="Enter API key here"
+                        placeholder={i18nT("onboarding.login.enterApiKey")}
                         masked
                         value={apiKey}
                         onChange={setApiKey}

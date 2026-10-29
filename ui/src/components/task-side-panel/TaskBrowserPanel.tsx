@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Globe, LoaderCircle } from "lucide-react";
 import { useBrowserViewport } from "@/hooks/useBrowserViewport";
 import { TaskBrowserFooter } from "./TaskBrowserFooter";
+import { t as i18nT } from "@/i18n";
 
 export function TaskBrowserPanel({
   issueId,
@@ -203,7 +204,7 @@ export function TaskBrowserPanel({
                     className="size-5 animate-spin text-muted-foreground motion-reduce:animate-none"
                     aria-hidden="true"
                   />
-                  <p className="text-sm">Connecting to browser…</p>
+                  <p className="text-sm">{i18nT("scan.s0268")}</p>
                 </>
               ) : (
                 <>

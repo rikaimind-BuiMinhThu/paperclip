@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { queryKeys } from "@/lib/queryKeys";
 import { useNavigate } from "@/lib/router";
 import { parseFrontmatterMarkdown } from "@paperclipai/shared";
+import { t as i18nT } from "@/i18n";
 
 export function TaskSkillPanel({ companyId, skillId }: { companyId: string; skillId: string }) {
   const navigate = useNavigate();
@@ -28,14 +29,14 @@ export function TaskSkillPanel({ companyId, skillId }: { companyId: string; skil
   if (query.isError) {
     const status = query.error instanceof ApiError ? query.error.status : null;
     if (status === 404) {
-      return <div className="py-8 text-sm text-muted-foreground" role="status">Skill no longer available.</div>;
+      return <div className="py-8 text-sm text-muted-foreground" role="status">{i18nT("scan.s1262")}</div>;
     }
     if (status === 403) {
-      return <div className="py-8 text-sm text-muted-foreground" role="alert">You do not have access to this skill.</div>;
+      return <div className="py-8 text-sm text-muted-foreground" role="alert">{i18nT("scan.s1535")}</div>;
     }
     return (
       <div className="space-y-3 py-8 text-sm text-muted-foreground" role="alert">
-        <p>The skill could not be loaded.</p>
+        <p>{i18nT("scan.s1362")}</p>
         <Button variant="outline" size="sm" onClick={() => void query.refetch()} disabled={query.isFetching}>
           {query.isFetching ? "Retrying…" : "Retry"}
         </Button>
@@ -43,7 +44,7 @@ export function TaskSkillPanel({ companyId, skillId }: { companyId: string; skil
     );
   }
   if (!query.data) {
-    return <div className="py-8 text-sm text-muted-foreground" role="status">Skill no longer available.</div>;
+    return <div className="py-8 text-sm text-muted-foreground" role="status">{i18nT("scan.s1262")}</div>;
   }
   const skill = query.data;
   const previewMarkdown = parseFrontmatterMarkdown(skill.markdown).body;

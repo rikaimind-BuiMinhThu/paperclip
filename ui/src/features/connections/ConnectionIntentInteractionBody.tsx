@@ -30,6 +30,7 @@ import {
   type ConnectionSetupCompletion,
   type ConnectionSetupFlowProps,
 } from "./ConnectionSetupFlow";
+import { t as i18nT } from "@/i18n";
 
 export interface ConnectionIntentInteractionBodyProps {
   interaction: ConnectionIntentInteraction;
@@ -239,7 +240,7 @@ export function ConnectionIntentInteractionBody({
       : interaction.status === "rejected"
         ? {
             icon: XCircle,
-            title: "Connection declined",
+            title: i18nT("scan.s0271"),
             body: isAi ? "The task still needs a working AI connection before it can run." : `${interaction.payload.requestingAgentName} was notified and can continue without it.`,
           }
         : interaction.status === "expired"
@@ -428,7 +429,7 @@ export function ConnectionIntentInteractionBody({
 
         {isEmail ? setupQuery.isLoading || setupQuery.isError ? <>
           {setupContent}
-          <Button type="button" variant="ghost" disabled={declineMutation.isPending} onClick={() => declineMutation.mutate()}>Not now</Button>
+          <Button type="button" variant="ghost" disabled={declineMutation.isPending} onClick={() => declineMutation.mutate()}>{i18nT("common.notNow")}</Button>
         </> : <AgentMailIntentSetup
           companyId={interaction.companyId}
           agentId={interaction.payload.requestingAgentId}

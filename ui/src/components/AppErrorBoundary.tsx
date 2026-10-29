@@ -1,5 +1,6 @@
 import { Component, type ErrorInfo, type ReactNode } from "react";
 import { captureBrowserException } from "@/lib/sentry";
+import { t as i18nT } from "@/i18n";
 
 type AppErrorBoundaryState = {
   error: Error | null;
@@ -35,7 +36,7 @@ export class AppErrorBoundary extends Component<{ children: ReactNode }, AppErro
     return (
       <div className="mx-auto flex min-h-screen max-w-2xl flex-col justify-center space-y-4 px-4 py-10">
         <div>
-          <h1 className="text-lg font-semibold">Kujira AI Workforce hit an error</h1>
+          <h1 className="text-lg font-semibold">{i18nT("scan.s0671")}</h1>
           <p className="mt-1 text-sm text-muted-foreground">
             Something went wrong while running the app. Reloading usually fixes this.
           </p>

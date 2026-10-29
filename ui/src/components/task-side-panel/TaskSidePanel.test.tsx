@@ -5,6 +5,8 @@ import { createRoot, type Root } from "react-dom/client";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import type { Issue, IssueDocument } from "@paperclipai/shared";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { i18n } from "@/i18n";
+import { DEFAULT_LOCALE } from "@/i18n/locales";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import {
   taskPanelAgentTasksTab,
@@ -128,7 +130,8 @@ describe("TaskSidePanel", () => {
   let container: HTMLDivElement;
   let queryClient: QueryClient;
 
-  beforeEach(() => {
+  beforeEach(async () => {
+    await i18n.changeLanguage("en");
     window.localStorage.clear();
     browserFixture.data = [];
     browserFixture.control.mockClear();
@@ -149,11 +152,12 @@ describe("TaskSidePanel", () => {
     });
   });
 
-  afterEach(() => {
+  afterEach(async () => {
     act(() => root.unmount());
     queryClient.clear();
     container.remove();
     vi.restoreAllMocks();
+    await i18n.changeLanguage(DEFAULT_LOCALE);
   });
 
   async function render(node: ReactNode) {

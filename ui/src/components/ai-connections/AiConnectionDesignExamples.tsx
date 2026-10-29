@@ -6,6 +6,7 @@ import type {
   AiConnectionRequirement,
   AiConnectionSummary,
 } from "./model";
+import { t as i18nT } from "@/i18n";
 
 const requirement: AiConnectionRequirement = {
   companyId: "design-example",
@@ -57,7 +58,7 @@ export function AiConnectionDesignExamples() {
         disabled
         onChange={() => {}}
         onSubmit={() => {}}
-        placeholder="Enter API key here"
+        placeholder={i18nT("onboarding.login.enterApiKey")}
       />
       <LocalProviderLoginInstructions
         adapterType="claude_local"

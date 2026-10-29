@@ -1524,6 +1524,37 @@ describe("TaskChatThread runtime transcript selection", () => {
     expect(onRetryFailedRun).toHaveBeenCalledWith("native-failed");
   });
 
+  it.each([
+    { errorCode: "chat_completion_superseded", error: null as string | null, status: "cancelled" },
+    { errorCode: "setup_failed", error: "chat_completion_superseded", status: "failed" },
+  ])("hides superseded chat-completion wakes from the failure banner: $errorCode/$status", ({ errorCode, error, status }) => {
+    render(
+      <TaskChatThread
+        comments={[]}
+        onAdd={async () => {}}
+        issueStatus="in_review"
+        onRetryFailedRun={vi.fn()}
+        linkedRuns={[
+          {
+            runId: "superseded-wake",
+            runtimeMode: "legacy",
+            status,
+            errorCode,
+            error,
+            agentId: "agent-1",
+            agentName: "CMO",
+            adapterType: "cursor_local",
+            createdAt: "2026-08-25T18:01:00.000Z",
+            startedAt: "2026-08-25T18:01:00.000Z",
+            finishedAt: "2026-08-25T18:01:00.100Z",
+          },
+        ]}
+      />,
+    );
+    expect(container.textContent).not.toContain("Run failed");
+    expect(container.querySelector('[data-testid="task-chat-run-failed-try-again"]')).toBeNull();
+  });
+
   it.each([false, true])("keeps a later bootstrap failure actionable only after the old recovery has a successor: %s", async (continued) => {
     const onRetryFailedRun = vi.fn();
     render(<TaskChatThread comments={[]} onAdd={async () => {}} issueStatus="blocked"

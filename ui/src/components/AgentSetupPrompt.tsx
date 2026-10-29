@@ -8,6 +8,7 @@ import { usePrefersReducedMotion } from "@/hooks/usePrefersReducedMotion";
 import { copyTextToClipboard } from "@/lib/clipboard";
 import { motionMilliseconds, motionNumber } from "@/lib/onboarding-motion-tokens";
 import { cn } from "@/lib/utils";
+import { t as i18nT } from "@/i18n";
 
 export interface AgentSetupPromptProps {
   /** The complete text to preview and copy; never truncated on the clipboard. */
@@ -196,7 +197,7 @@ export function AgentSetupPrompt({
             {status === "copied" ? <Check className="agent-setup-check size-4" /> : <Terminal className="size-4 text-muted-foreground" />}
             <span className="relative min-w-0">
               <span className={status === "copied" ? "invisible" : undefined}>{label}</span>
-              {status === "copied" && <span className="agent-setup-confirmation absolute inset-0 flex items-center">Copied!</span>}
+              {status === "copied" && <span className="agent-setup-confirmation absolute inset-0 flex items-center">{i18nT("onboarding.login.copied")}</span>}
             </span>
             <span className="agent-setup-trigger-logos"><AgentLogos ref={triggerLogos} hidden={open || Boolean(flight)} /></span>
           </Button>

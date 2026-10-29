@@ -16,6 +16,7 @@ import {
   ListChecks,
   Sparkles,
 } from "lucide-react";
+import { t as i18nT } from "@/i18n";
 
 function LabSection({
   id,
@@ -241,34 +242,34 @@ export function SystemNoticeUxLab() {
           <SystemNotice
             tone="danger"
             label="System alert"
-            source={{ label: "Kujira AI Workforce", href: "/PAP/agents" }}
+            source={{ label: i18nT("landing.brand"), href: "/PAP/agents" }}
             timestamp="2026-05-04T16:48:00.000Z"
             body="Kujira AI Workforce could not resolve this issue's missing disposition automatically. The source assignment is unchanged and a board decision is required."
             metadata={[
               {
-                title: "Recovery owner",
+                title: i18nT("scan.s1062"),
                 rows: [
                   {
                     kind: "issue",
-                    label: "Recovery issue",
+                    label: i18nT("scan.s1061"),
                     identifier: "PAP-3440",
                     href: "/PAP/issues/PAP-3440",
-                    title: "Successful run handoff missing disposition",
+                    title: i18nT("scan.s1317"),
                   },
                   {
                     kind: "agent",
-                    label: "Owner",
+                    label: i18nT("common.owner"),
                     name: "CTO",
                     href: "/PAP/agents/cto",
                   },
                 ],
               },
               {
-                title: "Run evidence",
+                title: i18nT("scan.s1159"),
                 rows: [
                   {
                     kind: "run",
-                    label: "Source run",
+                    label: i18nT("scan.s1283"),
                     runId: "9cdba892-c7ca-4d93-8604-4843873b127c",
                     href: "/PAP/agents/codexcoder/runs/9cdba892-c7ca-4d93-8604-4843873b127c",
                     status: "succeeded",
@@ -298,21 +299,21 @@ export function SystemNoticeUxLab() {
                 <AvatarFallback>YO</AvatarFallback>
               </Avatar>
               <div className="flex min-w-0 max-w-(--pct-85) flex-col">
-                <div className="mb-1 px-1 text-sm font-medium text-foreground">You</div>
+                <div className="mb-1 px-1 text-sm font-medium text-foreground">{i18nT("account.you")}</div>
                 <div className="min-w-0 max-w-full rounded-2xl bg-muted px-4 py-2.5 text-sm leading-6 text-foreground">
                   <div className="rounded-md border border-red-500/35 bg-red-500/10 px-3 py-2.5 text-sm text-red-950 dark:text-red-100">
                     <div className="flex items-start gap-2">
                       <Sparkles className="mt-1 h-4 w-4 shrink-0 text-red-600 dark:text-red-300" />
                       <div className="min-w-0">
-                        <p className="m-0 font-semibold">Successful run handoff missing</p>
+                        <p className="m-0 font-semibold">{i18nT("scan.s1316")}</p>
                         <ul className="mt-1.5 list-disc space-y-0.5 pl-4 text-(length:--text-compact) leading-5">
-                          <li>Source issue: PAP-3440</li>
-                          <li>Source run: 9cdba892-c7ca-4d93-8604-4843873b127c</li>
-                          <li>Recovery run: 61fdb79b-8012-4676-ac71-2971830e126a</li>
-                          <li>Status before: in_progress</li>
-                          <li>Normalized cause: Run completed without disposition</li>
-                          <li>Recovery owner: CTO</li>
-                          <li>Suggested action: Reassign to recovery agent</li>
+                          <li>{i18nT("scan.s1282")}</li>
+                          <li>{i18nT("scan.s1284")}</li>
+                          <li>{i18nT("scan.s1065")}</li>
+                          <li>{i18nT("scan.s1299")}</li>
+                          <li>{i18nT("scan.s0855")}</li>
+                          <li>{i18nT("scan.s1063")}</li>
+                          <li>{i18nT("scan.s1319")}</li>
                         </ul>
                       </div>
                     </div>
@@ -321,7 +322,7 @@ export function SystemNoticeUxLab() {
               </div>
             </div>
             <p className="px-1 text-xs text-muted-foreground">
-              Author reads as <span className="font-medium text-foreground">You</span> even though the
+              Author reads as <span className="font-medium text-foreground">{i18nT("account.you")}</span> even though the
               author is the Kujira AI Workforce system. Two containers stack the warning inside a user-style
               bubble, and operational evidence is always visible.
             </p>
@@ -338,7 +339,7 @@ export function SystemNoticeUxLab() {
             <SystemNotice {...dangerCollapsed} />
             <p className="px-1 text-xs text-muted-foreground">
               Same content. The visible body is one short system sentence; reviewers expand{" "}
-              <span className="font-medium text-foreground">Details</span> only when they need run
+              <span className="font-medium text-foreground">{i18nT("common.details")}</span> only when they need run
               evidence. Tone is reinforced by the octagon icon and the &quot;System alert&quot; label,
               not just red.
             </p>
@@ -352,14 +353,14 @@ export function SystemNoticeUxLab() {
             <Layers className="h-4 w-4 text-amber-700 dark:text-amber-300" />
             Implementation notes
           </div>
-          <CardTitle className="text-lg">Handoff to engineering</CardTitle>
+          <CardTitle className="text-lg">{i18nT("scan.s0581")}</CardTitle>
           <CardDescription>
             What the Phase 4 UI implementation should preserve from this design.
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-3 px-5 pb-5 pt-0 text-sm text-muted-foreground">
           <div className="rounded-2xl border border-border/70 bg-background/80 px-4 py-3">
-            <div className="mb-1 font-medium text-foreground">Component</div>
+            <div className="mb-1 font-medium text-foreground">{i18nT("scan.s0248")}</div>
             Use <code className="rounded bg-muted px-1.5 py-0.5 font-mono text-xs">{`<SystemNotice />`}</code>{" "}
             from <code className="rounded bg-muted px-1.5 py-0.5 font-mono text-xs">@/components/SystemNotice</code>.
             It accepts <code className="rounded bg-muted px-1.5 py-0.5 font-mono text-xs">tone</code>,{" "}
@@ -369,17 +370,17 @@ export function SystemNoticeUxLab() {
             <code className="rounded bg-muted px-1.5 py-0.5 font-mono text-xs">detailsDefaultOpen</code>.
           </div>
           <div className="rounded-2xl border border-border/70 bg-background/80 px-4 py-3">
-            <div className="mb-1 font-medium text-foreground">Routing in IssueChatThread</div>
+            <div className="mb-1 font-medium text-foreground">{i18nT("scan.s1153")}</div>
             Comments where{" "}
             <code className="rounded bg-muted px-1.5 py-0.5 font-mono text-xs">authorType === &quot;system&quot;</code>{" "}
             or{" "}
             <code className="rounded bg-muted px-1.5 py-0.5 font-mono text-xs">presentation.kind === &quot;system_notice&quot;</code>{" "}
             should render as a SystemNotice row at full content width — never inside an{" "}
-            <code className="rounded bg-muted px-1.5 py-0.5 font-mono text-xs">IssueChatUserMessage</code>{" "}
+            <code className="rounded bg-muted px-1.5 py-0.5 font-mono text-xs">{i18nT("scan.s0639")}</code>{" "}
             or assistant bubble.
           </div>
           <div className="rounded-2xl border border-border/70 bg-background/80 px-4 py-3">
-            <div className="mb-1 font-medium text-foreground">Accessibility</div>
+            <div className="mb-1 font-medium text-foreground">{i18nT("scan.s0014")}</div>
             The Details button has{" "}
             <code className="rounded bg-muted px-1.5 py-0.5 font-mono text-xs">aria-expanded</code>{" "}
             and{" "}
@@ -391,11 +392,11 @@ export function SystemNoticeUxLab() {
             equal to the visible tone label so screen readers announce tone with text.
           </div>
           <div className="rounded-2xl border border-border/70 bg-background/80 px-4 py-3">
-            <div className="mb-1 font-medium text-foreground">Legacy fallback</div>
+            <div className="mb-1 font-medium text-foreground">{i18nT("scan.s0685")}</div>
             Existing comments without{" "}
             <code className="rounded bg-muted px-1.5 py-0.5 font-mono text-xs">presentation</code>{" "}
             keep rendering through the current{" "}
-            <code className="rounded bg-muted px-1.5 py-0.5 font-mono text-xs">SuccessfulRunHandoffCommentCallout</code>{" "}
+            <code className="rounded bg-muted px-1.5 py-0.5 font-mono text-xs">{i18nT("scan.s1318")}</code>{" "}
             string-detector. The new contract is opt-in for the system generators in Phase 5.
           </div>
         </CardContent>

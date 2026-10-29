@@ -25,6 +25,7 @@ import { cn } from "@/lib/utils";
 import { Link } from "@/lib/router";
 import type { AppDetailSectionProps } from "./types";
 import { RevokeGrantDialog } from "./IdentitiesSection";
+import { t as i18nT } from "@/i18n";
 
 export function AdvancedPanel({
   connection,
@@ -115,7 +116,7 @@ function KeySection({
         <div className="flex items-start gap-3">
           <Lock className="mt-0.5 h-4 w-4 text-muted-foreground" />
           <div>
-            <h2 className="text-sm font-medium text-foreground">Reconnect</h2>
+            <h2 className="text-sm font-medium text-foreground">{i18nT("pages.appsBrowse.reconnect")}</h2>
             <p className="mt-0.5 text-xs text-muted-foreground">
               {canReplace ? "Replace the stored credential." : unavailableMessage}
             </p>
@@ -176,7 +177,7 @@ export function ReconnectCard({
         navigateTopLevel(target.url);
       } catch (error) {
         pushToast({
-          title: "Couldn’t start sign-in",
+          title: i18nT("scan.s0355"),
           body: error instanceof Error ? error.message : "Please try again.",
           tone: "error",
         });
@@ -184,7 +185,7 @@ export function ReconnectCard({
     },
     onError: (error) =>
       pushToast({
-        title: "Couldn’t start sign-in",
+        title: i18nT("scan.s0355"),
         body: error instanceof Error ? error.message : "Please try again.",
         tone: "error",
       }),
@@ -193,14 +194,14 @@ export function ReconnectCard({
     mutationFn: () => toolsApi.checkConnectionHealth(connection.id),
     onSuccess: () => {
       pushToast({
-        title: "Vercel credential verified",
+        title: i18nT("scan.s1441"),
         body: `${humanizeConnectionDisplayName(connection)} is back online.`,
         tone: "success",
       });
       onReconnected();
     },
     onError: (error) => pushToast({
-      title: "Credential still needs attention",
+      title: i18nT("scan.s0367"),
       body: error instanceof Error ? error.message : "Review the connector in Vercel Connect and try again.",
       tone: "error",
     }),
@@ -235,7 +236,7 @@ export function ReconnectCard({
             </Link>
           </Button>
         ) : onReconnect ? (
-          <Button size="sm" variant="outline" onClick={onReconnect}>Reconnect</Button>
+          <Button size="sm" variant="outline" onClick={onReconnect}>{i18nT("pages.appsBrowse.reconnect")}</Button>
         ) : managedByVercel && !oauth ? (
           <div className="flex items-center gap-2">
             <Button type="button" size="sm" variant="outline" asChild>
@@ -318,14 +319,14 @@ function ReconnectForm({
         result.connection.healthStatus === "ok" || result.connection.healthStatus === "healthy" || result.connection.healthStatus === "unknown";
       if (healthy) {
         pushToast({
-          title: "Reconnected",
+          title: i18nT("scan.s1058"),
           body: `${humanizeConnectionDisplayName(connection)} is back online.`,
           tone: "success",
         });
         onReconnected();
       } else {
         pushToast({
-          title: "Still not working",
+          title: i18nT("scan.s1304"),
           body: result.connection.healthMessage?.trim() || "That key didn't check out. Try another.",
           tone: "error",
         });
@@ -333,7 +334,7 @@ function ReconnectForm({
     },
     onError: (error) =>
       pushToast({
-        title: "That key didn't work",
+        title: i18nT("scan.s1357"),
         body: error instanceof Error ? error.message : "Check the key and try again.",
         tone: "error",
       }),
@@ -385,7 +386,7 @@ function ReconnectForm({
           autoComplete="off"
           value={single}
           onChange={(e) => setSingle(e.target.value)}
-          placeholder="Paste your new key"
+          placeholder={i18nT("scan.s0940")}
           className="h-10 font-mono"
         />
       )}
@@ -411,7 +412,7 @@ function TechnicalDetails({ connection }: { connection: ToolConnection }) {
       <section>
         <CollapsibleTrigger asChild>
           <button type="button" className="flex w-full items-center gap-3 py-1 text-left">
-            <span className="min-w-0 flex-1 text-sm font-medium text-foreground">Connection details</span>
+            <span className="min-w-0 flex-1 text-sm font-medium text-foreground">{i18nT("scan.s0273")}</span>
             <ChevronRight
               className={cn("h-4 w-4 shrink-0 text-muted-foreground transition-transform", open && "rotate-90")}
             />
@@ -419,9 +420,9 @@ function TechnicalDetails({ connection }: { connection: ToolConnection }) {
         </CollapsibleTrigger>
         <CollapsibleContent>
           <dl className="mt-4 grid gap-2 pb-2 text-xs sm:grid-cols-(--gtc-59)">
-            <dt className="text-muted-foreground">Address</dt>
+            <dt className="text-muted-foreground">{i18nT("pages.secrets.vaultForm.address")}</dt>
             <dd className="break-all font-mono text-foreground">{connectionAddress(connection)}</dd>
-            <dt className="text-muted-foreground">Type</dt>
+            <dt className="text-muted-foreground">{i18nT("common.type")}</dt>
             <dd className="text-foreground">{connectionTransportLabel(connection.transport)}</dd>
           </dl>
         </CollapsibleContent>
@@ -490,7 +491,7 @@ export function DangerZone({
             type="button"
             className="flex w-full items-center gap-3 py-1 text-left"
           >
-            <span className="min-w-0 flex-1 text-sm font-medium text-destructive">Danger zone</span>
+            <span className="min-w-0 flex-1 text-sm font-medium text-destructive">{i18nT("settings.dangerZone")}</span>
             <ChevronRight
               className={cn("h-4 w-4 shrink-0 text-muted-foreground transition-transform", open && "rotate-90")}
             />
@@ -501,7 +502,7 @@ export function DangerZone({
           <div className="mt-3 divide-y divide-border border-t border-border">
             {connection && onToggleConnection ? (
               <div className="flex items-center justify-between gap-4 py-4">
-                <h2 className="text-sm font-medium text-foreground">Pause connection</h2>
+                <h2 className="text-sm font-medium text-foreground">{i18nT("scan.s0945")}</h2>
                 <ToggleSwitch
                   aria-label="Pause connection"
                   checked={paused}
@@ -527,7 +528,7 @@ export function DangerZone({
             {connection?.authKind === "oauth" && !methodUnavailable && (onReconnectIdentity || !canReplaceCredential) ? (
               <div className="flex flex-wrap items-center justify-between gap-3 py-4">
                 <div>
-                  <p className="text-sm font-medium text-foreground">Reconnect</p>
+                  <p className="text-sm font-medium text-foreground">{i18nT("pages.appsBrowse.reconnect")}</p>
                   <p className="text-xs text-muted-foreground">
                     {canReplaceCredential
                       ? `Sign in to ${identityProviderName} again.`
@@ -553,7 +554,7 @@ export function DangerZone({
               && onRevokeIdentity ? (
                 <div className="flex flex-wrap items-center justify-between gap-3 py-4">
                   <div>
-                    <p className="text-sm font-medium text-foreground">Revoke identity</p>
+                    <p className="text-sm font-medium text-foreground">{i18nT("scan.s1143")}</p>
                     <p className="text-xs text-muted-foreground">
                       Disconnect the identity currently used by this app.
                     </p>
@@ -570,7 +571,7 @@ export function DangerZone({
 
             <div className="flex flex-wrap items-center justify-between gap-3 py-4">
               <div>
-                <p className="text-sm font-medium text-foreground">Remove this app</p>
+                <p className="text-sm font-medium text-foreground">{i18nT("scan.s1084")}</p>
                 <p className="text-xs text-muted-foreground">
                   {`Deletes credentials for ${appName} and removes agent access. Reconnecting requires a new sign-in or key.`}
                 </p>

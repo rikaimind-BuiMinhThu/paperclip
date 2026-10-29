@@ -22,6 +22,7 @@ import {
 } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
 import type { RoutineHistoryDirtyFieldDescriptor } from "./RoutineHistoryTab";
+import { t as i18nT } from "@/i18n";
 
 /**
  * Per-section sticky save bar (§1.4–§1.5). Hidden when clean; reveals on dirty.
@@ -81,7 +82,7 @@ export function RoutineSaveBar({
         {saveConflict ? (
           <div className="flex items-center gap-2 text-sm text-amber-800 dark:text-amber-200">
             <AlertTriangle className="h-4 w-4" />
-            <span>Routine changed elsewhere. Reload to merge.</span>
+            <span>{i18nT("scan.s1150")}</span>
           </div>
         ) : (
           <Popover>
@@ -166,7 +167,7 @@ export function RoutineSaveBar({
       <Dialog open={confirmDiscardOpen} onOpenChange={setConfirmDiscardOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Discard changes?</DialogTitle>
+            <DialogTitle>{i18nT("scan.s0418")}</DialogTitle>
             <DialogDescription>
               This will revert {dirtyCount} unsaved{" "}
               {dirtyCount === 1 ? "change" : "changes"} in this section.

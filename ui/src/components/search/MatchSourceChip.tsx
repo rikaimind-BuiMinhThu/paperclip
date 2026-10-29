@@ -1,4 +1,5 @@
 import { cn } from "@/lib/utils";
+import { t as i18nT } from "@/i18n";
 
 export type MatchSourceChipKind = "title" | "identifier" | "comment" | "document";
 
@@ -14,7 +15,7 @@ const chipStyles: Record<MatchSourceChipKind, string> = {
 };
 
 const chipLabels: Record<MatchSourceChipKind, string> = {
-  title: "Title",
+  title: i18nT("common.title"),
   identifier: "Identifier",
   comment: "Comment",
   document: "Doc",

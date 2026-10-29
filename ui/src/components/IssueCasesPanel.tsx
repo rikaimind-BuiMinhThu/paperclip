@@ -5,6 +5,7 @@ import { instanceSettingsApi } from "@/api/instanceSettings";
 import { queryKeys } from "@/lib/queryKeys";
 import { Badge } from "@/components/ui/badge";
 import { StatusBadge } from "@/components/StatusBadge";
+import { t as i18nT } from "@/i18n";
 
 const ROLE_LABEL: Record<CaseLinkRole, string> = {
   origin: "origin",
@@ -37,7 +38,7 @@ export function IssueCasesPanel({ issueId }: { issueId: string }) {
 
   return (
     <section className="space-y-2">
-      <h3 className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">Cases</h3>
+      <h3 className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">{i18nT("nav.cases")}</h3>
       <div className="space-y-1">
         {links.map((link) => (
           <Link

@@ -8,6 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
+import { t as i18nT } from "@/i18n";
 
 export interface AgentMultiSelectOption extends AvatarAgent {
   id: string;
@@ -78,7 +79,7 @@ export function AgentSelect({
           <Input
             value={filter}
             onChange={(event) => setFilter(event.target.value)}
-            placeholder="Filter agents"
+            placeholder={i18nT("scan.s0519")}
             className="h-8"
             autoFocus
           />
@@ -106,7 +107,7 @@ export function AgentSelect({
               </button>
             ))}
             {filteredAgents.length === 0 ? (
-              <div className="px-3 py-4 text-sm text-muted-foreground">No matches.</div>
+              <div className="px-3 py-4 text-sm text-muted-foreground">{i18nT("issues.propertiesPanel.noMatches")}</div>
             ) : null}
           </div>
         )}
@@ -230,7 +231,7 @@ export function AgentMultiSelect({
           <Input
             value={filter}
             onChange={(event) => setFilter(event.target.value)}
-            placeholder="Filter agents"
+            placeholder={i18nT("scan.s0519")}
             className="h-8"
             autoFocus
           />
@@ -279,7 +280,7 @@ export function AgentMultiSelect({
               );
             })}
             {filteredAgents.length === 0 ? (
-              <div className="px-3 py-4 text-sm text-muted-foreground">No matches.</div>
+              <div className="px-3 py-4 text-sm text-muted-foreground">{i18nT("issues.propertiesPanel.noMatches")}</div>
             ) : null}
           </div>
         )}

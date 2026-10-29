@@ -23,6 +23,7 @@ import {
 } from "../fixtures/issueChatUxFixtures";
 import { cn } from "../lib/utils";
 import { Bot, Brain, FlaskConical, Loader2, MessagesSquare, Route, Sparkles, WandSparkles } from "lucide-react";
+import { t as i18nT } from "@/i18n";
 
 const noop = async () => {};
 
@@ -152,7 +153,7 @@ export function IssueChatUxLab() {
               <FlaskConical className="h-3.5 w-3.5" />
               Chat UX Lab
             </div>
-            <h1 className="mt-4 text-3xl font-semibold tracking-tight">Issue chat review surface</h1>
+            <h1 className="mt-4 text-3xl font-semibold tracking-tight">{i18nT("scan.s0635")}</h1>
             <p className="mt-3 max-w-3xl text-sm leading-6 text-muted-foreground">
               This page exercises the real assistant-ui issue chat with fixture-backed messages. Use it to review
               spacing, chronology, running states, tool rendering, activity rows, queueing, and composer behavior
@@ -242,7 +243,7 @@ export function IssueChatUxLab() {
             <div className="flex items-center gap-2.5 rounded-lg px-1 py-2">
               <span className="inline-flex items-center gap-2 text-sm font-medium text-foreground/80">
                 <Loader2 className="h-4 w-4 shrink-0 animate-spin text-muted-foreground" />
-                <span className="shimmer-text">Working</span>
+                <span className="shimmer-text">{i18nT("scan.s1510")}</span>
               </span>
               <span className="text-xs text-muted-foreground/60">for 12s</span>
             </div>
@@ -367,7 +368,7 @@ export function IssueChatUxLab() {
                 <MessagesSquare className="h-4 w-4 text-cyan-700 dark:text-cyan-300" />
                 Review checklist
               </div>
-              <CardTitle className="text-lg">What to evaluate on this page</CardTitle>
+              <CardTitle className="text-lg">{i18nT("scan.s1484")}</CardTitle>
               <CardDescription>
                 This route should be the fastest way to inspect the chat system before or after tweaks.
               </CardDescription>

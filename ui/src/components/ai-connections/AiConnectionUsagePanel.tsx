@@ -5,6 +5,7 @@ import { aiConnectionsApi } from "@/api/ai-connections";
 import { Button } from "@/components/ui/button";
 import { QuotaBar } from "@/components/QuotaBar";
 import { formatDateTime, formatNumber } from "@/lib/utils";
+import { t as i18nT } from "@/i18n";
 
 const usageNumber = (value: number) => formatNumber(value, { maximumFractionDigits: 20 });
 const amount = (value: number, unit: string | null) => unit === "USD"
@@ -81,17 +82,17 @@ export function AiConnectionUsagePanel({ account }: { account: AiManagedConnecti
   return (
     <section aria-label="Account usage limits" className="space-y-3">
       <div className="flex flex-wrap items-center justify-between gap-3">
-        <h3 className="text-sm font-semibold">Usage</h3>
+        <h3 className="text-sm font-semibold">{i18nT("pages.secrets.usage")}</h3>
         {supported && <Button variant="outline" size="sm" disabled={probe.isPending || account.status !== "connected"} onClick={() => probe.mutate()}>
           {probe.isPending ? "Checking…" : usage?.status === "ok" ? "Refresh" : "Check usage"}
         </Button>}
       </div>
-      {!supported && <p className="text-xs text-muted-foreground">Unavailable for this sign-in method.</p>}
+      {!supported && <p className="text-xs text-muted-foreground">{i18nT("scan.s1404")}</p>}
       {probe.error && <p role="alert" className="text-sm text-destructive">{probe.error.message}</p>}
       {usage && usage.status !== "ok" && <p role={usage.status === "unsupported" ? "status" : "alert"} className="text-sm text-muted-foreground">{usageError(usage)}</p>}
       {usage?.status === "ok" && (
         <div className="space-y-3" aria-live="polite">
-          {usage.limits.length === 0 && <p className="text-xs text-muted-foreground">Usage not reported.</p>}
+          {usage.limits.length === 0 && <p className="text-xs text-muted-foreground">{i18nT("scan.s1430")}</p>}
           {usage.limits.map((window) => {
             const details = limitDetails(window);
             return <div key={window.id} className="space-y-1.5">
@@ -104,10 +105,10 @@ export function AiConnectionUsagePanel({ account }: { account: AiManagedConnecti
             </div>;
           })}
           {usage.overage && <div className="flex flex-wrap items-center justify-between gap-2 text-xs">
-            <span className="text-muted-foreground">Overage</span>
+            <span className="text-muted-foreground">{i18nT("scan.s0918")}</span>
             <span className="font-mono">{overageSummary(usage)}</span>
           </div>}
-          <p className="text-xs text-muted-foreground">Updated <time className="font-mono" dateTime={usage.checkedAt} title={formatDateTime(usage.checkedAt)}>{formatDateTime(usage.checkedAt, { includeYear: false })}</time>{usage.planType ? ` · ${usage.planType}` : ""}</p>
+          <p className="text-xs text-muted-foreground">{i18nT("common.updated")}<time className="font-mono" dateTime={usage.checkedAt} title={formatDateTime(usage.checkedAt)}>{formatDateTime(usage.checkedAt, { includeYear: false })}</time>{usage.planType ? ` · ${usage.planType}` : ""}</p>
         </div>
       )}
     </section>

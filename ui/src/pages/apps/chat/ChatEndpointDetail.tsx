@@ -56,6 +56,7 @@ import { queryKeys } from "@/lib/queryKeys";
 import { copyTextToClipboard } from "@/lib/clipboard";
 import { Link, Navigate, useNavigate, useParams } from "@/lib/router";
 import { useTranslation } from "@/i18n";
+import { t as i18nT } from "@/i18n";
 
 const tabs = ["settings", "access", "reviews", "conversations", "activity"] as const;
 type ChatTab = (typeof tabs)[number];
@@ -382,11 +383,11 @@ function EmailAccess({ endpoint }: { endpoint: ChatEndpoint }) {
   });
   if (!endpoint.connectionId || agents.isError || connection.isError) return (
     <div className="space-y-3">
-      <p role="alert" className="text-sm text-destructive">Connection access could not be loaded.</p>
-      <Button variant="outline" onClick={() => { void agents.refetch(); void connection.refetch(); }}>Try again</Button>
+      <p role="alert" className="text-sm text-destructive">{i18nT("scan.s0269")}</p>
+      <Button variant="outline" onClick={() => { void agents.refetch(); void connection.refetch(); }}>{i18nT("common.tryAgain")}</Button>
     </div>
   );
-  if (agents.isPending || connection.isPending) return <p role="status" className="text-sm text-muted-foreground">Loading access…</p>;
+  if (agents.isPending || connection.isPending) return <p role="status" className="text-sm text-muted-foreground">{i18nT("scan.s0703")}</p>;
   const sourceId = connection.data.config?.credentialConnectionId;
   const credentialId = typeof sourceId === "string" ? sourceId : endpoint.connectionId;
   return <section className="max-w-3xl space-y-4">
@@ -426,7 +427,7 @@ function Settings({
       ),
     onError: (error) =>
       pushToast({
-        title: "Couldn't update destination",
+        title: i18nT("scan.s0344"),
         body: error instanceof Error ? error.message : "Try again.",
         tone: "error",
       }),
@@ -440,7 +441,7 @@ function Settings({
       ),
     onError: (error) =>
       pushToast({
-        title: "Couldn't update settings",
+        title: i18nT("scan.s0345"),
         body: error instanceof Error ? error.message : "Try again.",
         tone: "error",
       }),
@@ -457,19 +458,19 @@ function Settings({
       {endpoint.provider === "imessage-photon" && <p className="text-sm text-muted-foreground">{endpoint.photonAllocation === "shared" ? "Shared Photon project · direct messages only. Enroll senders in Photon and link their Messages identities in Access. Groups cannot be enabled." : "Enable each group individually. Agent replies are visible to everyone in that group; only authorized senders can start work."}</p>}
       {endpoint.provider === "slack" && (
         <div className="space-y-2 text-sm">
-          <h2 className="text-lg font-semibold">Chat in Slack</h2>
+          <h2 className="text-lg font-semibold">{i18nT("scan.s0188")}</h2>
           <p>Invite the bot to a channel, then mention it to start a conversation.</p>
           <div className="flex items-center justify-between gap-3 rounded-lg border border-border p-3">
             <code>{mentionMessage}</code>
             <Button size="icon" variant="ghost" aria-label={messageCopied ? "Message copied" : "Copy message"} onClick={() => {
-              void copyTextToClipboard(mentionMessage).then(() => setMessageCopied(true), () => pushToast({ title: "Couldn’t copy the message", body: "Select and copy it manually.", tone: "error" }));
+              void copyTextToClipboard(mentionMessage).then(() => setMessageCopied(true), () => pushToast({ title: i18nT("scan.s0348"), body: "Select and copy it manually.", tone: "error" }));
             }}>{messageCopied ? <Check className="size-4" /> : <Copy className="size-4" />}</Button>
           </div>
         </div>
       )}
       {endpoint.provider === "slack" && (
-        avatarAgent.isPending ? <p role="status" className="text-sm text-muted-foreground">Loading agent avatar…</p>
-          : avatarAgent.isError ? <p role="alert" className="text-sm text-destructive">Couldn’t load the agent’s avatar. <button className="underline" onClick={() => void avatarAgent.refetch()}>Try again</button></p>
+        avatarAgent.isPending ? <p role="status" className="text-sm text-muted-foreground">{i18nT("scan.s0704")}</p>
+          : avatarAgent.isError ? <p role="alert" className="text-sm text-destructive">{i18nT("scan.s0352")}<button className="underline" onClick={() => void avatarAgent.refetch()}>{i18nT("common.tryAgain")}</button></p>
           : <SlackAvatarSettings
               agentName={avatarAgent.data?.name ?? endpoint.assignedAgentName}
               appName={endpoint.setup?.slackApp?.appName ?? defaultSlackAppName(avatarAgent.data?.name ?? endpoint.assignedAgentName)}
@@ -487,7 +488,7 @@ function Settings({
       />}
       {endpoint.provider === "telegram" && (
         <div className="space-y-2">
-          <h2 className="text-lg font-semibold">Telegram group command</h2>
+          <h2 className="text-lg font-semibold">{i18nT("scan.s1346")}</h2>
           <div className="rounded-lg border border-border p-3 text-sm">
             <code>
               /task@
@@ -503,12 +504,12 @@ function Settings({
         </div>
       )}
       <div>
-        <h2 className="text-lg font-semibold">Where this agent can work</h2>
+        <h2 className="text-lg font-semibold">{i18nT("scan.s1489")}</h2>
       </div>
       <div className="space-y-2">
         <h3 className="text-sm font-semibold">{endpoint.provider === "slack" ? "Allowed Channels" : "Destinations"}</h3>
         {resourcesQuery.isLoading ? (
-          <p className="text-sm text-muted-foreground">Loading destinations…</p>
+          <p className="text-sm text-muted-foreground">{i18nT("scan.s0706")}</p>
         ) : destinationResources.length === 0 ? (
           <p className="rounded-lg border border-dashed border-border p-4 text-sm text-muted-foreground">
             No provider destinations have been discovered yet.
@@ -547,7 +548,7 @@ function Settings({
       </div>
       {endpoint.provider !== "github" && (
         <div className="space-y-3">
-          <h3 className="text-sm font-semibold">Private conversations</h3>
+          <h3 className="text-sm font-semibold">{i18nT("scan.s0988")}</h3>
           <SettingToggle
             label="Allow direct messages"
             detail={
@@ -633,7 +634,7 @@ function Access({
         queryKeys.chatEndpoints.detail(endpointId),
         next,
       ),
-    onError: (error) => pushToast({ title: "Couldn’t update access", body: error instanceof Error ? error.message : "Try again.", tone: "error" }),
+    onError: (error) => pushToast({ title: i18nT("scan.s0356"), body: error instanceof Error ? error.message : "Try again.", tone: "error" }),
   });
   const createIntent = useMutation({
     mutationFn: (principalId: string) =>
@@ -643,14 +644,14 @@ function Access({
         new URL(confirmationUrl, window.location.origin).toString(),
       );
       pushToast({
-        title: "Private identity-link URL created",
+        title: i18nT("scan.s0989"),
         body: "Send it only to the person whose provider identity is shown.",
         tone: "success",
       });
     },
     onError: (error) =>
       pushToast({
-        title: "Couldn't create identity link",
+        title: i18nT("scan.s0328"),
         body: error instanceof Error ? error.message : "Try again.",
         tone: "error",
       }),
@@ -667,24 +668,24 @@ function Access({
   return (
     <section className="max-w-3xl space-y-7">
       <div>
-        <h2 className="text-lg font-semibold">External identity access</h2>
+        <h2 className="text-lg font-semibold">{i18nT("scan.s0485")}</h2>
       </div>
       {endpoint.provider === "slack" && <SlackSearchAccess companyId={endpoint.companyId} endpointId={endpointId} />}
       {endpoint.provider === "slack" && (
         <div className="space-y-3">
-          <h3 className="text-sm font-semibold">Invite others to connect their Slack accounts</h3>
+          <h3 className="text-sm font-semibold">{i18nT("scan.s0625")}</h3>
           <ol className="list-decimal space-y-3 pl-5 text-sm">
             <li>
               Ask them to send this command in your Slack workspace:
               <div className="mt-2 flex items-center justify-between gap-3 rounded-lg border border-border p-3">
                 <code>{joinCommand}</code>
                 <Button size="sm" variant="ghost" onClick={() => {
-                  void copyTextToClipboard(joinCommand).then(() => setJoinCommandCopied(true), () => pushToast({ title: "Couldn't copy the command", body: "Select and copy it manually.", tone: "error" }));
+                  void copyTextToClipboard(joinCommand).then(() => setJoinCommandCopied(true), () => pushToast({ title: i18nT("scan.s0324"), body: "Select and copy it manually.", tone: "error" }));
                 }}><Copy className="size-4" />{joinCommandCopied ? "Copied" : "Copy command"}</Button>
               </div>
             </li>
             <li>Open the private link from the bot, sign into Kujira AI Workforce, and confirm their Slack account. The link expires in 15 minutes and works once.</li>
-            <li>If they aren’t a member of this organization, choose <strong>Request access</strong>. An admin must approve their request before they can link their account.</li>
+            <li>{i18nT("scan.s0601")}<strong>{i18nT("apps.chat.identity.requestAccess")}</strong>. An admin must approve their request before they can link their account.</li>
           </ol>
           <p className="text-sm text-muted-foreground">Each person links their own account and uses their own Kujira AI Workforce permissions. They don’t need to create another Slack app or share credentials.</p>
         </div>
@@ -698,7 +699,7 @@ function Access({
       />
       {confirmationUrl && (
         <div className="space-y-2 border-y border-border py-3">
-          <p className="text-sm font-medium">Private confirmation link</p>
+          <p className="text-sm font-medium">{i18nT("scan.s0987")}</p>
           <p className="break-all text-xs text-muted-foreground">
             {confirmationUrl}
           </p>
@@ -709,12 +710,12 @@ function Access({
               void copyTextToClipboard(confirmationUrl).then(
                 () =>
                   pushToast({
-                    title: "Confirmation link copied",
+                    title: i18nT("scan.s0260"),
                     tone: "success",
                   }),
                 () =>
                   pushToast({
-                    title: "Couldn't copy the link",
+                    title: i18nT("scan.s0325"),
                     body: "Select and copy it manually.",
                     tone: "error",
                   }),
@@ -727,7 +728,7 @@ function Access({
         </div>
       )}
       <div className="space-y-2">
-        <h3 className="text-sm font-semibold">Identity links</h3>
+        <h3 className="text-sm font-semibold">{i18nT("scan.s0599")}</h3>
         {links.length === 0 ? (
           <p className="rounded-lg border border-dashed border-border p-4 text-sm text-muted-foreground">
             External people appear here after they message the agent.
@@ -792,12 +793,12 @@ function Conversations({
   return (
     <section className="space-y-4">
       <div>
-        <h2 className="text-lg font-semibold">Conversations</h2>
+        <h2 className="text-lg font-semibold">{i18nT("pages.chatEndpoint.tabConversations")}</h2>
       </div>
-      {query.isPending ? <p role="status" className="text-sm text-muted-foreground">Loading conversations…</p> : query.isError ? (
+      {query.isPending ? <p role="status" className="text-sm text-muted-foreground">{i18nT("scan.s0705")}</p> : query.isError ? (
         <div className="space-y-3">
-          <p role="alert" className="text-sm text-destructive">Conversations could not be loaded.</p>
-          <Button variant="outline" onClick={() => void query.refetch()}>Try again</Button>
+          <p role="alert" className="text-sm text-destructive">{i18nT("scan.s0285")}</p>
+          <Button variant="outline" onClick={() => void query.refetch()}>{i18nT("common.tryAgain")}</Button>
         </div>
       ) : rows.length === 0 ? (
         <p className="rounded-lg border border-dashed border-border p-4 text-sm text-muted-foreground">
@@ -817,7 +818,7 @@ function Conversations({
               <span aria-hidden="true" className="text-muted-foreground">·</span>
               <div className="flex min-w-0 flex-1 items-center gap-2">
                 <span className="truncate" title={row.issueTitle ?? undefined}>{row.issueTitle ?? "Waiting for task"}</span>
-                {row.issueId && <Link to={`/issues/${row.issueId}`} className="inline-flex shrink-0 items-center gap-1 text-xs text-muted-foreground hover:text-foreground hover:underline">Open task<ExternalLink className="size-3" /></Link>}
+                {row.issueId && <Link to={`/issues/${row.issueId}`} className="inline-flex shrink-0 items-center gap-1 text-xs text-muted-foreground hover:text-foreground hover:underline">{i18nT("inbox.openTask")}<ExternalLink className="size-3" /></Link>}
               </div>
               <span className="hidden shrink-0 text-xs text-muted-foreground xl:inline">{row.issueIdentifier}</span>
               {row.state !== "active" && <StatusBadge status={row.state} />}
@@ -868,7 +869,7 @@ function Activity({
     },
     onError: (error) =>
       pushToast({
-        title: "Couldn't replay activity",
+        title: i18nT("scan.s0335"),
         body: error instanceof Error ? error.message : "Try again.",
         tone: "error",
       }),
@@ -927,7 +928,7 @@ function Activity({
     },
     onError: (error) =>
       pushToast({
-        title: "Couldn't resolve activity",
+        title: i18nT("scan.s0337"),
         body: error instanceof Error ? error.message : "Try again.",
         tone: "error",
       }),
@@ -959,7 +960,7 @@ function Activity({
     },
     onError: (error) =>
       pushToast({
-        title: "Couldn't update connection",
+        title: i18nT("scan.s0343"),
         body: error instanceof Error ? error.message : "Try again.",
         tone: "error",
       }),
@@ -977,7 +978,7 @@ function Activity({
     : [];
   return (
     <section className="space-y-5">
-      <h2 className="text-lg font-semibold">Connection activity</h2>
+      <h2 className="text-lg font-semibold">{i18nT("scan.s0270")}</h2>
       {((status !== "active" && health.message) || health.error) && (
         <div
           className={`flex items-start gap-2 rounded-lg border p-3 text-sm ${status === "attention" || status === "revoked" ? "border-destructive/40 bg-destructive/5 text-destructive" : "border-border bg-muted/30 text-foreground"}`}
@@ -989,7 +990,7 @@ function Activity({
             {health.message && <p>{health.message}</p>}
             {health.previousHealth && (
               <p className="mt-1 text-xs opacity-80">
-                <span className="font-medium">Last reported health:</span>{" "}
+                <span className="font-medium">{i18nT("scan.s0677")}</span>{" "}
                 {health.previousHealth}
               </p>
             )}
@@ -1004,9 +1005,9 @@ function Activity({
       )}
       <details className="group rounded-lg border border-border">
         <summary className="flex cursor-pointer list-none items-center justify-between gap-3 p-4 text-sm font-medium chat-connection-health-summary">
-          <span>Connection health and controls</span>
+          <span>{i18nT("scan.s0275")}</span>
           <span className="flex items-center gap-2">
-            {endpoint.setup?.callbacksNeedUpdate && <span className="text-xs text-(--status-task-blocked)">Callback URLs need attention</span>}
+            {endpoint.setup?.callbacksNeedUpdate && <span className="text-xs text-(--status-task-blocked)">{i18nT("scan.s0164")}</span>}
             <ChevronDown className="size-4 text-muted-foreground transition-transform group-open:rotate-180" />
           </span>
         </summary>
@@ -1015,7 +1016,7 @@ function Activity({
         <div
           className="space-y-3 text-sm"
         >
-          <p className="font-medium">Slack callback health</p>
+          <p className="font-medium">{i18nT("scan.s1267")}</p>
           <p className="text-xs text-muted-foreground">
             {endpoint.setup?.callbacksNeedUpdate
               ? "Slack callback URLs need an update. Save the current App Manifest, then exercise Events, Interactivity, and the registered command again."
@@ -1228,8 +1229,8 @@ function Activity({
       <nav aria-label="Activity pagination" className="flex items-center justify-between gap-3">
         <span className="text-xs text-muted-foreground">Page {cursors.length}</span>
         <div className="flex items-center gap-2">
-          <Button size="sm" variant="outline" disabled={cursors.length === 1 || query.isFetching} onClick={() => setCursors((pages) => pages.slice(0, -1))}>Previous</Button>
-          <Button size="sm" variant="outline" disabled={!query.data?.nextCursor || query.isFetching || query.isError} onClick={() => { if (query.data?.nextCursor) setCursors((pages) => [...pages, query.data.nextCursor!]); }}>Next</Button>
+          <Button size="sm" variant="outline" disabled={cursors.length === 1 || query.isFetching} onClick={() => setCursors((pages) => pages.slice(0, -1))}>{i18nT("scan.s0985")}</Button>
+          <Button size="sm" variant="outline" disabled={!query.data?.nextCursor || query.isFetching || query.isError} onClick={() => { if (query.data?.nextCursor) setCursors((pages) => [...pages, query.data.nextCursor!]); }}>{i18nT("common.next")}</Button>
         </div>
       </nav>
       <AlertDialog
@@ -1326,7 +1327,7 @@ function Activity({
       <AlertDialog open={removeOpen} onOpenChange={setRemoveOpen}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Remove this connection?</AlertDialogTitle>
+            <AlertDialogTitle>{i18nT("scan.s1085")}</AlertDialogTitle>
             <AlertDialogDescription>
               {endpoint.assignedAgentName} will stop receiving new work from
               {` ${providerNames[endpoint.provider]}`}. Existing Kujira AI Workforce tasks
@@ -1335,7 +1336,7 @@ function Activity({
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogCancel>{i18nT("common.cancel")}</AlertDialogCancel>
             <AlertDialogAction
               className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
               disabled={lifecycle.isPending}

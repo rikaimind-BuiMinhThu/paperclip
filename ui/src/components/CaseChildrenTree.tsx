@@ -6,6 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { StatusBadge } from "@/components/StatusBadge";
 import { CaseCopyableToken } from "@/components/CaseIdentifierKey";
+import { t as i18nT } from "@/i18n";
 
 type CaseRelationRow = Pick<CaseSummary, "id" | "identifier" | "title" | "caseType" | "status"> & {
   key?: string | null;
@@ -26,7 +27,7 @@ export function CaseChildrenTree({
   const caseHref = useCaseHref();
   const [expanded, setExpanded] = useState(false);
   if (children.length === 0) {
-    return <p className="text-xs text-muted-foreground">No child cases.</p>;
+    return <p className="text-xs text-muted-foreground">{i18nT("scan.s0791")}</p>;
   }
 
   const shouldCap = maxVisible != null && children.length > maxVisible;

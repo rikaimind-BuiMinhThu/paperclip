@@ -84,7 +84,7 @@ describe("production artifact cards", () => {
     ).toContain("Changes requested");
     expect(
       render(product({ type: "preview_url", healthStatus: "unhealthy" })),
-    ).toContain("Unhealthy");
+    ).toContain("異常");
     expect(
       render(product({ type: "preview_url", healthStatus: "unknown" })),
     ).not.toContain("Healthy");
@@ -113,7 +113,7 @@ describe("production artifact cards", () => {
       'href="https://files.example/report.pdf?signature=abc&amp;expires=123"',
     );
     expect(external).not.toContain("?download=1");
-    expect(external).toContain("Open file");
+    expect(external).toContain("ファイルを開く");
     expect(external).toContain("Download file");
 
     const local = renderToStaticMarkup(
@@ -150,7 +150,7 @@ describe("production artifact cards", () => {
         }),
       ),
     ).toContain("12345678");
-    expect(render(product({ type: "preview_url" }))).toContain("Open link");
+    expect(render(product({ type: "preview_url" }))).toContain("リンクを開く");
     const attachment = {
       contentPath: "/api/attachments/file-1/content",
       byteSize: 25,
@@ -267,7 +267,7 @@ describe("production artifact cards", () => {
     expect(render(product({ type: "branch" }))).toContain("Open on GitHub");
     expect(
       render(product({ type: "runtime_service", healthStatus: "unhealthy" })),
-    ).toContain("Unhealthy");
+    ).toContain("異常");
     expect(
       render(product({ type: "preview_url", url: "javascript:alert(1)" })),
     ).not.toContain("javascript:");

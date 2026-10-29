@@ -26,23 +26,24 @@ import { cn } from "@/lib/utils";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useTranslation } from "@/i18n";
+import { t as i18nT } from "@/i18n";
 
 const ARTIFACTS_PAGE_SIZE = 30;
 const SEARCH_DEBOUNCE_MS = 250;
 
 export const ARTIFACT_KIND_FILTERS: { value: ArtifactKindFilter; label: string }[] = [
-  { value: "all", label: "All" },
-  { value: "image", label: "Images" },
-  { value: "video", label: "Videos" },
-  { value: "document", label: "Documents" },
-  { value: "text", label: "Text" },
-  { value: "file", label: "Files" },
+  { value: "all", label: i18nT("common.all") },
+  { value: "image", label: i18nT("pages.artifacts.kindImages") },
+  { value: "video", label: i18nT("pages.artifacts.kindVideos") },
+  { value: "document", label: i18nT("search.documents") },
+  { value: "text", label: i18nT("pages.artifacts.kindText") },
+  { value: "file", label: i18nT("issues.sidePanel.files") },
 ];
 
 export const ARTIFACT_GROUP_OPTIONS: { value: ArtifactGroupBy; label: string }[] = [
-  { value: "none", label: "None" },
-  { value: "task", label: "Task" },
-  { value: "parent_task", label: "Parent task" },
+  { value: "none", label: i18nT("common.none") },
+  { value: "task", label: i18nT("issues.task") },
+  { value: "parent_task", label: i18nT("issues.columns.parent.label") },
 ];
 
 const KIND_VALUES = new Set(ARTIFACT_KIND_FILTERS.map((filter) => filter.value));
@@ -398,11 +399,11 @@ export function Artifacts() {
           </div>
           <div ref={loadMoreRef} className="flex min-h-10 items-center justify-center pb-2 text-xs text-muted-foreground">
             {isFetchingNextPage
-              ? "Loading more artifacts..."
+              ? t("pages.artifacts.loadingMore")
               : hasNextPage
                 ? null
                 : isFetching
-                  ? "Updating artifacts..."
+                  ? t("pages.artifacts.updating")
                   : null}
           </div>
         </>

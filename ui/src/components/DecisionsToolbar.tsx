@@ -17,6 +17,7 @@ import { cn } from "../lib/utils";
 import { Button } from "./ui/button";
 import { Checkbox } from "./ui/checkbox";
 import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
+import { t as i18nT } from "@/i18n";
 
 const SEVERITY_LABELS: Record<string, string> = {
   critical: "Critical",
@@ -169,7 +170,7 @@ function FilterMenu({
   return (
     <div className="max-h-(--sz-70vh) overflow-y-auto">
       <div className="flex items-center justify-between px-3 py-2">
-        <span className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">Filter</span>
+        <span className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">{i18nT("common.filter")}</span>
         {hasActive && (
           <button
             type="button"

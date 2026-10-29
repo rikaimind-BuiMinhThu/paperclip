@@ -83,7 +83,7 @@ describe("ArtifactGroupCard", () => {
     expect(card.getAttribute("data-count")).toBe("3");
     // Two decorative stack layers sit behind the card.
     expect(mounted.container.querySelectorAll('[data-testid="artifact-stack-layer"]').length).toBe(2);
-    expect(mounted.container.textContent).toContain("3 artifacts");
+    expect(mounted.container.textContent).toContain("成果物 3 件");
   });
 
   it("omits the stack effect and uses singular count when count === 1", () => {
@@ -92,7 +92,7 @@ describe("ArtifactGroupCard", () => {
     expect(card.getAttribute("data-stacked")).toBe("false");
     expect(card.getAttribute("data-count")).toBe("1");
     expect(mounted.container.querySelectorAll('[data-testid="artifact-stack-layer"]').length).toBe(0);
-    expect(mounted.container.textContent).toContain("1 artifact");
+    expect(mounted.container.textContent).toContain("成果物 1 件");
     expect(mounted.container.textContent).not.toContain("1 artifacts");
   });
 

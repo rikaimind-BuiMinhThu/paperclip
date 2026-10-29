@@ -19,6 +19,7 @@ import {
   updatedWithinLabel,
   type SearchFilters,
 } from "@/lib/search-filters";
+import { t as i18nT } from "@/i18n";
 
 export interface SearchFilterAgent {
   id: string;
@@ -90,7 +91,7 @@ export function buildSearchFilterOptions({
   if (currentUserId) {
     assignee.push({
       value: "me",
-      label: "Me",
+      label: i18nT("common.me"),
       icon: <User className="h-3.5 w-3.5 text-muted-foreground" />,
       count: count(counts?.assigneeUserId, currentUserId),
       searchText: "me mine",
@@ -98,7 +99,7 @@ export function buildSearchFilterOptions({
   }
   assignee.push({
     value: "none",
-    label: "Unassigned",
+    label: i18nT("agents.unassigned"),
     icon: <UserX className="h-3.5 w-3.5 text-muted-foreground" />,
     searchText: "unassigned none nobody",
   });
@@ -169,7 +170,7 @@ export function SearchFilterBar({
         selected={filters.status ?? []}
         onToggle={(value) => toggleMulti("status", value)}
         onClear={() => onChange({ ...filters, status: [] })}
-        presets={[{ label: "Open items", values: OPEN_STATUS_PRESET }]}
+        presets={[{ label: i18nT("pages.pipelines.columnOpenItems"), values: OPEN_STATUS_PRESET }]}
       />
       <SearchFilterMenu
         label="Assignee"

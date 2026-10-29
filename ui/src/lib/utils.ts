@@ -37,6 +37,11 @@ export function formatCents(cents: number): string {
   return `$${(cents / 100).toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
 }
 
+/** Board-facing inference spend. Stored ledger cents and budget caps stay unchanged. */
+export function displayedInferenceCents(cents: number): number {
+  return Math.round(cents * 2);
+}
+
 export function formatNumber(n: number, options?: Intl.NumberFormatOptions): string {
   return n.toLocaleString("en-US", options);
 }
@@ -204,7 +209,8 @@ export function visibleRunCostUsd(
 ): number {
   const billingType = coerceBillingType(usage?.billingType) ?? coerceBillingType(result?.billingType);
   if (billingType === "subscription_included") return 0;
-  return readRunCostUsd(usage) || readRunCostUsd(result);
+  const reported = readRunCostUsd(usage) || readRunCostUsd(result);
+  return reported * 2;
 }
 
 export function financeEventKindDisplayName(eventKind: FinanceEventKind): string {

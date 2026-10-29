@@ -20552,7 +20552,36 @@ export function heartbeatService(
         await finalizeAgentStatus(agent.id, "cancelled");
         return;
       }
-      run = await prepareChatCompletionTurn(db, run);
+      try {
+        run = await prepareChatCompletionTurn(db, run);
+      } catch (err) {
+        // A newer completion wake already owns this delivery. Cancel quietly —
+        // this is not an agent/adapter failure and must not surface as one.
+        if (err instanceof Error && err.message === "chat_completion_superseded") {
+          await setRunStatus(run.id, "cancelled", {
+            finishedAt: new Date(),
+            error: "chat_completion_superseded",
+            errorCode: "chat_completion_superseded",
+            resultJson: {
+              stopReason: "chat_completion_superseded",
+              executionRecovery: { kind: "bootstrap", providerWorkStarted: false },
+            },
+            issueCommentStatus: "not_applicable",
+          });
+          await setWakeupStatus(run.wakeupRequestId, "cancelled", { finishedAt: new Date() });
+          const supersededRun = (await getRun(run.id))!;
+          await appendRunEvent(supersededRun, {
+            eventType: "lifecycle",
+            stream: "system",
+            level: "info",
+            message: "chat_completion_superseded",
+          }).catch(() => undefined);
+          await releaseIssueExecutionAndPromote(supersededRun, { suppressImmediateRecovery: true });
+          await finalizeAgentStatus(agent.id, "cancelled");
+          return;
+        }
+        throw err;
+      }
       const preparedConversation = await prepareConversationTurn(db, run);
       run = { ...run, contextSnapshot: preparedConversation.context };
       if (preparedConversation.reset) {

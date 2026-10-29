@@ -18,6 +18,7 @@ import { InlineBanner } from "@/components/InlineBanner";
 import { queryKeys } from "@/lib/queryKeys";
 import { SummarizerAgentSelect } from "./SummarizerAgentSelect";
 import { useTranslation } from "@/i18n";
+import { t as i18nT } from "@/i18n";
 
 const EXAMPLES = [
   "issues about evals",
@@ -95,11 +96,11 @@ export function CreateStatusCardDialog({
             onChange={(event) => setPrompt(event.target.value)}
             rows={5}
             autoFocus
-            placeholder="Keep an eye on the ID and Cloud projects. Tell me whether the service is live, and if not, the exact three actions needed to get it to production."
+            placeholder={i18nT("scan.s0661")}
             className="text-sm"
           />
           <div className="flex flex-wrap items-center gap-2">
-            <span className="text-xs font-medium text-muted-foreground">Examples</span>
+            <span className="text-xs font-medium text-muted-foreground">{i18nT("scan.s0475")}</span>
             {EXAMPLES.map((example) => (
               <button
                 key={example}
@@ -114,7 +115,7 @@ export function CreateStatusCardDialog({
         </div>
 
         <div className="space-y-2">
-          <label className="block text-sm font-semibold">Agent</label>
+          <label className="block text-sm font-semibold">{i18nT("agents.agent")}</label>
           <SummarizerAgentSelect companyId={companyId} value={agentId} onChange={setAgentId} enabled={open} />
           <p className="text-xs text-muted-foreground">
             Runs this card's setup and updates. Leave on the default unless another agent should own it.

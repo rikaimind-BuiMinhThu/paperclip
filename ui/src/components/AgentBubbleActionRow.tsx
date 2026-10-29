@@ -25,6 +25,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Check, Copy, MoreHorizontal, ThumbsDown, ThumbsUp, X } from "lucide-react";
+import { t as i18nT } from "@/i18n";
 
 const WEEK_MS = 7 * 24 * 60 * 60 * 1000;
 
@@ -287,11 +288,11 @@ export function IssueChatFeedbackButtons({
           </button>
         </PopoverTrigger>
         <PopoverContent side="top" align="start" className="w-80 p-3">
-          <div className="mb-2 text-sm font-medium">What could have been better?</div>
+          <div className="mb-2 text-sm font-medium">{i18nT("scan.s1476")}</div>
           <Textarea
             value={downvoteReason}
             onChange={(event) => setDownvoteReason(event.target.value)}
-            placeholder="Add a short note"
+            placeholder={i18nT("scan.s0029")}
             className="min-h-20 resize-y bg-background text-sm"
             disabled={isSaving}
           />
@@ -331,21 +332,21 @@ export function IssueChatFeedbackButtons({
       >
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Save your feedback sharing preference</DialogTitle>
+            <DialogTitle>{i18nT("scan.s1181")}</DialogTitle>
             <DialogDescription>
               Choose whether voted AI outputs can be shared with Kujira AI Workforce Labs. This
               answer becomes the default for future thumbs up and thumbs down votes.
             </DialogDescription>
           </DialogHeader>
           <div className="space-y-3 text-sm text-muted-foreground">
-            <p>This vote is always saved locally.</p>
+            <p>{i18nT("scan.s1378")}</p>
             <p>
-              Choose <span className="font-medium text-foreground">Always allow</span> to share
+              Choose <span className="font-medium text-foreground">{i18nT("pages.appsReview.reviewQueue.alwaysAllow")}</span> to share
               this vote and future voted AI outputs. Choose{" "}
-              <span className="font-medium text-foreground">Don't allow</span> to keep this vote
+              <span className="font-medium text-foreground">{i18nT("pages.instanceGeneral.feedbackDontAllow")}</span> to keep this vote
               and future votes local.
             </p>
-            <p>You can change this later in Settings &gt; General.</p>
+            <p>{i18nT("scan.s1534")}</p>
             {termsUrl ? (
               <a
                 href={termsUrl}

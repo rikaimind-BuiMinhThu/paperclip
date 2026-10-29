@@ -33,6 +33,7 @@ import {
   UserSecretChip,
 } from "./user-secret-presentation";
 import { useTranslation } from "@/i18n";
+import { t as i18nT } from "@/i18n";
 
 function keyFromName(name: string): string {
   return name
@@ -242,7 +243,7 @@ export function UserSecretDefinitionsTab({ companyId }: { companyId: string }) {
 
           <div className="space-y-3">
             <div className="space-y-1">
-              <label className="text-xs font-medium text-foreground">Name</label>
+              <label className="text-xs font-medium text-foreground">{i18nT("common.name")}</label>
               <Input
                 value={form.name}
                 onChange={(event) => {
@@ -253,19 +254,19 @@ export function UserSecretDefinitionsTab({ companyId }: { companyId: string }) {
                     key: keyDirty ? current.key : keyFromName(name),
                   }));
                 }}
-                placeholder="Personal GitHub token"
+                placeholder={i18nT("pages.secrets.createDialog.namePlaceholderUser")}
                 autoFocus
               />
             </div>
             <div className="space-y-1">
-              <label className="text-xs font-medium text-foreground">Key</label>
+              <label className="text-xs font-medium text-foreground">{i18nT("pages.companySkills.key")}</label>
               <Input
                 value={form.key}
                 onChange={(event) => {
                   setKeyDirty(true);
                   setForm((current) => ({ ...current, key: event.target.value }));
                 }}
-                placeholder="PERSONAL_GH_TOKEN"
+                placeholder={i18nT("pages.secrets.createDialog.keyPlaceholderUser")}
                 className="font-mono text-sm"
                 disabled={Boolean(editing)}
               />
@@ -274,13 +275,13 @@ export function UserSecretDefinitionsTab({ companyId }: { companyId: string }) {
               </p>
             </div>
             <div className="space-y-1">
-              <label className="text-xs font-medium text-foreground">Description</label>
+              <label className="text-xs font-medium text-foreground">{i18nT("common.description")}</label>
               <Input
                 value={form.description}
                 onChange={(event) =>
                   setForm((current) => ({ ...current, description: event.target.value }))
                 }
-                placeholder="What this credential is for"
+                placeholder={i18nT("scan.s1483")}
               />
             </div>
             <div className="space-y-1">
@@ -292,13 +293,13 @@ export function UserSecretDefinitionsTab({ companyId }: { companyId: string }) {
                 onChange={(event) =>
                   setForm((current) => ({ ...current, usageGuidance: event.target.value }))
                 }
-                placeholder="Tell members how to create their token, required scopes, etc."
+                placeholder={i18nT("pages.secrets.memberTokenHintPlaceholder")}
                 className="min-h-(--sz-70px) text-sm"
               />
             </div>
             {editing ? (
               <div className="space-y-1">
-                <label className="text-xs font-medium text-foreground">Status</label>
+                <label className="text-xs font-medium text-foreground">{i18nT("common.status")}</label>
                 <Select
                   value={form.status}
                   onValueChange={(status) =>
@@ -309,9 +310,9 @@ export function UserSecretDefinitionsTab({ companyId }: { companyId: string }) {
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="active">Active</SelectItem>
-                    <SelectItem value="disabled">Disabled</SelectItem>
-                    <SelectItem value="archived">Archived</SelectItem>
+                    <SelectItem value="active">{i18nT("status.active")}</SelectItem>
+                    <SelectItem value="disabled">{i18nT("common.disabled")}</SelectItem>
+                    <SelectItem value="archived">{i18nT("status.archived")}</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
@@ -334,7 +335,7 @@ export function UserSecretDefinitionsTab({ companyId }: { companyId: string }) {
       <Dialog open={deleteTarget !== null} onOpenChange={(open) => !open && setDeleteTarget(null)}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Remove user secret?</DialogTitle>
+            <DialogTitle>{i18nT("scan.s1086")}</DialogTitle>
             <DialogDescription>
               This removes the definition <span className="font-mono">{deleteTarget?.key}</span> for
               the whole company. Existing member values become unreferenced. This cannot be undone.

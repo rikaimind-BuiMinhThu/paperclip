@@ -9,21 +9,22 @@ import { isAgentTaskTarget } from "@/lib/company-members";
 import { AgentMultiSelect } from "@/components/AgentMultiSelect";
 import { Button } from "@/components/ui/button";
 import { RadioCardGroup, type RadioCardOption } from "@/components/ui/radio-card";
+import { t as i18nT } from "@/i18n";
 
 const MODE_OPTIONS: RadioCardOption[] = [
   {
     value: "open",
-    title: "Any of my agents",
+    title: i18nT("scan.s0075"),
     description: "Let any agent you manage archive tasks out of your inbox.",
   },
   {
     value: "allowlist",
-    title: "Only chosen agents",
+    title: i18nT("scan.s0872"),
     description: "Restrict inbox tidying to the agents you pick below.",
   },
   {
     value: "disabled",
-    title: "Off",
+    title: i18nT("common.off"),
     description: "Agents can never archive tasks from your inbox.",
   },
 ];
@@ -118,7 +119,7 @@ export function InboxAgentPolicyControl({ companyId }: { companyId: string | nul
   }
 
   if (policyQuery.isLoading || !draft) {
-    return <div className="text-sm text-muted-foreground">Loading inbox agent policy…</div>;
+    return <div className="text-sm text-muted-foreground">{i18nT("scan.s0713")}</div>;
   }
 
   return (
@@ -126,7 +127,7 @@ export function InboxAgentPolicyControl({ companyId }: { companyId: string | nul
       <div className="space-y-1">
         <div className="flex items-center gap-2">
           <Inbox className="h-5 w-5 text-muted-foreground" />
-          <h2 className="text-base font-semibold">Let agents tidy my inbox</h2>
+          <h2 className="text-base font-semibold">{i18nT("scan.s0687")}</h2>
         </div>
         <p className="max-w-2xl text-sm text-muted-foreground">
           Choose whether the agents you manage may archive tasks out of your inbox on your behalf. You can
@@ -144,7 +145,7 @@ export function InboxAgentPolicyControl({ companyId }: { companyId: string | nul
 
       {draft.mode === "allowlist" ? (
         <div className="max-w-2xl space-y-2">
-          <div className="text-sm font-medium">Agents allowed to tidy my inbox</div>
+          <div className="text-sm font-medium">{i18nT("scan.s0051")}</div>
           <AgentMultiSelect
             agents={agentOptions}
             selectedAgentIds={selectedAgentIds}
@@ -173,7 +174,7 @@ export function InboxAgentPolicyControl({ companyId }: { companyId: string | nul
 
       <div className="flex max-w-2xl items-center justify-end gap-3">
         {updateMutation.isSuccess && !isDirty ? (
-          <span className="text-xs text-muted-foreground" role="status">Saved</span>
+          <span className="text-xs text-muted-foreground" role="status">{i18nT("common.saved")}</span>
         ) : null}
         <Button
           type="button"

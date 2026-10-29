@@ -21,6 +21,7 @@ import { FoldCurtain } from "./FoldCurtain";
 import { MarkdownBody } from "./MarkdownBody";
 import { MarkdownEditor, type MentionOption } from "./MarkdownEditor";
 import { Button } from "@/components/ui/button";
+import { t as i18nT } from "@/i18n";
 
 /** Case-level body document key (PUT /cases/:id/documents/body). */
 const BODY_DOCUMENT_KEY = "body";
@@ -201,9 +202,9 @@ export function PipelineItemBodyDocument({
     onSuccess: async () => {
       setSelectedRevisionId(null);
       await invalidateAll();
-      pushToast({ title: "Revision restored", tone: "success" });
+      pushToast({ title: i18nT("scan.s1142"), tone: "success" });
     },
-    onError: () => pushToast({ title: "Could not restore the revision", tone: "error" }),
+    onError: () => pushToast({ title: i18nT("scan.s0311"), tone: "error" }),
   });
 
   const beginEdit = useCallback(() => {
@@ -229,13 +230,13 @@ export function PipelineItemBodyDocument({
       if (error instanceof ApiError && error.status === 409) {
         await caseDocumentQuery.refetch();
         pushToast({
-          title: "Body changed elsewhere",
+          title: i18nT("scan.s0142"),
           body: "This item body was updated by someone else. Reloaded the latest — re-apply your edit.",
           tone: "error",
         });
         return;
       }
-      pushToast({ title: "Could not save the body", tone: "error" });
+      pushToast({ title: i18nT("scan.s0314"), tone: "error" });
     }
   }, [caseDocumentQuery, doc?.latestRevisionId, draftBody, pushToast, saveMutation]);
 
@@ -265,7 +266,7 @@ export function PipelineItemBodyDocument({
         setPanelOpen(true);
       } catch {
         setPendingStartAnchor(null);
-        pushToast({ title: "Could not start the conversation", tone: "error" });
+        pushToast({ title: i18nT("scan.s0315"), tone: "error" });
       }
     },
     [conversationIssueId, doc?.latestRevisionId, latestBody, onStartConversation, pushToast, saveMutation],
@@ -295,7 +296,7 @@ export function PipelineItemBodyDocument({
           <MarkdownEditor
             value={draftBody}
             onChange={setDraftBody}
-            placeholder="Write the item body in Markdown…"
+            placeholder={i18nT("scan.s1530")}
             bordered={false}
             className="min-h-(--sz-220px) bg-transparent"
             contentClassName={bodyContentClassName}

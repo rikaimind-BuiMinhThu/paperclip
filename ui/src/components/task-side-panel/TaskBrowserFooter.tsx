@@ -33,6 +33,7 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { t as i18nT } from "@/i18n";
 
 /** Session controls stay below the viewport; the countdown appears only near expiry. */
 export function TaskBrowserFooter({
@@ -99,7 +100,7 @@ export function TaskBrowserFooter({
         </span>
       )}
       {controlledElsewhere && viewport === "fit" && (
-        <span>Size follows another viewer</span>
+        <span>{i18nT("scan.s1260")}</span>
       )}
       {resizing ? (
         <span role="status" className="flex items-center gap-1">
@@ -110,7 +111,7 @@ export function TaskBrowserFooter({
           Resizing…
         </span>
       ) : (
-        browser.status === "running" && <span>Browsing</span>
+        browser.status === "running" && <span>{i18nT("scan.s0158")}</span>
       )}
       <div className="ml-auto flex items-center gap-1">
         {closingSoon && canExtend && (
@@ -164,13 +165,13 @@ export function TaskBrowserFooter({
               <DropdownMenuSub>
                 <DropdownMenuSubTrigger disabled={resizing || !resizeAvailable}>
                   <Monitor aria-hidden="true" />
-                  <span>Browser size</span>
+                  <span>{i18nT("scan.s0156")}</span>
                   <span className="ml-auto text-xs text-muted-foreground">
                     {sizeLabel}
                   </span>
                 </DropdownMenuSubTrigger>
                 <DropdownMenuSubContent className="w-64">
-                  <DropdownMenuLabel>Browser size</DropdownMenuLabel>
+                  <DropdownMenuLabel>{i18nT("scan.s0156")}</DropdownMenuLabel>
                   <DropdownMenuRadioGroup
                     value={viewport}
                     onValueChange={(value) =>
@@ -221,7 +222,7 @@ export function TaskBrowserFooter({
               <DropdownMenuItem onSelect={onReconnect} className="items-start">
                 <RefreshCw className="mt-0.5" aria-hidden="true" />
                 <span className="flex flex-col gap-1">
-                  <span>Reconnect view</span>
+                  <span>{i18nT("scan.s1057")}</span>
                   <span className="text-xs font-normal text-muted-foreground">
                     Reload the live view. Browser work keeps running.
                   </span>
@@ -234,7 +235,7 @@ export function TaskBrowserFooter({
                 >
                   <Clock3 className="mt-0.5" aria-hidden="true" />
                   <span className="flex flex-col gap-1">
-                    <span>Keep browser open</span>
+                    <span>{i18nT("scan.s0662")}</span>
                     <span className="text-xs font-normal text-muted-foreground">
                       Keep it open for up to 10 more minutes.
                     </span>
@@ -249,7 +250,7 @@ export function TaskBrowserFooter({
               >
                 <X className="mt-0.5" aria-hidden="true" />
                 <span className="flex flex-col gap-1">
-                  <span>Close browser</span>
+                  <span>{i18nT("scan.s0233")}</span>
                   <span className="text-xs font-normal text-muted-foreground">
                     End this browser and stop any browsing.
                   </span>

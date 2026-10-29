@@ -26,6 +26,7 @@ import { cn } from "../lib/utils";
 import { brandChipBadge } from "../lib/status-colors";
 import { installPayload, installStateFrom, isAgentInstalled, INSTALLED_HINT } from "../lib/tool-installs";
 import { useTranslation } from "@/i18n";
+import { t as i18nT } from "@/i18n";
 
 function isGitHubConnection(connection: ToolConnection): boolean {
   return (connection.config?.sourceTemplateKey ?? connection.transportConfig?.sourceTemplateKey) === "github";
@@ -718,7 +719,7 @@ export function AgentToolsTab({ agent, companyId }: { agent: AgentDetailRecord; 
                 Active policies
               </div>
               {policiesQuery.isLoading ? (
-                <p className="text-xs text-muted-foreground">Loading policies…</p>
+                <p className="text-xs text-muted-foreground">{i18nT("scan.s0716")}</p>
               ) : governingPolicies.length === 0 ? (
                 <p className="text-xs text-muted-foreground">
                   No enabled policy currently mutates this agent's allow list.
@@ -753,7 +754,7 @@ export function AgentToolsTab({ agent, companyId }: { agent: AgentDetailRecord; 
                 Unavailable tools
               </div>
               {catalogLoading ? (
-                <p className="text-xs text-muted-foreground">Checking tools…</p>
+                <p className="text-xs text-muted-foreground">{i18nT("scan.s0195")}</p>
               ) : deniedTools.length === 0 ? (
                 <p className="text-xs text-muted-foreground">
                   Every known tool this agent could name is allowed.

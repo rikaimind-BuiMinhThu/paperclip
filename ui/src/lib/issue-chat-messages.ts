@@ -59,6 +59,8 @@ export interface IssueChatLinkedRun {
   hasStoredOutput?: boolean;
   logBytes?: number | null;
   errorCode?: string | null;
+  /** Raw run error text (e.g. chat_completion_superseded on older setup_failed rows). */
+  error?: string | null;
   scheduledRetryAt?: string | null;
   nextAction?: string | null;
   resultJson?: Record<string, unknown> | null;

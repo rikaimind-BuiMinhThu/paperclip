@@ -8,6 +8,7 @@ import type {
 import { slackToolsApi } from "@/api/slackTools";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { t as i18nT } from "@/i18n";
 
 export function SlackCapabilitiesView({
   capabilities,
@@ -18,7 +19,7 @@ export function SlackCapabilitiesView({
 }) {
   return (
     <section className="space-y-3">
-      <h3 className="text-sm font-semibold">Slack tools</h3>
+      <h3 className="text-sm font-semibold">{i18nT("scan.s1269")}</h3>
       <p className="text-sm">
         Invite the bot to a channel, then ask it to read the discussion and act
         on it. Only linked people can direct these tools.
@@ -149,7 +150,7 @@ export function SlackSearchView({
   };
   return (
     <section className="space-y-3">
-      <h3 className="text-sm font-semibold">Your Slack search access</h3>
+      <h3 className="text-sm font-semibold">{i18nT("scan.s1540")}</h3>
       <p className="text-sm text-muted-foreground">
         Optional personal authorization enables private search on supported
         runtimes. It cannot read channels the bot hasn’t joined or let the bot
@@ -162,7 +163,7 @@ export function SlackSearchView({
       )}
       {status.connected ? (
         <div className="flex items-center justify-between gap-3">
-          <span className="text-sm">Slack search connected</span>
+          <span className="text-sm">{i18nT("scan.s1268")}</span>
           <Button
             variant="outline"
             size="sm"
@@ -213,7 +214,7 @@ export function SlackSearchView({
               {status.redirectUri ?? "Configure a public HTTPS URL first."}
             </p>
             <div className="space-y-2">
-              <label htmlFor={`${id}-client`}>Client ID</label>
+              <label htmlFor={`${id}-client`}>{i18nT("scan.s0228")}</label>
               <Input
                 id={`${id}-client`}
                 value={clientId}
@@ -221,7 +222,7 @@ export function SlackSearchView({
               />
             </div>
             <div className="space-y-2">
-              <label htmlFor={`${id}-secret`}>Client Secret</label>
+              <label htmlFor={`${id}-secret`}>{i18nT("scan.s0229")}</label>
               <Input
                 id={`${id}-secret`}
                 type="password"

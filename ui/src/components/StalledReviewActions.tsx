@@ -10,6 +10,7 @@ import { cn } from "../lib/utils";
 import { Badge } from "./ui/badge";
 import { Button } from "./ui/button";
 import { Textarea } from "./ui/textarea";
+import { t as i18nT } from "@/i18n";
 
 interface StalledReviewActionsProps {
   issueId: string;
@@ -71,7 +72,7 @@ export function StalledReviewActions({
     },
     onError: (error) => {
       pushToast({
-        title: "Could not record the review decision",
+        title: i18nT("scan.s0306"),
         body: error instanceof Error ? error.message : "Please try again.",
         tone: "error",
       });
@@ -104,7 +105,7 @@ export function StalledReviewActions({
       <Textarea
         value={note}
         onChange={(event) => setNote(event.target.value)}
-        placeholder="Add a note — required to request changes, optional otherwise…"
+        placeholder={i18nT("scan.s0028")}
         className="min-h-16 text-sm"
         data-testid="stalled-review-note"
         disabled={pending}

@@ -12,6 +12,7 @@ import {
 } from "@/components/ui/dialog";
 import { ThumbsDown, ThumbsUp } from "lucide-react";
 import { cn } from "../lib/utils";
+import { t as i18nT } from "@/i18n";
 
 export function OutputFeedbackButtons({
   activeVote,
@@ -141,11 +142,11 @@ export function OutputFeedbackButtons({
       </div>
       {collectingDownvoteReason ? (
         <div className="mt-2 rounded-md border border-border/60 bg-accent/20 p-3">
-          <div className="mb-2 text-sm font-medium">What could have been better?</div>
+          <div className="mb-2 text-sm font-medium">{i18nT("scan.s1476")}</div>
           <Textarea
             value={downvoteReason}
             onChange={(event) => setDownvoteReason(event.target.value)}
-            placeholder="Add a short note"
+            placeholder={i18nT("scan.s0029")}
             className="min-h-20 resize-y bg-background"
             disabled={disabled || isSaving}
           />
@@ -191,7 +192,7 @@ export function OutputFeedbackButtons({
       >
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Save your feedback sharing preference</DialogTitle>
+            <DialogTitle>{i18nT("scan.s1181")}</DialogTitle>
             <DialogDescription>
               Choose whether voted AI outputs can be shared with Kujira AI Workforce Labs. This
               answer becomes the default for future thumbs up and thumbs down votes.
@@ -202,9 +203,9 @@ export function OutputFeedbackButtons({
               This vote is always saved locally.
             </p>
             <p>
-              Choose <span className="font-medium text-foreground">Always allow</span> to share
+              Choose <span className="font-medium text-foreground">{i18nT("pages.appsReview.reviewQueue.alwaysAllow")}</span> to share
               this vote and future voted AI outputs. Choose{" "}
-              <span className="font-medium text-foreground">Don't allow</span> to keep this vote
+              <span className="font-medium text-foreground">{i18nT("pages.instanceGeneral.feedbackDontAllow")}</span> to keep this vote
               and future votes local.
             </p>
             <p>

@@ -1,4 +1,5 @@
 import { TextAttachmentContext } from "@/context/TextAttachmentContext";
+import { useTranslation } from "@/i18n";
 import { useContext, useEffect, useMemo, useRef, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import type {
@@ -40,6 +41,7 @@ import {
 } from "@/components/IssueDocumentAnnotations";
 import { formatDateTime } from "@/lib/utils";
 import { useLocation } from "@/lib/router";
+import { t as i18nT } from "@/i18n";
 
 interface IssuePropertiesArtifactsTabProps {
   issue: Issue;
@@ -57,16 +59,16 @@ function workProductStatusBadge(
   switch (status) {
     case "active":
     case "draft":
-      return { label: "In progress", cssVar: "--status-task-in_progress" };
+      return { label: i18nT("status.inProgress"), cssVar: "--status-task-in_progress" };
     case "ready_for_review":
-      return { label: "For review", cssVar: "--status-task-in_review" };
+      return { label: i18nT("scan.s0540"), cssVar: "--status-task-in_review" };
     case "approved":
     case "merged":
-      return { label: "Done", cssVar: "--status-task-done" };
+      return { label: i18nT("common.done"), cssVar: "--status-task-done" };
     case "changes_requested":
-      return { label: "Changes requested", cssVar: "--status-task-todo" };
+      return { label: i18nT("scan.s0184"), cssVar: "--status-task-todo" };
     case "failed":
-      return { label: "Failed", cssVar: "--status-task-blocked" };
+      return { label: i18nT("status.failed"), cssVar: "--status-task-blocked" };
     default:
       return null;
   }
@@ -171,7 +173,7 @@ function MarkdownWorkProductRow({
           <MarkdownBody>{reviewDoc.body}</MarkdownBody>
         </IssueDocumentAnnotations>
       ) : (
-        <p className="text-sm text-muted-foreground">Document is empty.</p>
+        <p className="text-sm text-muted-foreground">{i18nT("scan.s0424")}</p>
       );
   } else if (ensure.isError) {
     expandedBody = (
@@ -197,7 +199,7 @@ function MarkdownWorkProductRow({
     );
   } else {
     expandedBody = (
-      <p className="text-sm text-muted-foreground">Preparing preview…</p>
+      <p className="text-sm text-muted-foreground">{i18nT("scan.s0976")}</p>
     );
   }
 
@@ -343,7 +345,7 @@ function DocumentRow({
               <MarkdownBody>{doc.body}</MarkdownBody>
             </IssueDocumentAnnotations>
           ) : (
-            <p className="text-sm text-muted-foreground">Document is empty.</p>
+            <p className="text-sm text-muted-foreground">{i18nT("scan.s0424")}</p>
           )}
         </div>
       ) : null}
@@ -366,6 +368,7 @@ export function IssuePropertiesArtifactsTab({
   documentDeepLink,
   onOpenDocument,
 }: IssuePropertiesArtifactsTabProps) {
+  const { t } = useTranslation();
   const {
     data: attachments,
     isPending: attachmentsPending,
@@ -497,7 +500,7 @@ export function IssuePropertiesArtifactsTab({
   const loading = attachmentsPending || productsPending || documentsPending;
   const feedback = loadError ? (
     <div role="alert" className="px-1 py-3 text-sm text-muted-foreground">
-      Some artifacts could not be loaded.
+      {t("pages.artifacts.loadFailed")}
       <button
         className="ml-2 underline"
         onClick={() => {
@@ -506,12 +509,12 @@ export function IssuePropertiesArtifactsTab({
           void refetchDocuments();
         }}
       >
-        Retry
+        {t("pages.artifacts.retry")}
       </button>
     </div>
   ) : loading ? (
     <p role="status" className="px-1 py-3 text-sm text-muted-foreground">
-      Loading artifacts…
+      {t("pages.artifacts.loading")}
     </p>
   ) : null;
 

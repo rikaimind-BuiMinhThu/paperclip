@@ -9,6 +9,7 @@ import { StatusBadge } from "../components/StatusBadge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { formatCents } from "@/lib/utils";
+import { t as i18nT } from "@/i18n";
 
 export function ApiAppDetail() {
   const { appId } = useParams<{ appId: string }>();
@@ -51,8 +52,8 @@ export function ApiAppDetail() {
 
   useEffect(() => {
     setBreadcrumbs([
-      { label: "Settings", href: "/company/settings" },
-      { label: "API Apps", href: "/company/settings/api-apps" },
+      { label: i18nT("common.settings"), href: "/company/settings" },
+      { label: i18nT("settings.apiApps"), href: "/company/settings/api-apps" },
       { label: app?.name ?? "App" },
     ]);
   }, [setBreadcrumbs, app?.name]);
@@ -123,7 +124,7 @@ export function ApiAppDetail() {
 
       <section className="space-y-3">
         <div className="flex items-center justify-between">
-          <h2 className="text-sm font-semibold">Billing units</h2>
+          <h2 className="text-sm font-semibold">{i18nT("scan.s0131")}</h2>
           <Button size="sm" variant="outline" onClick={() => setUnitForm(true)}>
             <Plus className="mr-1 h-3.5 w-3.5" />
             Add unit
@@ -141,20 +142,20 @@ export function ApiAppDetail() {
             }}
           >
             <Input placeholder="unit_key" value={unitKey} onChange={(e) => setUnitKey(e.target.value)} />
-            <Input placeholder="Display name" value={unitName} onChange={(e) => setUnitName(e.target.value)} />
+            <Input placeholder={i18nT("pages.secrets.vaultDialog.displayName")} value={unitName} onChange={(e) => setUnitName(e.target.value)} />
             <Input
               type="number"
               min={1}
               value={packSize}
               onChange={(e) => setPackSize(Number(e.target.value) || 1)}
-              placeholder="Pack size"
+              placeholder={i18nT("scan.s0928")}
             />
             <Input
               type="number"
               min={0}
               value={defaultPrice}
               onChange={(e) => setDefaultPrice(Number(e.target.value) || 0)}
-              placeholder="Default price cents"
+              placeholder={i18nT("scan.s0388")}
             />
             <div className="flex gap-2 sm:col-span-2">
               <Button type="button" variant="ghost" onClick={() => setUnitForm(false)}>
@@ -170,10 +171,10 @@ export function ApiAppDetail() {
           <table className="w-full text-sm">
             <thead className="bg-muted/40 text-left text-muted-foreground">
               <tr>
-                <th className="px-3 py-2">Key</th>
-                <th className="px-3 py-2">Name</th>
-                <th className="px-3 py-2">Billing</th>
-                <th className="px-3 py-2">Active</th>
+                <th className="px-3 py-2">{i18nT("pages.companySkills.key")}</th>
+                <th className="px-3 py-2">{i18nT("common.name")}</th>
+                <th className="px-3 py-2">{i18nT("scan.s0130")}</th>
+                <th className="px-3 py-2">{i18nT("status.active")}</th>
               </tr>
             </thead>
             <tbody>
@@ -202,7 +203,7 @@ export function ApiAppDetail() {
 
       <section className="space-y-3">
         <div className="flex items-center justify-between">
-          <h2 className="text-sm font-semibold">Customers</h2>
+          <h2 className="text-sm font-semibold">{i18nT("scan.s0379")}</h2>
           <Button size="sm" onClick={() => setCustomerForm(true)}>
             <Plus className="mr-1 h-3.5 w-3.5" />
             Add customer
@@ -217,11 +218,11 @@ export function ApiAppDetail() {
             }}
           >
             <div className="min-w-40 flex-1 space-y-1">
-              <label className="text-xs text-muted-foreground">Name</label>
+              <label className="text-xs text-muted-foreground">{i18nT("common.name")}</label>
               <Input value={customerName} onChange={(e) => setCustomerName(e.target.value)} />
             </div>
             <div className="min-w-40 space-y-1">
-              <label className="text-xs text-muted-foreground">Plan</label>
+              <label className="text-xs text-muted-foreground">{i18nT("taskChat.modePlan")}</label>
               <select
                 className="flex h-9 w-full rounded-md border border-input bg-background px-3 text-sm"
                 value={planId}
@@ -246,10 +247,10 @@ export function ApiAppDetail() {
           <table className="w-full text-sm">
             <thead className="bg-muted/40 text-left text-muted-foreground">
               <tr>
-                <th className="px-3 py-2">Name</th>
-                <th className="px-3 py-2">External ref</th>
-                <th className="px-3 py-2">Status</th>
-                <th className="px-3 py-2">Plan</th>
+                <th className="px-3 py-2">{i18nT("common.name")}</th>
+                <th className="px-3 py-2">{i18nT("scan.s0487")}</th>
+                <th className="px-3 py-2">{i18nT("common.status")}</th>
+                <th className="px-3 py-2">{i18nT("taskChat.modePlan")}</th>
               </tr>
             </thead>
             <tbody>

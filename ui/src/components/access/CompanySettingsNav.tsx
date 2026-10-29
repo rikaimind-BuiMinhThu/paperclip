@@ -5,23 +5,24 @@ import { useCloudInstance } from "@/hooks/useCloudInstance";
 import { useHiddenSettings } from "@/hooks/useHiddenSettings";
 import { INSTANCE_SETTINGS_PATH_PREFIX } from "@/lib/instance-settings";
 import { useLocation, useNavigate } from "@/lib/router";
+import { t as i18nT } from "@/i18n";
 
 const items = [
-  { value: "general", label: "General", href: "/company/settings" },
-  { value: "export", label: "Export", href: "/company/export" },
-  { value: "import", label: "Import", href: "/company/import" },
-  { value: "members", label: "Members", href: "/company/settings/members" },
-  { value: "secrets", label: "Secrets", href: "/company/settings/secrets" },
-  { value: "api-apps", label: "API Apps", href: "/company/settings/api-apps" },
-  { value: "instance-profile", label: "Profile", href: `${INSTANCE_SETTINGS_PATH_PREFIX}/profile` },
-  { value: "instance-environments", label: "Environments", href: `${INSTANCE_SETTINGS_PATH_PREFIX}/environments` },
-  { value: "instance-access", label: "Access", href: `${INSTANCE_SETTINGS_PATH_PREFIX}/access` },
-  { value: "instance-experimental", label: "Experimental", href: `${INSTANCE_SETTINGS_PATH_PREFIX}/experimental` },
-  { value: "instance-plugins", label: "Plugins", href: `${INSTANCE_SETTINGS_PATH_PREFIX}/plugins` },
-  { value: "instance-adapters", label: "Adapters", href: `${INSTANCE_SETTINGS_PATH_PREFIX}/adapters` },
-  { value: "instance-master-agents", label: "Master agents", href: `${INSTANCE_SETTINGS_PATH_PREFIX}/master-agents` },
-  { value: "instance-master-departments", label: "Master departments", href: `${INSTANCE_SETTINGS_PATH_PREFIX}/master-departments` },
-  { value: "instance-master-skills", label: "Master skills", href: `${INSTANCE_SETTINGS_PATH_PREFIX}/master-skills` },
+  { value: "general", label: i18nT("settings.general"), href: "/company/settings" },
+  { value: "export", label: i18nT("settings.export"), href: "/company/export" },
+  { value: "import", label: i18nT("settings.import"), href: "/company/import" },
+  { value: "members", label: i18nT("common.members"), href: "/company/settings/members" },
+  { value: "secrets", label: i18nT("settings.secrets"), href: "/company/settings/secrets" },
+  { value: "api-apps", label: i18nT("settings.apiApps"), href: "/company/settings/api-apps" },
+  { value: "instance-profile", label: i18nT("account.profile"), href: `${INSTANCE_SETTINGS_PATH_PREFIX}/profile` },
+  { value: "instance-environments", label: i18nT("settings.environments"), href: `${INSTANCE_SETTINGS_PATH_PREFIX}/environments` },
+  { value: "instance-access", label: i18nT("settings.access"), href: `${INSTANCE_SETTINGS_PATH_PREFIX}/access` },
+  { value: "instance-experimental", label: i18nT("settings.experimental"), href: `${INSTANCE_SETTINGS_PATH_PREFIX}/experimental` },
+  { value: "instance-plugins", label: i18nT("settings.plugins"), href: `${INSTANCE_SETTINGS_PATH_PREFIX}/plugins` },
+  { value: "instance-adapters", label: i18nT("settings.adapters"), href: `${INSTANCE_SETTINGS_PATH_PREFIX}/adapters` },
+  { value: "instance-master-agents", label: i18nT("settings.masterAgents"), href: `${INSTANCE_SETTINGS_PATH_PREFIX}/master-agents` },
+  { value: "instance-master-departments", label: i18nT("settings.masterDepartments"), href: `${INSTANCE_SETTINGS_PATH_PREFIX}/master-departments` },
+  { value: "instance-master-skills", label: i18nT("settings.masterSkills"), href: `${INSTANCE_SETTINGS_PATH_PREFIX}/master-skills` },
 ] as const;
 
 type CompanySettingsTab = (typeof items)[number]["value"];

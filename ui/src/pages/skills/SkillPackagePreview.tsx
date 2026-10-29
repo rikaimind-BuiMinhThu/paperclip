@@ -9,6 +9,7 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } f
 import { Button } from '@/components/ui/button';
 import { Link } from '@/lib/router';
 import type { SkillTreeCandidate } from './SkillSourceTree';
+import { t as i18nT } from "@/i18n";
 
 export function SkillPackagePreview({ companyId, repository, commitSha, skill, initialFile, onClose }: {
   companyId: string; repository: SkillSourceDiscoveryRequest; commitSha: string | null;
@@ -34,15 +35,15 @@ export function SkillPackagePreview({ companyId, repository, commitSha, skill, i
         <DialogTitle>{skill.name}</DialogTitle>
         <DialogDescription className="break-all font-mono text-xs">{root || 'Repository root'}/ · {inspection?.files.length ?? skill.fileCount ?? '?'} files{commitSha ? ` · ${commitSha.slice(0, 8)}` : ''}</DialogDescription>
       </DialogHeader>
-      {!inspection && <p role="status" className="text-sm text-muted-foreground">Refresh this source to inspect its complete package contents.</p>}
+      {!inspection && <p role="status" className="text-sm text-muted-foreground">{i18nT("scan.s1071")}</p>}
       {skill.error && <p role="alert" className="text-sm text-destructive">{skill.error}</p>}
       {inspection?.requirements && <section className="rounded-md border border-border bg-muted/30 p-3 text-sm">
-        <h3 className="font-medium">Runtime requirements</h3>
+        <h3 className="font-medium">{i18nT("scan.s1171")}</h3>
         <p className="mt-1 whitespace-pre-wrap text-muted-foreground">{inspection.requirements}</p>
         <p className="mt-2 text-xs text-muted-foreground">Declared by the skill author. Importing does not install dependencies or run scripts.</p>
       </section>}
       {Boolean(inspection?.references.length) && <section className="rounded-md border border-border p-3 text-sm" aria-label="Package reference warnings">
-        <h3 className="flex items-center gap-2 font-medium"><AlertTriangle className="size-4" />Check references</h3>
+        <h3 className="flex items-center gap-2 font-medium"><AlertTriangle className="size-4" />{i18nT("scan.s0192")}</h3>
         <p className="mt-1 text-xs text-muted-foreground">These referenced paths are not included. If the skill needs them, fix the source or leave this skill unchecked.</p>
         <ul className="mt-2 space-y-2">
           {inspection!.references.map(reference => <li key={`${reference.fromPath}:${reference.resolvedPath}`} className="break-all text-xs">
@@ -67,16 +68,16 @@ export function SkillPackagePreview({ companyId, repository, commitSha, skill, i
             {file && <span className="text-muted-foreground">{file.sizeBytes.toLocaleString()} bytes{file.executable ? ' · executable' : ''}</span>}
           </div>
           <div className="max-h-(--sz-480px) min-h-40 overflow-auto p-3">
-            {preview.isFetching && <p role="status" className="text-sm text-muted-foreground">Loading preview…</p>}
-            {preview.error && <div role="alert" className="space-y-2 text-sm"><p className="text-destructive">{preview.error.message}</p><Button variant="outline" size="sm" onClick={() => void preview.refetch()}>Try again</Button> <Link to="/apps" className="underline">Manage GitHub access</Link></div>}
-            {skill.error && <p className="text-sm text-muted-foreground">Preview unavailable for a package that failed validation.</p>}
-            {preview.data?.file.encoding === 'base64' && <div className="flex flex-col items-center gap-3 py-8 text-sm text-muted-foreground"><FileImage className="size-6" /><p>Binary asset · included without changes</p><p className="text-xs">Open on GitHub to preview or download this file.</p></div>}
+            {preview.isFetching && <p role="status" className="text-sm text-muted-foreground">{i18nT("scan.s0718")}</p>}
+            {preview.error && <div role="alert" className="space-y-2 text-sm"><p className="text-destructive">{preview.error.message}</p><Button variant="outline" size="sm" onClick={() => void preview.refetch()}>{i18nT("common.tryAgain")}</Button> <Link to="/apps" className="underline">{i18nT("scan.s0734")}</Link></div>}
+            {skill.error && <p className="text-sm text-muted-foreground">{i18nT("scan.s0983")}</p>}
+            {preview.data?.file.encoding === 'base64' && <div className="flex flex-col items-center gap-3 py-8 text-sm text-muted-foreground"><FileImage className="size-6" /><p>{i18nT("scan.s0132")}</p><p className="text-xs">{i18nT("scan.s0889")}</p></div>}
             {preview.data?.content !== null && preview.data?.content !== undefined && <pre className="whitespace-pre-wrap break-words font-mono text-xs leading-relaxed">{preview.data.content}</pre>}
-            {preview.data?.truncated && <p className="mt-3 text-xs text-muted-foreground">Showing the first 64 KB. The complete file is imported.</p>}
+            {preview.data?.truncated && <p className="mt-3 text-xs text-muted-foreground">{i18nT("scan.s1251")}</p>}
           </div>
         </div>
       </div>}
-      <div className="flex items-center justify-between gap-3"><Button type="button" variant="outline" onClick={onClose}>Back to selection</Button><Button asChild variant="ghost" size="sm"><a href={githubUrl} target="_blank" rel="noreferrer">Open on GitHub<ExternalLink className="size-3.5" /></a></Button></div>
+      <div className="flex items-center justify-between gap-3"><Button type="button" variant="outline" onClick={onClose}>{i18nT("scan.s0124")}</Button><Button asChild variant="ghost" size="sm"><a href={githubUrl} target="_blank" rel="noreferrer">{i18nT("scan.s0888")}<ExternalLink className="size-3.5" /></a></Button></div>
     </DialogContent>
   </Dialog>;
 }

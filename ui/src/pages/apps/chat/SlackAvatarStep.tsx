@@ -9,6 +9,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { SetupWizardFooter } from "@/components/SetupWizard";
 import { useTranslation } from "@/i18n";
+import { t as i18nT } from "@/i18n";
 
 export interface SlackAvatarProps {
   agentName: string;
@@ -137,16 +138,16 @@ export function SlackAvatarContent({
               and choose <strong>{appName}</strong>.
             </li>
             <li>
-              Choose <strong>Basic Information</strong>, then scroll to{" "}
-              <strong>Display Information</strong>.
+              Choose <strong>{i18nT("scan.s0127")}</strong>, then scroll to{" "}
+              <strong>{i18nT("scan.s0421")}</strong>.
             </li>
             <li>
-              Under <strong>App icon &amp; Preview</strong>, click the app icon
+              Under <strong>{i18nT("scan.s0079")}</strong>, click the app icon
               and upload{" "}
               <span className="break-all font-mono text-xs">{filename}</span>.
             </li>
             <li>
-              Confirm the crop, then click <strong>Save Changes</strong> in
+              Confirm the crop, then click <strong>{i18nT("scan.s1179")}</strong> in
               Slack.
             </li>
           </ol>
@@ -176,7 +177,7 @@ export function SlackAvatarStep({
           <h1 className="text-xl font-bold">
             Give {props.agentName} a face in Slack
           </h1>
-          <span className="text-xs text-muted-foreground">Optional</span>
+          <span className="text-xs text-muted-foreground">{i18nT("common.optional")}</span>
         </div>
         <p className="text-sm text-muted-foreground">
           Use {props.agentName}’s avatar so your team recognizes the agent
@@ -209,7 +210,7 @@ export function SlackAvatarSettings(props: SlackAvatarProps) {
   return (
     <section className="space-y-4" aria-label="Slack avatar">
       <div className="space-y-1">
-        <h2 className="text-lg font-semibold">Agent avatar</h2>
+        <h2 className="text-lg font-semibold">{i18nT("scan.s0045")}</h2>
         <p className="text-sm text-muted-foreground">
           Use {props.agentName}’s avatar so your team recognizes the agent
         </p>

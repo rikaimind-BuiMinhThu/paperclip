@@ -1,6 +1,7 @@
 import { useCallback } from "react";
 import { getWorktreeUiBranding } from "../lib/worktree-branding";
 import { useCopyAction } from "../lib/use-copy-action";
+import { t as i18nT } from "@/i18n";
 
 export function WorktreeBanner() {
   const branding = getWorktreeUiBranding();
@@ -25,7 +26,7 @@ export function WorktreeBanner() {
       }}
     >
       <div className="flex items-center gap-2 overflow-hidden whitespace-nowrap">
-        <span className="shrink-0 opacity-70">Worktree</span>
+        <span className="shrink-0 opacity-70">{i18nT("scan.s1523")}</span>
         <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-current opacity-70" aria-hidden="true" />
         <button
           type="button"

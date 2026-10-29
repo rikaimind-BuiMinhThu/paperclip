@@ -3,17 +3,18 @@ import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
 import { nextCronFires, parseCronExpression } from "../lib/cron-fires";
+import { t as i18nT } from "@/i18n";
 
 export type SchedulePreset = "every_minute" | "every_hour" | "every_day" | "weekdays" | "weekly" | "monthly" | "custom";
 
 const PRESETS: { value: SchedulePreset; label: string }[] = [
-  { value: "every_minute", label: "Every minute" },
-  { value: "every_hour", label: "Every hour" },
-  { value: "every_day", label: "Every day" },
-  { value: "weekdays", label: "Weekdays" },
-  { value: "weekly", label: "Weekly" },
-  { value: "monthly", label: "Monthly" },
-  { value: "custom", label: "Custom (cron)" },
+  { value: "every_minute", label: i18nT("scan.s0472") },
+  { value: "every_hour", label: i18nT("scan.s0471") },
+  { value: "every_day", label: i18nT("pages.routineDetail.wizard.everyDay") },
+  { value: "weekdays", label: i18nT("scan.s1475") },
+  { value: "weekly", label: i18nT("pages.instanceGeneral.retentionWeekly") },
+  { value: "monthly", label: i18nT("pages.instanceGeneral.retentionMonthly") },
+  { value: "custom", label: i18nT("scan.s0374") },
 ];
 
 const HOURS = Array.from({ length: 24 }, (_, i) => ({
@@ -27,13 +28,13 @@ const MINUTES = Array.from({ length: 12 }, (_, i) => ({
 }));
 
 const DAYS_OF_WEEK = [
-  { value: "1", label: "Mon" },
-  { value: "2", label: "Tue" },
-  { value: "3", label: "Wed" },
-  { value: "4", label: "Thu" },
-  { value: "5", label: "Fri" },
-  { value: "6", label: "Sat" },
-  { value: "0", label: "Sun" },
+  { value: "1", label: i18nT("scan.s0756") },
+  { value: "2", label: i18nT("scan.s1397") },
+  { value: "3", label: i18nT("scan.s1473") },
+  { value: "4", label: i18nT("scan.s1379") },
+  { value: "5", label: i18nT("scan.s0543") },
+  { value: "6", label: i18nT("scan.s1178") },
+  { value: "0", label: i18nT("scan.s1321") },
 ];
 
 const DAYS_OF_MONTH = Array.from({ length: 31 }, (_, i) => ({
@@ -248,7 +249,7 @@ export function ScheduleEditor({
     <div className="space-y-3">
       <Select value={preset} onValueChange={(v) => handlePresetChange(v as SchedulePreset)}>
         <SelectTrigger className="w-full" aria-label="Schedule frequency">
-          <SelectValue placeholder="Choose frequency..." />
+          <SelectValue placeholder={i18nT("scan.s0209")} />
         </SelectTrigger>
         <SelectContent>
           {PRESETS.map((p) => (

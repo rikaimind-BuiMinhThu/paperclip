@@ -30,6 +30,7 @@ import {
   type BoardSendRejection,
   type RetainedBoardSend,
 } from "./board-send-draft";
+import { t as i18nT } from "@/i18n";
 
 const providerNames: Record<ChatProvider, string> = {
   slack: "Slack",
@@ -49,42 +50,42 @@ type PublicationFeedback = {
 
 const publicationFeedback: Record<ChatPublicationState, PublicationFeedback> = {
   awaiting_consent: {
-    title: "Waiting for file consent",
+    title: i18nT("scan.s1457"),
     body: "The recipient must accept the file card in Microsoft Teams. The file is not delivered yet; this send identity is kept while Kujira AI Workforce waits.",
     tone: "info",
   },
   published: {
-    title: "Sent to channel",
+    title: i18nT("scan.s1233"),
     body: "The board update was published to the connected conversation.",
     tone: "success",
   },
   pending: {
-    title: "Queued for channel",
+    title: i18nT("scan.s1023"),
     body: "Delivery is still pending. Your draft is kept until Kujira AI Workforce confirms publication.",
     tone: "info",
   },
   streaming: {
-    title: "Publishing to channel",
+    title: i18nT("scan.s1016"),
     body: "Delivery is still in progress. Your draft is kept until Kujira AI Workforce confirms publication.",
     tone: "info",
   },
   retry: {
-    title: "Delivery retry scheduled",
+    title: i18nT("scan.s0400"),
     body: "Kujira AI Workforce will retry this publication. Your draft and retry identity are kept.",
     tone: "warn",
   },
   delivery_unknown: {
-    title: "Delivery not confirmed",
+    title: i18nT("scan.s0398"),
     body: "The provider may have accepted this update. Resolve it in Activity before trying again to avoid a duplicate.",
     tone: "warn",
   },
   failed: {
-    title: "Channel delivery failed",
+    title: i18nT("scan.s0187"),
     body: "Your draft is kept. Open Activity to retry this same publication safely.",
     tone: "error",
   },
   cancelled: {
-    title: "Channel delivery cancelled",
+    title: i18nT("scan.s0186"),
     body: "Your draft is kept. Some parts may already have been published; check Activity before starting a new send.",
     tone: "info",
   },
@@ -336,7 +337,7 @@ function ConnectedTaskComposer({
       pushToast({
         ...feedback,
         action: {
-          label: "View activity",
+          label: i18nT("scan.s1444"),
           href: `/apps/chat/${binding!.endpointId}/activity`,
         },
       });
@@ -359,14 +360,14 @@ function ConnectedTaskComposer({
         setUnconfirmedRequest(false);
         invalidateTask();
         pushToast({
-          title: "Update was not sent",
+          title: i18nT("scan.s1424"),
           body: "A selected file already belongs to another comment. Edit the rejected send to correct the selection.",
           tone: "error",
         });
         return;
       }
       pushToast({
-        title: "Couldn't confirm channel delivery",
+        title: i18nT("scan.s0322"),
         body:
           error instanceof Error
             ? `${error.message} Your draft is kept; retrying here reuses the same request identity.`
@@ -467,14 +468,14 @@ function ConnectedTaskComposer({
     canDismissBoardSendBatch(batch) && batch!.published < batch!.total;
   const currentFeedback = mixedTerminal
     ? {
-        title: "Delivery settled with mixed outcomes",
+        title: i18nT("scan.s0401"),
         body: "Not every part was confirmed delivered. Review the outcomes below; dismissing this receipt does not resend anything.",
         tone: "info" as const,
       }
     : currentPublication?.state === "cancelled" &&
         (batch?.awaitingConsent ?? 0) > 0
       ? {
-          title: "Waiting for remaining file consent",
+          title: i18nT("scan.s1458"),
           body: "Some parts have settled. The remaining file cards still need the recipient's response; this send stays locked until the whole batch is resolved.",
           tone: "info" as const,
         }
@@ -547,7 +548,7 @@ function ConnectedTaskComposer({
               idempotencyKey.current = null;
               publish.reset();
             }}
-            placeholder="Write only what should be visible in the provider conversation."
+            placeholder={i18nT("scan.s1527")}
           />
           {selectedAttachmentIds.length > 0 && !body.trim() && (
             <p className="text-xs text-muted-foreground">
@@ -660,7 +661,7 @@ function ConnectedTaskComposer({
               role="alert"
               className="space-y-1 rounded-md border border-border bg-background p-3 text-xs"
             >
-              <p className="font-medium">Update was not sent</p>
+              <p className="font-medium">{i18nT("scan.s1424")}</p>
               <p className="text-muted-foreground">
                 A selected file already belongs to another comment. This request
                 was rejected before any channel message was queued. Your exact
@@ -711,7 +712,7 @@ function ConnectedTaskComposer({
                 role="alert"
                 className="space-y-1 rounded-md border border-border bg-background p-3 text-xs"
               >
-                <p className="font-medium">Delivery result not confirmed</p>
+                <p className="font-medium">{i18nT("scan.s0399")}</p>
                 <p className="text-muted-foreground">
                   Your exact draft and request identity are kept. Retry safely
                   to learn the authoritative publication state without creating

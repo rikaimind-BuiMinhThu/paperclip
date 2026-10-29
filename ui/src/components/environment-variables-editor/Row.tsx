@@ -30,6 +30,7 @@ import {
   type NameIssue,
   type RowSource,
 } from "./model";
+import { t as i18nT } from "@/i18n";
 
 const nameInputClass =
   "w-full rounded-md border border-border px-2.5 py-1.5 bg-transparent outline-none text-sm font-mono placeholder:text-muted-foreground/40 focus-visible:ring-2 focus-visible:ring-ring/40";
@@ -214,7 +215,7 @@ export function EnvironmentVariableRow({
             showNameIssue && nameIssue?.level === "error" && "border-destructive focus-visible:ring-destructive/40",
             showNameIssue && nameIssue?.level === "warn" && "border-amber-500 focus-visible:ring-amber-500/40",
           )}
-          placeholder="KEY"
+          placeholder={i18nT("scan.s0660")}
           value={row.name}
           spellCheck={false}
           disabled={disabled}
@@ -280,15 +281,15 @@ export function EnvironmentVariableRow({
                 </Tooltip>
                 <DropdownMenuContent align="start" className="w-56">
                   <DropdownMenuItem className="flex-col items-start gap-0.5" onSelect={() => switchSource("text")}>
-                    <span className="text-sm">Text value</span>
-                    <span className="text-(length:--text-micro) text-muted-foreground">Store the value inline as plain text.</span>
+                    <span className="text-sm">{i18nT("scan.s1356")}</span>
+                    <span className="text-(length:--text-micro) text-muted-foreground">{i18nT("scan.s1311")}</span>
                   </DropdownMenuItem>
                   <DropdownMenuItem className="flex-col items-start gap-0.5" onSelect={() => switchSource("secret")}>
-                    <span className="text-sm">Organization secret</span>
-                    <span className="text-(length:--text-micro) text-muted-foreground">Resolve a stored organization secret at run start.</span>
+                    <span className="text-sm">{i18nT("scan.s0909")}</span>
+                    <span className="text-(length:--text-micro) text-muted-foreground">{i18nT("scan.s1112")}</span>
                   </DropdownMenuItem>
                   <DropdownMenuItem className="flex-col items-start gap-0.5" onSelect={() => switchSource("user_secret")}>
-                    <span className="text-sm">User secret</span>
+                    <span className="text-sm">{i18nT("pages.secrets.eventsTab.userSecretBadge")}</span>
                     <span className="text-(length:--text-micro) text-muted-foreground">
                       Resolve the responsible user&apos;s own value at run start.
                     </span>
@@ -325,7 +326,7 @@ export function EnvironmentVariableRow({
                         title="This value looks sensitive — store it as a secret"
                       >
                         <ShieldAlert className="size-3.5" />
-                        <span className="hidden @[30rem]/env:inline">Store as secret</span>
+                        <span className="hidden @[30rem]/env:inline">{i18nT("scan.s1310")}</span>
                       </button>
                       <button
                         type="button"
@@ -435,7 +436,7 @@ export function EnvironmentVariableRow({
                       }}
                       className="min-w-0 bg-transparent px-2 py-1.5 text-sm font-mono outline-none disabled:pointer-events-none"
                     >
-                      <option value="">Select user secret...</option>
+                      <option value="">{i18nT("scan.s1221")}</option>
                       {row.userSecretKey && !userSecretDefinitions?.some((definition) => definition.key === row.userSecretKey) ? (
                         <option value={row.userSecretKey}>Unknown ({row.userSecretKey})</option>
                       ) : null}
@@ -464,8 +465,8 @@ export function EnvironmentVariableRow({
                     onChange={(event) => onPatch({ required: event.target.value === "required" })}
                     className="border-l border-border bg-transparent px-2 py-1.5 text-xs font-medium text-muted-foreground outline-none disabled:pointer-events-none"
                   >
-                    <option value="required">Required</option>
-                    <option value="optional">Optional</option>
+                    <option value="required">{i18nT("common.required")}</option>
+                    <option value="optional">{i18nT("common.optional")}</option>
                   </select>
                 </div>
               )}

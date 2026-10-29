@@ -47,6 +47,7 @@ import { IssueGroupHeader } from "../components/IssueGroupHeader";
 import { Button } from "../components/ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "../components/ui/popover";
 import { useTranslation } from "@/i18n";
+import { t as i18nT } from "@/i18n";
 
 /**
  * Queue page. A single queue's pending
@@ -207,7 +208,7 @@ export function DecisionQueuePage() {
     onSuccess: () => queryClient.invalidateQueries({ queryKey: queryKeys.decisionQueues.list(selectedCompanyId!) }),
     onError: (err) =>
       pushToast({
-        title: "Could not update seeding",
+        title: i18nT("scan.s0316"),
         body: err instanceof Error ? err.message : "Please try again.",
         tone: "error",
       }),
@@ -447,12 +448,12 @@ function QueueItemRow({
     onSuccess: () => {
       setOpen(false);
       setReason("");
-      pushToast({ title: "Removed from queue", body: item.subject.title ?? undefined, tone: "info" });
+      pushToast({ title: i18nT("scan.s1088"), body: item.subject.title ?? undefined, tone: "info" });
       onExcluded();
     },
     onError: (err) =>
       pushToast({
-        title: "Could not exclude",
+        title: i18nT("scan.s0295"),
         body: err instanceof Error ? err.message : "Please try again.",
         tone: "error",
       }),
@@ -469,11 +470,11 @@ function QueueItemRow({
             </Button>
           </PopoverTrigger>
           <PopoverContent align="end" className="w-64 space-y-2 p-3">
-            <p className="text-xs font-medium text-foreground">Remove from this queue</p>
+            <p className="text-xs font-medium text-foreground">{i18nT("scan.s1083")}</p>
             <textarea
               value={reason}
               onChange={(event) => setReason(event.target.value)}
-              placeholder="Reason (optional)…"
+              placeholder={i18nT("scan.s1038")}
               className="min-h-16 w-full rounded-sm border border-border bg-background px-2 py-1 text-xs"
             />
             <div className="flex justify-end gap-1">

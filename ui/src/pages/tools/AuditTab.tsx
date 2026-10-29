@@ -25,18 +25,19 @@ import { agentsApi } from "@/api/agents";
 import { AgentSelect } from "@/components/AgentMultiSelect";
 import { ToolsPageHeader, LoadingState, ErrorState, RelativeTime } from "./shared";
 import { useTranslation } from "@/i18n";
+import { t as i18nT } from "@/i18n";
 
 const PAGE_SIZE = 50;
 const ALL = "__all";
 
 /** Outcome chip vocabulary (spec §4C / §5): Allowed · Blocked · Asked first · Failed · Waiting. */
 const OUTCOME_META: Record<ToolAuditOutcome, { label: string; status: string }> = {
-  allowed: { label: "Allowed", status: "allowed" },
-  blocked: { label: "Blocked", status: "denied" },
-  asked_first: { label: "Asked first", status: "require-approval" },
-  waiting: { label: "Waiting", status: "deferred" },
-  failed: { label: "Failed", status: "failed" },
-  unknown: { label: "Recorded", status: "unchecked" },
+  allowed: { label: i18nT("status.allowed"), status: "allowed" },
+  blocked: { label: i18nT("status.blocked"), status: "denied" },
+  asked_first: { label: i18nT("status.askedFirst"), status: "require-approval" },
+  waiting: { label: i18nT("status.waiting"), status: "deferred" },
+  failed: { label: i18nT("status.failed"), status: "failed" },
+  unknown: { label: i18nT("status.recorded"), status: "unchecked" },
 };
 
 const OUTCOME_FILTER_VALUES = [ALL, "allowed", "blocked", "asked_first", "waiting", "failed"] as const;
@@ -292,7 +293,7 @@ function ActivityRow({
                       const connectionName = detailString(connection, "name") ?? "Unnamed connection";
                       return connectionId ? (
                         <div key={connectionId} className="flex gap-2">
-                          <span className="shrink-0 text-muted-foreground">Not installed</span>
+                          <span className="shrink-0 text-muted-foreground">{i18nT("pages.plugins.notInstalled")}</span>
                           <Link to={`/apps/${connectionId}/permissions`} className="font-medium text-primary hover:underline">
                             {connectionName}
                           </Link>
@@ -303,7 +304,7 @@ function ActivityRow({
                 ) : null}
                 {argumentsText ? (
                   <div className="space-y-1">
-                    <span className="text-muted-foreground">Parameters (redacted)</span>
+                    <span className="text-muted-foreground">{i18nT("scan.s0932")}</span>
                     <pre className="whitespace-pre-wrap break-words rounded-md border border-border bg-background p-3 font-mono text-xs text-foreground">
                       {argumentsText}
                     </pre>

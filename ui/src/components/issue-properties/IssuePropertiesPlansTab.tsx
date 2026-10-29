@@ -7,6 +7,7 @@ import { IssuePlanDecompositionsSection } from "@/components/IssuePlanDecomposit
 import { MarkdownBody } from "@/components/MarkdownBody";
 import { DocumentAnnotationsCountChip, IssueDocumentAnnotations } from "@/components/IssueDocumentAnnotations";
 import { useIssuePlanDocument } from "@/hooks/useIssuePlanDocument";
+import { useTranslation } from "@/i18n";
 import { useLocation } from "@/lib/router";
 
 interface IssuePropertiesPlansTabProps {
@@ -36,6 +37,7 @@ function hasPendingPlanConfirmation(interactions: IssueThreadInteraction[] | und
  * the /dev/task-chat-lab harness).
  */
 export function IssuePropertiesPlansTab({ issue }: IssuePropertiesPlansTabProps) {
+  const { t } = useTranslation();
   const { data: planDocument, isLoading: planDocumentLoading } = useIssuePlanDocument(issue.id);
   const location = useLocation();
   const [annotationPanelOpen, setAnnotationPanelOpen] = useState(false);
@@ -80,11 +82,13 @@ export function IssuePropertiesPlansTab({ issue }: IssuePropertiesPlansTabProps)
       {planDocument ? (
         <section data-testid="issue-plan-document" className="space-y-2">
           <div className="flex items-center gap-1 text-xs text-muted-foreground">
-            {`Revision ${planDocument.latestRevisionNumber ?? 1} · updated ${new Date(planDocument.updatedAt).toLocaleString([], {
-              month: "short",
-              day: "numeric",
-              hour: "numeric",
-              minute: "2-digit",
+            {`${t("issues.documents.revision", { n: planDocument.latestRevisionNumber ?? 1 })} · ${t("issues.documents.updated", {
+              date: new Date(planDocument.updatedAt).toLocaleString([], {
+                month: "short",
+                day: "numeric",
+                hour: "numeric",
+                minute: "2-digit",
+              }),
             })}`}
             <DocumentAnnotationsCountChip
               issueId={issue.id}

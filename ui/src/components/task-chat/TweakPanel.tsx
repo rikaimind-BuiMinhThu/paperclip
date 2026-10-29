@@ -10,6 +10,7 @@ import {
   parseCssTimeMs,
   type MotionTokenDef,
 } from "./motion-tokens";
+import { t as i18nT } from "@/i18n";
 
 const POS_KEY = "tc-tweak-pos";
 const OVERRIDES_KEY = "tc-tweak-overrides";
@@ -139,7 +140,7 @@ export function TweakPanel() {
         onPointerUp={onHeaderPointerUp}
       >
         <GripHorizontal className="h-3.5 w-3.5 text-muted-foreground" />
-        <span>Motion tweak panel</span>
+        <span>{i18nT("scan.s0761")}</span>
         <div className="ml-auto flex items-center gap-1">
           <button type="button" title="Reset all" onClick={resetAll} className="rounded p-0.5 hover:bg-accent">
             <RotateCcw className="h-3.5 w-3.5" />

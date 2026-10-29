@@ -1,4 +1,5 @@
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { t as i18nT } from "@/i18n";
 
 interface ShortcutEntry {
   keys: string[];
@@ -15,48 +16,48 @@ interface ShortcutSection {
 
 const sections: ShortcutSection[] = [
   {
-    title: "Inbox",
+    title: i18nT("nav.inbox"),
     shortcuts: [
-      { keys: ["j"], label: "Move down" },
-      { keys: ["↓"], label: "Move down" },
-      { keys: ["k"], label: "Move up" },
-      { keys: ["↑"], label: "Move up" },
-      { keys: ["←"], label: "Collapse selected group" },
-      { keys: ["→"], label: "Expand selected group" },
-      { keys: ["Enter"], label: "Open selected item" },
-      { keys: ["a"], label: "Archive item" },
-      { keys: ["y"], label: "Archive item" },
-      { keys: ["r"], label: "Mark as read" },
-      { keys: ["U"], label: "Mark as unread" },
+      { keys: ["j"], label: i18nT("scan.s0763") },
+      { keys: ["↓"], label: i18nT("scan.s0763") },
+      { keys: ["k"], label: i18nT("scan.s0767") },
+      { keys: ["↑"], label: i18nT("scan.s0767") },
+      { keys: ["←"], label: i18nT("scan.s0239") },
+      { keys: ["→"], label: i18nT("scan.s0482") },
+      { keys: ["Enter"], label: i18nT("scan.s0891") },
+      { keys: ["a"], label: i18nT("scan.s0087") },
+      { keys: ["y"], label: i18nT("scan.s0087") },
+      { keys: ["r"], label: i18nT("inbox.markRead") },
+      { keys: ["U"], label: i18nT("inbox.markUnread") },
     ],
   },
   {
-    title: "Task detail",
+    title: i18nT("scan.s1332"),
     shortcuts: [
-      { keys: ["y"], label: "Quick-archive back to inbox" },
-      { keys: ["g", "i"], label: "Go to inbox" },
-      { keys: ["g", "c"], label: "Focus comment composer" },
+      { keys: ["y"], label: i18nT("scan.s1025") },
+      { keys: ["g", "i"], label: i18nT("scan.s0572") },
+      { keys: ["g", "c"], label: i18nT("scan.s0536") },
     ],
   },
   {
-    title: "Decisions",
+    title: i18nT("nav.decisions"),
     shortcuts: [
-      { keys: ["j"], label: "Move down" },
-      { keys: ["↓"], label: "Move down" },
-      { keys: ["k"], label: "Move up" },
-      { keys: ["↑"], label: "Move up" },
-      { keys: ["Enter"], label: "Open or close selected decision" },
-      { keys: ["x"], label: "Dismiss selected decision" },
+      { keys: ["j"], label: i18nT("scan.s0763") },
+      { keys: ["↓"], label: i18nT("scan.s0763") },
+      { keys: ["k"], label: i18nT("scan.s0767") },
+      { keys: ["↑"], label: i18nT("scan.s0767") },
+      { keys: ["Enter"], label: i18nT("scan.s0890") },
+      { keys: ["x"], label: i18nT("scan.s0420") },
     ],
   },
   {
-    title: "Global",
+    title: i18nT("scan.s0571"),
     shortcuts: [
-      { keys: ["/"], label: "Search current page or quick search" },
-      { keys: ["c"], label: "New task" },
-      { keys: ["["], label: "Toggle sidebar" },
-      { keys: ["]"], label: "Toggle panel" },
-      { keys: ["?"], label: "Show keyboard shortcuts" },
+      { keys: ["/"], label: i18nT("scan.s1188") },
+      { keys: ["c"], label: i18nT("issues.dialog.newTask") },
+      { keys: ["["], label: i18nT("scan.s1383") },
+      { keys: ["]"], label: i18nT("scan.s1382") },
+      { keys: ["?"], label: i18nT("scan.s1250") },
     ],
   },
 ];
@@ -105,7 +106,7 @@ export function KeyboardShortcutsCheatsheetContent() {
       </div>
       <div className="border-t border-border px-5 py-3">
         <p className="text-xs text-muted-foreground">
-          Press <KeyCap>Esc</KeyCap> to close &middot; Shortcuts are disabled in text fields
+          Press <KeyCap>{i18nT("scan.s0468")}</KeyCap> to close &middot; Shortcuts are disabled in text fields
         </p>
       </div>
     </>
@@ -123,7 +124,7 @@ export function KeyboardShortcutsCheatsheet({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-md gap-0 p-0 overflow-hidden" showCloseButton={false}>
         <DialogHeader className="px-5 pt-5 pb-3">
-          <DialogTitle className="text-base">Keyboard shortcuts</DialogTitle>
+          <DialogTitle className="text-base">{i18nT("scan.s0665")}</DialogTitle>
         </DialogHeader>
         <KeyboardShortcutsCheatsheetContent />
       </DialogContent>

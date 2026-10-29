@@ -12,6 +12,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { copyTextToClipboard } from "@/lib/clipboard";
 import { formatCents } from "@/lib/utils";
+import { t as i18nT } from "@/i18n";
 
 export function ApiAppCustomerDetail() {
   const { appId, customerId } = useParams<{ appId: string; customerId: string }>();
@@ -63,8 +64,8 @@ export function ApiAppCustomerDetail() {
 
   useEffect(() => {
     setBreadcrumbs([
-      { label: "Settings", href: "/company/settings" },
-      { label: "API Apps", href: "/company/settings/api-apps" },
+      { label: i18nT("common.settings"), href: "/company/settings" },
+      { label: i18nT("settings.apiApps"), href: "/company/settings/api-apps" },
       { label: app?.name ?? "App", href: `/company/settings/api-apps/${appId}` },
       { label: customer?.name ?? "Customer" },
     ]);
@@ -96,7 +97,7 @@ export function ApiAppCustomerDetail() {
     onSuccess: async (created) => {
       setCreatedToken(created.token);
       pushToast({
-        title: "API key created",
+        title: i18nT("scan.s0008"),
         body: "Copy it now. You will not see this key again.",
         tone: "success",
       });
@@ -175,10 +176,10 @@ export function ApiAppCustomerDetail() {
       ) : null}
 
       <section className="space-y-3">
-        <h2 className="text-sm font-semibold">Overview</h2>
+        <h2 className="text-sm font-semibold">{i18nT("common.overview")}</h2>
         <div className="grid gap-3 sm:grid-cols-2">
           <div className="space-y-1">
-            <label className="text-xs text-muted-foreground">Plan</label>
+            <label className="text-xs text-muted-foreground">{i18nT("taskChat.modePlan")}</label>
             <select
               className="flex h-9 w-full rounded-md border border-input bg-background px-3 text-sm"
               value={customer.planId}
@@ -192,7 +193,7 @@ export function ApiAppCustomerDetail() {
             </select>
           </div>
           <div className="space-y-1">
-            <label className="text-xs text-muted-foreground">Email</label>
+            <label className="text-xs text-muted-foreground">{i18nT("auth.email")}</label>
             <div className="text-sm">{customer.email ?? "—"}</div>
           </div>
         </div>
@@ -200,7 +201,7 @@ export function ApiAppCustomerDetail() {
 
       {usage ? (
         <section className="space-y-3">
-          <h2 className="text-sm font-semibold">Usage (this month)</h2>
+          <h2 className="text-sm font-semibold">{i18nT("scan.s1429")}</h2>
           <UsageMeters
             tokensUsed={usage.tokensUsed}
             tokenLimit={usage.tokenLimit}
@@ -227,7 +228,7 @@ export function ApiAppCustomerDetail() {
 
       <section className="space-y-3">
         <div className="flex items-center justify-between">
-          <h2 className="text-sm font-semibold">Unit prices</h2>
+          <h2 className="text-sm font-semibold">{i18nT("scan.s1410")}</h2>
           <Button
             size="sm"
             variant="outline"
@@ -246,10 +247,10 @@ export function ApiAppCustomerDetail() {
             <table className="w-full text-sm">
               <thead className="bg-muted/40 text-left text-muted-foreground">
                 <tr>
-                  <th className="px-3 py-2">Unit</th>
-                  <th className="px-3 py-2">Price (¢)</th>
-                  <th className="px-3 py-2">Enabled</th>
-                  <th className="px-3 py-2">Monthly qty cap</th>
+                  <th className="px-3 py-2">{i18nT("scan.s1409")}</th>
+                  <th className="px-3 py-2">{i18nT("scan.s0986")}</th>
+                  <th className="px-3 py-2">{i18nT("common.enabled")}</th>
+                  <th className="px-3 py-2">{i18nT("scan.s0759")}</th>
                 </tr>
               </thead>
               <tbody>
@@ -322,7 +323,7 @@ export function ApiAppCustomerDetail() {
 
       <section className="space-y-3">
         <div className="flex items-center justify-between">
-          <h2 className="text-sm font-semibold">API keys</h2>
+          <h2 className="text-sm font-semibold">{i18nT("settings.apiKeys")}</h2>
           <Button
             size="sm"
             onClick={() => {
@@ -350,7 +351,7 @@ export function ApiAppCustomerDetail() {
                     variant="outline"
                     onClick={async () => {
                       await copyTextToClipboard(createdToken);
-                      pushToast({ title: "Copied", tone: "success" });
+                      pushToast({ title: i18nT("common.copied"), tone: "success" });
                     }}
                   >
                     <Copy className="mr-1 h-3.5 w-3.5" />
@@ -370,7 +371,7 @@ export function ApiAppCustomerDetail() {
                 }}
               >
                 <div className="min-w-40 flex-1 space-y-1">
-                  <label className="text-xs text-muted-foreground">Name</label>
+                  <label className="text-xs text-muted-foreground">{i18nT("common.name")}</label>
                   <Input value={keyName} onChange={(e) => setKeyName(e.target.value)} />
                 </div>
                 <Button type="button" variant="ghost" onClick={() => setMintOpen(false)}>
@@ -387,9 +388,9 @@ export function ApiAppCustomerDetail() {
           <table className="w-full text-sm">
             <thead className="bg-muted/40 text-left text-muted-foreground">
               <tr>
-                <th className="px-3 py-2">Name</th>
-                <th className="px-3 py-2">Status</th>
-                <th className="px-3 py-2">Last used</th>
+                <th className="px-3 py-2">{i18nT("common.name")}</th>
+                <th className="px-3 py-2">{i18nT("common.status")}</th>
+                <th className="px-3 py-2">{i18nT("apps.gateways.columnLastUsed")}</th>
                 <th className="px-3 py-2" />
               </tr>
             </thead>
@@ -436,7 +437,7 @@ export function ApiAppCustomerDetail() {
       </section>
 
       <section className="space-y-2">
-        <h2 className="text-sm font-semibold">Recent meter events</h2>
+        <h2 className="text-sm font-semibold">{i18nT("scan.s1049")}</h2>
         <ul className="space-y-1 text-sm text-muted-foreground">
           {(meterEvents ?? []).slice(0, 10).map((event) => (
             <li key={String(event.id)} className="font-mono text-xs">
@@ -444,12 +445,12 @@ export function ApiAppCustomerDetail() {
               {formatCents(Number(event.costCents ?? 0))} · {String(event.source)}
             </li>
           ))}
-          {!meterEvents?.length ? <li>No meter events yet.</li> : null}
+          {!meterEvents?.length ? <li>{i18nT("scan.s0815")}</li> : null}
         </ul>
       </section>
 
       <details className="rounded-md border border-border p-3 text-sm">
-        <summary className="cursor-pointer font-medium">Partner quickstart</summary>
+        <summary className="cursor-pointer font-medium">{i18nT("scan.s0934")}</summary>
         <pre className="mt-2 overflow-x-auto whitespace-pre-wrap font-mono text-xs text-muted-foreground">{`POST /api/companies/{companyId}/issues
 Authorization: Bearer pcp_cust_YOUR_KEY
 Content-Type: application/json

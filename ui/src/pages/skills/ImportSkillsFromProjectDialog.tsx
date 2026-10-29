@@ -49,6 +49,7 @@ import { EmptyState } from "../../components/EmptyState";
 import { cn } from "../../lib/utils";
 import type { TFunction } from "i18next";
 import { useTranslation } from "@/i18n";
+import { t as i18nT } from "@/i18n";
 
 const PROJECT_I18N = "pages.skills.importFromProject";
 
@@ -1035,7 +1036,7 @@ function SelectStep({
           <p className="text-base font-semibold">{t(`${PROJECT_I18N}.emptyTitle`)}</p>
           <p className="mt-1.5 text-sm text-muted-foreground">
             {t(`${PROJECT_I18N}.emptyBodyPrefix`)}{" "}
-            <code className="rounded bg-muted px-1 py-0.5 text-xs">SKILL.md</code>.{" "}
+            <code className="rounded bg-muted px-1 py-0.5 text-xs">{i18nT("scan.s1172")}</code>.{" "}
             {t(`${PROJECT_I18N}.emptyBodySearch`, {
               folders: HIGHLIGHTED_SCAN_FOLDERS.join(", "),
               extraCount: APPROX_TOTAL_SCAN_FOLDERS - HIGHLIGHTED_SCAN_FOLDERS.length,

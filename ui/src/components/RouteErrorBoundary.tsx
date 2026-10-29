@@ -2,6 +2,7 @@ import { Component, type ErrorInfo, type ReactNode } from "react";
 import { useLocation, useNavigate } from "@/lib/router";
 import { Button } from "@/components/ui/button";
 import { captureBrowserException } from "@/lib/sentry";
+import { t as i18nT } from "@/i18n";
 
 type RouteErrorBoundaryInnerProps = {
   resetKey: string;
@@ -41,7 +42,7 @@ class RouteErrorBoundaryInner extends Component<RouteErrorBoundaryInnerProps, Ro
     return (
       <div className="mx-auto max-w-2xl space-y-4 px-4 py-10">
         <div>
-          <h1 className="text-lg font-semibold">This page hit an error</h1>
+          <h1 className="text-lg font-semibold">{i18nT("scan.s1373")}</h1>
           <p className="mt-1 text-sm text-muted-foreground">
             Something went wrong while rendering this page. You can go back and try again, or reload.
           </p>

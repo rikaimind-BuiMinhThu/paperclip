@@ -777,7 +777,7 @@ describe("IssueProperties", () => {
     });
 
     await waitForAssertion(() => {
-      expect(Array.from(container.querySelectorAll("button")).some((button) => button.textContent === "Plan")).toBe(false);
+      expect(Array.from(container.querySelectorAll("button")).some((button) => button.textContent === "計画" || button.textContent === "Plan")).toBe(false);
       expect(container.textContent).not.toContain("This task is in plan mode but no plan document has been written yet.");
     });
 
@@ -829,7 +829,7 @@ describe("IssueProperties", () => {
     const { root, queryClient } = renderPropertiesWithQueryClient(container, props);
     await waitForAssertion(() => {
       const planTab = Array.from(container.querySelectorAll("button"))
-        .find((button) => button.textContent === "Plan");
+        .find((button) => button.textContent === "計画");
       expect(planTab?.getAttribute("data-state")).toBe("active");
     });
 

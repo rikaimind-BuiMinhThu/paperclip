@@ -22,15 +22,16 @@ import { Button } from "@/components/ui/button";
 import { Check, Copy, FileSearch, FolderOpen, FolderSearch, GitBranch, Pencil, X } from "lucide-react";
 import { ReusableExecutionWorkspaceSelect } from "./ReusableExecutionWorkspaceSelect";
 import { Badge } from "@/components/ui/badge";
+import { t as i18nT } from "@/i18n";
 
 /* -------------------------------------------------------------------------- */
 /*  Utility helpers (mirrored from IssueProperties for self-containment)      */
 /* -------------------------------------------------------------------------- */
 
 const EXECUTION_WORKSPACE_OPTIONS = [
-  { value: "shared_workspace", label: "Project default" },
-  { value: "isolated_workspace", label: "New isolated workspace" },
-  { value: "reuse_existing", label: "Reuse existing workspace" },
+  { value: "shared_workspace", label: i18nT("issues.dialog.projectDefaultWorkspace") },
+  { value: "isolated_workspace", label: i18nT("issues.dialog.newIsolatedWorkspace") },
+  { value: "reuse_existing", label: i18nT("issues.dialog.reuseExistingWorkspace") },
 ] as const;
 
 /* -------------------------------------------------------------------------- */
@@ -359,8 +360,7 @@ export function IssueWorkspaceCard({
                   className="h-6 px-2 text-xs text-muted-foreground"
                   onClick={handleCancel}
                 >
-                  <X className="h-3 w-3 mr-1" />Cancel
-                </Button>
+                  <X className="h-3 w-3 mr-1" />{i18nT("common.cancel")}</Button>
                 <Button
                   size="sm"
                   className="h-6 px-2 text-xs"
@@ -377,8 +377,7 @@ export function IssueWorkspaceCard({
                 className="h-6 px-2 text-xs text-muted-foreground"
                 onClick={() => setEditing(true)}
               >
-                <Pencil className="h-3 w-3 mr-1" />Edit
-              </Button>
+                <Pencil className="h-3 w-3 mr-1" />{i18nT("common.edit")}</Button>
             )}
           </div>
         )}
@@ -401,7 +400,7 @@ export function IssueWorkspaceCard({
           )}
           {workspace?.repoUrl && (
             <div className="flex items-center gap-1.5 text-muted-foreground">
-              <span className="text-(length:--text-micro)">Repo:</span>
+              <span className="text-(length:--text-micro)">{i18nT("scan.s1098")}</span>
               <CopyableInline value={workspace.repoUrl} mono />
             </div>
           )}

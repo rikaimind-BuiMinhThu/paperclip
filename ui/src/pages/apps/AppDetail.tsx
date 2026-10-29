@@ -67,6 +67,7 @@ import {
   connectionDisplayNameForOwner,
   connectionOwnerProfile,
 } from "./connection-owner";
+import { t as i18nT } from "@/i18n";
 
 export { connectionAddress, connectionTransportLabel };
 
@@ -344,7 +345,7 @@ export function AppDetail({ renderActions, onReconnect }: {
         navigateTopLevel(target.url);
       } catch (error) {
         pushToast({
-          title: "Couldn't start sign-in",
+          title: i18nT("apps.detail.signInFailed"),
           body: error instanceof Error ? error.message : "Please try again.",
           tone: "error",
         });
@@ -352,7 +353,7 @@ export function AppDetail({ renderActions, onReconnect }: {
     },
     onError: (error) =>
       pushToast({
-        title: "Couldn't start sign-in",
+        title: i18nT("apps.detail.signInFailed"),
         body: error instanceof Error ? error.message : "Please try again.",
         tone: "error",
       }),
@@ -386,7 +387,7 @@ export function AppDetail({ renderActions, onReconnect }: {
         navigateTopLevel(target.url);
       } catch (error) {
         pushToast({
-          title: "Couldn't start sign-in",
+          title: i18nT("apps.detail.signInFailed"),
           body: error instanceof Error ? error.message : "Please try again.",
           tone: "error",
         });
@@ -394,7 +395,7 @@ export function AppDetail({ renderActions, onReconnect }: {
     },
     onError: (error) =>
       pushToast({
-        title: "Couldn't start sign-in",
+        title: i18nT("apps.detail.signInFailed"),
         body: error instanceof Error ? error.message : "Please try again.",
         tone: "error",
       }),
@@ -412,7 +413,7 @@ export function AppDetail({ renderActions, onReconnect }: {
       invalidateGrants();
       setAudienceOpenGrantId(null);
       pushToast({
-        title: "Audience saved",
+        title: i18nT("scan.s0102"),
         body: (grant.members?.length ?? 0) === 0
           ? "Every organization member can use this identity."
           : `${grant.members?.length} ${grant.members?.length === 1 ? "member" : "members"} can use this identity.`,
@@ -444,7 +445,7 @@ export function AppDetail({ renderActions, onReconnect }: {
     },
     onError: (error) =>
       pushToast({
-        title: "Couldn't refresh actions",
+        title: i18nT("scan.s0334"),
         body: error instanceof Error ? error.message : "Please try again.",
         tone: "error",
       }),
@@ -456,13 +457,13 @@ export function AppDetail({ renderActions, onReconnect }: {
       queryClient.invalidateQueries({ queryKey: queryKeys.tools.connectionGrants(connectionId) });
       queryClient.invalidateQueries({ queryKey: queryKeys.apps.attention(selectedCompanyId!) });
       pushToast({
-        title: "GitHub access refreshed",
+        title: i18nT("scan.s0566"),
         body: "Account, installation, and repository access are current.",
         tone: "success",
       });
     },
     onError: (error) => pushToast({
-      title: "Couldn't refresh GitHub access",
+      title: i18nT("scan.s0333"),
       body: error instanceof Error ? error.message : "Please try again.",
       tone: "error",
     }),
@@ -536,7 +537,7 @@ export function AppDetail({ renderActions, onReconnect }: {
         <h2 className="text-sm font-semibold">{t("apps.detail.connectionRetired")}</h2>
         <p className="text-sm text-muted-foreground">{RETIRED_COMPOSIO_MESSAGE}</p>
         <p className="text-sm text-muted-foreground">Remove each obsolete connection separately. Removing this one does not remove other connections.</p>
-        <Button variant="outline" onClick={() => navigate("/apps/connect?source=composio")}>Add Composio MCP connection</Button>
+        <Button variant="outline" onClick={() => navigate("/apps/connect?source=composio")}>{i18nT("scan.s0023")}</Button>
       </section>
       {grantsQuery.data?.capabilities.canConfigure === true && <DangerZone
         appName={appName}
@@ -891,12 +892,12 @@ function translateConnectionStatus(
 
 function statusFor(connection: ToolConnection): StatusInfo {
   if (connection.enabled === false || connection.status === "disabled") {
-    return { label: "Paused", tone: "paused" };
+    return { label: i18nT("status.paused"), tone: "paused" };
   }
   if (isAttentionHealthStatus(connection.healthStatus) || (connection.connectionPurpose === "ai" && (connection.healthStatus !== "ok" || aiSubscriptionNeedsIsolatedLogin(connection.config)))) {
-    return { label: "Needs attention", tone: "attention" };
+    return { label: i18nT("apps.connect.needsAttention"), tone: "attention" };
   }
-  return { label: "Connected", tone: "connected" };
+  return { label: i18nT("apps.connected"), tone: "connected" };
 }
 
 function StatusBadge({ status }: { status: StatusInfo }) {

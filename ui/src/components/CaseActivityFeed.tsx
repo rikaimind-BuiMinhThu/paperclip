@@ -14,6 +14,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { cn, relativeTime } from "@/lib/utils";
+import { t as i18nT } from "@/i18n";
 
 const EVENT_LABEL: Record<CaseEventKind, string> = {
   created: "created",
@@ -116,7 +117,7 @@ export function CaseActivityFeed({ events }: { events: CaseEvent[] }) {
       : `${active.size} filters`;
 
   if (events.length === 0) {
-    return <p className="py-6 text-center text-sm text-muted-foreground">No activity yet.</p>;
+    return <p className="py-6 text-center text-sm text-muted-foreground">{i18nT("pages.activity.empty")}</p>;
   }
 
   return (
@@ -134,7 +135,7 @@ export function CaseActivityFeed({ events }: { events: CaseEvent[] }) {
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" className="w-56">
-            <DropdownMenuLabel>Activity filter</DropdownMenuLabel>
+            <DropdownMenuLabel>{i18nT("scan.s0021")}</DropdownMenuLabel>
             <DropdownMenuItem onSelect={() => setActive(new Set())}>
               All activity
             </DropdownMenuItem>
@@ -152,7 +153,7 @@ export function CaseActivityFeed({ events }: { events: CaseEvent[] }) {
         </DropdownMenu>
       </div>
       {filtered.length === 0 ? (
-        <p className="py-6 text-center text-sm text-muted-foreground">No events match this filter.</p>
+        <p className="py-6 text-center text-sm text-muted-foreground">{i18nT("scan.s0796")}</p>
       ) : (
         <div className="divide-y divide-border">
           {filtered.map((event) => (

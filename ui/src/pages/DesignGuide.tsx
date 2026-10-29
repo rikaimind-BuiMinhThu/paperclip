@@ -205,6 +205,7 @@ import {
   warnTeam,
 } from "@/pages/TeamCatalog.fixtures";
 import type { IssueWorkProduct } from "@paperclipai/shared";
+import { t as i18nT } from "@/i18n";
 
 /* ------------------------------------------------------------------ */
 /*  Sample data for the Issue Output surface showcase                  */
@@ -277,7 +278,7 @@ const DESIGN_GUIDE_DEGRADED_OUTPUTS: IssueWorkProduct[] = [
 const DESIGN_GUIDE_TASK = {
   id: "design-guide-task",
   identifier: "PAP-427",
-  title: "Reconcile the navigation model across operator surfaces",
+  title: i18nT("scan.s1054"),
   status: "in_progress",
   priority: "medium",
   blockerAttention: false,
@@ -439,7 +440,7 @@ function TaskExecutionControlsExample() {
     </div>
     <p className="text-sm text-muted-foreground">{running ? "Running: type to switch Stop to Send." : "Paused: resume from the menu."}</p>
     <TaskChatProjectCreatedCard item={{ id: "design-project", kind: "project_created", projectId: "example-project", name: "Onboarding improvements", description: "Help new teams reach their first useful result.", timestamp: "2026-09-11T00:00:00Z", repositories: [{ id: "1", name: "paperclipai/paperclip", url: "https://github.com/paperclipai/paperclip" }] }} />
-    {!running ? <TaskChatMarker item={{ id: "design-cancelled", kind: "marker", variant: "interrupted", tone: "neutral", label: "Run cancelled", detail: "The run was cancelled before returning an answer.", collapsible: true }} /> : null}
+    {!running ? <TaskChatMarker item={{ id: "design-cancelled", kind: "marker", variant: "interrupted", tone: "neutral", label: i18nT("scan.s1157"), detail: "The run was cancelled before returning an answer.", collapsible: true }} /> : null}
     <TaskChatComposer pause={!running ? { scope: "subtree", onResume: () => setDialogMode("resume") } : null} onAdd={async () => {}} workMode="standard" stopScope="subtree" onStop={running ? async () => setRunning(false) : undefined} />
     <TaskTreeControlDialog open={dialogMode !== null} onOpenChange={(open) => { if (!open) setDialogMode(null); }}
       mode={dialogMode ?? "cancel"} scope="subtree" affectedCount={3} affectedAgentCount={2} loading={false} pending={false} valid
@@ -457,19 +458,19 @@ function TaskPendingInputExample() {
       workMode="standard"
       takeover={pending && open ? {
         id: "design-question",
-        label: "Question",
+        label: i18nT("taskChat.questionTitle"),
         pendingCount: 1,
         content: <div className="space-y-3 text-sm">
-          <p>Should the agent use the existing draft?</p>
+          <p>{i18nT("scan.s1249")}</p>
           <div className="flex gap-2">
-            <Button size="sm" onClick={() => setPending(false)}>Use draft</Button>
-            <Button size="sm" variant="outline" onClick={() => setPending(false)}>Start fresh</Button>
+            <Button size="sm" onClick={() => setPending(false)}>{i18nT("scan.s1433")}</Button>
+            <Button size="sm" variant="outline" onClick={() => setPending(false)}>{i18nT("scan.s1297")}</Button>
           </div>
         </div>,
         onDismiss: () => setOpen(false),
         onSkip: () => setPending(false),
       } : null}
-      pendingTakeover={pending ? { count: 1, label: "Question", onOpen: () => setOpen(true) } : null}
+      pendingTakeover={pending ? { count: 1, label: i18nT("taskChat.questionTitle"), onOpen: () => setOpen(true) } : null}
     />
   </div>;
 }
@@ -477,9 +478,9 @@ function TaskPendingInputExample() {
 function AgentChatPickerExample() {
   const [state, setState] = useState<"closed" | "empty" | "loading" | "error">("closed");
   return <div className="flex flex-wrap gap-2">
-    <Button variant="outline" onClick={() => setState("empty")}>Empty picker</Button>
-    <Button variant="outline" onClick={() => setState("loading")}>Loading picker</Button>
-    <Button variant="outline" onClick={() => setState("error")}>Failed picker</Button>
+    <Button variant="outline" onClick={() => setState("empty")}>{i18nT("scan.s0450")}</Button>
+    <Button variant="outline" onClick={() => setState("loading")}>{i18nT("scan.s0715")}</Button>
+    <Button variant="outline" onClick={() => setState("error")}>{i18nT("scan.s0492")}</Button>
     <AgentChatPicker agents={[]} open={state !== "closed"} onOpenChange={(open) => { if (!open) setState("closed"); }} onSelect={() => {}}
       loading={state === "loading"} error={state === "error" ? new Error("Unavailable") : null} onRetry={() => setState("empty")} />
   </div>;
@@ -490,7 +491,7 @@ function ComposerActionsExample() {
   return <div className="flex max-w-xl items-center gap-2 rounded-xl border border-border bg-card p-3">
     <ComposerAddMenu mode={mode} onModeChange={setMode} onAttachFile={() => {}} onGoal={() => {}} />
     <ComposerModeChip mode={mode} onRemove={() => setMode("standard")} />
-    <span className="ml-auto text-xs text-muted-foreground">Plus menu · removable mode chip</span>
+    <span className="ml-auto text-xs text-muted-foreground">{i18nT("scan.s0973")}</span>
   </div>;
 }
 
@@ -508,10 +509,10 @@ export function DesignGuide() {
     "This is an editable description. Click to edit it — the textarea auto-sizes to fit the content without layout shift."
   );
   const [filters, setFilters] = useState<FilterValue[]>([
-    { key: "status", label: "Status", value: "Active" },
+    { key: "status", label: i18nT("common.status"), value: "Active" },
     // PAP-411: priority filter demo row suppressed while SHOW_TASK_PRIORITY_UI is off.
     ...(SHOW_TASK_PRIORITY_UI
-      ? [{ key: "priority", label: "Priority", value: "High" } as FilterValue]
+      ? [{ key: "priority", label: i18nT("common.priority"), value: "High" } as FilterValue]
       : []),
   ]);
   const [allowExternal, setAllowExternal] = useState(false);
@@ -522,7 +523,7 @@ export function DesignGuide() {
     <div className="space-y-10 max-w-4xl">
       {/* Page header */}
       <div>
-        <h2 className="text-xl font-bold">Design Guide</h2>
+        <h2 className="text-xl font-bold">{i18nT("scan.s0407")}</h2>
         <p className="text-sm text-muted-foreground mt-1">
           Every component, style, and pattern used across Kujira AI Workforce.
         </p>
@@ -590,10 +591,10 @@ export function DesignGuide() {
           title emphasis, metadata remains stable, and the task identifier trails.
         </p>
         <CollectionToolbar
-          context={<span className="text-sm font-medium">Recent tasks</span>}
-          search={<Input aria-label="Search task collection example" placeholder="Search tasks..." />}
-          controls={<Button variant="outline" size="sm">Filter</Button>}
-          actions={<Button size="sm">New task</Button>}
+          context={<span className="text-sm font-medium">{i18nT("pages.userProfile.recentTasks")}</span>}
+          search={<Input aria-label="Search task collection example" placeholder={i18nT("issues.list.searchPlaceholder")} />}
+          controls={<Button variant="outline" size="sm">{i18nT("common.filter")}</Button>}
+          actions={<Button size="sm">{i18nT("issues.dialog.newTask")}</Button>}
           feedback={<span className="text-xs text-muted-foreground">1 task · Updated newest first</span>}
         />
         <div className="overflow-hidden rounded-lg border border-border">
@@ -601,8 +602,8 @@ export function DesignGuide() {
             issue={DESIGN_GUIDE_TASK}
             presentation="task"
             unreadState="visible"
-            metadata={<span className="text-xs text-muted-foreground">Updated 12m ago</span>}
-            actions={<Button variant="ghost" size="xs">More</Button>}
+            metadata={<span className="text-xs text-muted-foreground">{i18nT("scan.s1425")}</span>}
+            actions={<Button variant="ghost" size="xs">{i18nT("common.more")}</Button>}
           />
         </div>
       </Section>
@@ -672,14 +673,14 @@ export function DesignGuide() {
 
       <Section title="Typography">
         <div className="space-y-3">
-          <h2 className="text-xl font-bold">Page Title — text-xl font-bold</h2>
-          <h2 className="text-lg font-semibold">Section Title — text-lg font-semibold</h2>
+          <h2 className="text-xl font-bold">{i18nT("scan.s0930")}</h2>
+          <h2 className="text-lg font-semibold">{i18nT("scan.s1203")}</h2>
           <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">
             Section Heading — text-sm font-semibold uppercase tracking-wide
           </h3>
-          <p className="text-sm font-medium">Card Title — text-sm font-medium</p>
-          <p className="text-sm font-semibold">Card Title Alt — text-sm font-semibold</p>
-          <p className="text-sm">Body text — text-sm</p>
+          <p className="text-sm font-medium">{i18nT("scan.s0174")}</p>
+          <p className="text-sm font-semibold">{i18nT("scan.s0173")}</p>
+          <p className="text-sm">{i18nT("scan.s0144")}</p>
           <p className="text-sm text-muted-foreground">
             Muted description — text-sm text-muted-foreground
           </p>
@@ -689,8 +690,8 @@ export function DesignGuide() {
           <p className="text-sm font-mono text-muted-foreground">
             Mono identifier — text-sm font-mono text-muted-foreground
           </p>
-          <p className="text-2xl font-bold">Large stat — text-2xl font-bold</p>
-          <p className="font-mono text-xs">Log/code text — font-mono text-xs</p>
+          <p className="text-2xl font-bold">{i18nT("scan.s0674")}</p>
+          <p className="font-mono text-xs">{i18nT("scan.s0730")}</p>
         </div>
       </Section>
 
@@ -723,21 +724,21 @@ export function DesignGuide() {
       <Section title="Buttons">
         <SubSection title="Variants">
           <div className="flex items-center gap-2 flex-wrap">
-            <Button variant="default">Default</Button>
-            <Button variant="secondary">Secondary</Button>
-            <Button variant="outline">Outline</Button>
-            <Button variant="ghost">Ghost</Button>
-            <Button variant="destructive">Destructive</Button>
-            <Button variant="link">Link</Button>
+            <Button variant="default">{i18nT("agents.detail.keys.defaultName")}</Button>
+            <Button variant="secondary">{i18nT("scan.s1200")}</Button>
+            <Button variant="outline">{i18nT("scan.s0912")}</Button>
+            <Button variant="ghost">{i18nT("scan.s0561")}</Button>
+            <Button variant="destructive">{i18nT("pages.profiles.detail.capabilityDestructive")}</Button>
+            <Button variant="link">{i18nT("scan.s0690")}</Button>
           </div>
         </SubSection>
 
         <SubSection title="Sizes">
           <div className="flex items-center gap-2 flex-wrap">
-            <Button size="xs">Extra Small</Button>
-            <Button size="sm">Small</Button>
-            <Button size="default">Default</Button>
-            <Button size="lg">Large</Button>
+            <Button size="xs">{i18nT("scan.s0489")}</Button>
+            <Button size="sm">{i18nT("scan.s1270")}</Button>
+            <Button size="default">{i18nT("agents.detail.keys.defaultName")}</Button>
+            <Button size="lg">{i18nT("scan.s0673")}</Button>
           </div>
         </SubSection>
 
@@ -761,8 +762,8 @@ export function DesignGuide() {
 
         <SubSection title="States">
           <div className="flex items-center gap-2 flex-wrap">
-            <Button disabled>Disabled</Button>
-            <Button variant="outline" disabled>Disabled Outline</Button>
+            <Button disabled>{i18nT("common.disabled")}</Button>
+            <Button variant="outline" disabled>{i18nT("scan.s0415")}</Button>
           </div>
         </SubSection>
       </Section>
@@ -773,11 +774,11 @@ export function DesignGuide() {
       <Section title="Badges">
         <SubSection title="Variants">
           <div className="flex items-center gap-2 flex-wrap">
-            <Badge variant="default">Default</Badge>
-            <Badge variant="secondary">Secondary</Badge>
-            <Badge variant="outline">Outline</Badge>
-            <Badge variant="destructive">Destructive</Badge>
-            <Badge variant="ghost">Ghost</Badge>
+            <Badge variant="default">{i18nT("agents.detail.keys.defaultName")}</Badge>
+            <Badge variant="secondary">{i18nT("scan.s1200")}</Badge>
+            <Badge variant="outline">{i18nT("scan.s0912")}</Badge>
+            <Badge variant="destructive">{i18nT("pages.profiles.detail.capabilityDestructive")}</Badge>
+            <Badge variant="ghost">{i18nT("scan.s0561")}</Badge>
           </div>
         </SubSection>
       </Section>
@@ -886,12 +887,12 @@ export function DesignGuide() {
             Use <code className="font-mono">strikethrough</code> for &quot;removed&quot; contexts.
           </p>
           <div className="flex items-center gap-2 flex-wrap">
-            <IssueReferencePill issue={{ id: "demo-1", identifier: "PAP-123", title: "Identifier only — no status yet" }} />
-            <IssueReferencePill issue={{ id: "demo-2", identifier: "PAP-456", title: "With in_progress status", status: "in_progress" }} />
-            <IssueReferencePill issue={{ id: "demo-3", identifier: "PAP-789", title: "Done status", status: "done" }} />
-            <IssueReferencePill issue={{ id: "demo-4", identifier: "PAP-101", title: "Blocked status", status: "blocked" }} />
-            <IssueReferencePill onRemove={() => window.alert("Blocker removed")} issue={{ id: "demo-blocker", identifier: "PAP-303", title: "Hover or focus to remove blocker", status: "in_review" }} />
-            <IssueReferencePill strikethrough issue={{ id: "demo-5", identifier: "PAP-202", title: "Removed (strikethrough)", status: "todo" }} />
+            <IssueReferencePill issue={{ id: "demo-1", identifier: "PAP-123", title: i18nT("scan.s0598") }} />
+            <IssueReferencePill issue={{ id: "demo-2", identifier: "PAP-456", title: i18nT("scan.s1507"), status: "in_progress" }} />
+            <IssueReferencePill issue={{ id: "demo-3", identifier: "PAP-789", title: i18nT("scan.s0427"), status: "done" }} />
+            <IssueReferencePill issue={{ id: "demo-4", identifier: "PAP-101", title: i18nT("scan.s0139"), status: "blocked" }} />
+            <IssueReferencePill onRemove={() => window.alert("Blocker removed")} issue={{ id: "demo-blocker", identifier: "PAP-303", title: i18nT("scan.s0592"), status: "in_review" }} />
+            <IssueReferencePill strikethrough issue={{ id: "demo-5", identifier: "PAP-202", title: i18nT("scan.s1087"), status: "todo" }} />
           </div>
         </SubSection>
       </Section>
@@ -965,27 +966,27 @@ export function DesignGuide() {
       <Section title="Form Elements">
         <div className="grid gap-6 md:grid-cols-2">
           <SubSection title="Input">
-            <Input placeholder="Default input" />
-            <Input placeholder="Disabled input" disabled className="mt-2" />
+            <Input placeholder={i18nT("scan.s0387")} />
+            <Input placeholder={i18nT("scan.s0416")} disabled className="mt-2" />
           </SubSection>
 
           <SubSection title="Textarea">
-            <Textarea placeholder="Write something..." />
+            <Textarea placeholder={i18nT("scan.s1529")} />
           </SubSection>
 
           <SubSection title="Checkbox & Label">
             <div className="space-y-3">
               <div className="flex items-center gap-2">
                 <Checkbox id="check1" defaultChecked />
-                <Label htmlFor="check1">Checked item</Label>
+                <Label htmlFor="check1">{i18nT("scan.s0193")}</Label>
               </div>
               <div className="flex items-center gap-2">
                 <Checkbox id="check2" />
-                <Label htmlFor="check2">Unchecked item</Label>
+                <Label htmlFor="check2">{i18nT("scan.s1405")}</Label>
               </div>
               <div className="flex items-center gap-2">
                 <Checkbox id="check3" disabled />
-                <Label htmlFor="check3">Disabled item</Label>
+                <Label htmlFor="check3">{i18nT("scan.s0417")}</Label>
               </div>
             </div>
           </SubSection>
@@ -993,7 +994,7 @@ export function DesignGuide() {
           <SubSection title="Inline Editor">
             <div className="space-y-4">
               <div>
-                <p className="text-xs text-muted-foreground mb-1">Title (single-line)</p>
+                <p className="text-xs text-muted-foreground mb-1">{i18nT("scan.s1380")}</p>
                 <InlineEditor
                   value={inlineTitle}
                   onSave={setInlineTitle}
@@ -1002,7 +1003,7 @@ export function DesignGuide() {
                 />
               </div>
               <div>
-                <p className="text-xs text-muted-foreground mb-1">Body text (single-line)</p>
+                <p className="text-xs text-muted-foreground mb-1">{i18nT("scan.s0143")}</p>
                 <InlineEditor
                   value={inlineText}
                   onSave={setInlineText}
@@ -1011,13 +1012,13 @@ export function DesignGuide() {
                 />
               </div>
               <div>
-                <p className="text-xs text-muted-foreground mb-1">Description (multiline, auto-sizing)</p>
+                <p className="text-xs text-muted-foreground mb-1">{i18nT("scan.s0406")}</p>
                 <InlineEditor
                   value={inlineDesc}
                   onSave={setInlineDesc}
                   as="p"
                   className="text-sm text-muted-foreground"
-                  placeholder="Add a description..."
+                  placeholder={i18nT("projects.addDescription")}
                   multiline
                 />
               </div>
@@ -1035,14 +1036,14 @@ export function DesignGuide() {
           <SubSection title="Default size">
             <Select value={selectValue} onValueChange={setSelectValue}>
               <SelectTrigger className="w-full">
-                <SelectValue placeholder="Select status" />
+                <SelectValue placeholder={i18nT("scan.s1218")} />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="backlog">Backlog</SelectItem>
-                <SelectItem value="todo">Todo</SelectItem>
-                <SelectItem value="in_progress">In Progress</SelectItem>
-                <SelectItem value="in_review">In Review</SelectItem>
-                <SelectItem value="done">Done</SelectItem>
+                <SelectItem value="backlog">{i18nT("status.backlog")}</SelectItem>
+                <SelectItem value="todo">{i18nT("status.todo")}</SelectItem>
+                <SelectItem value="in_progress">{i18nT("scan.s0604")}</SelectItem>
+                <SelectItem value="in_review">{i18nT("scan.s0605")}</SelectItem>
+                <SelectItem value="done">{i18nT("common.done")}</SelectItem>
               </SelectContent>
             </Select>
             <p className="text-xs text-muted-foreground">Current value: {selectValue}</p>
@@ -1053,10 +1054,10 @@ export function DesignGuide() {
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="critical">Critical</SelectItem>
-                <SelectItem value="high">High</SelectItem>
-                <SelectItem value="medium">Medium</SelectItem>
-                <SelectItem value="low">Low</SelectItem>
+                <SelectItem value="critical">{i18nT("status.critical")}</SelectItem>
+                <SelectItem value="high">{i18nT("status.high")}</SelectItem>
+                <SelectItem value="medium">{i18nT("status.medium")}</SelectItem>
+                <SelectItem value="low">{i18nT("status.low")}</SelectItem>
               </SelectContent>
             </Select>
           </SubSection>
@@ -1105,14 +1106,14 @@ export function DesignGuide() {
       <Section title="Popover">
         <Popover>
           <PopoverTrigger asChild>
-            <Button variant="outline" size="sm">Open Popover</Button>
+            <Button variant="outline" size="sm">{i18nT("scan.s0878")}</Button>
           </PopoverTrigger>
           <PopoverContent className="space-y-2">
-            <p className="text-sm font-medium">Agent heartbeat</p>
+            <p className="text-sm font-medium">{i18nT("scan.s0048")}</p>
             <p className="text-xs text-muted-foreground">
               Last run succeeded 24s ago. Next timer run in 9m.
             </p>
-            <Button size="xs">Wake now</Button>
+            <Button size="xs">{i18nT("scan.s1465")}</Button>
           </PopoverContent>
         </Popover>
       </Section>
@@ -1129,8 +1130,8 @@ export function DesignGuide() {
           </CollapsibleTrigger>
           <CollapsibleContent className="rounded-md border border-border p-3">
             <div className="space-y-2">
-              <Label htmlFor="owner-filter">Owner</Label>
-              <Input id="owner-filter" placeholder="Filter by agent name" />
+              <Label htmlFor="owner-filter">{i18nT("common.owner")}</Label>
+              <Input id="owner-filter" placeholder={i18nT("scan.s0521")} />
             </div>
           </CollapsibleContent>
         </Collapsible>
@@ -1142,26 +1143,26 @@ export function DesignGuide() {
       <Section title="Sheet">
         <Sheet>
           <SheetTrigger asChild>
-            <Button variant="outline" size="sm">Open Side Panel</Button>
+            <Button variant="outline" size="sm">{i18nT("scan.s0880")}</Button>
           </SheetTrigger>
           <SheetContent side="right">
             <SheetHeader>
-              <SheetTitle>Issue Properties</SheetTitle>
-              <SheetDescription>Edit metadata without leaving the current page.</SheetDescription>
+              <SheetTitle>{i18nT("scan.s0632")}</SheetTitle>
+              <SheetDescription>{i18nT("scan.s0441")}</SheetDescription>
             </SheetHeader>
             <div className="space-y-4 px-4">
               <div className="space-y-1">
-                <Label htmlFor="sheet-title">Title</Label>
+                <Label htmlFor="sheet-title">{i18nT("common.title")}</Label>
                 <Input id="sheet-title" defaultValue="Improve onboarding docs" />
               </div>
               <div className="space-y-1">
-                <Label htmlFor="sheet-description">Description</Label>
+                <Label htmlFor="sheet-description">{i18nT("common.description")}</Label>
                 <Textarea id="sheet-description" defaultValue="Capture setup pitfalls and screenshots." />
               </div>
             </div>
             <SheetFooter>
-              <Button variant="outline">Cancel</Button>
-              <Button>Save</Button>
+              <Button variant="outline">{i18nT("common.cancel")}</Button>
+              <Button>{i18nT("common.save")}</Button>
             </SheetFooter>
           </SheetContent>
         </Sheet>
@@ -1188,9 +1189,9 @@ export function DesignGuide() {
       <Section title="Command (CMDK)">
         <div className="rounded-md border border-border">
           <Command>
-            <CommandInput placeholder="Type a command or search..." />
+            <CommandInput placeholder={i18nT("scan.s1399")} />
             <CommandList>
-              <CommandEmpty>No results found.</CommandEmpty>
+              <CommandEmpty>{i18nT("empty.noResults")}</CommandEmpty>
               <CommandGroup heading="Pages">
                 <CommandItem>
                   <LayoutDashboard className="h-4 w-4" />
@@ -1224,15 +1225,15 @@ export function DesignGuide() {
         <Breadcrumb>
           <BreadcrumbList>
             <BreadcrumbItem>
-              <BreadcrumbLink href="#">Projects</BreadcrumbLink>
+              <BreadcrumbLink href="#">{i18nT("nav.projects")}</BreadcrumbLink>
             </BreadcrumbItem>
             <BreadcrumbSeparator />
             <BreadcrumbItem>
-              <BreadcrumbLink href="#">Kujira AI Workforce App</BreadcrumbLink>
+              <BreadcrumbLink href="#">{i18nT("scan.s0666")}</BreadcrumbLink>
             </BreadcrumbItem>
             <BreadcrumbSeparator />
             <BreadcrumbItem>
-              <BreadcrumbPage>Issue List</BreadcrumbPage>
+              <BreadcrumbPage>{i18nT("scan.s0631")}</BreadcrumbPage>
             </BreadcrumbItem>
           </BreadcrumbList>
         </Breadcrumb>
@@ -1253,7 +1254,7 @@ export function DesignGuide() {
                   status, adapterType: "codex_local", invocationSource: "on_demand", triggerDetail: "manual",
                   startedAt: null, finishedAt: null, createdAt: "2026-09-11T12:00:00Z", issueId: "design-guide-task",
                 }}
-                issue={{ identifier: "PAP-559", title: "Recreate this wireframe on pages Kujira AI Workforce", status: status === "succeeded" ? "done" : "in_progress" }}
+                issue={{ identifier: "PAP-559", title: i18nT("scan.s1067"), status: status === "succeeded" ? "done" : "in_progress" }}
               />
             ))}
           </div>
@@ -1262,15 +1263,15 @@ export function DesignGuide() {
         <SubSection title="Standard Card">
           <Card>
             <CardHeader>
-              <CardTitle>Card Title</CardTitle>
-              <CardDescription>Card description with supporting text.</CardDescription>
+              <CardTitle>{i18nT("scan.s0172")}</CardTitle>
+              <CardDescription>{i18nT("scan.s0176")}</CardDescription>
             </CardHeader>
             <CardContent>
-              <p className="text-sm">Card content goes here. This is the main body area.</p>
+              <p className="text-sm">{i18nT("scan.s0175")}</p>
             </CardContent>
             <CardFooter className="gap-2">
-              <Button size="sm">Action</Button>
-              <Button variant="outline" size="sm">Cancel</Button>
+              <Button size="sm">{i18nT("pages.companyAccess.action")}</Button>
+              <Button variant="outline" size="sm">{i18nT("common.cancel")}</Button>
             </CardFooter>
           </Card>
         </SubSection>
@@ -1292,22 +1293,22 @@ export function DesignGuide() {
         <SubSection title="Default (pill) variant">
           <Tabs defaultValue="overview">
             <TabsList>
-              <TabsTrigger value="overview">Overview</TabsTrigger>
-              <TabsTrigger value="runs">Runs</TabsTrigger>
-              <TabsTrigger value="config">Config</TabsTrigger>
-              <TabsTrigger value="costs">Costs</TabsTrigger>
+              <TabsTrigger value="overview">{i18nT("common.overview")}</TabsTrigger>
+              <TabsTrigger value="runs">{i18nT("nav.runs")}</TabsTrigger>
+              <TabsTrigger value="config">{i18nT("scan.s0250")}</TabsTrigger>
+              <TabsTrigger value="costs">{i18nT("nav.costs")}</TabsTrigger>
             </TabsList>
             <TabsContent value="overview">
-              <p className="text-sm text-muted-foreground py-4">Overview tab content.</p>
+              <p className="text-sm text-muted-foreground py-4">{i18nT("scan.s0921")}</p>
             </TabsContent>
             <TabsContent value="runs">
-              <p className="text-sm text-muted-foreground py-4">Runs tab content.</p>
+              <p className="text-sm text-muted-foreground py-4">{i18nT("scan.s1167")}</p>
             </TabsContent>
             <TabsContent value="config">
-              <p className="text-sm text-muted-foreground py-4">Config tab content.</p>
+              <p className="text-sm text-muted-foreground py-4">{i18nT("scan.s0251")}</p>
             </TabsContent>
             <TabsContent value="costs">
-              <p className="text-sm text-muted-foreground py-4">Costs tab content.</p>
+              <p className="text-sm text-muted-foreground py-4">{i18nT("scan.s0289")}</p>
             </TabsContent>
           </Tabs>
         </SubSection>
@@ -1315,18 +1316,18 @@ export function DesignGuide() {
         <SubSection title="Line variant">
           <Tabs defaultValue="summary">
             <TabsList variant="line">
-              <TabsTrigger value="summary">Summary</TabsTrigger>
-              <TabsTrigger value="details">Details</TabsTrigger>
-              <TabsTrigger value="comments">Comments</TabsTrigger>
+              <TabsTrigger value="summary">{i18nT("pages.statusCards.tabSummary")}</TabsTrigger>
+              <TabsTrigger value="details">{i18nT("common.details")}</TabsTrigger>
+              <TabsTrigger value="comments">{i18nT("issues.comments")}</TabsTrigger>
             </TabsList>
             <TabsContent value="summary">
-              <p className="text-sm text-muted-foreground py-4">Summary content with underline tabs.</p>
+              <p className="text-sm text-muted-foreground py-4">{i18nT("scan.s1320")}</p>
             </TabsContent>
             <TabsContent value="details">
-              <p className="text-sm text-muted-foreground py-4">Details content.</p>
+              <p className="text-sm text-muted-foreground py-4">{i18nT("scan.s0409")}</p>
             </TabsContent>
             <TabsContent value="comments">
-              <p className="text-sm text-muted-foreground py-4">Comments content.</p>
+              <p className="text-sm text-muted-foreground py-4">{i18nT("scan.s0243")}</p>
             </TabsContent>
           </Tabs>
         </SubSection>
@@ -1467,10 +1468,10 @@ export function DesignGuide() {
             size="sm"
             onClick={() =>
               setFilters([
-                { key: "status", label: "Status", value: "Active" },
+                { key: "status", label: i18nT("common.status"), value: "Active" },
                 // PAP-411: priority filter demo row suppressed while SHOW_TASK_PRIORITY_UI is off.
                 ...(SHOW_TASK_PRIORITY_UI
-                  ? [{ key: "priority", label: "Priority", value: "High" } as FilterValue]
+                  ? [{ key: "priority", label: i18nT("common.priority"), value: "High" } as FilterValue]
                   : []),
               ])
             }
@@ -1558,15 +1559,15 @@ export function DesignGuide() {
         <div className="flex items-center gap-4">
           <Tooltip>
             <TooltipTrigger asChild>
-              <Button variant="outline" size="sm">Hover me</Button>
+              <Button variant="outline" size="sm">{i18nT("scan.s0591")}</Button>
             </TooltipTrigger>
-            <TooltipContent>This is a tooltip</TooltipContent>
+            <TooltipContent>{i18nT("scan.s1372")}</TooltipContent>
           </Tooltip>
           <Tooltip>
             <TooltipTrigger asChild>
               <Button variant="ghost" size="icon-sm"><Settings /></Button>
             </TooltipTrigger>
-            <TooltipContent>Settings</TooltipContent>
+            <TooltipContent>{i18nT("common.settings")}</TooltipContent>
           </Tooltip>
         </div>
       </Section>
@@ -1577,28 +1578,28 @@ export function DesignGuide() {
       <Section title="Dialog">
         <Dialog>
           <DialogTrigger asChild>
-            <Button variant="outline">Open Dialog</Button>
+            <Button variant="outline">{i18nT("scan.s0875")}</Button>
           </DialogTrigger>
           <DialogContent>
             <DialogHeader>
-              <DialogTitle>Dialog Title</DialogTitle>
+              <DialogTitle>{i18nT("scan.s0410")}</DialogTitle>
               <DialogDescription>
                 This is a sample dialog showing the standard layout with header, content, and footer.
               </DialogDescription>
             </DialogHeader>
             <div className="space-y-3">
               <div>
-                <Label>Name</Label>
-                <Input placeholder="Enter a name" className="mt-1.5" />
+                <Label>{i18nT("common.name")}</Label>
+                <Input placeholder={i18nT("scan.s0458")} className="mt-1.5" />
               </div>
               <div>
-                <Label>Description</Label>
-                <Textarea placeholder="Describe..." className="mt-1.5" />
+                <Label>{i18nT("common.description")}</Label>
+                <Textarea placeholder={i18nT("scan.s0405")} className="mt-1.5" />
               </div>
             </div>
             <DialogFooter>
-              <Button variant="outline">Cancel</Button>
-              <Button>Save</Button>
+              <Button variant="outline">{i18nT("common.cancel")}</Button>
+              <Button>{i18nT("common.save")}</Button>
             </DialogFooter>
           </DialogContent>
         </Dialog>
@@ -1624,9 +1625,9 @@ export function DesignGuide() {
       <Section title="Progress Bars (Budget)">
         <div className="space-y-3">
           {[
-            { label: "Under budget (40%)", pct: 40, color: "bg-green-400" },
-            { label: "Warning (75%)", pct: 75, color: "bg-yellow-400" },
-            { label: "Over budget (95%)", pct: 95, color: "bg-red-400" },
+            { label: i18nT("scan.s1406"), pct: 40, color: "bg-green-400" },
+            { label: i18nT("scan.s1467"), pct: 75, color: "bg-yellow-400" },
+            { label: i18nT("scan.s0917"), pct: 95, color: "bg-red-400" },
           ].map(({ label, pct, color }) => (
             <div key={label} className="space-y-1">
               <div className="flex items-center justify-between">
@@ -1661,7 +1662,7 @@ export function DesignGuide() {
               <span className="absolute inline-flex h-full w-full rounded-full bg-blue-400 animate-pulse" />
               <span className="inline-flex h-full w-full rounded-full bg-blue-500" />
             </span>
-            <span className="text-blue-600 dark:text-blue-400">Live</span>
+            <span className="text-blue-600 dark:text-blue-400">{i18nT("agents.detail.live")}</span>
           </div>
         </div>
       </Section>
@@ -1672,26 +1673,26 @@ export function DesignGuide() {
       <Section title="Property Row Pattern">
         <div className="border border-border rounded-md p-4 space-y-1 max-w-sm">
           <div className="flex items-center justify-between py-1.5">
-            <span className="text-xs text-muted-foreground">Status</span>
+            <span className="text-xs text-muted-foreground">{i18nT("common.status")}</span>
             <StatusBadge status="active" />
           </div>
           {/* PAP-411: priority metadata row hidden behind SHOW_TASK_PRIORITY_UI. */}
           {SHOW_TASK_PRIORITY_UI && (
             <div className="flex items-center justify-between py-1.5">
-              <span className="text-xs text-muted-foreground">Priority</span>
+              <span className="text-xs text-muted-foreground">{i18nT("common.priority")}</span>
               <PriorityIcon priority="high" />
             </div>
           )}
           <div className="flex items-center justify-between py-1.5">
-            <span className="text-xs text-muted-foreground">Responsible</span>
+            <span className="text-xs text-muted-foreground">{i18nT("inbox.responsible")}</span>
             <div className="flex items-center gap-1.5">
               <Avatar size="sm"><AvatarFallback>A</AvatarFallback></Avatar>
-              <span className="text-xs">Agent Alpha</span>
+              <span className="text-xs">{i18nT("scan.s0043")}</span>
             </div>
           </div>
           <div className="flex items-center justify-between py-1.5">
-            <span className="text-xs text-muted-foreground">Created</span>
-            <span className="text-xs">Jan 15, 2025</span>
+            <span className="text-xs text-muted-foreground">{i18nT("common.created")}</span>
+            <span className="text-xs">{i18nT("scan.s0654")}</span>
           </div>
         </div>
       </Section>
@@ -1708,7 +1709,7 @@ export function DesignGuide() {
           <p className="text-sm text-muted-foreground">Shared by connection setup and trigger previews. Setup navigation takes over the section sidebar; each step owns a single footer.</p>
           <div className="max-w-sm space-y-6">
             <SetupWizardNavigation inline labels={["Choose trigger", "Configure", "Review"]} step={wizardStep} availableStep={2} onSelect={setWizardStep} />
-            <SetupWizardFooter onSaveExit={() => setWizardStep(0)}><Button onClick={() => setWizardStep((wizardStep + 1) % 3)}>Continue</Button></SetupWizardFooter>
+            <SetupWizardFooter onSaveExit={() => setWizardStep(0)}><Button onClick={() => setWizardStep((wizardStep + 1) % 3)}>{i18nT("common.continue")}</Button></SetupWizardFooter>
           </div>
         </SubSection>
         <SubSection title="Agent chat picker">
@@ -1771,7 +1772,7 @@ export function DesignGuide() {
         <div>
           <div className="flex items-center gap-2 px-4 py-2 bg-muted/50 rounded-t-md">
             <StatusIcon status="in_progress" />
-            <span className="text-sm font-medium">In Progress</span>
+            <span className="text-sm font-medium">{i18nT("scan.s0604")}</span>
             <span className="text-xs text-muted-foreground ml-1">2</span>
           </div>
           <div className="border border-border rounded-b-md">
@@ -1797,26 +1798,26 @@ export function DesignGuide() {
       {/* ============================================================ */}
       <Section title="Comment Thread Pattern">
         <div className="space-y-3 max-w-2xl">
-          <h3 className="text-sm font-semibold">Comments (2)</h3>
+          <h3 className="text-sm font-semibold">{i18nT("scan.s0242")}</h3>
           <div className="space-y-3">
             <div className="rounded-md border border-border p-3">
               <div className="flex items-center justify-between mb-1">
-                <span className="text-xs font-medium text-muted-foreground">Agent</span>
-                <span className="text-xs text-muted-foreground">Jan 15, 2025</span>
+                <span className="text-xs font-medium text-muted-foreground">{i18nT("agents.agent")}</span>
+                <span className="text-xs text-muted-foreground">{i18nT("scan.s0654")}</span>
               </div>
               <p className="text-sm">Started working on the authentication module. Will need API keys configured.</p>
             </div>
             <div className="rounded-md border border-border p-3">
               <div className="flex items-center justify-between mb-1">
-                <span className="text-xs font-medium text-muted-foreground">Human</span>
-                <span className="text-xs text-muted-foreground">Jan 16, 2025</span>
+                <span className="text-xs font-medium text-muted-foreground">{i18nT("pages.joinRequests.typeHuman")}</span>
+                <span className="text-xs text-muted-foreground">{i18nT("scan.s0655")}</span>
               </div>
-              <p className="text-sm">API keys have been added to the vault. Please proceed.</p>
+              <p className="text-sm">{i18nT("scan.s0009")}</p>
             </div>
           </div>
           <div className="space-y-2">
-            <Textarea placeholder="Leave a comment..." rows={3} />
-            <Button size="sm">Comment</Button>
+            <Textarea placeholder={i18nT("scan.s0682")} rows={3} />
+            <Button size="sm">{i18nT("common.comment")}</Button>
           </div>
         </div>
       </Section>
@@ -1829,9 +1830,9 @@ export function DesignGuide() {
           <table className="w-full text-xs">
             <thead className="border-b border-border bg-accent/20">
               <tr>
-                <th className="text-left px-3 py-2 font-medium text-muted-foreground">Model</th>
-                <th className="text-left px-3 py-2 font-medium text-muted-foreground">Tokens</th>
-                <th className="text-left px-3 py-2 font-medium text-muted-foreground">Cost</th>
+                <th className="text-left px-3 py-2 font-medium text-muted-foreground">{i18nT("agents.model")}</th>
+                <th className="text-left px-3 py-2 font-medium text-muted-foreground">{i18nT("issues.detail.tokens")}</th>
+                <th className="text-left px-3 py-2 font-medium text-muted-foreground">{i18nT("agents.detail.cost")}</th>
               </tr>
             </thead>
             <tbody>
@@ -1846,7 +1847,7 @@ export function DesignGuide() {
                 <td className="px-3 py-2 font-mono">$1.25</td>
               </tr>
               <tr>
-                <td className="px-3 py-2 font-medium">Total</td>
+                <td className="px-3 py-2 font-medium">{i18nT("scan.s1389")}</td>
                 <td className="px-3 py-2 font-mono">1.7M</td>
                 <td className="px-3 py-2 font-mono font-medium">$19.25</td>
               </tr>
@@ -1885,12 +1886,12 @@ export function DesignGuide() {
       {/* ============================================================ */}
       <Section title="Separator">
         <div className="space-y-4">
-          <p className="text-sm text-muted-foreground">Horizontal</p>
+          <p className="text-sm text-muted-foreground">{i18nT("scan.s0590")}</p>
           <Separator />
           <div className="flex items-center gap-4 h-8">
-            <span className="text-sm">Left</span>
+            <span className="text-sm">{i18nT("scan.s0684")}</span>
             <Separator orientation="vertical" />
-            <span className="text-sm">Right</span>
+            <span className="text-sm">{i18nT("scan.s1145")}</span>
           </div>
         </div>
       </Section>
@@ -1923,7 +1924,7 @@ export function DesignGuide() {
             <TeamRow team={warnTeam} selected={false} onSelect={() => {}} installed={currentInstalledState} />
           </div>
           <p className="mt-2 text-xs text-muted-foreground">
-            Installed teams collapse under <code className="font-mono">INSTALLED · N</code>; an out-of-date
+            Installed teams collapse under <code className="font-mono">{i18nT("scan.s0597")}</code>; an out-of-date
             install (server <code className="font-mono">originHash</code> ≠ catalog <code className="font-mono">contentHash</code>)
             shows the amber <code className="font-mono">↑</code> badge (PAP-10256).
           </p>
@@ -2137,7 +2138,7 @@ export function DesignGuide() {
           <p className="mt-2 text-xs text-muted-foreground">
             Signed payload sha256 + expiry surface on every variant (PAP-10400). The{" "}
             <code>stale</code> variant tints the border amber, banners the catalog-hash mismatch, strikes through
-            the previous hash next to the current one, and renders <code>Approve</code> disabled until the request
+            the previous hash next to the current one, and renders <code>{i18nT("common.approve")}</code> disabled until the request
             is re-issued.
           </p>
         </SubSection>
@@ -2170,14 +2171,14 @@ export function DesignGuide() {
         <SubSection title="BindingsTable (reused in the audit row drilldown)">
           <BindingsTable
             rows={[
-              { label: "Application", value: "Slack · manifest v2.4.1" },
-              { label: "Connection", value: "https://slack.com/api · acme-workspace", mono: true },
-              { label: "Catalog", value: "sha256:9f86d081…f00a08", mono: true },
-              { label: "Payload", value: "sha256:2c26b46b…66e7ae", mono: true },
+              { label: i18nT("pages.tools.connections.application"), value: "Slack · manifest v2.4.1" },
+              { label: i18nT("apps.connection"), value: "https://slack.com/api · acme-workspace", mono: true },
+              { label: i18nT("apps.catalog"), value: "sha256:9f86d081…f00a08", mono: true },
+              { label: i18nT("scan.s0946"), value: "sha256:2c26b46b…66e7ae", mono: true },
             ]}
           />
           <p className="mt-2 text-xs text-muted-foreground">
-            Two-column key/value block with mono values. Lives inside <code>ActionCard</code> and is reused
+            Two-column key/value block with mono values. Lives inside <code>{i18nT("scan.s0018")}</code> and is reused
             standalone in the audit row drilldown.
           </p>
         </SubSection>
@@ -2193,7 +2194,7 @@ export function DesignGuide() {
           </div>
           <p className="mt-2 text-xs text-muted-foreground">
             Policy decisions, connection/runtime health, and catalog quarantine all route through the canonical{" "}
-            <code>StatusBadge</code> keys defined in <code>lib/status-colors</code>.
+            <code>{i18nT("scan.s1300")}</code> keys defined in <code>lib/status-colors</code>.
           </p>
         </SubSection>
 
@@ -2231,7 +2232,7 @@ export function DesignGuide() {
           Reusable env-var editor (agents, projects, environments, routines). One shared grid, an
           in-field Text/Secret source switch, a fuzzy secret picker with a pinned “Create secret”
           item, automatic sensitive-value detection, and inline secret-health warnings. See the
-          Storybook <span className="font-mono">Product/Environment Variables Editor</span> stories
+          Storybook <span className="font-mono">{i18nT("scan.s0992")}</span> stories
           for all 10 states.
         </p>
         <EnvironmentVariablesEditorShowcase />
@@ -2244,7 +2245,7 @@ export function DesignGuide() {
               subtasks={[DESIGN_GUIDE_TASK]}
               createdTasks={[
                 { ...DESIGN_GUIDE_TASK, projectId: "design-board", project: { id: "design-board", name: "Board UI" } as Issue["project"] },
-                { ...DESIGN_GUIDE_TASK, id: "design-followup", identifier: "PAP-428", title: "Write release notes", status: "todo", projectId: null },
+                { ...DESIGN_GUIDE_TASK, id: "design-followup", identifier: "PAP-428", title: i18nT("scan.s1528"), status: "todo", projectId: null },
               ]}
               projects={[]}
             />
@@ -2283,7 +2284,7 @@ export function DesignGuide() {
       </Section>
 
       <Section title="Saved provider API keys">
-        <SavedProviderKeySelect options={[{ id: "example", label: "Claude API key (Your key)", binding: { type: "user_secret_ref", key: "ANTHROPIC_API_KEY", version: "latest" } }]} value="example" onChange={() => {}} loading={false} error={false} />
+        <SavedProviderKeySelect options={[{ id: "example", label: i18nT("scan.s0220"), binding: { type: "user_secret_ref", key: "ANTHROPIC_API_KEY", version: "latest" } }]} value="example" onChange={() => {}} loading={false} error={false} />
         <SavedProviderKeySelect options={[]} value="" onChange={() => {}} loading error={false} />
         <SavedProviderKeySelect options={[]} value="" onChange={() => {}} loading={false} error />
       </Section>
@@ -2379,17 +2380,17 @@ export function DesignGuide() {
           <InlineBanner
             tone="info"
             title="Built-in agent"
-            actions={<Button variant="outline" size="sm">Reset to defaults</Button>}
+            actions={<Button variant="outline" size="sm">{i18nT("agents.detail.resetBuiltIn")}</Button>}
           >
-            Ships with Kujira AI Workforce and powers <strong>Briefs</strong>. It can be paused but not deleted.
+            Ships with Kujira AI Workforce and powers <strong>{i18nT("scan.s0151")}</strong>. It can be paused but not deleted.
           </InlineBanner>
           <InlineBanner
             tone="warning"
             title="Briefs is paused."
             actions={
               <>
-                <Button variant="ghost" size="sm">View agent</Button>
-                <Button size="sm">Resume agent</Button>
+                <Button variant="ghost" size="sm">{i18nT("scan.s1446")}</Button>
+                <Button size="sm">{i18nT("agents.resumeAgent")}</Button>
               </>
             }
           >
@@ -2398,7 +2399,7 @@ export function DesignGuide() {
           <InlineBanner
             tone="danger"
             title="Summary generation failed."
-            actions={<Button size="sm">Retry</Button>}
+            actions={<Button size="sm">{i18nT("common.retry")}</Button>}
           >
             The linked issue reached a terminal state before a summary was written.
           </InlineBanner>
@@ -2487,8 +2488,8 @@ export function DesignGuide() {
         </div>
         <p className="mt-3 text-sm text-muted-foreground">
           <span className="font-mono">&lt;BuiltInAgentGate agentKey&gt;</span> composes{" "}
-          <span className="font-mono">PageSkeleton</span> + <span className="font-mono">EmptyState</span>{" "}
-          + <span className="font-mono">InlineBanner</span> to render the loading / setup /
+          <span className="font-mono">{i18nT("scan.s0931")}</span> + <span className="font-mono">{i18nT("scan.s0452")}</span>{" "}
+          + <span className="font-mono">{i18nT("scan.s0611")}</span> to render the loading / setup /
           pending-approval / paused / ready states of a feature that depends on a built-in agent.
         </p>
       </Section>

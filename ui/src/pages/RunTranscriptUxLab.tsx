@@ -11,6 +11,7 @@ import { StatusBadge } from "../components/StatusBadge";
 import { RunTranscriptView, type TranscriptDensity, type TranscriptMode } from "../components/transcript/RunTranscriptView";
 import { runTranscriptFixtureEntries, runTranscriptFixtureMeta } from "../fixtures/runTranscriptFixtures";
 import { ExternalLink, FlaskConical, LayoutPanelLeft, MonitorCog, PanelsTopLeft, RadioTower } from "lucide-react";
+import { t as i18nT } from "@/i18n";
 
 type SurfaceId = "detail" | "live" | "dashboard";
 
@@ -23,21 +24,21 @@ const surfaceOptions: Array<{
 }> = [
   {
     id: "detail",
-    label: "Run Detail",
+    label: i18nT("scan.s1154"),
     eyebrow: "Full transcript",
     description: "The long-form run page with the `Nice | Raw` toggle and the most inspectable transcript view.",
     icon: MonitorCog,
   },
   {
     id: "live",
-    label: "Issue Widget",
+    label: i18nT("scan.s0633"),
     eyebrow: "Live stream",
     description: "The issue-detail live run widget, optimized for following an active run without leaving the task page.",
     icon: RadioTower,
   },
   {
     id: "dashboard",
-    label: "Dashboard Card",
+    label: i18nT("scan.s0380"),
     eyebrow: "Dense card",
     description: "The active-agents dashboard card, tuned for compact scanning while keeping the same transcript language.",
     icon: PanelsTopLeft,
@@ -212,7 +213,7 @@ export function RunTranscriptUxLab() {
                 <FlaskConical className="h-3.5 w-3.5" />
                 UX Lab
               </div>
-              <h1 className="mt-4 text-2xl font-semibold tracking-tight">Run Transcript Fixtures</h1>
+              <h1 className="mt-4 text-2xl font-semibold tracking-tight">{i18nT("scan.s1155")}</h1>
               <p className="mt-2 text-sm text-muted-foreground">
                 Built from a real Kujira AI Workforce development run, then sanitized so no secrets, local paths, or environment details survive into the fixture.
               </p>

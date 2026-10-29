@@ -1,5 +1,11 @@
 import type { IssueAttachment, IssueDocumentSummary, IssueWorkProduct } from "@paperclipai/shared";
 import { getAttachmentArtifactWorkProductMetadata } from "@paperclipai/shared";
+import { t } from "@/i18n";
+
+const LOCALE_DOCUMENT_TITLES: Record<string, { english: string; key: string }> = {
+  plan: { english: "plan", key: "issues.sidePanel.plan" },
+  campaign: { english: "campaign", key: "landing.visual.campaign" },
+};
 
 /**
  * Selectors for the properties pane's Artifacts tab (PAP-491): which
@@ -75,7 +81,12 @@ export function workProductHref(
 export function documentDisplayTitle(
   doc: Pick<IssueDocumentSummary, "key" | "title">,
 ): string {
-  if (doc.title?.trim()) return doc.title;
+  const known = LOCALE_DOCUMENT_TITLES[doc.key];
+  const title = doc.title?.trim() ?? "";
+  if (known && (title.length === 0 || title.toLowerCase() === known.english)) {
+    return String(t(known.key));
+  }
+  if (title.length > 0) return title;
   const words = doc.key.replace(/[-_]+/g, " ").trim();
   return words.charAt(0).toUpperCase() + words.slice(1);
 }

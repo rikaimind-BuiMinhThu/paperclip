@@ -5,6 +5,7 @@ import { activityApi } from "../api/activity";
 import { queryKeys } from "../lib/queryKeys";
 import { Button } from "./ui/button";
 import { Link } from "../lib/router";
+import { t as i18nT } from "@/i18n";
 
 export function ExecutionBlockerNotice({ companyId, issueId, blocker, onRetried }: {
   companyId: string;
@@ -42,7 +43,7 @@ export function ExecutionBlockerNotice({ companyId, issueId, blocker, onRetried 
       </div>
       {blocker.agentId && blocker.runId && (
         <Button variant="outline" size="sm" asChild>
-          <Link to={`/agents/${blocker.agentId}/runs/${blocker.runId}`}>Inspect run</Link>
+          <Link to={`/agents/${blocker.agentId}/runs/${blocker.runId}`}>{i18nT("agents.detail.inspectRun")}</Link>
         </Button>
       )}
       {(!requiresInspection || blocker.canRetry) && blocker.agentId && blocker.runId &&

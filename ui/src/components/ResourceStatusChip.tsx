@@ -1,6 +1,7 @@
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import { brandChipBadge, type BrandChipColor } from "@/lib/status-colors";
+import { t as i18nT } from "@/i18n";
 
 /**
  * The load-bearing visual grammar for the built-in bundle status panel
@@ -33,40 +34,40 @@ interface VariantSpec {
 }
 
 const VARIANTS: Record<ResourceStatusVariant, VariantSpec> = {
-  ready: { color: "green", glyph: "●", label: "Ready", title: "Materialized and matches the shipped default" },
-  needs_setup: { color: "amber", glyph: "⚠", label: "Needs setup", title: "Present but not usable yet" },
-  missing: { color: "amber", glyph: "⚠", label: "Missing", title: "Expected resource absent; reconcile will recreate it" },
-  error: { color: "red", glyph: "✕", label: "Error", title: "Failed to load or reconcile" },
+  ready: { color: "green", glyph: "●", label: i18nT("pages.instanceGeneral.ready"), title: i18nT("scan.s0742") },
+  needs_setup: { color: "amber", glyph: "⚠", label: i18nT("scan.s0772"), title: i18nT("scan.s0979") },
+  missing: { color: "amber", glyph: "⚠", label: i18nT("pages.secrets.coverage.missing"), title: i18nT("scan.s0483") },
+  error: { color: "red", glyph: "✕", label: i18nT("status.error"), title: i18nT("scan.s0500") },
   update_available: {
     color: "blue",
     glyph: "↑",
-    label: "Update available",
-    title: "Unedited — a newer shipped default can be applied",
+    label: i18nT("scan.s1421"),
+    title: i18nT("scan.s1408"),
   },
   drifted: {
     color: "gray",
     glyph: "✎",
-    label: "Drifted",
-    title: "You've edited this; your changes are kept, not overwritten",
+    label: i18nT("scan.s0434"),
+    title: i18nT("scan.s1539"),
   },
   schedule_off: {
     color: "gray",
     glyph: "◌",
-    label: "Schedule off",
-    title: "No background work runs until you enable it — costs zero tokens",
+    label: i18nT("scan.s1184"),
+    title: i18nT("scan.s0787"),
   },
-  schedule_on: { color: "green", glyph: "●", label: "Weekly", title: "Runs on the weekly schedule" },
+  schedule_on: { color: "green", glyph: "●", label: i18nT("pages.instanceGeneral.retentionWeekly"), title: i18nT("scan.s1165") },
   pending_approval: {
     color: "amber",
     glyph: "⚠",
-    label: "Pending approval",
-    title: "Waiting on board hire approval before it can run",
+    label: i18nT("status.pendingApproval"),
+    title: i18nT("scan.s1461"),
   },
   proposal_pending: {
     color: "blue",
     glyph: "↑",
-    label: "Proposal pending",
-    title: "A proposed update is waiting for your review",
+    label: i18nT("scan.s1001"),
+    title: i18nT("scan.s0002"),
   },
 };
 

@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { copyTextToClipboard } from "@/lib/clipboard";
 import { queryKeys } from "@/lib/queryKeys";
 import { useTranslation } from "@/i18n";
+import { t as i18nT } from "@/i18n";
 
 export function SlackIdentityStep({ endpointId, command, testStartedAt, onConnected, onSaveExit }: {
   endpointId: string;
@@ -58,19 +59,19 @@ export function SlackIdentityStep({ endpointId, command, testStartedAt, onConnec
           void copyTextToClipboard(connectCommand).then(() => { setCopied(true); setCopyError(false); }, () => setCopyError(true));
         }}><Copy className="size-4" />{copied ? t("common.copied") : t("apps.connect.copyCommand")}</Button>
       </div>
-      {copyError && <p role="alert" className="text-sm text-destructive">Couldn&apos;t copy the command. Select and copy it above.</p>}
+      {copyError && <p role="alert" className="text-sm text-destructive">{i18nT("scan.s0318")}</p>}
       <p className="text-sm">
-        <a href="https://app.slack.com/" target="_blank" rel="noopener noreferrer" className="underline underline-offset-4">Open Slack <ExternalLink className="inline size-3" /></a>, send the command in your workspace, then return here.
+        <a href="https://app.slack.com/" target="_blank" rel="noopener noreferrer" className="underline underline-offset-4">{i18nT("scan.s0881")}<ExternalLink className="inline size-3" /></a>, send the command in your workspace, then return here.
       </p>
       {identities.isError ? (
         <p role="alert" className="text-sm text-destructive">Couldn&apos;t check for your Slack account. We&apos;ll keep trying.</p>
       ) : candidates.length === 0 ? (
-        <p role="status" className="flex items-center gap-2 text-sm text-muted-foreground"><Loader2 className="size-4 animate-spin" />Waiting for your connect command…</p>
+        <p role="status" className="flex items-center gap-2 text-sm text-muted-foreground"><Loader2 className="size-4 animate-spin" />{i18nT("scan.s1460")}</p>
       ) : (
         <div className={`space-y-3 rounded-lg border p-4 ${linkedToMe
           ? "border-(--status-task-done)/30 bg-(--status-task-done)/10"
           : "border-(--status-task-todo)/30 bg-(--status-task-todo)/10"}`}>
-          <p className="text-sm">Choose your Slack account below to link it to <strong>{userLabel ?? "your Kujira AI Workforce account"}</strong>. Only confirm an account that belongs to you. Future messages will use your Kujira AI Workforce permissions.</p>
+          <p className="text-sm">{i18nT("scan.s0213")}<strong>{userLabel ?? "your Kujira AI Workforce account"}</strong>. Only confirm an account that belongs to you. Future messages will use your Kujira AI Workforce permissions.</p>
           {candidates.map((identity) => {
             const mine = identity.status === "linked" && identity.paperclipUserId === userId;
             return (

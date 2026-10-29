@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { useCompany } from "@/context/CompanyContext";
 import { queryKeys } from "@/lib/queryKeys";
 import { Link, useParams } from "@/lib/router";
+import { t as i18nT } from "@/i18n";
 
 const NODE_TYPES = ["start", "employee", "tool", "approval", "artifact", "end"] as const;
 
@@ -56,7 +57,7 @@ export function WorkforceWorkflowDetail() {
         kind: "schedule",
         cronExpression: SACHI_ROUTINE_CRON,
         timezone: SACHI_ROUTINE_TIMEZONE,
-        label: "Weekday morning",
+        label: i18nT("scan.s1474"),
       });
       return routine;
     },
@@ -101,7 +102,7 @@ export function WorkforceWorkflowDetail() {
           value={assigneeAgentId}
           onChange={(event) => setAssigneeAgentId(event.target.value)}
         >
-          <option value="">Select employee</option>
+          <option value="">{i18nT("scan.s1215")}</option>
           {(agents.data ?? []).map((agent) => (
             <option key={agent.id} value={agent.id}>{agent.name}</option>
           ))}
@@ -110,8 +111,8 @@ export function WorkforceWorkflowDetail() {
           Create weekday routine
         </Button>
       </div>
-      {createRoutine.data ? <p className="text-sm">Routine created. Open Routines to confirm the schedule.</p> : null}
-      <h2 className="text-lg font-medium">Runs</h2>
+      {createRoutine.data ? <p className="text-sm">{i18nT("scan.s1151")}</p> : null}
+      <h2 className="text-lg font-medium">{i18nT("nav.runs")}</h2>
       {(detail.data?.runs ?? []).map((run) => (
         <Link key={run.id} to={`/workforce/runs/${run.id}`} className="text-sm underline">
           {run.status} · {new Date(run.startedAt).toLocaleString()}

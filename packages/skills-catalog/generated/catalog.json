@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "packageName": "@paperclipai/skills-catalog",
   "packageVersion": "0.3.1",
-  "generatedAt": "2026-10-25T15:14:27.685Z",
+  "generatedAt": "2026-10-25T18:40:40.534Z",
   "skills": [
     {
       "id": "paperclipai:bundled:docs:doc-maintenance",
@@ -37,6 +37,42 @@
         }
       ],
       "contentHash": "sha256:2e02299210fd17c1fe1867b4ee8c144a11b6fe1fe481f83b8268cfbaaf10f9aa"
+    },
+    {
+      "id": "paperclipai:bundled:marketing:cmo-campaign-planning",
+      "key": "paperclipai/bundled/marketing/cmo-campaign-planning",
+      "kind": "bundled",
+      "category": "marketing",
+      "slug": "cmo-campaign-planning",
+      "name": "cmo-campaign-planning",
+      "description": "Ask clarifying questions first, then write a content×channel WBS issue plan with package components and final assemble deliverables, get plan confirmation, decompose to children, and request approval of final packages.",
+      "path": "catalog/bundled/marketing/cmo-campaign-planning",
+      "entrypoint": "SKILL.md",
+      "trustLevel": "markdown_only",
+      "compatibility": "compatible",
+      "defaultInstall": false,
+      "recommendedForRoles": [
+        "marketer",
+        "manager",
+        "cmo"
+      ],
+      "requires": [],
+      "tags": [
+        "paperclip",
+        "marketing",
+        "planning",
+        "wbs",
+        "approval"
+      ],
+      "files": [
+        {
+          "path": "SKILL.md",
+          "kind": "skill",
+          "sizeBytes": 9065,
+          "sha256": "8c99ddb89d3e173cabad59cda2135704a953ac3341477545cdb3ad07010a816b"
+        }
+      ],
+      "contentHash": "sha256:747db4c3a9a4ea4d18cd257e9dc4576c0874626cf6f813ad22701e4e6bcb7ed9"
     },
     {
       "id": "paperclipai:bundled:paperclip-operations:issue-triage",

@@ -22,6 +22,7 @@ import { CaseCopyableToken } from "@/components/CaseIdentifierKey";
 import { hasBlockingShortcutDialog, isKeyboardShortcutTextInputTarget } from "@/lib/keyboardShortcuts";
 import { cn, relativeTime } from "@/lib/utils";
 import { useTranslation } from "@/i18n";
+import { t as i18nT } from "@/i18n";
 
 type GroupBy = "type" | "project" | "status" | "none";
 type CaseColumn = "id" | "key" | "title" | "status" | "updated" | "created" | "type" | "project" | "parent";
@@ -40,12 +41,12 @@ type CaseViewState = {
 };
 
 const STATUS_FILTER_OPTIONS: { value: CaseStatus; label: string }[] = [
-  { value: "draft", label: "Draft" },
-  { value: "in_progress", label: "In progress" },
-  { value: "in_review", label: "In review" },
-  { value: "approved", label: "Approved" },
-  { value: "done", label: "Done" },
-  { value: "cancelled", label: "Cancelled" },
+  { value: "draft", label: i18nT("status.draft") },
+  { value: "in_progress", label: i18nT("status.inProgress") },
+  { value: "in_review", label: i18nT("status.inReview") },
+  { value: "approved", label: i18nT("pages.joinRequests.statusApproved") },
+  { value: "done", label: i18nT("common.done") },
+  { value: "cancelled", label: i18nT("status.cancelled") },
 ];
 
 const ALL = "__all__";
@@ -55,7 +56,7 @@ const CASE_COLUMN_ORDER: CaseColumn[] = ["id", "key", "title", "type", "status",
 const CASE_COLUMN_LABELS: Record<CaseColumn, string> = {
   id: "ID",
   key: "Key",
-  title: "Title",
+  title: i18nT("common.title"),
   status: "Status",
   updated: "Updated",
   created: "Created at",
@@ -66,7 +67,7 @@ const CASE_COLUMN_LABELS: Record<CaseColumn, string> = {
 const CASE_SORT_LABELS: Record<CaseSortField, string> = {
   updated: "Last updated",
   created: "Created at",
-  title: "Title",
+  title: i18nT("common.title"),
   status: "Status",
   id: "ID",
   type: "Type",
@@ -305,7 +306,7 @@ function CaseTrailingColumns({
               stopPropagation
             />
           ) : (
-            <span key={column} className="min-w-0 truncate text-xs text-muted-foreground">None</span>
+            <span key={column} className="min-w-0 truncate text-xs text-muted-foreground">{i18nT("common.none")}</span>
           );
         }
         if (column === "title") {
@@ -643,7 +644,7 @@ function CaseColumnPicker({
           <div className="text-(length:--text-nano) font-semibold uppercase tracking-(--tracking-caps) text-muted-foreground">
             Desktop case rows
           </div>
-          <div className="text-sm font-medium text-foreground">Choose visible columns</div>
+          <div className="text-sm font-medium text-foreground">{i18nT("scan.s0211")}</div>
         </div>
         <div className="space-y-0.5">
           {CASE_COLUMN_ORDER.map((column) => (
@@ -723,7 +724,7 @@ function CasesEmptyHero() {
         iterate on. In v1 they&apos;re created by agents, not from the UI.
       </p>
       <div className="w-full space-y-2 rounded-lg border border-border bg-muted/50 p-4 text-left">
-        <p className="text-sm font-medium">To start creating cases, add this to a skill:</p>
+        <p className="text-sm font-medium">{i18nT("scan.s1381")}</p>
         <pre className="overflow-x-auto rounded bg-background/60 p-3 font-mono text-xs text-muted-foreground">
 {`"Create a case of type blog_post with fields
 {slug, target_audience, publish_url} and key <release>/<slug>."`}
@@ -1021,14 +1022,14 @@ export function Cases() {
   }, [selectedIndex]);
 
   const activeFilters: FilterValue[] = [];
-  if (viewState.search.trim()) activeFilters.push({ key: "search", label: "Search", value: viewState.search.trim() });
+  if (viewState.search.trim()) activeFilters.push({ key: "search", label: i18nT("common.search"), value: viewState.search.trim() });
   if (viewState.typeFilters.length > 0) {
-    activeFilters.push({ key: "type", label: "Type", value: viewState.typeFilters.join(", ") });
+    activeFilters.push({ key: "type", label: i18nT("common.type"), value: viewState.typeFilters.join(", ") });
   }
   if (!usesDefaultStatusFilter) {
     activeFilters.push({
       key: "status",
-      label: "Status",
+      label: i18nT("common.status"),
       value: viewState.statusFilters.length === CASE_STATUSES.length
         ? "All"
         : viewState.statusFilters
@@ -1039,7 +1040,7 @@ export function Cases() {
   if (viewState.projectFilters.length > 0) {
     activeFilters.push({
       key: "project",
-      label: "Project",
+      label: i18nT("issues.project"),
       value: viewState.projectFilters
         .map((projectId) => projectId === ALL ? "No project" : projectName.get(projectId) ?? "Project")
         .join(", "),
@@ -1047,7 +1048,7 @@ export function Cases() {
   }
   if (viewState.labelFilter !== ALL) {
     const name = (labelsQuery.data ?? []).find((l) => l.id === viewState.labelFilter)?.name ?? "Label";
-    activeFilters.push({ key: "label", label: "Label", value: name });
+    activeFilters.push({ key: "label", label: i18nT("pages.routines.variableEditor.label"), value: name });
   }
 
   function removeFilter(key: string) {
@@ -1241,7 +1242,7 @@ export function Cases() {
                     <FilterField label="Type">
                       <div className="max-h-40 overflow-y-auto">
                         {distinctTypes.length === 0 ? (
-                          <p className="px-1 py-1 text-xs text-muted-foreground">No types yet</p>
+                          <p className="px-1 py-1 text-xs text-muted-foreground">{i18nT("scan.s0847")}</p>
                         ) : distinctTypes.map((type) => (
                           <FilterCheckboxRow
                             key={type}

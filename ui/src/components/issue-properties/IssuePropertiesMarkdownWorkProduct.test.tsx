@@ -462,7 +462,7 @@ describe("markdown work product review row", () => {
       expect(container.textContent).toContain("DesignCoder");
       expect(container.querySelectorAll("article")).toHaveLength(2);
       expect(container.querySelector(`img[src="${imagePath}"]`)).not.toBeNull();
-      expect(container.querySelector('a[href="https://github.com/paperclipai/paperclip/pull/1"]')?.textContent).toContain("Open pull request");
+      expect(container.querySelector('a[href="https://github.com/paperclipai/paperclip/pull/1"]')?.textContent).toContain("プルリクエストを開く");
       expect(container.querySelector('button[aria-label="View image: Artifacts screenshot"]')).not.toBeNull();
     });
   });

@@ -260,6 +260,7 @@ import {
 import { SourceTrustBadge } from "./SourceTrustBadge";
 import { CommentAttributionChip } from "./CommentAttributionChip";
 import { resolveCommentAttribution } from "../lib/comment-attribution";
+import { t as i18nT } from "@/i18n";
 
 interface IssueChatMessageContext {
   feedbackDataSharingPreference: FeedbackDataSharingPreference;
@@ -1579,7 +1580,7 @@ function CopyablePreBlock({
             })
             .catch((error) => {
               toastActions?.pushToast({
-                title: "Copy failed",
+                title: i18nT("issues.detail.copyFailed"),
                 body:
                   error instanceof Error
                     ? error.message
@@ -1880,7 +1881,7 @@ function IssueChatProviderActivity({
             })}
             {effectiveModel ? (
               <div>
-                <span className="text-muted-foreground">Model</span>{" "}
+                <span className="text-muted-foreground">{i18nT("agents.model")}</span>{" "}
                 {requestedModel && requestedModel !== effectiveModel
                   ? `${requestedModel} → `
                   : ""}
@@ -2224,7 +2225,7 @@ function IssueChatUserMessage({
                   })
                   .catch((error) => {
                     toastActions?.pushToast({
-                      title: "Copy failed",
+                      title: i18nT("issues.detail.copyFailed"),
                       body:
                         error instanceof Error
                           ? error.message
@@ -2282,7 +2283,7 @@ function IssueChatUserMessage({
       <Dialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Delete comment?</DialogTitle>
+            <DialogTitle>{i18nT("scan.s0391")}</DialogTitle>
             <DialogDescription>
               This will replace the comment with a deleted-comment marker.
             </DialogDescription>
@@ -2457,7 +2458,7 @@ function IssueChatAssistantMessage({
             })
             .catch((error) => {
               toastActions?.pushToast({
-                title: "Copy failed",
+                title: i18nT("issues.detail.copyFailed"),
                 body:
                   error instanceof Error
                     ? error.message
@@ -2511,7 +2512,7 @@ function IssueChatAssistantMessage({
             onClick={() => {
               void copyTextToClipboard(copyText).catch((error) => {
                 toastActions?.pushToast({
-                  title: "Copy failed",
+                  title: i18nT("issues.detail.copyFailed"),
                   body:
                     error instanceof Error
                       ? error.message
@@ -2882,7 +2883,7 @@ function IssueChatFeedbackButtons({
           <Textarea
             value={downvoteReason}
             onChange={(event) => setDownvoteReason(event.target.value)}
-            placeholder="Add a short note"
+            placeholder={i18nT("scan.s0029")}
             className="min-h-20 resize-y bg-background text-sm"
             disabled={isSaving}
           />
@@ -2922,7 +2923,7 @@ function IssueChatFeedbackButtons({
       >
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Save your feedback sharing preference</DialogTitle>
+            <DialogTitle>{i18nT("scan.s1181")}</DialogTitle>
             <DialogDescription>
               Choose whether voted AI outputs can be shared with Kujira AI Workforce Labs.
               This answer becomes the default for future thumbs up and thumbs
@@ -2930,15 +2931,15 @@ function IssueChatFeedbackButtons({
             </DialogDescription>
           </DialogHeader>
           <div className="space-y-3 text-sm text-muted-foreground">
-            <p>This vote is always saved locally.</p>
+            <p>{i18nT("scan.s1378")}</p>
             <p>
               Choose{" "}
-              <span className="font-medium text-foreground">Always allow</span>{" "}
+              <span className="font-medium text-foreground">{i18nT("pages.appsReview.reviewQueue.alwaysAllow")}</span>{" "}
               to share this vote and future voted AI outputs. Choose{" "}
-              <span className="font-medium text-foreground">Don't allow</span>{" "}
+              <span className="font-medium text-foreground">{i18nT("pages.instanceGeneral.feedbackDontAllow")}</span>{" "}
               to keep this vote and future votes local.
             </p>
-            <p>You can change this later in Settings &gt; General.</p>
+            <p>{i18nT("scan.s1534")}</p>
             {termsUrl ? (
               <a
                 href={termsUrl}
@@ -3584,7 +3585,7 @@ function SystemNoticeCommentContent({
       })
       .catch((error) => {
         toastActions?.pushToast({
-          title: "Copy failed",
+          title: i18nT("issues.detail.copyFailed"),
           body:
             error instanceof Error
               ? error.message
@@ -3604,7 +3605,7 @@ function SystemNoticeCommentContent({
       })
       .catch((error) => {
         toastActions?.pushToast({
-          title: "Copy failed",
+          title: i18nT("issues.detail.copyFailed"),
           body:
             error instanceof Error
               ? error.message
@@ -5453,7 +5454,7 @@ const IssueChatComposer = forwardRef<
             Review conversation
           </Button>
           {reviewError ? (
-            <p>Couldn’t refresh the conversation. Try reviewing it again.</p>
+            <p>{i18nT("scan.s0354")}</p>
           ) : null}
           {uncertainSubmission.reviewed ? (
             <>
@@ -5485,7 +5486,7 @@ const IssueChatComposer = forwardRef<
         readOnly={!!uncertainSubmission}
         value={body}
         onChange={changeBody}
-        placeholder="Reply"
+        placeholder={i18nT("common.reply")}
         mentions={mentions}
         onSubmit={handleSubmit}
         imageUploadHandler={
@@ -5634,7 +5635,7 @@ const IssueChatComposer = forwardRef<
             ref={reassignTriggerRef}
             value={reassignTarget}
             options={reassignOptions}
-            placeholder="Responsible"
+            placeholder={i18nT("inbox.responsible")}
             noneLabel="No responsible"
             searchPlaceholder="Search responsible..."
             emptyMessage="No responsible found."
@@ -5643,7 +5644,7 @@ const IssueChatComposer = forwardRef<
             renderTriggerValue={(option) => {
               if (!option)
                 return (
-                  <span className="text-muted-foreground">Responsible</span>
+                  <span className="text-muted-foreground">{i18nT("inbox.responsible")}</span>
                 );
               const agentId = option.id.startsWith("agent:")
                 ? option.id.slice("agent:".length)
@@ -5723,7 +5724,7 @@ const IssueChatComposer = forwardRef<
           }}
         >
           <AlertDialogHeader>
-            <AlertDialogTitle>No responsible selected</AlertDialogTitle>
+            <AlertDialogTitle>{i18nT("scan.s0825")}</AlertDialogTitle>
             <AlertDialogDescription>
               This comment will be posted without an assignee, so no agent will
               be woken to act on it. Go back to pick a responsible, or send

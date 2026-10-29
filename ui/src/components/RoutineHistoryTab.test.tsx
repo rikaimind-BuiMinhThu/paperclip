@@ -210,8 +210,8 @@ describe("RoutineHistoryTab", () => {
     await render({
       routine: createRoutine({ latestRevisionId: "revision-1", latestRevisionNumber: 1 }),
     });
-    expect(container.textContent).toContain("No edits yet");
-    expect(container.textContent).toContain("Revision 1 is the only history");
+    expect(container.textContent).toContain("まだ編集はありません");
+    expect(container.textContent).toContain("リビジョン 1 がこのルーティンの唯一の履歴");
   });
 
   it("renders the revision list with current and historical pills", async () => {
@@ -227,9 +227,9 @@ describe("RoutineHistoryTab", () => {
     });
     mockRoutinesApi.listRevisions.mockResolvedValue([current, old]);
     await render();
-    expect(container.textContent).toContain("rev 2");
-    expect(container.textContent).toContain("rev 1");
-    expect(container.textContent).toContain("Current");
+    expect(container.textContent).toContain("リビジョン 2");
+    expect(container.textContent).toContain("リビジョン 1");
+    expect(container.textContent).toContain("現在");
   });
 
   it("shows the historical-preview banner with append-only copy when previewing an old revision", async () => {
@@ -254,13 +254,13 @@ describe("RoutineHistoryTab", () => {
       oldRow?.click();
     });
     await flush();
-    expect(container.textContent).toContain("Viewing revision 1 (read-only)");
+    expect(container.textContent).toContain("リビジョン 1 を表示中（読み取り専用）");
     expect(container.textContent).toContain(
-      "Restoring this revision creates a new revision 3 with the same content. History stays append-only.",
+      "このリビジョンを復元すると、同じ内容の新しいリビジョン 3 が作られます。履歴は追記のみです。",
     );
-    expect(container.textContent).toContain("Status");
+    expect(container.textContent).toContain("ステータス");
     expect(container.textContent).toContain("paused");
-    expect(container.textContent).toContain("Restore as new revision");
+    expect(container.textContent).toContain("新しいリビジョンとして復元");
   });
 
   it("blocks historical preview and surfaces the conflict banner when local edits are dirty", async () => {
@@ -271,7 +271,7 @@ describe("RoutineHistoryTab", () => {
       isEditDirty: true,
       dirtyFields: [{ key: "description", label: "the description" }],
     });
-    expect(container.textContent).toContain("Unsaved routine edits");
+    expect(container.textContent).toContain("未保存のルーティン編集");
     const oldRow = container.querySelector(
       "[data-testid='revision-row-1']",
     ) as HTMLButtonElement | null;
@@ -302,7 +302,7 @@ describe("RoutineHistoryTab", () => {
     });
     await flush();
     const restoreButtons = Array.from(container.querySelectorAll("button")).filter(
-      (button) => button.textContent === "Restore as new revision",
+      (button) => button.textContent === "新しいリビジョンとして復元",
     );
     expect(restoreButtons.length).toBeGreaterThan(0);
     await act(async () => {
@@ -311,7 +311,7 @@ describe("RoutineHistoryTab", () => {
     await flush();
     expect(container.querySelector("[data-testid='dialog']")).not.toBeNull();
     const confirmButtons = Array.from(container.querySelectorAll("button")).filter((b) =>
-      (b.textContent ?? "").includes("Restore as revision 3"),
+      (b.textContent ?? "").includes("リビジョン 3 として復元"),
     );
     expect(confirmButtons.length).toBeGreaterThan(0);
     await act(async () => {
@@ -325,7 +325,7 @@ describe("RoutineHistoryTab", () => {
     );
     expect(toastSpy).toHaveBeenCalled();
     const successCall = toastSpy.mock.calls.find(
-      (call) => call[0]?.title === "Restored revision 1 as revision 3",
+      (call) => call[0]?.title === "リビジョン 1 をリビジョン 3 として復元しました",
     );
     expect(successCall).toBeTruthy();
   });
@@ -375,7 +375,7 @@ describe("RoutineHistoryTab", () => {
       },
     ];
     await render({ secrets });
-    expect(container.textContent).toContain("Env");
+    expect(container.textContent).toContain("環境変数");
     expect(container.textContent).toContain("2 keys (1 secret ref)");
 
     const oldRow = container.querySelector(
@@ -386,14 +386,14 @@ describe("RoutineHistoryTab", () => {
     });
     await flush();
     const restoreButtons = Array.from(container.querySelectorAll("button")).filter(
-      (button) => button.textContent === "Restore as new revision",
+      (button) => button.textContent === "新しいリビジョンとして復元",
     );
     expect(restoreButtons.length).toBeGreaterThan(0);
     await act(async () => {
       restoreButtons[0].click();
     });
     await flush();
-    expect(container.textContent).toContain("Routine secrets will revert");
+    expect(container.textContent).toContain("ルーティンの秘密情報は元に戻ります");
     expect(container.textContent).toContain("1 key removed");
     expect(container.textContent).toContain("1 key changed");
   });
@@ -474,7 +474,7 @@ describe("RoutineHistoryTab", () => {
     });
     await flush();
     const compareButton = Array.from(container.querySelectorAll("button")).find(
-      (button) => button.textContent === "Compare with current",
+      (button) => button.textContent === "現在と比較",
     );
     await act(async () => {
       compareButton?.click();
@@ -519,14 +519,14 @@ describe("RoutineHistoryTab", () => {
     });
     await flush();
     const restoreButtons = Array.from(container.querySelectorAll("button")).filter(
-      (button) => button.textContent === "Restore as new revision",
+      (button) => button.textContent === "新しいリビジョンとして復元",
     );
     await act(async () => {
       restoreButtons[0].click();
     });
     await flush();
     const confirmButtons = Array.from(container.querySelectorAll("button")).filter((b) =>
-      (b.textContent ?? "").includes("Restore as revision 3"),
+      (b.textContent ?? "").includes("リビジョン 3 として復元"),
     );
     await act(async () => {
       confirmButtons[0].click();

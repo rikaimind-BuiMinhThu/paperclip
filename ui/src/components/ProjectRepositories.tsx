@@ -8,6 +8,7 @@ import { ConnectionSetupFlow } from "@/features/connections/ConnectionSetupFlow"
 import { ProjectRepositoryInput, repositoryOptionsKey } from "./ProjectRepositoryInput";
 import { Dialog, DialogContent, DialogTitle } from "./ui/dialog";
 import { Button } from "./ui/button";
+import { t as i18nT } from "@/i18n";
 
 export function ProjectRepositories({ project }: { project: Project }) {
   const client = useQueryClient();
@@ -34,12 +35,12 @@ export function ProjectRepositories({ project }: { project: Project }) {
     {project.workspaces.filter((workspace) => workspace.repoUrl && !workspace.metadata?.githubRepositoryId).map((workspace) => <LegacyProjectRepository key={workspace.id} workspace={workspace} projectRef={project.urlKey} />)}
     <div className="flex flex-wrap items-center justify-end gap-2 border-t border-border pt-4">
       {save.isError && <p role="alert" className="mr-auto text-sm text-destructive">{save.error.message}</p>}
-      {save.isSuccess && <span role="status" className="mr-auto text-sm text-muted-foreground">Changes saved</span>}
-      {draft && <Button type="button" variant="ghost" disabled={save.isPending} onClick={() => { setDraft(null); save.reset(); }}>Discard changes</Button>}
+      {save.isSuccess && <span role="status" className="mr-auto text-sm text-muted-foreground">{i18nT("scan.s0185")}</span>}
+      {draft && <Button type="button" variant="ghost" disabled={save.isPending} onClick={() => { setDraft(null); save.reset(); }}>{i18nT("pages.routines.history.discardChanges")}</Button>}
       <Button type="button" disabled={!draft || save.isPending} onClick={() => save.mutate()}>{save.isPending ? "Saving…" : "Save changes"}</Button>
     </div>
     <Dialog open={connecting} onOpenChange={setConnecting}><DialogContent showCloseButton={false} aria-describedby={undefined} className="max-h-(--sz-calc-18) overflow-y-auto sm:max-w-2xl">
-      <DialogTitle className="sr-only">Connect GitHub</DialogTitle>
+      <DialogTitle className="sr-only">{i18nT("projects.connectGitHub")}</DialogTitle>
       <ConnectionSetupFlow host="dialog" serviceSlug="github" forceNewConnection onCancel={() => setConnecting(false)} onComplete={() => {
         void client.invalidateQueries({ queryKey: repositoryOptionsKey(project.companyId) });
         setConnecting(false);

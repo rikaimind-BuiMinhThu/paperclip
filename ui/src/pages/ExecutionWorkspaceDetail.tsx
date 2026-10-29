@@ -49,6 +49,7 @@ import {
   sortWorkspaceRoutinesByName,
 } from "../lib/workspace-routines";
 import { useTranslation } from "@/i18n";
+import { t as i18nT } from "@/i18n";
 
 type WorkspaceFormState = {
   name: string;
@@ -438,13 +439,13 @@ export function RuntimeProvisionStatusValue({
 }) {
   if (status.kind === "eager") {
     return (
-      <span className="text-sm text-muted-foreground">Eager · provisioned during workspace setup</span>
+      <span className="text-sm text-muted-foreground">{i18nT("scan.s0438")}</span>
     );
   }
   if (status.kind === "deferred") {
     return (
       <div className="flex flex-col gap-1">
-        <StatusPill className="border-amber-500/40 text-amber-600 dark:text-amber-400">Deferred</StatusPill>
+        <StatusPill className="border-amber-500/40 text-amber-600 dark:text-amber-400">{i18nT("scan.s0389")}</StatusPill>
         <span className="text-xs text-muted-foreground">
           Runs once before the first runtime-service start.
         </span>
@@ -689,7 +690,7 @@ function ExecutionWorkspaceRoutinesList({
         queryClient.invalidateQueries({ queryKey: queryKeys.issues.list(workspace.companyId) }),
       ]);
       pushToast({
-        title: "Routine started",
+        title: i18nT("scan.s1152"),
         body: "Kujira AI Workforce created a run using this execution workspace.",
         tone: "success",
       });
@@ -699,7 +700,7 @@ function ExecutionWorkspaceRoutinesList({
     },
     onError: (mutationError) => {
       pushToast({
-        title: "Routine run failed",
+        title: i18nT("pages.routineDetail.runFailedTitle"),
         body: mutationError instanceof Error ? mutationError.message : "Kujira AI Workforce could not start the routine run.",
         tone: "error",
       });
@@ -1123,7 +1124,7 @@ export function ExecutionWorkspaceDetail() {
           <div className="space-y-4 sm:space-y-6">
             <Card className="rounded-none">
               <CardHeader>
-                <CardTitle>Workspace settings</CardTitle>
+                <CardTitle>{i18nT("scan.s1521")}</CardTitle>
                 <CardDescription>
                   Edit the concrete path, repo, branch, provisioning, teardown, and runtime overrides attached to this execution workspace. Saved changes affect future runs; Kujira AI Workforce may refresh or replace a reused workspace when config changes.
                 </CardDescription>
@@ -1144,12 +1145,12 @@ export function ExecutionWorkspaceDetail() {
 
               <div className="space-y-6">
                 <div className="space-y-4">
-                  <div className="text-xs font-medium uppercase tracking-widest text-muted-foreground">General</div>
+                  <div className="text-xs font-medium uppercase tracking-widest text-muted-foreground">{i18nT("settings.general")}</div>
                   <Field label="Workspace name">
                     <Input
                       value={form.name}
                       onChange={(event) => setForm((current) => current ? { ...current, name: event.target.value } : current)}
-                      placeholder="Execution workspace name"
+                      placeholder={i18nT("scan.s0478")}
                     />
                   </Field>
                 </div>
@@ -1157,14 +1158,14 @@ export function ExecutionWorkspaceDetail() {
                 <Separator />
 
                 <div className="space-y-4">
-                  <div className="text-xs font-medium uppercase tracking-widest text-muted-foreground">Source control</div>
+                  <div className="text-xs font-medium uppercase tracking-widest text-muted-foreground">{i18nT("scan.s1281")}</div>
                   <div className="grid gap-4 sm:grid-cols-2">
                     <Field label="Branch name" hint="Useful for isolated worktrees">
                       <Input
                         className="font-mono"
                         value={form.branchName}
                         onChange={(event) => setForm((current) => current ? { ...current, branchName: event.target.value } : current)}
-                        placeholder="PAP-946-workspace"
+                        placeholder={i18nT("scan.s0923")}
                       />
                     </Field>
 
@@ -1199,7 +1200,7 @@ export function ExecutionWorkspaceDetail() {
                 {!hideHostPaths && (
                   <>
                     <div className="space-y-4">
-                      <div className="text-xs font-medium uppercase tracking-widest text-muted-foreground">Paths</div>
+                      <div className="text-xs font-medium uppercase tracking-widest text-muted-foreground">{i18nT("scan.s0943")}</div>
                       <Field label="Working directory">
                         <Input
                           className="font-mono"
@@ -1233,7 +1234,7 @@ export function ExecutionWorkspaceDetail() {
                 {!hideHostPaths && (
                   <>
                     <div className="space-y-4">
-                      <div className="text-xs font-medium uppercase tracking-widest text-muted-foreground">Lifecycle commands</div>
+                      <div className="text-xs font-medium uppercase tracking-widest text-muted-foreground">{i18nT("scan.s0689")}</div>
                       <Field label="Provision command" hint="Runs when Kujira AI Workforce prepares this execution workspace">
                         <Textarea
                           className="min-h-20 font-mono"
@@ -1279,7 +1280,7 @@ export function ExecutionWorkspaceDetail() {
                 )}
 
                 <div className="space-y-4">
-                  <div className="text-xs font-medium uppercase tracking-widest text-muted-foreground">Runtime config</div>
+                  <div className="text-xs font-medium uppercase tracking-widest text-muted-foreground">{i18nT("scan.s1169")}</div>
                   <div className="rounded-md border border-dashed border-border/70 bg-background px-4 py-3">
                     <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between">
                       <div className="space-y-1">
@@ -1313,7 +1314,7 @@ export function ExecutionWorkspaceDetail() {
                   </div>
 
                   <details className="rounded-md border border-dashed border-border/70 bg-background px-4 py-3">
-                    <summary className="cursor-pointer text-sm font-medium">Advanced runtime JSON</summary>
+                    <summary className="cursor-pointer text-sm font-medium">{i18nT("scan.s0042")}</summary>
                     <p className="mt-2 text-sm text-muted-foreground">
                       Override the inherited workspace command model only when this execution workspace truly needs different service or job behavior.
                     </p>
@@ -1336,7 +1337,7 @@ export function ExecutionWorkspaceDetail() {
                               });
                             }}
                           />
-                          <label htmlFor="inherit-runtime-config">Inherit project workspace runtime config</label>
+                          <label htmlFor="inherit-runtime-config">{i18nT("scan.s0610")}</label>
                         </div>
                         <Textarea
                           className="min-h-64 font-mono sm:min-h-96"
@@ -1352,7 +1353,7 @@ export function ExecutionWorkspaceDetail() {
                   {configuredRuntimeServicePorts.length > 0 ? (
                     <div className="space-y-3 rounded-md border border-border bg-muted/20 p-4">
                       <div>
-                        <div className="text-sm font-medium">Service ports</div>
+                        <div className="text-sm font-medium">{i18nT("scan.s1236")}</div>
                         <p className="mt-1 text-sm text-muted-foreground">
                           Set a fixed port for a service or leave it blank to use its configured automatic behavior. Editing an inherited service creates an execution-workspace runtime override.
                         </p>
@@ -1420,15 +1421,15 @@ export function ExecutionWorkspaceDetail() {
                   Reset
                 </Button>
                 {errorMessage ? <p className="text-sm text-destructive">{errorMessage}</p> : null}
-                {!errorMessage && !isDirty ? <p className="text-sm text-muted-foreground">No unsaved changes.</p> : null}
+                {!errorMessage && !isDirty ? <p className="text-sm text-muted-foreground">{i18nT("pages.projectDetail.noUnsavedChanges")}</p> : null}
               </div>
               </CardContent>
             </Card>
 
             <Card className="rounded-none">
               <CardHeader>
-                <CardTitle>Workspace context</CardTitle>
-                <CardDescription>Linked objects and relationships</CardDescription>
+                <CardTitle>{i18nT("scan.s1513")}</CardTitle>
+                <CardDescription>{i18nT("scan.s0695")}</CardDescription>
               </CardHeader>
               <CardContent>
               <DetailRow label="Project">
@@ -1479,8 +1480,8 @@ export function ExecutionWorkspaceDetail() {
 
             <Card className="rounded-none">
               <CardHeader>
-                <CardTitle>Concrete location</CardTitle>
-                <CardDescription>Paths and refs</CardDescription>
+                <CardTitle>{i18nT("scan.s0249")}</CardTitle>
+                <CardDescription>{i18nT("scan.s0944")}</CardDescription>
               </CardHeader>
               <CardContent>
               <DetailRow label="Working dir">
@@ -1525,8 +1526,8 @@ export function ExecutionWorkspaceDetail() {
         ) : activeTab === "runtime_logs" ? (
           <Card className="rounded-none">
             <CardHeader>
-              <CardTitle>Runtime and cleanup logs</CardTitle>
-              <CardDescription>Recent operations</CardDescription>
+              <CardTitle>{i18nT("scan.s1168")}</CardTitle>
+              <CardDescription>{i18nT("scan.s1050")}</CardDescription>
             </CardHeader>
             <CardContent>
             {workspaceOperationsQuery.isLoading ? (

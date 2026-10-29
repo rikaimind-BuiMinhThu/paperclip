@@ -29,6 +29,7 @@ import {
   type SearchableSelectOption,
 } from "@/components/SearchableSelect";
 import { cn } from "@/lib/utils";
+import { t as i18nT } from "@/i18n";
 
 const LATEST_VALUE = "__latest__";
 
@@ -204,7 +205,7 @@ export function AgentsUsingSkillDialog({
       const message = error instanceof Error ? error.message : "Failed to update agent skills.";
       toast?.pushToast({
         tone: "error",
-        title: "Update failed",
+        title: i18nT("pages.skills.library.toastUpdateFailed"),
         body: message.includes("403") ? "You don't have permission to change this agent's skills." : message,
       });
     },
@@ -440,7 +441,7 @@ function AddAgentPicker({
       groups={groups}
       loading={loading}
       loadingMessage="Loading agents..."
-      placeholder="Add agent…"
+      placeholder={i18nT("scan.s0033")}
       searchPlaceholder="Search agents..."
       emptyMessage="All eligible agents already have this skill."
       disabled={disabled}

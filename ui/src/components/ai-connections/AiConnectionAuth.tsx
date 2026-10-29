@@ -12,6 +12,7 @@ import {
   type AiAuthMethod,
   type AiProvider,
 } from "./model";
+import { t as i18nT } from "@/i18n";
 
 /** Redacted view of the existing login lifecycle, supplied by the host. */
 export type AiAuthState =
@@ -77,7 +78,7 @@ function AuthAttempt({
           <p role="status" className="text-sm">
             Connected. This account is saved in Connections and can be reused.
           </p>
-          <Button onClick={onDone}>Use connection</Button>
+          <Button onClick={onDone}>{i18nT("scan.s1432")}</Button>
         </>
       ) : (
         <>
@@ -105,7 +106,7 @@ function AuthAttempt({
                   value={value}
                   onChange={setValue}
                   onSubmit={submit}
-                  placeholder="Enter API key here"
+                  placeholder={i18nT("onboarding.login.enterApiKey")}
                   disabled={busy}
                   autoFocus
                 />

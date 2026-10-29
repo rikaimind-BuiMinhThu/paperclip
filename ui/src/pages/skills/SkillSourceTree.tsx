@@ -5,6 +5,7 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Search, Info, AlertTriangle } from 'lucide-react';
+import { t as i18nT } from "@/i18n";
 
 export type SkillTreeCandidate = Pick<SkillSourceCandidate, 'path' | 'name' | 'description' | 'error' | 'inspection'> & { note?: string; warnings?: string[]; fileCount?: number };
 export function updateSkillTreeSelection(candidates: SkillTreeCandidate[], selected: Set<string>, folder: string, checked: boolean) {
@@ -97,7 +98,7 @@ export function SkillSourceTree({ candidates, selected, excludedFolders, onChang
   return <div className="flex min-h-0 flex-col overflow-hidden rounded-md border border-border">
     <div className="flex items-center gap-2 px-3">
       <Search className="size-4 shrink-0 text-muted-foreground" />
-      <Input className="border-0 bg-transparent px-0 shadow-none focus-visible:ring-0 dark:bg-transparent" value={search} onChange={event => setSearch(event.target.value)} placeholder="Search skills or files…" aria-label="Search discovered skills" />
+      <Input className="border-0 bg-transparent px-0 shadow-none focus-visible:ring-0 dark:bg-transparent" value={search} onChange={event => setSearch(event.target.value)} placeholder={i18nT("scan.s1197")} aria-label="Search discovered skills" />
     </div>
     <div className="flex items-center justify-between gap-2 border-y border-border bg-muted/30 px-3 py-1.5">
       <label className="flex items-center gap-2 text-xs text-muted-foreground">
@@ -136,7 +137,7 @@ export function SkillSourceTree({ candidates, selected, excludedFolders, onChang
         }}
         renderNodeExtra={node => {
           const skill = skillsByPath.get(node.path);
-          if (!skill) return node.kind === 'file' ? <span className="text-xs text-muted-foreground">Included</span> : null;
+          if (!skill) return node.kind === 'file' ? <span className="text-xs text-muted-foreground">{i18nT("scan.s0609")}</span> : null;
           const label = skill.error ? 'Invalid' : skill.inspection?.references.length ? 'Check references' : skill.note === 'New skill' ? 'New' : skill.note === 'Already imported' ? 'Installed' : skill.note?.startsWith('Removed from source') ? 'Removed' : skill.note;
           const count = skill.inspection?.files.length ?? skill.fileCount;
           return <>

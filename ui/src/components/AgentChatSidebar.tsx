@@ -6,6 +6,7 @@ import { useSidebar } from "@/context/SidebarContext";
 import type { Agent } from "@paperclipai/shared";
 import { agentRouteRef, cn } from "@/lib/utils";
 import { orderChatAgents } from "@/lib/recent-agent-chats";
+import { t as i18nT } from "@/i18n";
 export function AgentChatSidebar({
   activeId,
   starredIds,
@@ -66,7 +67,7 @@ export function AgentChatSidebar({
   return (
     <section aria-label="Chats" className="group/chats flex flex-col gap-0.5">
       <div className="relative flex min-h-9 items-center px-4 py-1.5">
-        <span className={cn("font-mono text-(length:--text-nano) font-medium uppercase tracking-widest text-muted-foreground/60", rail && "sr-only")}>Chats</span>
+        <span className={cn("font-mono text-(length:--text-nano) font-medium uppercase tracking-widest text-muted-foreground/60", rail && "sr-only")}>{i18nT("scan.s0190")}</span>
         <Button
           type="button"
           variant="ghost"

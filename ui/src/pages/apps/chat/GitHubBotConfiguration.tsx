@@ -16,6 +16,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { ToggleSwitch } from "@/components/ui/toggle-switch";
 import { Link } from "@/lib/router";
+import { t as i18nT } from "@/i18n";
 
 export const githubSelectClass =
   "w-full rounded-md border border-input bg-background px-3 py-2 text-sm";
@@ -87,7 +88,7 @@ export function GitHubPolicyEditor({
           <option value="linked_authors">
             Linked members’ PRs and authorized mentions
           </option>
-          <option value="mentions_only">Authorized mentions only</option>
+          <option value="mentions_only">{i18nT("scan.s0109")}</option>
           <option value="allowed_authors">
             Allowed authors’ PRs and authorized mentions
           </option>
@@ -97,7 +98,7 @@ export function GitHubPolicyEditor({
         </p>
       </div>
       <div>
-        <h3 className="text-sm font-medium">Automatic review events</h3>
+        <h3 className="text-sm font-medium">{i18nT("scan.s0116")}</h3>
         {GITHUB_REVIEW_EVENTS.slice(0, 4).map((event) => (
           <GitHubToggle
             key={event}
@@ -188,7 +189,7 @@ export function GitHubPolicyEditor({
         </p>
       </details>
       <div className="space-y-2">
-        <Label htmlFor="github-instructions">Review instructions</Label>
+        <Label htmlFor="github-instructions">{i18nT("scan.s1134")}</Label>
         <Textarea
           id="github-instructions"
           value={policy.instructions}
@@ -200,7 +201,7 @@ export function GitHubPolicyEditor({
         </p>
       </div>
       <div className="space-y-2">
-        <Label htmlFor="github-prompt-event">Event prompts</Label>
+        <Label htmlFor="github-prompt-event">{i18nT("scan.s0470")}</Label>
         <select
           id="github-prompt-event"
           className={githubSelectClass}
@@ -228,7 +229,7 @@ export function GitHubPolicyEditor({
       </div>
       <div className="grid gap-4 sm:grid-cols-2">
         <div className="space-y-2">
-          <Label htmlFor="github-categories">Finding categories</Label>
+          <Label htmlFor="github-categories">{i18nT("scan.s0528")}</Label>
           <Input
             id="github-categories"
             value={policy.findingCategories.join(", ")}
@@ -261,9 +262,9 @@ export function GitHubPolicyEditor({
               )
             }
           >
-            <option value="info">Info</option>
-            <option value="warning">Warning</option>
-            <option value="error">Error</option>
+            <option value="info">{i18nT("status.info")}</option>
+            <option value="warning">{i18nT("status.warning")}</option>
+            <option value="error">{i18nT("status.error")}</option>
           </select>
           <p className="text-xs text-muted-foreground">
             Hidden comments still count in the assessment.
@@ -271,7 +272,7 @@ export function GitHubPolicyEditor({
         </div>
       </div>
       <div>
-        <h3 className="text-sm font-medium">Publication permissions</h3>
+        <h3 className="text-sm font-medium">{i18nT("scan.s1015")}</h3>
         <GitHubToggle
           label="Publish summary"
           checked={policy.publishSummary}
@@ -295,7 +296,7 @@ export function GitHubPolicyEditor({
         />
       </div>
       <div className="space-y-2">
-        <Label htmlFor="github-rating">Kujira AI Workforce Review check</Label>
+        <Label htmlFor="github-rating">{i18nT("scan.s0668")}</Label>
         <select
           id="github-rating"
           className={githubSelectClass}
@@ -314,7 +315,7 @@ export function GitHubPolicyEditor({
               Require at least {score}/5
             </option>
           ))}
-          <option value="report">Report only</option>
+          <option value="report">{i18nT("scan.s1099")}</option>
         </select>
         <p className="text-xs text-muted-foreground">
           Kujira AI Workforce computes the result for the exact reviewed commit.
@@ -410,7 +411,7 @@ export function GitHubAccessEditor({
         </p>
       </div>
       <div className="space-y-2">
-        <Label htmlFor="github-member-access">Company member access</Label>
+        <Label htmlFor="github-member-access">{i18nT("scan.s0244")}</Label>
         <select
           id="github-member-access"
           className={githubSelectClass}
@@ -422,8 +423,8 @@ export function GitHubAccessEditor({
             })
           }
         >
-          <option value="all_linked">All linked company members</option>
-          <option value="selected">Only selected linked members</option>
+          <option value="all_linked">{i18nT("scan.s0056")}</option>
+          <option value="selected">{i18nT("scan.s0874")}</option>
         </select>
         <p className="text-xs text-muted-foreground">
           Members connect their own GitHub account.{" "}
@@ -454,7 +455,7 @@ export function GitHubAccessEditor({
         </p>
       </div>
       <div className="space-y-3">
-        <h3 className="text-sm font-medium">Linked GitHub accounts</h3>
+        <h3 className="text-sm font-medium">{i18nT("scan.s0693")}</h3>
         {links.isError && (
           <p role="alert" className="text-sm text-destructive">
             Could not load linked accounts.
@@ -623,7 +624,7 @@ export function GitHubAccessEditor({
             permissions. A sponsor is required.
           </p>
           <div className="space-y-2">
-            <Label htmlFor="github-guest-login">GitHub username</Label>
+            <Label htmlFor="github-guest-login">{i18nT("scan.s0569")}</Label>
             <div className="flex gap-2">
               <Input
                 id="github-guest-login"
@@ -655,7 +656,7 @@ export function GitHubAccessEditor({
             </div>
           </div>
           <div className="space-y-2">
-            <Label htmlFor="github-guest-sponsor">Sponsor</Label>
+            <Label htmlFor="github-guest-sponsor">{i18nT("scan.s1287")}</Label>
             <select
               id="github-guest-sponsor"
               className={githubSelectClass}

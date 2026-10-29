@@ -29,7 +29,7 @@ import { useBreadcrumbs } from "../context/BreadcrumbContext";
 import { useCompany } from "../context/CompanyContext";
 import { useDateRange, PRESET_KEYS, PRESET_LABELS } from "../hooks/useDateRange";
 import { queryKeys } from "../lib/queryKeys";
-import { billingTypeDisplayName, cn, formatCents, formatTokens, providerDisplayName } from "../lib/utils";
+import { billingTypeDisplayName, cn, displayedInferenceCents, formatCents, formatTokens, providerDisplayName } from "../lib/utils";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -53,7 +53,7 @@ function ProviderTabLabel({ provider, rows }: { provider: string; rows: CostByPr
     <span className="flex items-center gap-1.5">
       <span>{providerDisplayName(provider)}</span>
       <span className="font-mono text-xs text-muted-foreground">{formatTokens(totalTokens)}</span>
-      <span className="text-xs text-muted-foreground">{formatCents(totalCost)}</span>
+      <span className="text-xs text-muted-foreground">{formatCents(displayedInferenceCents(totalCost))}</span>
     </span>
   );
 }
@@ -65,7 +65,7 @@ function BillerTabLabel({ biller, rows }: { biller: string; rows: CostByBiller[]
     <span className="flex items-center gap-1.5">
       <span>{providerDisplayName(biller)}</span>
       <span className="font-mono text-xs text-muted-foreground">{formatTokens(totalTokens)}</span>
-      <span className="text-xs text-muted-foreground">{formatCents(totalCost)}</span>
+      <span className="text-xs text-muted-foreground">{formatCents(displayedInferenceCents(totalCost))}</span>
     </span>
   );
 }
@@ -472,7 +472,7 @@ export function Costs() {
             {providerKeys.length > 0 ? (
               <>
                 <span className="font-mono text-xs text-muted-foreground">{formatTokens(allTokens)}</span>
-                <span className="text-xs text-muted-foreground">{formatCents(allCents)}</span>
+                <span className="text-xs text-muted-foreground">{formatCents(displayedInferenceCents(allCents))}</span>
               </>
             ) : null}
           </span>
@@ -504,7 +504,7 @@ export function Costs() {
             {billerKeys.length > 0 ? (
               <>
                 <span className="font-mono text-xs text-muted-foreground">{formatTokens(allTokens)}</span>
-                <span className="text-xs text-muted-foreground">{formatCents(allCents)}</span>
+                <span className="text-xs text-muted-foreground">{formatCents(displayedInferenceCents(allCents))}</span>
               </>
             ) : null}
           </span>
@@ -587,7 +587,7 @@ export function Costs() {
           <div className="grid gap-3 lg:grid-cols-4">
             <MetricTile
               label={t("pages.costs.inferenceSpend")}
-              value={formatCents(spendData?.summary.spendCents ?? 0)}
+              value={formatCents(displayedInferenceCents(spendData?.summary.spendCents ?? 0))}
               subtitle={`${formatTokens(inferenceTokenTotal)} tokens across request-scoped events`}
               icon={DollarSign}
             />
@@ -669,7 +669,7 @@ export function Costs() {
                     <div className="flex flex-wrap items-end justify-between gap-3">
                       <div>
                         <div className="text-3xl font-semibold tabular-nums">
-                          {formatCents(spendData?.summary.spendCents ?? 0)}
+                          {formatCents(displayedInferenceCents(spendData?.summary.spendCents ?? 0))}
                         </div>
                         <div className="mt-1 text-sm text-muted-foreground">
                           {spendData?.summary.budgetCents && spendData.summary.budgetCents > 0
@@ -748,7 +748,7 @@ export function Costs() {
                                 {row.agentStatus === "terminated" ? <StatusBadge status="terminated" /> : null}
                               </div>
                               <div className="text-right text-sm tabular-nums">
-                                <div className="font-medium">{formatCents(row.costCents)}</div>
+                                <div className="font-medium">{formatCents(displayedInferenceCents(row.costCents))}</div>
                                 <div className="text-xs text-muted-foreground">
                                   in {formatTokens(row.inputTokens + row.cachedInputTokens)} · out {formatTokens(row.outputTokens)}
                                 </div>
@@ -785,7 +785,7 @@ export function Costs() {
                                       </div>
                                       <div className="text-right tabular-nums">
                                         <div className="font-medium">
-                                          {formatCents(modelRow.costCents)}
+                                          {formatCents(displayedInferenceCents(modelRow.costCents))}
                                           <span className="ml-1 font-normal text-muted-foreground">({sharePct}%)</span>
                                         </div>
                                         <div className="text-muted-foreground">
@@ -820,7 +820,7 @@ export function Costs() {
                             className="flex items-center justify-between gap-3 border border-border px-3 py-2 text-sm"
                           >
                             <span className="truncate">{row.projectName ?? row.projectId ?? t("pages.costs.unattributed")}</span>
-                            <span className="font-medium tabular-nums">{formatCents(row.costCents)}</span>
+                            <span className="font-medium tabular-nums">{formatCents(displayedInferenceCents(row.costCents))}</span>
                           </div>
                         ))
                       )}

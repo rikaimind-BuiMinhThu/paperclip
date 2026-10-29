@@ -23,6 +23,7 @@ import { useManagedSandboxOnly } from "../hooks/useManagedSandboxOnly";
 import { queryKeys } from "../lib/queryKeys";
 import { projectRouteRef, projectWorkspaceUrl } from "../lib/utils";
 import { useTranslation } from "@/i18n";
+import { t as i18nT } from "@/i18n";
 
 type WorkspaceFormState = {
   name: string;
@@ -71,15 +72,15 @@ function orderProjectWorkspaceTabItems(items: OrderedProjectWorkspaceTabItem[]) 
 }
 
 const SOURCE_TYPE_OPTIONS: Array<{ value: ProjectWorkspaceSourceType; label: string; description: string }> = [
-  { value: "local_path", label: "Local git checkout", description: "A local path Kujira AI Workforce can use directly." },
-  { value: "non_git_path", label: "Local non-git path", description: "A local folder without git semantics." },
-  { value: "git_repo", label: "Remote git repo", description: "A repo URL with optional refs and local checkout." },
-  { value: "remote_managed", label: "Remote-managed workspace", description: "A hosted workspace tracked by external reference." },
+  { value: "local_path", label: i18nT("scan.s0727"), description: "A local path Kujira AI Workforce can use directly." },
+  { value: "non_git_path", label: i18nT("scan.s0728"), description: "A local folder without git semantics." },
+  { value: "git_repo", label: i18nT("scan.s1076"), description: "A repo URL with optional refs and local checkout." },
+  { value: "remote_managed", label: i18nT("scan.s1078"), description: "A hosted workspace tracked by external reference." },
 ];
 
 const VISIBILITY_OPTIONS: Array<{ value: ProjectWorkspaceVisibility; label: string }> = [
-  { value: "default", label: "Default" },
-  { value: "advanced", label: "Advanced" },
+  { value: "default", label: i18nT("agents.detail.keys.defaultName") },
+  { value: "advanced", label: i18nT("apps.gateways.tabAdvanced") },
 ];
 
 function isSafeExternalUrl(value: string | null | undefined) {
@@ -503,7 +504,7 @@ export function ProjectWorkspaceDetail() {
                   className="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm outline-none"
                   value={form.name}
                   onChange={(event) => setForm((current) => current ? { ...current, name: event.target.value } : current)}
-                  placeholder="Workspace name"
+                  placeholder={i18nT("scan.s1517")}
                 />
               </Field>
 
@@ -636,7 +637,7 @@ export function ProjectWorkspaceDetail() {
               </div>
 
               <details className="rounded-xl border border-dashed border-border/70 bg-background px-3 py-3">
-                <summary className="cursor-pointer text-sm font-medium">Advanced runtime JSON</summary>
+                <summary className="cursor-pointer text-sm font-medium">{i18nT("scan.s0042")}</summary>
                 <p className="mt-2 text-sm text-muted-foreground">
                   Kujira AI Workforce derives Services and Jobs from this JSON. Prefer editing named commands first; use raw JSON for advanced lifecycle, port, readiness, or environment settings.
                 </p>
@@ -679,8 +680,8 @@ export function ProjectWorkspaceDetail() {
         <div className="space-y-6">
           <Card className="block p-5">
             <div className="space-y-1">
-              <div className="text-xs font-medium uppercase tracking-(--tracking-eyebrow) text-muted-foreground">Workspace facts</div>
-              <h2 className="text-lg font-semibold">Current state</h2>
+              <div className="text-xs font-medium uppercase tracking-(--tracking-eyebrow) text-muted-foreground">{i18nT("scan.s1515")}</div>
+              <h2 className="text-lg font-semibold">{i18nT("scan.s0371")}</h2>
             </div>
             <Separator className="my-4" />
             <DetailRow label="Project">
@@ -711,8 +712,8 @@ export function ProjectWorkspaceDetail() {
           <Card className="block p-5">
             <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
               <div className="space-y-1">
-                <div className="text-xs font-medium uppercase tracking-(--tracking-eyebrow) text-muted-foreground">Workspace commands</div>
-                <h2 className="text-lg font-semibold">Services and jobs</h2>
+                <div className="text-xs font-medium uppercase tracking-(--tracking-eyebrow) text-muted-foreground">{i18nT("scan.s1512")}</div>
+                <h2 className="text-lg font-semibold">{i18nT("scan.s1237")}</h2>
                 <p className="text-sm text-muted-foreground">
                   Long-running services stay supervised here, while one-shot jobs run on demand against this workspace. Execution workspaces inherit this config unless they override it.
                 </p>

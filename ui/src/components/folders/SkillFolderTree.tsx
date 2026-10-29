@@ -57,6 +57,7 @@ import {
   type FolderTreeNode,
   type SkillFolderTreeModel,
 } from "./skill-folder-tree";
+import { t as i18nT } from "@/i18n";
 
 export {
   buildSkillFolderTree,
@@ -335,7 +336,7 @@ export function SkillFolderRail({
               />
             ))
           ) : (
-            <div className="px-2 py-1 text-xs text-muted-foreground">No organization folders yet.</div>
+            <div className="px-2 py-1 text-xs text-muted-foreground">{i18nT("scan.s0818")}</div>
           )}
 
           {/* Projects — auto-managed, read-only structure */}
@@ -645,8 +646,8 @@ function TreeBranch({
               ) : null}
               {editable ? (
                 <>
-                  <DropdownMenuItem onSelect={() => onStartRename(folder)}>Rename</DropdownMenuItem>
-                  <DropdownMenuItem onSelect={() => onEditFolder(folder)}>Edit color</DropdownMenuItem>
+                  <DropdownMenuItem onSelect={() => onStartRename(folder)}>{i18nT("common.rename")}</DropdownMenuItem>
+                  <DropdownMenuItem onSelect={() => onEditFolder(folder)}>{i18nT("scan.s0439")}</DropdownMenuItem>
                   <DropdownMenuItem onSelect={() => onMoveFolder(folder, isInMySkills ? "company" : "my")}>
                     <MoveRight className="h-3.5 w-3.5" />
                     Move to {isInMySkills ? "Organization" : "My Skills"}
@@ -727,7 +728,7 @@ export function FolderBreadcrumb({
       {selection === "unfiled" ? (
         <>
           <ChevronRight className="h-3.5 w-3.5 text-muted-foreground/60" />
-          <span className="rounded px-1.5 py-0.5 font-medium text-foreground">Unfiled</span>
+          <span className="rounded px-1.5 py-0.5 font-medium text-foreground">{i18nT("pages.routines.unfiled")}</span>
         </>
       ) : null}
       {trail.map((folder, index) => {
@@ -950,7 +951,7 @@ export function MoveToFolderDialog({
           <input
             value={query}
             onChange={(event) => setQuery(event.target.value)}
-            placeholder="Search folders"
+            placeholder={i18nT("scan.s1190")}
             className="h-8 min-w-0 flex-1 bg-transparent text-sm outline-none placeholder:text-muted-foreground"
           />
         </div>
@@ -964,7 +965,7 @@ export function MoveToFolderDialog({
             onClick={() => setTarget(null)}
           >
             <FolderSwatch color={null} />
-            <span className="min-w-0 flex-1 truncate">Unfiled</span>
+            <span className="min-w-0 flex-1 truncate">{i18nT("pages.routines.unfiled")}</span>
             {currentFolderId == null ? <span className="text-xs text-muted-foreground">current</span> : null}
             {chosen === null ? <Check className="h-3.5 w-3.5" /> : null}
           </div>
@@ -1001,7 +1002,7 @@ export function MoveToFolderDialog({
               Moving to <span className="font-mono text-foreground">{previewPath}</span>
             </span>
           ) : (
-            <span>Pick a destination folder.</span>
+            <span>{i18nT("scan.s0953")}</span>
           )}
         </div>
 
@@ -1047,7 +1048,7 @@ function InlineNewFolder({
       <Input
         value={value}
         onChange={(event) => onChange(event.target.value)}
-        placeholder="Folder name"
+        placeholder={i18nT("pages.secrets.list.folderNameAria")}
         autoFocus
         className="h-7 flex-1 text-sm"
         onKeyDown={(event) => {

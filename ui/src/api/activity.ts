@@ -16,6 +16,8 @@ export interface RunForIssue {
   invocationSource: string;
   responsibleUserId?: string | null;
   errorCode?: string | null;
+  /** Run error message; used to hide non-user-facing races such as chat_completion_superseded. */
+  error?: string | null;
   usageJson: Record<string, unknown> | null;
   resultJson: Record<string, unknown> | null;
   logBytes?: number | null;

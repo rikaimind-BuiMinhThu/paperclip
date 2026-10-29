@@ -103,6 +103,7 @@ import {
   type GenericMcpAuthMode,
 } from "@/pages/apps/generic-mcp-connect";
 import { autoExtendNotice, INSTALL_ALL_WARNING, installInfoNotice, installPayload } from "@/lib/tool-installs";
+import { t as i18nT } from "@/i18n";
 
 type Step = "gallery" | "key" | "success";
 export type OAuthConnectPhase = "entry" | "starting" | "redirecting" | "error";
@@ -548,7 +549,7 @@ export function ConnectionSetupFlow(props: ConnectionSetupFlowProps = {}) {
   const provider = source || existing.data?.config?.sourceTemplateKey;
   const method = searchParams.get("method") || existing.data?.config?.connectionMethodKey;
   if (lookup && existing.isPending) return <p className="p-6 text-sm text-muted-foreground">{t("apps.connect.loadingConnection")}</p>;
-  if (lookup && existing.isError) return <div role="alert" className="space-y-3 p-6"><p>Could not load this connection. Your saved access and credentials have not changed.</p><Button variant="outline" onClick={() => void existing.refetch()}>Try again</Button></div>;
+  if (lookup && existing.isError) return <div role="alert" className="space-y-3 p-6"><p>Could not load this connection. Your saved access and credentials have not changed.</p><Button variant="outline" onClick={() => void existing.refetch()}>{i18nT("common.tryAgain")}</Button></div>;
   if (isMemoryConnectorId(provider) && !(existing.data && existing.data.status !== "draft" && existing.data.config?.sourceTemplateKey === provider)) {
     if (!memory.loaded) return <p className="p-6 text-sm text-muted-foreground">{t("apps.connect.loadingConnection")}</p>;
     if (!memory.enabled) return <p role="status" className="p-6 text-sm text-muted-foreground">Enable memory connectors in Settings → Experimental to set up this connection.</p>;
@@ -1432,7 +1433,7 @@ function StandardConnectionSetupFlow({
         return;
       }
       pushToast({
-        title: "Couldn’t connect",
+        title: i18nT("scan.s0346"),
         body: error instanceof Error ? error.message : "Please check your key and try again.",
         tone: "error",
       });
@@ -1738,7 +1739,7 @@ function StandardConnectionSetupFlow({
       // rather than stranding them on a half-made connection.
       setAppStep("key");
       pushToast({
-        title: "Couldn’t finish setup",
+        title: i18nT("scan.s0349"),
         body: error instanceof Error ? error.message : "Please try again.",
         tone: "error",
       });
@@ -1746,7 +1747,7 @@ function StandardConnectionSetupFlow({
   });
 
   if (!selectedCompanyId) {
-    return <div className="p-6 text-sm text-muted-foreground">Select an organization to connect apps.</div>;
+    return <div className="p-6 text-sm text-muted-foreground">{i18nT("scan.s1212")}</div>;
   }
 
   if (
@@ -1755,7 +1756,7 @@ function StandardConnectionSetupFlow({
   ) {
     return (
       <div className="mx-auto max-w-xl rounded-xl border border-border bg-card p-6">
-        <h2 className="text-lg font-semibold text-foreground">Couldn’t load connection setup</h2>
+        <h2 className="text-lg font-semibold text-foreground">{i18nT("scan.s0351")}</h2>
         <p className="mt-2 text-sm text-muted-foreground">
           Kujira AI Workforce couldn’t check the retained connection. The retained connection was not changed.
         </p>
@@ -1786,7 +1787,7 @@ function StandardConnectionSetupFlow({
   if (resumeConnectionId && connectionsQuery.isFetchedAfterMount && !resumeConnection) {
     return (
       <div className="mx-auto max-w-xl rounded-xl border border-border bg-card p-6">
-        <h2 className="text-lg font-semibold text-foreground">This setup can’t be resumed</h2>
+        <h2 className="text-lg font-semibold text-foreground">{i18nT("scan.s1376")}</h2>
         <p className="mt-2 text-sm text-muted-foreground">
           The saved connection no longer exists or is not available to this organization.
         </p>
@@ -1805,7 +1806,7 @@ function StandardConnectionSetupFlow({
   ) {
     return (
       <div className="mx-auto max-w-xl rounded-xl border border-border bg-card p-6">
-        <h2 className="text-lg font-semibold text-foreground">This connection can’t be reconnected</h2>
+        <h2 className="text-lg font-semibold text-foreground">{i18nT("scan.s1370")}</h2>
         <p className="mt-2 text-sm text-muted-foreground">
           {!reconnectConnection
             ? "The retained connection no longer exists or is not available to this organization."
@@ -1821,7 +1822,7 @@ function StandardConnectionSetupFlow({
   if ((resumeConnectionId || reconnectConnectionId) && galleryQuery.isError) {
     return (
       <div className="mx-auto max-w-xl rounded-xl border border-border bg-card p-6">
-        <h2 className="text-lg font-semibold text-foreground">Couldn’t load connection setup</h2>
+        <h2 className="text-lg font-semibold text-foreground">{i18nT("scan.s0351")}</h2>
         <p className="mt-2 text-sm text-muted-foreground">
           Kujira AI Workforce couldn’t load the provider details needed to restore this connection. The retained connection was not changed.
         </p>
@@ -1840,7 +1841,7 @@ function StandardConnectionSetupFlow({
   if (reconnectConnectionId && unavailableReconnectId === reconnectConnectionId) {
     return (
       <div className="mx-auto max-w-xl rounded-xl border border-border bg-card p-6">
-        <h2 className="text-lg font-semibold text-foreground">This connection can’t be reconnected</h2>
+        <h2 className="text-lg font-semibold text-foreground">{i18nT("scan.s1370")}</h2>
         <p className="mt-2 text-sm text-muted-foreground">
           Kujira AI Workforce no longer has a supported setup method for this retained connection. The retained connection was not changed.
         </p>
@@ -1913,7 +1914,7 @@ function StandardConnectionSetupFlow({
           <Button type="button" variant="outline" onClick={() => setShowConnectionChoice(false)}>
             {configuredConnection ? "Review connection setup" : "Connect new"}
           </Button>
-          {onCancel ? <Button type="button" variant="ghost" onClick={onCancel}>Cancel</Button> : null}
+          {onCancel ? <Button type="button" variant="ghost" onClick={onCancel}>{i18nT("common.cancel")}</Button> : null}
         </div>
       </div>
     );
@@ -2314,7 +2315,7 @@ function StandardConnectionSetupFlow({
             </Button>
           ) : null}
           <div className="mt-6 flex items-center justify-between gap-3">
-            <Button type="button" variant="ghost" onClick={backToGallery}>Back</Button>
+            <Button type="button" variant="ghost" onClick={backToGallery}>{i18nT("common.back")}</Button>
             <Button type="button" disabled={galleryQuery.isFetching} onClick={() => void galleryQuery.refetch()}>
               {galleryQuery.isFetching ? <Loader2 className="h-4 w-4 animate-spin" /> : null}
               Try again
@@ -2697,7 +2698,7 @@ export function OAuthConnectStateScreen({
       }
     : phase === "starting"
       ? {
-          title: "Preparing secure sign-in",
+          title: i18nT("apps.oauthHandoff.preparingTitle"),
           body: `Kujira AI Workforce is creating a secure ${serverName} connection.`,
         }
       : phase === "redirecting"
@@ -2777,8 +2778,8 @@ export function OAuthConnectStateScreen({
               {phase === "redirecting" ? `Opening ${serverName}…` : "Preparing…"}
             </Button>
           )}
-          {authorizationUrl ? <Button variant="outline" asChild><a href={authorizationUrl} target="_blank" rel="noopener noreferrer" onClick={onOpenAuthorization}>Open sign-in in a new tab</a></Button> : null}
-          <Button type="button" variant="ghost" onClick={onBack}>Back</Button>
+          {authorizationUrl ? <Button variant="outline" asChild><a href={authorizationUrl} target="_blank" rel="noopener noreferrer" onClick={onOpenAuthorization}>{i18nT("scan.s0892")}</a></Button> : null}
+          <Button type="button" variant="ghost" onClick={onBack}>{i18nT("common.back")}</Button>
         </div>
       </div>
     </div>
@@ -2808,7 +2809,7 @@ function ZapierConnectStep({
   return (
     <div className="mx-auto max-w-xl">
       <div>
-        <label className="text-sm font-medium text-foreground">Zapier MCP URL</label>
+        <label className="text-sm font-medium text-foreground">{i18nT("scan.s1544")}</label>
         <Input
           type="password"
           autoComplete="off"
@@ -2823,7 +2824,7 @@ function ZapierConnectStep({
           autoFocus
         />
         {link.trim() && !isZapierLink && (
-          <p className="mt-2 text-xs text-destructive">Paste a valid Zapier URL to continue.</p>
+          <p className="mt-2 text-xs text-destructive">{i18nT("scan.s0936")}</p>
         )}
       </div>
 
@@ -2926,7 +2927,7 @@ function GalleryStep({
         <div className="rounded-xl border border-border bg-card p-5">
           <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
             <div>
-              <h2 className="text-lg font-bold tracking-tight">Connect through Vercel</h2>
+              <h2 className="text-lg font-bold tracking-tight">{i18nT("scan.s0265")}</h2>
               <p className="mt-1 max-w-2xl text-sm text-muted-foreground">
                 Create and manage the provider connector in Vercel. Kujira AI Workforce stores its reference and applies agent access, policy, approval, and audit controls here.
               </p>
@@ -2955,7 +2956,7 @@ function GalleryStep({
             <Input
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              placeholder="Search apps…"
+              placeholder={i18nT("scan.s1186")}
               className="h-11 pl-9"
             />
           </div>
@@ -2996,9 +2997,9 @@ function GalleryStep({
                         {app.availability?.reason ?? vercelConnectAvailability?.reason ?? "Unavailable on this instance."}
                       </span>
                     ) : oauthBlocked ? (
-                      <span className="text-muted-foreground">Unavailable</span>
+                      <span className="text-muted-foreground">{i18nT("pages.appsBrowse.unavailable")}</span>
                     ) : (
-                      <span>Connect →</span>
+                      <span>{i18nT("scan.s0266")}</span>
                     )}
                   </div>
                 </button>
@@ -3224,7 +3225,7 @@ function LinkConnectStep({
         {showKeyField ? (
           <div className="space-y-4">
             <div>
-              <label className="text-sm font-medium text-foreground" htmlFor="generic-mcp-key">App key</label>
+              <label className="text-sm font-medium text-foreground" htmlFor="generic-mcp-key">{i18nT("scan.s0080")}</label>
               <Input
                 id="generic-mcp-key"
                 type="password"
@@ -3271,7 +3272,7 @@ function LinkConnectStep({
                     <Input
                       value={row.name}
                       onChange={(e) => updateHeader(row.id, { name: e.target.value })}
-                      placeholder="Header name"
+                      placeholder={i18nT("scan.s0584")}
                       aria-label="Header name"
                       className="h-10 font-mono"
                     />
@@ -3280,7 +3281,7 @@ function LinkConnectStep({
                       autoComplete="off"
                       value={row.value}
                       onChange={(e) => updateHeader(row.id, { value: e.target.value })}
-                      placeholder="Value"
+                      placeholder={i18nT("pages.secrets.createDialog.value")}
                       aria-label={row.name.trim() ? `Value for ${row.name.trim()}` : "Header value"}
                       className="h-10 font-mono"
                     />
@@ -3323,7 +3324,7 @@ function LinkConnectStep({
                     value={oauthClientId}
                     onChange={(e) => onOAuthClientIdChange(e.target.value)}
                     autoComplete="off"
-                    placeholder="Optional"
+                    placeholder={i18nT("common.optional")}
                     className="mt-2 h-11 font-mono"
                   />
                 </div>
@@ -3337,7 +3338,7 @@ function LinkConnectStep({
                     autoComplete="off"
                     value={oauthClientSecret}
                     onChange={(e) => onOAuthClientSecretChange(e.target.value)}
-                    placeholder="Optional"
+                    placeholder={i18nT("common.optional")}
                     className="mt-2 h-11 font-mono"
                   />
                 </div>
@@ -3371,27 +3372,27 @@ function LinkConnectStep({
 const GENERIC_AUTH_MODE_OPTIONS: Array<{ mode: GenericMcpAuthMode; label: string; hint: string }> = [
   {
     mode: "auto",
-    label: "Let Kujira AI Workforce check",
+    label: i18nT("scan.s0686"),
     hint: "Kujira AI Workforce asks the server what it needs and walks you through it. Start here.",
   },
   {
     mode: "none",
-    label: "No sign-in needed",
+    label: i18nT("scan.s0836"),
     hint: "The server is open to anyone with the address.",
   },
   {
     mode: "bearer",
-    label: "Key or token",
+    label: i18nT("scan.s0664"),
     hint: "Kujira AI Workforce sends your key as an Authorization header.",
   },
   {
     mode: "custom_headers",
-    label: "Custom headers",
+    label: i18nT("scan.s0375"),
     hint: "For servers that name their own headers. Values are stored as Kujira AI Workforce secrets and can\u2019t be read back.",
   },
   {
     mode: "oauth",
-    label: "Browser sign-in",
+    label: i18nT("scan.s0155"),
     hint: "You\u2019ll sign in at the provider. Add a client ID and secret only if the provider requires you to register Kujira AI Workforce first.",
   },
 ];
@@ -3579,7 +3580,7 @@ function KeyStep({
   const hasAlternateMethods = capabilityGroups.length > 1 || capabilityMethods.length > 1;
   const capabilitySelection = capabilityGroups.length > 1 ? (
     <div>
-      <label className="text-sm font-medium text-foreground">What should Kujira AI Workforce be able to do?</label>
+      <label className="text-sm font-medium text-foreground">{i18nT("scan.s1479")}</label>
       <RadioCardGroup
         ariaLabel={`Access level for ${entry.name}`}
         className="mt-2"
@@ -3596,7 +3597,7 @@ function KeyStep({
           description: group.description,
         }))}
       />
-      {!capabilityKey && <p className="mt-2 text-xs text-muted-foreground">Choose an access level to continue.</p>}
+      {!capabilityKey && <p className="mt-2 text-xs text-muted-foreground">{i18nT("scan.s0205")}</p>}
     </div>
   ) : null;
   const managedOAuthMethod = capabilityMethods.find((candidate) =>
@@ -3625,7 +3626,7 @@ function KeyStep({
     // way to pick something else, one disclosure away, rather than a question
     // the screen opens with.
     <div>
-      <label className="text-sm font-medium text-foreground">How do you want to connect?</label>
+      <label className="text-sm font-medium text-foreground">{i18nT("scan.s0593")}</label>
       <RadioCardGroup
         ariaLabel={`How to connect ${entry.name}`}
         className="mt-2"
@@ -3639,7 +3640,7 @@ function KeyStep({
           title: candidate.label ?? (candidate.auth === "oauth" ? `Sign in with ${entry.name}` : "Use an API key"),
         }))}
       />
-      {!method && <p className="mt-2 text-xs text-muted-foreground">Choose a connection method to continue.</p>}
+      {!method && <p className="mt-2 text-xs text-muted-foreground">{i18nT("scan.s0200")}</p>}
     </div>
   ) : null;
   const hasAdvancedSettings = advancedConfigFields.length > 0
@@ -3686,7 +3687,7 @@ function KeyStep({
 
           {robotEmail ? (
             <div>
-              <label className="text-sm font-medium text-foreground">Share each sheet with this email</label>
+              <label className="text-sm font-medium text-foreground">{i18nT("scan.s1246")}</label>
               <div className="mt-2 flex min-w-0 flex-col gap-2 sm:flex-row">
                 <div
                   title={robotEmail}
@@ -3707,7 +3708,7 @@ function KeyStep({
           )}
 
           <div>
-            <label className="text-sm font-medium text-foreground">Paste links to the sheets you shared</label>
+            <label className="text-sm font-medium text-foreground">{i18nT("scan.s0937")}</label>
             <Textarea
               value={googleSheetsLinks}
               onChange={(e) => onGoogleSheetsLinksChange(e.target.value)}
@@ -3769,7 +3770,7 @@ function KeyStep({
         {usingVercel && vercelReview && vercelConnectAvailability ? (
           <div className="space-y-4 rounded-lg border border-border p-4">
             <div>
-              <div className="text-sm font-medium text-foreground">Create or attach the connector in Vercel</div>
+              <div className="text-sm font-medium text-foreground">{i18nT("scan.s0364")}</div>
               <p className="mt-1 text-xs text-muted-foreground">
                 Kujira AI Workforce does not copy Vercel’s setup forms. Finish connector setup there, then paste its UID below.
               </p>
@@ -3955,7 +3956,7 @@ function OAuthClientFields({
       </div>
       {callbackUrl ? (
         <div>
-          <label className="text-sm font-medium text-foreground">Kujira AI Workforce callback URL</label>
+          <label className="text-sm font-medium text-foreground">{i18nT("scan.s0669")}</label>
           <div className="mt-2 flex min-w-0 flex-col gap-2 sm:flex-row">
             <div
               title={callbackUrl}
@@ -4037,7 +4038,7 @@ function MethodConfigField({
           onChange={(event) => onChange(event.target.value)}
           className="mt-2 h-11 w-full rounded-md border border-input bg-background px-3 text-sm text-foreground outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/30"
         >
-          <option value="" disabled>Select an option</option>
+          <option value="" disabled>{i18nT("scan.s1210")}</option>
           {(field.options ?? []).map((option) => <option key={option.value} value={option.value}>{option.label}</option>)}
         </select>
       ) : (
@@ -4232,7 +4233,7 @@ export function AccessStepContent({
                   },
                   {
                     value: "agent",
-                    title: "A dedicated account for an agent",
+                    title: i18nT("scan.s0000"),
                     description: githubIdentity
                       ? "That agent always uses this account, regardless of who starts the run."
                       : undefined,
@@ -4260,7 +4261,7 @@ export function AccessStepContent({
             ) : (
               // A connection with no credential has no identity to choose, so
               // asking would be a meaningless decision.
-              <p className="mt-4 text-sm text-muted-foreground">No identity required</p>
+              <p className="mt-4 text-sm text-muted-foreground">{i18nT("scan.s0804")}</p>
             )}
           </section>
 
@@ -4270,7 +4271,7 @@ export function AccessStepContent({
               <div className="mt-4 flex items-start gap-3 rounded-md border border-border bg-muted/40 p-4">
                 <UsersRound className="mt-0.5 h-4 w-4 shrink-0 text-primary" aria-hidden="true" />
                 <div>
-                  <div className="text-sm font-medium text-foreground">Existing agent access stays the same</div>
+                  <div className="text-sm font-medium text-foreground">{i18nT("scan.s0480")}</div>
                   <p className="mt-1 text-xs text-muted-foreground">
                     Reconnecting replaces the credential without changing which agents can use it.
                   </p>
@@ -4302,7 +4303,7 @@ export function AccessStepContent({
                   },
                   {
                     value: "all",
-                    title: "Any agent",
+                    title: i18nT("apps.detail.permissions.anyAgentTitle"),
                     description: githubIdentity
                       ? grantKind === "user"
                         ? "Every agent may use your GitHub when you’re responsible."
@@ -4500,10 +4501,10 @@ export function accessSummaryLines(input: {
     ? "Any agent"
     : `${input.installCount} selected ${input.installCount === 1 ? "agent" : "agents"}`;
   return [
-    { label: "Identity", value: identity },
-    { label: "Available to", value: availableTo },
+    { label: i18nT("apps.identity"), value: identity },
+    { label: i18nT("scan.s0118"), value: availableTo },
     {
-      label: "Actions",
+      label: i18nT("common.actions"),
       value: `${input.enabledCount} ${input.enabledCount === 1 ? "action" : "actions"} on`,
     },
   ];

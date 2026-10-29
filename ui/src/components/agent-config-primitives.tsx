@@ -21,7 +21,7 @@ import { AGENT_ROLE_LABELS } from "@paperclipai/shared";
 /* ---- Help text for (?) tooltips ---- */
 export const help: Record<string, string> = {
   name: "Display name for this agent.",
-  title: "Job title shown in the org chart.",
+  title: i18nT("scan.s0656"),
   role: "Organizational role. Determines position and capabilities.",
   reportsTo: "The agent this one reports to in the org hierarchy.",
   capabilities: "Describes what this agent can do. Shown in the org chart and used for task routing.",
@@ -65,6 +65,7 @@ export const help: Record<string, string> = {
 };
 
 import { getAdapterLabels } from "../adapters/adapter-display-registry";
+import { t as i18nT } from "@/i18n";
 
 export const adapterLabels = getAdapterLabels();
 
@@ -394,7 +395,7 @@ export function ChoosePathButton() {
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Specify path manually</DialogTitle>
+            <DialogTitle>{i18nT("scan.s1285")}</DialogTitle>
             <DialogDescription>
               Browser security blocks apps from reading full local paths via a file picker.
               Copy the absolute path and paste it into the input.
@@ -404,33 +405,33 @@ export function ChoosePathButton() {
             <section className="space-y-1.5">
               <p className="font-medium">macOS (Finder)</p>
               <ol className="list-decimal space-y-1 pl-5 text-muted-foreground">
-                <li>Find the folder in Finder.</li>
-                <li>Hold <kbd>Option</kbd> and right-click the folder.</li>
-                <li>Click "Copy &lt;folder name&gt; as Pathname".</li>
-                <li>Paste the result into the path input.</li>
+                <li>{i18nT("scan.s0527")}</li>
+                <li>{i18nT("scan.s0589")}<kbd>{i18nT("scan.s0902")}</kbd> and right-click the folder.</li>
+                <li>{i18nT("scan.s0226")}</li>
+                <li>{i18nT("scan.s0938")}</li>
               </ol>
               <p className="rounded-md bg-muted px-2 py-1 font-mono text-xs">
                 /Users/yourname/Documents/project
               </p>
             </section>
             <section className="space-y-1.5">
-              <p className="font-medium">Windows (File Explorer)</p>
+              <p className="font-medium">{i18nT("scan.s1506")}</p>
               <ol className="list-decimal space-y-1 pl-5 text-muted-foreground">
-                <li>Find the folder in File Explorer.</li>
-                <li>Hold <kbd>Shift</kbd> and right-click the folder.</li>
-                <li>Click "Copy as path".</li>
-                <li>Paste the result into the path input.</li>
+                <li>{i18nT("scan.s0526")}</li>
+                <li>{i18nT("scan.s0589")}<kbd>{i18nT("scan.s1248")}</kbd> and right-click the folder.</li>
+                <li>{i18nT("scan.s0227")}</li>
+                <li>{i18nT("scan.s0938")}</li>
               </ol>
               <p className="rounded-md bg-muted px-2 py-1 font-mono text-xs">
                 C:\Users\yourname\Documents\project
               </p>
             </section>
             <section className="space-y-1.5">
-              <p className="font-medium">Terminal fallback (macOS/Linux)</p>
+              <p className="font-medium">{i18nT("scan.s1352")}</p>
               <ol className="list-decimal space-y-1 pl-5 text-muted-foreground">
-                <li>Run <code>cd /path/to/folder</code>.</li>
-                <li>Run <code>pwd</code>.</li>
-                <li>Copy the output and paste it into the path input.</li>
+                <li>{i18nT("pages.skills.studio.runButton")}<code>cd /path/to/folder</code>.</li>
+                <li>{i18nT("pages.skills.studio.runButton")}<code>pwd</code>.</li>
+                <li>{i18nT("scan.s0287")}</li>
               </ol>
             </section>
           </div>

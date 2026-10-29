@@ -2,6 +2,7 @@ import type { MasterAgentDepartment } from "@paperclipai/shared";
 
 const TASK_PLANNING = "paperclipai/bundled/paperclip-operations/task-planning";
 const ISSUE_TRIAGE = "paperclipai/bundled/paperclip-operations/issue-triage";
+const CMO_CAMPAIGN_PLANNING = "paperclipai/bundled/marketing/cmo-campaign-planning";
 const GITHUB_PR = "paperclipai/bundled/software-development/github-pr-workflow";
 const QA_ACCEPTANCE = "paperclipai/bundled/quality/qa-acceptance";
 const WIREFRAME = "paperclipai/bundled/product/wireframe";
@@ -11,6 +12,15 @@ const DESIGN_CRITIQUE = "paperclipai/optional/product/design-critique";
 function marketingSkill(slug: string) {
   return `paperclipai/optional/marketing/${slug}`;
 }
+
+const CMO_OPERATING_LOOP = [
+  "Follow the cmo-campaign-planning skill for every campaign or marketing request.",
+  "Ask first: post ask_user_questions covering goal, offer/product, audience/ICP, publish channels, content volume, timeline, budget/constraints, success metric, and existing assets unless the user already gave a complete brief in this thread. Do not PUT documents/plan, create child issues, or assign reports until those answers exist (or the user explicitly skips intake).",
+  "After answers: summarize what you learned, refresh product-marketing / customer-research context when useful, then write the issue plan document with Goal, Context collected, Constraints, Schedule phases, Content inventory × channels matrix, Package components (per content × channel, with exactly one Final?=yes assemble row per channel), and a WBS of component rows plus final assemble/publish rows with Depends on.",
+  "Request plan approval with request_confirmation on the latest plan revision, set in_review, and wait. No children until the plan is accepted.",
+  "After acceptance: create one child issue per WBS row, assign by owner role (Content Writer for write components; channel specialists for adapt/publish/assemble), and encode Depends on as blockedByIssueIds. Never one mega “write all content” or “post everywhere” child.",
+  "When channel work finishes: write campaign_deliverables listing final packages (each a roll-up of collected component deliverables), then request_confirmation before treating the campaign as done or authorizing live publish.",
+].join(" ");
 
 export interface MasterAgentSeed {
   slug: string;
@@ -71,15 +81,14 @@ export const MASTER_AGENT_SEEDS: MasterAgentSeed[] = [
     title: "CMO",
     department: "marketing",
     role: "cmo",
-    description: "Plans campaigns and assigns approved work.",
-    instructions: brief(
-      "CMO",
-      "Turn every user idea into an issue plan document first. Do not create child issues or assign marketing reports until the user accepts that plan. After acceptance, create child issues and assign them by role (content writer, video editor, social media manager, SEO, performance, email, community). Use assigned marketing plan and strategy skills.",
-    ),
+    description: "Asks clarifying questions, plans content×channel WBS, and gets plan and deliverable approval.",
+    instructions: brief("CMO", CMO_OPERATING_LOOP),
     icon: "megaphone",
     skillKeys: [
       TASK_PLANNING,
       ISSUE_TRIAGE,
+      CMO_CAMPAIGN_PLANNING,
+      marketingSkill("customer-research"),
       marketingSkill("marketing-plan"),
       marketingSkill("content-strategy"),
       marketingSkill("product-marketing"),

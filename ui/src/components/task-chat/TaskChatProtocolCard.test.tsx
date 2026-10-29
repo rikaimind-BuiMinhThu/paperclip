@@ -348,7 +348,7 @@ describe("TaskChatProtocolCard", () => {
       workProduct: product,
     });
 
-    expect(container.textContent).toContain("Unhealthy");
+    expect(container.textContent).toContain("異常");
     expect(container.textContent).not.toContain("Running");
   });
 
@@ -396,7 +396,7 @@ describe("TaskChatProtocolCard", () => {
       workProduct: product,
     });
 
-    expect(container.textContent).toContain("Unhealthy");
+    expect(container.textContent).toContain("異常");
     expect(container.textContent).not.toContain("Running");
   });
 
@@ -763,7 +763,7 @@ describe("TaskChatProtocolCard", () => {
     // Selecting answers the question; every page waits for Next.
     const nextButton = () =>
       Array.from(container.querySelectorAll<HTMLButtonElement>("button")).find(
-        (button) => button.textContent?.trim() === "Next",
+        (button) => button.textContent?.trim() === "次へ",
       );
     expect(container.textContent).toContain("1 of 3");
     await act(async () => nextButton()?.click());

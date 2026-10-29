@@ -2,7 +2,7 @@ import { useMemo } from "react";
 import type { CostByBiller, CostByProviderModel } from "@paperclipai/shared";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { QuotaBar } from "./QuotaBar";
-import { billingTypeDisplayName, formatCents, formatTokens, providerDisplayName } from "@/lib/utils";
+import { billingTypeDisplayName, displayedInferenceCents, formatCents, formatTokens, providerDisplayName } from "@/lib/utils";
 
 interface BillerSpendCardProps {
   row: CostByBiller;
@@ -72,7 +72,7 @@ export function BillerSpendCard({
             </CardDescription>
           </div>
           <span className="text-xl font-bold tabular-nums shrink-0">
-            {formatCents(row.costCents)}
+            {formatCents(displayedInferenceCents(row.costCents))}
           </span>
         </div>
       </CardHeader>
@@ -82,7 +82,7 @@ export function BillerSpendCard({
           <QuotaBar
             label="Period spend"
             percentUsed={budgetPct}
-            leftLabel={formatCents(row.costCents)}
+            leftLabel={formatCents(displayedInferenceCents(row.costCents))}
             rightLabel={`${Math.round(budgetPct)}% of allocation`}
           />
         )}
@@ -94,7 +94,7 @@ export function BillerSpendCard({
             ? `${row.subscriptionRunCount} subscription run${row.subscriptionRunCount === 1 ? "" : "s"}`
             : "0 subscription runs"}
           {" · "}
-          {formatCents(weekSpendCents)} this week
+          {formatCents(displayedInferenceCents(weekSpendCents))} this week
         </div>
 
         {billingTypeBreakdown.length > 0 && (
@@ -108,7 +108,7 @@ export function BillerSpendCard({
                 {billingTypeBreakdown.map(([billingType, costCents]) => (
                   <div key={billingType} className="flex items-center justify-between gap-2 text-xs">
                     <span className="text-muted-foreground">{billingTypeDisplayName(billingType as any)}</span>
-                    <span className="font-medium tabular-nums">{formatCents(costCents)}</span>
+                    <span className="font-medium tabular-nums">{formatCents(displayedInferenceCents(costCents))}</span>
                   </div>
                 ))}
               </div>
@@ -128,7 +128,7 @@ export function BillerSpendCard({
                   <div key={entry.provider} className="flex items-center justify-between gap-2 text-xs">
                     <span className="text-muted-foreground">{providerDisplayName(entry.provider)}</span>
                     <div className="text-right tabular-nums">
-                      <div className="font-medium">{formatCents(entry.costCents)}</div>
+                      <div className="font-medium">{formatCents(displayedInferenceCents(entry.costCents))}</div>
                       <div className="text-muted-foreground">
                         {formatTokens(entry.inputTokens + entry.outputTokens)} tok
                       </div>

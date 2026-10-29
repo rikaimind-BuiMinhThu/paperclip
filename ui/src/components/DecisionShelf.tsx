@@ -9,6 +9,7 @@ import { attentionIdleDays } from "../lib/attention";
 import { AttentionQueueRow } from "./AttentionQueueRow";
 import { IssueGroupHeader } from "./IssueGroupHeader";
 import { Button } from "./ui/button";
+import { t as i18nT } from "@/i18n";
 
 /**
  * A collapsible shelf header + body (snoozed / dismissed / aging / decided /
@@ -77,11 +78,11 @@ export function AgingItemRow({
     mutationFn: () => decisionQueuesApi.setKeep(companyId, item.sourceKind, item.subject.id, true),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: queryKeys.attention(companyId) });
-      pushToast({ title: "Kept on desk", body: item.subject.title ?? undefined, tone: "success" });
+      pushToast({ title: i18nT("scan.s0663"), body: item.subject.title ?? undefined, tone: "success" });
     },
     onError: (error) =>
       pushToast({
-        title: "Could not keep this decision",
+        title: i18nT("scan.s0296"),
         body: error instanceof Error ? error.message : "Please try again.",
         tone: "error",
       }),

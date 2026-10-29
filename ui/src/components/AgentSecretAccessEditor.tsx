@@ -26,6 +26,7 @@ import {
   bindingEnvKey,
   bindingSecretLabel,
 } from "../pages/secrets/proposal-review";
+import { t as i18nT } from "@/i18n";
 
 /* -------------------------------------------------------------------------- */
 /* Pure model (exported for tests)                                            */
@@ -285,7 +286,7 @@ export function AgentSecretAccessEditor({
           ))}
         </div>
       ) : (
-        <p className="text-sm text-muted-foreground">No secrets are bound to this agent yet.</p>
+        <p className="text-sm text-muted-foreground">{i18nT("scan.s0833")}</p>
       )}
 
       {/* Pending binding proposals targeting this agent (PAP-14731). */}
@@ -356,7 +357,7 @@ export function AgentSecretAccessEditor({
                             if (suggested && suggested !== next) patchRow(row.id, { alias: suggested });
                           }
                         }}
-                        placeholder="ALIAS"
+                        placeholder={i18nT("scan.s0007")}
                         aria-label="Access alias"
                         disabled={disabled}
                         className={cn(
@@ -481,7 +482,7 @@ export function AgentSecretAccessEditor({
                       Invalid alias — use letters, digits and _
                     </p>
                   ) : aliasDuplicate ? (
-                    <p className="pl-0.5 text-(length:--text-micro) text-destructive">Duplicate alias</p>
+                    <p className="pl-0.5 text-(length:--text-micro) text-destructive">{i18nT("scan.s0435")}</p>
                   ) : null}
                 </div>
               );
@@ -501,7 +502,7 @@ export function AgentSecretAccessEditor({
       </div>
 
       <p className="text-(length:--text-micro) text-muted-foreground/70">
-        {deliveryModeDescription("api")} The agent reads them by alias through <code>GET /agents/me/secrets</code>.
+        {deliveryModeDescription("api")} The agent reads them by alias through <code>{i18nT("scan.s0546")}</code>.
       </p>
     </div>
   );

@@ -44,6 +44,7 @@ import {
   personalGrantFor,
   type GrantStatusTone,
 } from "../connection-identity";
+import { t as i18nT } from "@/i18n";
 
 const STATUS_CHIP: Record<GrantStatusTone, string> = {
   connected: brandChipBadge.green,
@@ -176,7 +177,7 @@ export function IdentitiesSection({
     const github = agentGrant?.providerTenant?.github;
     return (
       <section className="space-y-5">
-        <h2 className="text-sm font-semibold text-foreground">GitHub identity</h2>
+        <h2 className="text-sm font-semibold text-foreground">{i18nT("pages.agentTools.githubIdentity")}</h2>
         <p className="text-sm text-muted-foreground">This agent uses this GitHub account for everyone’s work, instead of the person giving instructions.</p>
         <IdentityRow
           title={github ? `@${github.login}` : "Dedicated GitHub account"}
@@ -311,7 +312,7 @@ function GitHubConnectionSummary({
   return (
     <div className="divide-y divide-border border-y border-border">
       <div className="py-3">
-        <div className="text-sm font-medium text-foreground">GitHub account</div>
+        <div className="text-sm font-medium text-foreground">{i18nT("scan.s0567")}</div>
         <a className="text-sm text-muted-foreground hover:underline" href={`https://github.com/${encodeURIComponent(github.login)}`} target="_blank" rel="noreferrer">
           @{github.login}
         </a>
@@ -319,7 +320,7 @@ function GitHubConnectionSummary({
       <div className="space-y-3 py-3">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div className="min-w-0">
-            <div className="text-sm font-medium text-foreground">Repositories</div>
+            <div className="text-sm font-medium text-foreground">{i18nT("scan.s1100")}</div>
             {repositoryWarning ? (
               <div
                 role="note"
@@ -343,7 +344,7 @@ function GitHubConnectionSummary({
             ) : null}
             {configurationUrl ? (
               <Button asChild size="sm" variant="outline">
-                <a href={configurationUrl} target="_blank" rel="noreferrer">Add More Repos on GitHub</a>
+                <a href={configurationUrl} target="_blank" rel="noreferrer">{i18nT("scan.s0024")}</a>
               </Button>
             ) : onRefreshAccess ? (
               <Button size="sm" variant="outline" disabled={refreshPending} onClick={onRefreshAccess}>
@@ -368,10 +369,10 @@ function GitHubConnectionSummary({
             No accessible repositories.
           </p>
         ) : (
-          <p className="text-sm text-muted-foreground">Refresh access to load the current repository list.</p>
+          <p className="text-sm text-muted-foreground">{i18nT("scan.s1070")}</p>
         )}
         {configurationUrl ? <p className="text-xs text-muted-foreground">
-          Missing an organization or repository? <a href={configurationUrl} target="_blank" rel="noreferrer" className="text-foreground hover:underline">Configure access on GitHub</a>, then refresh this list.
+          Missing an organization or repository? <a href={configurationUrl} target="_blank" rel="noreferrer" className="text-foreground hover:underline">{i18nT("scan.s0252")}</a>, then refresh this list.
         </p> : null}
       </div>
     </div>
@@ -379,7 +380,7 @@ function GitHubConnectionSummary({
 }
 
 function IdentitiesHeading() {
-  return <h2 className="text-sm font-semibold text-foreground">Which humans can use this credential?</h2>;
+  return <h2 className="text-sm font-semibold text-foreground">{i18nT("scan.s1490")}</h2>;
 }
 
 function HumanAccessCards({
@@ -415,21 +416,21 @@ function HumanAccessCards({
         options={personal ? [
           {
             value: "personal",
-            title: "Just me",
+            title: i18nT("scan.s0659"),
             description: "Only you can use this connection.",
             icon: <UserRound className="h-4 w-4" />,
           },
         ] : [
           {
             value: "selected",
-            title: "Humans I pick",
+            title: i18nT("scan.s0596"),
             description: "Only selected people in your company.",
             icon: <UserRound className="h-4 w-4" />,
             disabled: !canEditAudience,
           },
           {
             value: "company",
-            title: "Any human in the company",
+            title: i18nT("scan.s0074"),
             description: "Anyone in your company can use this connection.",
             icon: <Building2 className="h-4 w-4" />,
             disabled: !canEditAudience,
@@ -510,7 +511,7 @@ export function AudienceDialog({
     <Dialog open onOpenChange={(open) => { if (!open) onCancel(); }}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Who can use this identity</DialogTitle>
+          <DialogTitle>{i18nT("scan.s1493")}</DialogTitle>
           <DialogDescription>
             {grantAccountLabel(grant)} · {appName}
           </DialogDescription>
@@ -524,12 +525,12 @@ export function AudienceDialog({
             options={[
               {
                 value: "all",
-                title: "All organization members",
+                title: i18nT("scan.s0059"),
                 description: "Anyone in this organization can have work use this identity.",
               },
               {
                 value: "selected",
-                title: "Selected members",
+                title: i18nT("scan.s1222"),
                 description: "Only the people you choose.",
               },
             ]}

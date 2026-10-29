@@ -4,6 +4,7 @@ import { cloudStackEntryUrl } from "@/lib/cloudLinks";
 import { beginCloudSignIn, clearCloudSignInAttempt } from "@/lib/cloud-sign-in";
 import { PaperclipLoading } from "@/components/AnimatedPaperclipIcon";
 import { Button } from "@/components/ui/button";
+import { t as i18nT } from "@/i18n";
 
 export function CloudSignIn({ cloud, returnTo }: { cloud: CloudInstanceHealthStatus; returnTo: string }) {
   const entryUrl = cloudStackEntryUrl(cloud.cloudBaseUrl, cloud.stackSlug, returnTo);
@@ -20,7 +21,7 @@ export function CloudSignIn({ cloud, returnTo }: { cloud: CloudInstanceHealthSta
 
   return (
     <div className="mx-auto max-w-xl space-y-4 p-6">
-      <h1 className="text-xl font-semibold">Sign in to Kujira AI Workforce Cloud</h1>
+      <h1 className="text-xl font-semibold">{i18nT("scan.s1253")}</h1>
       <p role="alert" className="text-sm text-muted-foreground">
         {entryUrl
           ? "We couldn't restore your session. Continue to Kujira AI Workforce Cloud to try again."
@@ -28,7 +29,7 @@ export function CloudSignIn({ cloud, returnTo }: { cloud: CloudInstanceHealthSta
       </p>
       {entryUrl && (
         <Button asChild>
-          <a href={entryUrl} onClick={clearCloudSignInAttempt}>Continue to Kujira AI Workforce Cloud</a>
+          <a href={entryUrl} onClick={clearCloudSignInAttempt}>{i18nT("scan.s0282")}</a>
         </Button>
       )}
     </div>

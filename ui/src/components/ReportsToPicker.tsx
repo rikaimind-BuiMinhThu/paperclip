@@ -9,6 +9,7 @@ import {
 import { User } from "lucide-react";
 import { cn } from "../lib/utils";
 import { roleLabels } from "./agent-config-primitives";
+import { t as i18nT } from "@/i18n";
 
 export function ReportsToPicker({
   agents,
@@ -51,7 +52,7 @@ export function ReportsToPicker({
           {unknownManager ? (
             <>
               <User className="h-3 w-3 shrink-0 text-muted-foreground" />
-              <span className="min-w-0 truncate text-muted-foreground">Unknown manager (stale ID)</span>
+              <span className="min-w-0 truncate text-muted-foreground">{i18nT("scan.s1413")}</span>
             </>
           ) : current ? (
             <>

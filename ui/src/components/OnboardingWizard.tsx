@@ -155,6 +155,7 @@ import {
   Loader2,
   ChevronDown,
 } from "lucide-react";
+import { t as i18nT } from "@/i18n";
 
 type Step = 0 | 1 | 2 | 3 | 4 | 5;
 
@@ -3189,7 +3190,7 @@ function OnboardingWizardInner({
                           </p>
                           <p className="text-muted-foreground">
                             {t("onboarding.wizard.connect.envTest.promptLabel")}{" "}
-                            <span className="font-mono">Respond with hello.</span>
+                            <span className="font-mono">{i18nT("scan.s1115")}</span>
                           </p>
                           {adapterType === "cursor" ||
                           adapterType === "codex_local" ||

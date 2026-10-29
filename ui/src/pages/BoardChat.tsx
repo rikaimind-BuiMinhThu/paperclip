@@ -34,6 +34,7 @@ import {
 import { cn, formatDateTime } from "../lib/utils";
 import type { FeedbackVoteValue } from "@paperclipai/shared";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { t as i18nT } from "@/i18n";
 
 /**
  * Board Concierge Chat — a chat interface powered by the board-member skill.
@@ -745,19 +746,19 @@ export function BoardChat() {
 
                 const chips: Array<{ label: string; prompt: string }> = [
                   {
-                    label: "Draft an Organization Brief",
+                    label: i18nT("scan.s0432"),
                     prompt: `Draft a one-page Organization Brief for ${companyName} — include our mission, team roster, and first priorities.`,
                   },
                   {
-                    label: "Create a hiring plan",
+                    label: i18nT("scan.s0358"),
                     prompt: `Create a hiring plan for ${companyName}. List the next roles to hire, in priority order, with a short rationale for each.`,
                   },
                   {
-                    label: "Outline our first 30 days",
+                    label: i18nT("scan.s0913"),
                     prompt: `Outline our first 30 days. Break it into weekly priorities with who owns what.`,
                   },
                   {
-                    label: "Write an intro pitch",
+                    label: i18nT("scan.s1526"),
                     prompt: `Write a short intro pitch for ${companyName} that I could reuse for investors, customers, or recruits.`,
                   },
                 ];
@@ -956,7 +957,7 @@ export function BoardChat() {
               value={input}
               onChange={setInput}
               onSubmit={handleSend}
-              placeholder="Ask anything about your organization..."
+              placeholder={i18nT("scan.s0093")}
               submitKey="enter"
               surface="translucent"
               submitting={sending}

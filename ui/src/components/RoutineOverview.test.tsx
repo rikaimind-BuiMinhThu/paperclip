@@ -155,20 +155,20 @@ describe("RoutineOverview", () => {
 
   it("summarizes enabled schedules and their next run", () => {
     expect(summarizeRoutineSchedule(routine.triggers)).toMatchObject({
-      label: "1 active schedule",
+      label: "有効なスケジュール 1 件",
       detail: "0 9 * * 1-5 · America/Los_Angeles",
       nextRunAt: new Date("2026-09-01T16:00:00.000Z"),
     });
     expect(summarizeRoutineSchedule([{ ...routine.triggers[0]!, enabled: false }])).toEqual({
-      label: "No active schedule",
-      detail: "Manual runs only",
+      label: "有効なスケジュールはありません",
+      detail: "手動実行のみ",
       nextRunAt: null,
     });
   });
 
   it("describes webhook-only routines as externally triggered", () => {
     expect(summarizeRoutineSchedule([{ ...routine.triggers[0]!, kind: "webhook", enabled: true }])).toEqual({
-      label: "1 active webhook", detail: "Runs on incoming requests", nextRunAt: null,
+      label: "有効な Webhook 1 件", detail: "受信したリクエストで実行", nextRunAt: null,
     });
   });
 
@@ -193,8 +193,8 @@ describe("RoutineOverview", () => {
       </RoutineDetailContext.Provider>,
     ));
 
-    expect(container.textContent).toContain("1 active schedule");
-    expect(container.textContent).toContain("Next run");
+    expect(container.textContent).toContain("有効なスケジュール 1 件");
+    expect(container.textContent).toContain("次回の実行");
     expect(container.textContent).toContain("Release Manager");
     expect(container.textContent).toContain("Summarize **release readiness** for the operator.");
     expect(container.textContent).toContain("Prepare the release digest");

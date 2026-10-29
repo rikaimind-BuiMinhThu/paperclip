@@ -51,6 +51,7 @@ import { AttentionInteractionResolver } from "./AttentionInteractionResolver";
 import { DecisionResolver } from "./DecisionResolver";
 import { StalledReviewActions } from "./StalledReviewActions";
 import { readIssueReviewPolicyMetadata } from "../lib/review-policy";
+import { t as i18nT } from "@/i18n";
 
 const HOUR_MS = 60 * 60 * 1000;
 const DAY_MS = 24 * HOUR_MS;
@@ -73,8 +74,8 @@ function tomorrowMorningIso(): string {
 const SNOOZE_PRESETS: ReadonlyArray<{ label: string; resolve: () => string }> = [
   { label: "1 hour", resolve: () => new Date(Date.now() + HOUR_MS).toISOString() },
   { label: "4 hours", resolve: () => new Date(Date.now() + 4 * HOUR_MS).toISOString() },
-  { label: "Tomorrow morning", resolve: tomorrowMorningIso },
-  { label: "Next week", resolve: () => new Date(Date.now() + 7 * DAY_MS).toISOString() },
+  { label: i18nT("scan.s1385"), resolve: tomorrowMorningIso },
+  { label: i18nT("scan.s0778"), resolve: () => new Date(Date.now() + 7 * DAY_MS).toISOString() },
 ];
 
 interface AttentionQueueRowProps {
@@ -322,7 +323,7 @@ export const AttentionQueueRow = memo(function AttentionQueueRow({
                   <>
                     <DropdownMenuSeparator />
                     <DropdownMenuItem asChild>
-                      <Link to={href}>Open source</Link>
+                      <Link to={href}>{i18nT("scan.s0893")}</Link>
                     </DropdownMenuItem>
                   </>
                 )}
@@ -777,7 +778,7 @@ function InlineResolver({
   if (item.sourceKind === "issue_thread_interaction") {
     const issueId = (item.subject.metadata?.issueId as string | undefined) ?? item.relatedIssue?.id;
     if (!issueId) {
-      return <p className="text-xs text-muted-foreground">Missing issue reference for this decision.</p>;
+      return <p className="text-xs text-muted-foreground">{i18nT("scan.s0755")}</p>;
     }
     return (
       <>
@@ -856,7 +857,7 @@ function ApprovalResolver({ item, companyId, toggle }: { item: AttentionItem; co
       <Textarea
         value={note}
         onChange={(e) => setNote(e.target.value)}
-        placeholder="Optional decision note…"
+        placeholder={i18nT("scan.s0904")}
         className="min-h-16 text-sm"
       />
       <ResolverFooter toggle={toggle}>

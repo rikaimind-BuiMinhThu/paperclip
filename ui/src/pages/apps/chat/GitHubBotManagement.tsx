@@ -16,6 +16,7 @@ import {
   GitHubToggle,
   githubSelectClass,
 } from "./GitHubBotConfiguration";
+import { t as i18nT } from "@/i18n";
 
 export function GitHubBotManagement({
   endpoint,
@@ -70,7 +71,7 @@ export function GitHubBotManagement({
     );
   if (!record)
     return (
-      <p className="text-sm text-muted-foreground">Loading configuration…</p>
+      <p className="text-sm text-muted-foreground">{i18nT("pages.plugins.loadingConfiguration")}</p>
     );
   const config = record.configuration;
   const override = repository ? config.repositories[repository] : undefined;
@@ -111,7 +112,7 @@ export function GitHubBotManagement({
           />
           <div className="space-y-3">
             <div className="flex flex-wrap items-center justify-between gap-3">
-              <h3 className="text-sm font-medium">Repository access</h3>
+              <h3 className="text-sm font-medium">{i18nT("scan.s1102")}</h3>
               <div className="flex gap-2">
                 <Button
                   variant="outline"
@@ -186,7 +187,7 @@ export function GitHubBotManagement({
               value={repository}
               onChange={(e) => setRepository(e.target.value)}
             >
-              <option value="">Connection defaults</option>
+              <option value="">{i18nT("scan.s0272")}</option>
               {resources.data
                 ?.filter(
                   (r) =>
@@ -294,7 +295,7 @@ export function GitHubReviews({ endpointId }: { endpointId: string }) {
   return (
     <section className="space-y-4">
       <div>
-        <h2 className="text-lg font-semibold">Reviews</h2>
+        <h2 className="text-lg font-semibold">{i18nT("pages.chatEndpoint.tabReviews")}</h2>
         <p className="mt-1 text-sm text-muted-foreground">
           Review activity from the agent’s Kujira AI Workforce tasks. Open a task for the
           conversation and execution history.
@@ -309,7 +310,7 @@ export function GitHubReviews({ endpointId }: { endpointId: string }) {
         </p>
       )}
       {query.isLoading && (
-        <p className="text-sm text-muted-foreground">Loading reviews…</p>
+        <p className="text-sm text-muted-foreground">{i18nT("scan.s0720")}</p>
       )}
       {query.data?.length === 0 && (
         <p className="text-sm text-muted-foreground">

@@ -13,6 +13,7 @@ import {
   type AiConnectionRequirement,
   type AiConnectionSummary,
 } from "./model";
+import { t as i18nT } from "@/i18n";
 
 export interface AiConnectionPickerProps {
   requirement: AiConnectionRequirement;
@@ -81,7 +82,7 @@ export function AiConnectionPicker({
           size={32}
         />
         <div className="flex min-w-0 flex-col gap-1">
-        <h3 className="text-sm font-semibold">AI connection</h3>
+        <h3 className="text-sm font-semibold">{i18nT("scan.s0006")}</h3>
         <p className="text-xs text-muted-foreground">
           {AI_PROVIDERS[requirement.provider].name}
           {value && value.mode !== "responsible_user" && ` · ${aiMethodLabel(value.provider, value.method)}`}
@@ -131,7 +132,7 @@ export function AiConnectionPicker({
           )}
           {!readOnly && (
             <div className="flex justify-end gap-2">
-              {onReconnect && <Button type="button" variant="outline" onClick={onReconnect}>Reconnect account</Button>}
+              {onReconnect && <Button type="button" variant="outline" onClick={onReconnect}>{i18nT("scan.s1055")}</Button>}
               <Button
                 type="button"
                 variant="outline"

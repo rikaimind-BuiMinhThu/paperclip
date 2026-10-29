@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
+import { t as i18nT } from "@/i18n";
 
 function CredentialSettings({
   companyId,
@@ -57,7 +58,7 @@ function CredentialSettings({
           min="0"
           step="0.01"
           value={limit}
-          placeholder="Use the remaining Kujira AI Workforce budget"
+          placeholder={i18nT("scan.s1438")}
           onChange={(e) => setLimit(e.target.value)}
         />
         <p className="text-sm text-muted-foreground">
@@ -66,7 +67,7 @@ function CredentialSettings({
         </p>
       </div>
       <fieldset className="space-y-2">
-        <legend className="text-sm font-medium">Allowed saved profiles</legend>
+        <legend className="text-sm font-medium">{i18nT("scan.s0064")}</legend>
         <p className="text-sm text-muted-foreground">
           Fresh browsers are the default. Selected profiles let agents use their
           saved website logins. Manage profiles in{" "}
@@ -96,10 +97,10 @@ function CredentialSettings({
           </Label>
         ))}
         {profiles.data?.length === 0 && (
-          <p className="text-sm text-muted-foreground">No saved profiles.</p>
+          <p className="text-sm text-muted-foreground">{i18nT("scan.s0831")}</p>
         )}
         {profiles.isLoading && (
-          <p className="text-sm text-muted-foreground">Loading profiles…</p>
+          <p className="text-sm text-muted-foreground">{i18nT("scan.s0719")}</p>
         )}
         {profiles.isError && (
           <p role="alert" className="text-sm text-destructive">
@@ -162,7 +163,7 @@ export function BrowserUseSettingsPanel({
   const grantId = selected || eligible[0]?.id;
   return (
     <section className="space-y-4">
-      <h2 className="text-lg font-semibold">Browser settings</h2>
+      <h2 className="text-lg font-semibold">{i18nT("scan.s0154")}</h2>
       {eligible.length > 1 && (
         <Label className="flex flex-col gap-2">
           Credential

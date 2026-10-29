@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { MarkdownBody } from "@/components/MarkdownBody";
 import { attachmentDownloadPath, isMarkdownAttachment, isTextAttachment } from "@/lib/issue-attachments";
 import { queryKeys } from "@/lib/queryKeys";
+import { t as i18nT } from "@/i18n";
 
 export const TEXT_PREVIEW_MAX_BYTES = 512 * 1024;
 
@@ -60,7 +61,7 @@ export function TextAttachmentPreview({ title, text, markdown, downloadUrl }: {
         </Button>
       </header>
       <div className="min-h-0 flex-1 overflow-auto p-4">
-        {text.length === 0 ? <p className="text-sm text-muted-foreground">File is empty.</p>
+        {text.length === 0 ? <p className="text-sm text-muted-foreground">{i18nT("scan.s0517")}</p>
           : markdown && !raw ? <MarkdownBody mediaMode="reference">{text}</MarkdownBody>
           : <pre className="whitespace-pre-wrap break-words font-mono text-sm" aria-label={`${title} raw text`}>{text}</pre>}
       </div>
@@ -85,19 +86,19 @@ export function TaskAttachmentPanel({ issueId, attachmentId }: { issueId: string
     enabled: Boolean(eligible),
     retry: false,
   });
-  if (attachments.isLoading) return <p className="p-4 text-sm" role="status">Loading file…</p>;
-  if (attachments.isError) return <div className="p-4" role="alert">Could not load attachment details. <Button onClick={() => void attachments.refetch()}>Retry</Button></div>;
+  if (attachments.isLoading) return <p className="p-4 text-sm" role="status">{i18nT("scan.s0712")}</p>;
+  if (attachments.isError) return <div className="p-4" role="alert">{i18nT("scan.s0298")}<Button onClick={() => void attachments.refetch()}>{i18nT("common.retry")}</Button></div>;
   if (!attachment) return <p className="p-4 text-sm" role="status">File no longer available. Close this tab or choose another file.</p>;
   const downloadUrl = attachmentDownloadPath(attachment);
   if (!eligible || content.isError) {
     return (
       <div className="space-y-3 p-4" role="alert">
         <p className="text-sm">{content.isError ? "Could not preview this file. Retry or download it." : "This file is too large or is not supported for text preview. Download it instead."}</p>
-        {eligible ? <Button onClick={() => void content.refetch()}>Retry</Button> : null}
-        <Button asChild variant="outline"><a href={downloadUrl} download>Download file</a></Button>
+        {eligible ? <Button onClick={() => void content.refetch()}>{i18nT("common.retry")}</Button> : null}
+        <Button asChild variant="outline"><a href={downloadUrl} download>{i18nT("scan.s0431")}</a></Button>
       </div>
     );
   }
-  if (content.data === undefined) return <p className="p-4 text-sm" role="status">Loading file…</p>;
+  if (content.data === undefined) return <p className="p-4 text-sm" role="status">{i18nT("scan.s0712")}</p>;
   return <TextAttachmentPreview title={attachment.originalFilename ?? attachment.id} text={content.data} markdown={isMarkdownAttachment(attachment)} downloadUrl={downloadUrl} />;
 }

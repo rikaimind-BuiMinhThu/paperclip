@@ -114,6 +114,7 @@ import {
   type BreakdownCopyNames,
 } from "../lib/pipeline-breakdown";
 import { getPipelineStageColumnTone } from "../lib/pipeline-stage-presentation";
+import { t as i18nT } from "@/i18n";
 
 type StageSectionKey = "instructions" | "advanced" | "secrets" | "activity" | "history";
 type ApproverKind = "any_human" | "user" | "agent";
@@ -168,18 +169,18 @@ const STAGE_NAV_GROUPS: Array<{
   items: Array<{ id: StageSectionKey; label: string; icon: typeof Circle }>;
 }> = [
   {
-    label: "Stage",
+    label: i18nT("pages.pipelines.stageLabel"),
     items: [
-      { id: "instructions", label: "Automation", icon: LayoutGrid },
-      { id: "advanced", label: "Advanced", icon: SlidersHorizontal },
-      { id: "secrets", label: "Secrets", icon: KeyRound },
+      { id: "instructions", label: i18nT("pages.timeline.automation"), icon: LayoutGrid },
+      { id: "advanced", label: i18nT("apps.gateways.tabAdvanced"), icon: SlidersHorizontal },
+      { id: "secrets", label: i18nT("settings.secrets"), icon: KeyRound },
     ],
   },
   {
-    label: "Operate",
+    label: i18nT("pages.routineDetail.groupOperate"),
     items: [
-      { id: "activity", label: "Activity", icon: ActivityIcon },
-      { id: "history", label: "History", icon: HistoryIcon },
+      { id: "activity", label: i18nT("nav.activity"), icon: ActivityIcon },
+      { id: "history", label: i18nT("routines.history"), icon: HistoryIcon },
     ],
   },
 ];
@@ -223,25 +224,25 @@ const STAGE_KIND_OPTIONS: Array<{
 }> = [
   {
     value: "working",
-    label: "Working",
+    label: i18nT("scan.s1510"),
     description: "Items wait here while work happens. An agent or a person moves them forward.",
     icon: Hammer,
   },
   {
     value: "review",
-    label: "Review",
+    label: i18nT("common.review"),
     description: "Someone has to approve before items leave. Use this when a person or an agent has to say yes or no.",
     icon: BadgeCheck,
   },
   {
     value: "done",
-    label: "Done",
+    label: i18nT("common.done"),
     description: "The final step. Items that reach here are finished.",
     icon: CircleCheck,
   },
   {
     value: "cancelled",
-    label: "Cancelled",
+    label: i18nT("status.cancelled"),
     description: "The dead end. Items that reach here are dropped or rejected.",
     icon: Ban,
   },
@@ -312,9 +313,9 @@ function stageConfig(stage: PipelineStage | null | undefined): StageConfig {
 }
 
 const STAGE_EXECUTION_WORKSPACE_OPTIONS = [
-  { value: "shared_workspace", label: "Project default" },
-  { value: "isolated_workspace", label: "New isolated workspace" },
-  { value: "reuse_existing", label: "Reuse existing workspace" },
+  { value: "shared_workspace", label: i18nT("issues.dialog.projectDefaultWorkspace") },
+  { value: "isolated_workspace", label: i18nT("issues.dialog.newIsolatedWorkspace") },
+  { value: "reuse_existing", label: i18nT("issues.dialog.reuseExistingWorkspace") },
 ] as const;
 
 function nullableString(value: unknown) {
@@ -955,42 +956,42 @@ function buildAutomationVariableGroups(input: {
   const pipelineVariables: AutomationVariableOption[] = [
     {
       key: "pipeline_id",
-      label: "Pipeline ID",
+      label: i18nT("scan.s0962"),
       description: "ID of the pipeline this automation runs in.",
       example: input.pipeline.id,
       exampleSource: null,
     },
     {
       key: "pipeline_key",
-      label: "Pipeline key",
+      label: i18nT("scan.s0965"),
       description: "Stable key of the pipeline this automation runs in.",
       example: input.pipeline.key,
       exampleSource: null,
     },
     {
       key: "pipeline_name",
-      label: "Pipeline name",
+      label: i18nT("scan.s0966"),
       description: "Display name of the pipeline this automation runs in.",
       example: input.pipeline.name,
       exampleSource: null,
     },
     {
       key: "stage_id",
-      label: "Stage ID",
+      label: i18nT("scan.s1288"),
       description: "ID of this automation stage.",
       example: input.stage.id,
       exampleSource: null,
     },
     {
       key: "stage_key",
-      label: "Stage key",
+      label: i18nT("scan.s1291"),
       description: "Stable key of this automation stage.",
       example: input.stage.key,
       exampleSource: null,
     },
     {
       key: "stage_name",
-      label: "Stage name",
+      label: i18nT("scan.s1292"),
       description: "Display name of this automation stage.",
       example: input.stage.name,
       exampleSource: null,
@@ -999,42 +1000,42 @@ function buildAutomationVariableGroups(input: {
   const itemVariables: AutomationVariableOption[] = [
     {
       key: "title",
-      label: "Item title",
+      label: i18nT("scan.s0651"),
       description: "Title of the item being automated.",
       example: sampleCase?.title ?? "",
       exampleSource,
     },
     {
       key: "body",
-      label: "Item body",
+      label: i18nT("scan.s0644"),
       description: "Body text of the item being automated.",
       example: sampleCase?.summary ?? "",
       exampleSource,
     },
     {
       key: "case_id",
-      label: "Item ID",
+      label: i18nT("scan.s0643"),
       description: "ID of the item being automated.",
       example: sampleCase?.id ?? "",
       exampleSource,
     },
     {
       key: "case_key",
-      label: "Item key",
+      label: i18nT("scan.s0646"),
       description: "Stable key of the item being automated.",
       example: sampleCase?.caseKey ?? "",
       exampleSource,
     },
     {
       key: "case_title",
-      label: "Item title alias",
+      label: i18nT("scan.s0652"),
       description: "Compatibility alias for the item title.",
       example: sampleCase?.title ?? "",
       exampleSource,
     },
     {
       key: "case_version",
-      label: "Item version",
+      label: i18nT("scan.s0653"),
       description: "Current item version when the automation runs.",
       example: sampleCase?.version ?? "",
       exampleSource,
@@ -1055,11 +1056,11 @@ function buildAutomationVariableGroups(input: {
     });
   }
   const groups: AutomationVariableGroup[] = [
-    { id: "pipeline", label: "Pipeline and stage", variables: pipelineVariables },
-    { id: "item", label: "Current item", variables: itemVariables },
+    { id: "pipeline", label: i18nT("scan.s0963"), variables: pipelineVariables },
+    { id: "item", label: i18nT("scan.s0370"), variables: itemVariables },
   ];
   if (fieldVariables.length > 0) {
-    groups.push({ id: "fields", label: "Item fields", variables: fieldVariables });
+    groups.push({ id: "fields", label: i18nT("scan.s0645"), variables: fieldVariables });
   }
   return groups;
 }
@@ -1181,7 +1182,7 @@ function StageSubSidebar({
   return (
     <>
       <div className="md:hidden">
-        <label className="sr-only" htmlFor="stage-section-picker">Stage section</label>
+        <label className="sr-only" htmlFor="stage-section-picker">{i18nT("scan.s1295")}</label>
         <select
           id="stage-section-picker"
           value={activeSection}
@@ -1905,11 +1906,11 @@ export function PipelineSettings() {
         ]);
       }
       await refreshPipeline();
-      pushToast({ title: "Stage saved", tone: "success" });
+      pushToast({ title: i18nT("scan.s1293"), tone: "success" });
     },
     onError: async (error) => {
       pushToast({
-        title: "Failed to save stage",
+        title: i18nT("scan.s0509"),
         body: error instanceof Error ? error.message : "Kujira AI Workforce could not save the stage.",
         tone: "error",
       });
@@ -1934,11 +1935,11 @@ export function PipelineSettings() {
       if (selectedCompanyId) {
         await queryClient.invalidateQueries({ queryKey: queryKeys.secrets.list(selectedCompanyId) });
       }
-      pushToast({ title: "Stage secrets saved", tone: "success" });
+      pushToast({ title: i18nT("scan.s1294"), tone: "success" });
     },
     onError: async (error) => {
       pushToast({
-        title: "Failed to save secrets",
+        title: i18nT("scan.s0508"),
         body: error instanceof ApiError
           ? error.message
           : error instanceof Error
@@ -1996,7 +1997,7 @@ export function PipelineSettings() {
       if (created) {
         setSelectedStageId(created.id);
       }
-      pushToast({ title: "Stage added", tone: "success" });
+      pushToast({ title: i18nT("scan.s1289"), tone: "success" });
     },
   });
 
@@ -2015,11 +2016,11 @@ export function PipelineSettings() {
       if (selectedCompanyId) {
         await queryClient.invalidateQueries({ queryKey: queryKeys.pipelines.list(selectedCompanyId) });
       }
-      pushToast({ title: "Stage deleted", tone: "success" });
+      pushToast({ title: i18nT("scan.s1290"), tone: "success" });
     },
     onError: (error) => {
       pushToast({
-        title: "Failed to delete stage",
+        title: i18nT("scan.s0498"),
         body: error instanceof Error ? error.message : "Kujira AI Workforce could not delete the stage.",
         tone: "error",
       });
@@ -2037,7 +2038,7 @@ export function PipelineSettings() {
       if (selectedCompanyId) {
         await queryClient.invalidateQueries({ queryKey: queryKeys.pipelines.list(selectedCompanyId) });
       }
-      pushToast({ title: "Pipeline updated", tone: "success" });
+      pushToast({ title: i18nT("scan.s0968"), tone: "success" });
     },
   });
 
@@ -2046,12 +2047,12 @@ export function PipelineSettings() {
       pipelinesApi.update(pipelineId!, { enforceTransitions }),
     onSuccess: async () => {
       await refreshPipeline();
-      pushToast({ title: "Transition rules updated", tone: "success" });
+      pushToast({ title: i18nT("scan.s1391"), tone: "success" });
     },
     onError: (error) => {
       setStrictTransitionsEnabled(pipeline?.enforceTransitions ?? false);
       pushToast({
-        title: "Failed to update transition rules",
+        title: i18nT("scan.s0512"),
         body: error instanceof Error ? error.message : "Kujira AI Workforce could not update transition rules.",
         tone: "error",
       });
@@ -2070,7 +2071,7 @@ export function PipelineSettings() {
         navigate("/pipelines");
       } else {
         await refreshPipeline();
-        pushToast({ title: "Pipeline restored", tone: "success" });
+        pushToast({ title: i18nT("scan.s0967"), tone: "success" });
       }
     },
   });
@@ -2300,7 +2301,7 @@ export function PipelineSettings() {
               />
               <span className="flex-1">{stage.name}</span>
               {isCancelled ? (
-                <span className="text-xs text-muted-foreground">Always available</span>
+                <span className="text-xs text-muted-foreground">{i18nT("scan.s0067")}</span>
               ) : null}
             </label>
           );
@@ -2312,7 +2313,7 @@ export function PipelineSettings() {
     <div className="rounded-lg border border-border">
       <div className="flex items-start justify-between gap-4 border-b border-border p-4">
         <div className="space-y-1">
-          <h3 className="text-sm font-semibold text-foreground">Break into smaller pieces</h3>
+          <h3 className="text-sm font-semibold text-foreground">{i18nT("scan.s0150")}</h3>
           <p className="max-w-md text-sm text-muted-foreground">
             The agent decides what the pieces are. Kujira AI Workforce creates and tracks them.
           </p>
@@ -2342,7 +2343,7 @@ export function PipelineSettings() {
                   }}
                   className="h-10 min-w-0 flex-1 rounded-md border border-input bg-background px-3 text-sm"
                 >
-                  <option value="">Choose a pipeline</option>
+                  <option value="">{i18nT("scan.s0204")}</option>
                   {breakdownTargetOptions.map((candidate) => (
                     <option key={candidate.id} value={candidate.id}>{candidate.name}</option>
                   ))}
@@ -2359,7 +2360,7 @@ export function PipelineSettings() {
                 ) : null}
               </div>
               {!breakdownTargetPipelineId ? (
-                <p className="text-xs text-muted-foreground">A pipeline in this workspace</p>
+                <p className="text-xs text-muted-foreground">{i18nT("scan.s0001")}</p>
               ) : null}
             </div>
           </FieldRow>
@@ -2372,12 +2373,12 @@ export function PipelineSettings() {
                 disabled={!breakdownTargetPipelineId}
                 className="h-10 w-full max-w-sm rounded-md border border-input bg-background px-3 text-sm disabled:opacity-50"
               >
-                <option value="">Choose a stage</option>
+                <option value="">{i18nT("pages.pipelines.chooseStage")}</option>
                 {breakdownTargetStages.map((stage) => (
                   <option key={stage.id} value={stage.key}>{stage.name}</option>
                 ))}
               </select>
-              <p className="text-xs text-muted-foreground">The stage every new piece starts in</p>
+              <p className="text-xs text-muted-foreground">{i18nT("scan.s1363")}</p>
             </div>
           </FieldRow>
           <FieldRow label="Call each piece a">
@@ -2402,7 +2403,7 @@ export function PipelineSettings() {
                 </p>
                 {breakdownTargetPipelineId ? (
                   <div className="flex flex-wrap items-center gap-1 text-muted-foreground">
-                    <span>Destination validation:</span>
+                    <span>{i18nT("scan.s0408")}</span>
                     <span className="font-medium text-foreground">
                       {breakdownTargetPipeline?.name ?? "selected pipeline"}
                     </span>
@@ -2499,12 +2500,12 @@ export function PipelineSettings() {
                 onChange={(event) => setBreakdownAdvanceTo(event.target.value)}
                 className="h-10 w-full max-w-sm rounded-md border border-input bg-background px-3 text-sm"
               >
-                <option value="">Stay on this step</option>
+                <option value="">{i18nT("scan.s1302")}</option>
                 {otherStages.map((stage) => (
                   <option key={stage.id} value={stage.key}>{stage.name}</option>
                 ))}
               </select>
-              <p className="text-xs text-muted-foreground">As soon as the pieces are created</p>
+              <p className="text-xs text-muted-foreground">{i18nT("scan.s0092")}</p>
             </div>
           </FieldRow>
           <FieldRow label="Wait">
@@ -2533,7 +2534,7 @@ export function PipelineSettings() {
                 disabled={!breakdownWaitForPieces}
                 className="h-10 w-full max-w-sm rounded-md border border-input bg-background px-3 text-sm disabled:opacity-50"
               >
-                <option value="">Choose a stage</option>
+                <option value="">{i18nT("pages.pipelines.chooseStage")}</option>
                 {otherStages.map((stage) => (
                   <option key={stage.id} value={stage.key}>{stage.name}</option>
                 ))}
@@ -2594,7 +2595,7 @@ export function PipelineSettings() {
         <div className="grid gap-3 md:grid-cols-(--gtc-13) md:items-end">
           <div className="space-y-3">
             <label className="block space-y-1.5 text-sm font-medium">
-              <span className="sr-only">Pipeline name</span>
+              <span className="sr-only">{i18nT("scan.s0966")}</span>
               <Input
                 aria-label="Pipeline name"
                 value={pipelineName}
@@ -2604,13 +2605,13 @@ export function PipelineSettings() {
               />
             </label>
             <label className="block space-y-1.5 text-sm font-medium">
-              <span className="sr-only">Pipeline description</span>
+              <span className="sr-only">{i18nT("scan.s0964")}</span>
               <Textarea
                 aria-label="Pipeline description"
                 value={pipelineDescription}
                 onChange={(event) => setPipelineDescription(event.target.value)}
                 rows={2}
-                placeholder="Add a description"
+                placeholder={i18nT("scan.s0026")}
                 className="min-h-0 resize-none border-0 bg-transparent px-0 py-0 text-sm text-muted-foreground shadow-none focus-visible:ring-0"
               />
             </label>
@@ -2821,13 +2822,13 @@ export function PipelineSettings() {
                               value={selectedApproval === "any_human" ? "" : selectedApproval}
                               options={approvalOptions}
                               recentOptionIds={recentAssigneeOptionIds}
-                              placeholder="Approver"
+                              placeholder={i18nT("newIssue.approver")}
                               noneLabel="Any human"
                               searchPlaceholder="Search approvers..."
                               emptyMessage="No approvers found."
                               onChange={(value) => setSelectedApproval(approverValueFromOption(value))}
                               renderTriggerValue={(option) => {
-                                if (!option) return <span className="text-muted-foreground">Any human</span>;
+                                if (!option) return <span className="text-muted-foreground">{i18nT("scan.s0073")}</span>;
                                 const agent = option.id.startsWith("agent:") ? agentById.get(option.id.slice("agent:".length)) : null;
                                 return (
                                   <>
@@ -2877,13 +2878,13 @@ export function PipelineSettings() {
                                 </div>
                               ))}
                               <div className="grid grid-cols-1 items-center gap-2 sm:grid-cols-(--gtc-42)">
-                                <span className="text-sm font-medium">Ask for a note when requesting changes</span>
+                                <span className="text-sm font-medium">{i18nT("scan.s0095")}</span>
                                 <div className="sm:justify-self-start">
                                   <ToggleSwitch checked={requireRequestChangesReason} onCheckedChange={setRequireRequestChangesReason} />
                                 </div>
                               </div>
                               <div className="grid grid-cols-1 items-center gap-2 sm:grid-cols-(--gtc-42)">
-                                <span className="text-sm font-medium">Ask for a note when declining</span>
+                                <span className="text-sm font-medium">{i18nT("scan.s0094")}</span>
                                 <div className="sm:justify-self-start">
                                   <ToggleSwitch checked={requireRejectReason} onCheckedChange={setRequireRejectReason} />
                                 </div>
@@ -2905,18 +2906,18 @@ export function PipelineSettings() {
                     <div className="mt-8 w-full max-w-3xl space-y-6">
                       <div className="overflow-x-auto overscroll-x-contain">
                         <div className="inline-flex min-w-full flex-wrap items-center gap-2 text-sm text-muted-foreground sm:min-w-max sm:flex-nowrap">
-                          <span>When an item enters this step</span>
+                          <span>{i18nT("scan.s1486")}</span>
                           <InlineEntitySelector
                             value={stageAssigneeOptionId(stageAssigneeAgentId)}
                             options={stageAssigneeOptions}
                             recentOptionIds={recentAssigneeOptionIds}
-                            placeholder="Pick agent"
+                            placeholder={i18nT("scan.s0956")}
                             noneLabel="No automation"
                             searchPlaceholder="Search agents..."
                             emptyMessage="No agents found."
                             onChange={(value) => setStageAssigneeAgentId(stageAssigneeIdFromOption(value))}
                             renderTriggerValue={(option) => {
-                              if (!option) return <span className="text-muted-foreground">Pick agent</span>;
+                              if (!option) return <span className="text-muted-foreground">{i18nT("scan.s0956")}</span>;
                               const agent = stageAssigneeIdFromOption(option.id)
                                 ? agentById.get(stageAssigneeIdFromOption(option.id))
                                 : null;
@@ -2952,7 +2953,7 @@ export function PipelineSettings() {
                                   value={stageProjectId}
                                   options={projectOptions}
                                   recentOptionIds={recentProjectIds}
-                                  placeholder="Project"
+                                  placeholder={i18nT("issues.project")}
                                   noneLabel="No project"
                                   searchPlaceholder="Search projects..."
                                   emptyMessage="No projects found."
@@ -2967,7 +2968,7 @@ export function PipelineSettings() {
                                         <span className="truncate">{option.label}</span>
                                       </>
                                     ) : (
-                                      <span className="text-muted-foreground">Project</span>
+                                      <span className="text-muted-foreground">{i18nT("issues.project")}</span>
                                     )
                                   }
                                   renderOption={(option) => {
@@ -2991,7 +2992,7 @@ export function PipelineSettings() {
                                     onChange={(event) => handleAutomationProjectWorkspaceChange(event.target.value)}
                                     className="h-10 w-full rounded-md border border-input bg-background px-3 text-sm"
                                   >
-                                    <option value="">Project fallback</option>
+                                    <option value="">{i18nT("scan.s1000")}</option>
                                     {(selectedAutomationProject.workspaces ?? []).map((workspace) => (
                                       <option key={workspace.id} value={workspace.id}>
                                         {workspace.name}{workspace.isPrimary ? " · primary" : ""}
@@ -3033,7 +3034,7 @@ export function PipelineSettings() {
                                       onChange={(event) => handleAutomationExecutionWorkspaceIdChange(event.target.value)}
                                       className="h-10 w-full rounded-md border border-input bg-background px-3 text-sm"
                                     >
-                                      <option value="">Choose an existing workspace</option>
+                                      <option value="">{i18nT("scan.s0207")}</option>
                                       {deduplicatedReusableWorkspaces.map((workspace) => (
                                         <option key={workspace.id} value={workspace.id}>
                                           {workspace.name} · {workspace.status} · {workspace.branchName ?? workspace.cwd ?? workspace.id.slice(0, 8)}
@@ -3082,7 +3083,7 @@ export function PipelineSettings() {
                           />
                           {breakdownEnabled ? (
                             <div className="space-y-1">
-                              <h3 className="text-sm font-semibold text-foreground">What should the agent decide?</h3>
+                              <h3 className="text-sm font-semibold text-foreground">{i18nT("scan.s1480")}</h3>
                               <p className="text-sm text-muted-foreground">
                                 The mechanics are handled below. Write only the judgment.
                               </p>
@@ -3169,7 +3170,7 @@ export function PipelineSettings() {
                     <div className="w-full max-w-3xl space-y-8">
                       <div className="divide-y divide-border border-b border-border">
                         <div className="py-3">
-                          <h3 className="text-sm font-semibold text-foreground">Transitions</h3>
+                          <h3 className="text-sm font-semibold text-foreground">{i18nT("scan.s1392")}</h3>
                         </div>
                         <FieldRow label="Strict mode">
                           <div className="space-y-1.5">
@@ -3204,7 +3205,7 @@ export function PipelineSettings() {
                       ) : (
                         <div className="divide-y divide-border border-b border-border">
                           <div className="py-3">
-                            <h3 className="text-sm font-semibold text-foreground">Children</h3>
+                            <h3 className="text-sm font-semibold text-foreground">{i18nT("scan.s0199")}</h3>
                           </div>
                           <FieldRow label="Block children">
                             <div className="space-y-1.5">
@@ -3236,7 +3237,7 @@ export function PipelineSettings() {
                                 </span>
                               </div>
                               <div className="grid grid-cols-1 items-center gap-2 sm:grid-cols-(--gtc-44)">
-                                <span className="text-sm font-medium text-muted-foreground">Move to</span>
+                                <span className="text-sm font-medium text-muted-foreground">{i18nT("scan.s0765")}</span>
                                 <select
                                   aria-label="Move to stage when children finish"
                                   value={autoAdvanceOnChildrenTerminal}
@@ -3244,7 +3245,7 @@ export function PipelineSettings() {
                                   disabled={!autoAdvanceOnChildrenTerminal}
                                   className="h-10 w-full rounded-md border border-input bg-background px-3 text-sm disabled:opacity-50"
                                 >
-                                  <option value="">Choose a stage</option>
+                                  <option value="">{i18nT("pages.pipelines.chooseStage")}</option>
                                   {otherStages.map((stage) => (
                                     <option key={stage.id} value={stage.key}>{stage.name}</option>
                                   ))}
@@ -3318,7 +3319,7 @@ export function PipelineSettings() {
       >
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Delete stage</DialogTitle>
+            <DialogTitle>{i18nT("scan.s0393")}</DialogTitle>
             <DialogDescription>
               Delete {selectedStage?.name ?? "this stage"} from this pipeline. Connected stage transitions are removed.
             </DialogDescription>
@@ -3326,7 +3327,7 @@ export function PipelineSettings() {
           <div className="space-y-3">
             {stages.length > 1 ? (
               <label className="block space-y-1.5 text-sm font-medium">
-                <span>Move existing items to</span>
+                <span>{i18nT("scan.s0764")}</span>
                 <select
                   aria-label="Move existing items to"
                   value={deleteMoveTargetStageId}
@@ -3380,7 +3381,7 @@ export function PipelineSettings() {
       >
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Archive pipeline</DialogTitle>
+            <DialogTitle>{i18nT("scan.s0088")}</DialogTitle>
             <DialogDescription>
               Archiving hides this pipeline from everyday views. Its stages and items are kept and can be restored later.
             </DialogDescription>

@@ -22,6 +22,7 @@ import {
   DialogDescription,
   DialogFooter,
 } from "@/components/ui/dialog";
+import { t as i18nT } from "@/i18n";
 
 export function aiProviderForAdapter(
   adapterType: string,
@@ -194,8 +195,8 @@ export function AiConnectionField({
           {savedAccount ? <div className="space-y-4">
             {selectDefault.error ? <>
               <p role="alert" className="text-sm text-destructive">{selectDefault.error.message}</p>
-              <Button onClick={() => selectDefault.mutate(savedAccount)}>Retry default selection</Button>
-            </> : <p role="status" className="text-sm text-muted-foreground">Selecting your default account…</p>}
+              <Button onClick={() => selectDefault.mutate(savedAccount)}>{i18nT("scan.s1127")}</Button>
+            </> : <p role="status" className="text-sm text-muted-foreground">{i18nT("scan.s1224")}</p>}
           </div> :
           <AiConnectionCredentialStep
             companyId={companyId}

@@ -27,6 +27,7 @@ import {
   type PaperclipRunnerPermissionMode,
   type PaperclipRunnerProvider,
 } from "@paperclipai/adapter-utils";
+import { t as i18nT } from "@/i18n";
 
 const inputClass =
   "w-full rounded-md border border-border px-2.5 py-1.5 bg-transparent outline-none text-sm font-mono placeholder:text-muted-foreground/40";
@@ -183,9 +184,9 @@ export function CodexLocalConfigFields({
                   );
             }}
           >
-            <option value="auto">Default (ACP)</option>
-            <option value="cli">Codex CLI</option>
-            <option value="acp">ACP</option>
+            <option value="auto">{i18nT("scan.s0384")}</option>
+            <option value="cli">{i18nT("scan.s0238")}</option>
+            <option value="acp">{i18nT("scan.s0004")}</option>
           </select>
         </Field>
       )}
@@ -230,12 +231,12 @@ export function CodexLocalConfigFields({
               }
             }}
           >
-            <option value="codex">Codex</option>
-            <option value="opencode">OpenCode 1.18.32</option>
-            <option value="claude_managed">Claude Managed</option>
-            <option value="aws_agentcore">AWS AgentCore</option>
-            <option value="acpx">ACP agents</option>
-            <option value="grok">Grok Build</option>
+            <option value="codex">{i18nT("scan.s0236")}</option>
+            <option value="opencode">{i18nT("scan.s0899")}</option>
+            <option value="claude_managed">{i18nT("scan.s0223")}</option>
+            <option value="aws_agentcore">{i18nT("scan.s0010")}</option>
+            <option value="acpx">{i18nT("scan.s0005")}</option>
+            <option value="grok">{i18nT("scan.s0575")}</option>
           </select>
         </Field>
       )}
@@ -465,8 +466,8 @@ export function CodexLocalConfigFields({
                 : mark("adapterConfig", "lifecycleMode", value);
             }}
           >
-            <option value="per_turn">Turn by turn</option>
-            <option value="warm">Warm session</option>
+            <option value="per_turn">{i18nT("scan.s1398")}</option>
+            <option value="warm">{i18nT("scan.s1466")}</option>
           </select>
         </Field>
       )}
@@ -560,8 +561,8 @@ export function CodexLocalConfigFields({
                   : mark("adapterConfig", "mode", value);
               }}
             >
-              <option value="persistent">Persistent</option>
-              <option value="oneshot">One-shot</option>
+              <option value="persistent">{i18nT("scan.s0951")}</option>
+              <option value="oneshot">{i18nT("scan.s0870")}</option>
             </select>
           </Field>
           <Field
@@ -586,8 +587,8 @@ export function CodexLocalConfigFields({
                   : mark("adapterConfig", "nonInteractivePermissions", value);
               }}
             >
-              <option value="deny">Deny</option>
-              <option value="fail">Fail</option>
+              <option value="deny">{i18nT("scan.s0402")}</option>
+              <option value="fail">{i18nT("scan.s0491")}</option>
             </select>
           </Field>
           {!managedSandboxOnly && (

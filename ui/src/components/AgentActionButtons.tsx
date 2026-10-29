@@ -49,6 +49,7 @@ import type {
   HeartbeatRun,
 } from "@paperclipai/shared";
 import { useTranslation } from "@/i18n";
+import { t as i18nT } from "@/i18n";
 
 export function RunButton({
   onClick,
@@ -119,7 +120,7 @@ export function ClearErrorButton({
       aria-label="Clear error and return agent to idle"
     >
       <CheckCircle2 className="h-3.5 w-3.5 sm:mr-1" />
-      <span className="hidden sm:inline">Clear error</span>
+      <span className="hidden sm:inline">{i18nT("scan.s0225")}</span>
     </Button>
   );
 }
@@ -426,7 +427,7 @@ export function AgentActionButtons({
           title="Capture exact provider traffic for this run (expires after 24 hours)"
         >
           <Bug className="h-3.5 w-3.5 sm:mr-1" />
-          <span className="hidden sm:inline">Run with provider trace</span>
+          <span className="hidden sm:inline">{i18nT("scan.s1161")}</span>
         </Button>
       )}
       {isError ? (
@@ -491,7 +492,7 @@ export function AgentActionButtons({
             className="flex items-center gap-2 w-full px-2 py-1.5 text-xs rounded hover:bg-accent/50"
             onClick={() => {
               void copyTextToClipboard(agent.id).catch(() => {
-                pushToast({ title: "Copy failed", body: "Clipboard access is unavailable.", tone: "error" });
+                pushToast({ title: i18nT("issues.detail.copyFailed"), body: "Clipboard access is unavailable.", tone: "error" });
               });
               setMoreOpen(false);
             }}

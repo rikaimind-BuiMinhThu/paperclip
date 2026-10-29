@@ -5,6 +5,7 @@ import { queryKeys } from "@/lib/queryKeys";
 import { Button } from "@/components/ui/button";
 import { useChatConnectorsEnabled } from "@/hooks/useChatConnectorsEnabled";
 import { Navigate, useParams, useSearchParams } from "@/lib/router";
+import { t as i18nT } from "@/i18n";
 
 function DefaultEmailEndpointGate({ endpointId, children }: { endpointId: string; children: ReactNode }) {
   const endpoint = useQuery({
@@ -14,7 +15,7 @@ function DefaultEmailEndpointGate({ endpointId, children }: { endpointId: string
   if (endpoint.isError) return (
     <div className="space-y-3 p-6">
       <p role="alert" className="text-sm text-destructive">{endpoint.error.message}</p>
-      <Button variant="outline" onClick={() => void endpoint.refetch()}>Retry</Button>
+      <Button variant="outline" onClick={() => void endpoint.refetch()}>{i18nT("common.retry")}</Button>
     </div>
   );
   if (!endpoint.data) return null;

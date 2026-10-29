@@ -39,6 +39,7 @@ import { CaseCopyableToken, CaseIdentifierKey } from "@/components/CaseIdentifie
 import { copyTextToClipboard } from "@/lib/clipboard";
 import { cn } from "@/lib/utils";
 import { useTranslation } from "@/i18n";
+import { t as i18nT } from "@/i18n";
 
 const STATUS_LABEL: Record<CaseStatus, string> = {
   draft: "Draft",
@@ -130,7 +131,7 @@ function CaseRelationshipsSection({
     <section className="space-y-3" aria-label="Case relationships">
       {parent ? (
         <div className="space-y-1">
-          <h2 className="text-xs font-medium text-muted-foreground">Parent</h2>
+          <h2 className="text-xs font-medium text-muted-foreground">{i18nT("issues.parent")}</h2>
           <CaseChildrenTree children={[parent]} />
         </div>
       ) : null}
@@ -283,7 +284,7 @@ function CaseLabelsPicker({
         <Input
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          placeholder="Search labels…"
+          placeholder={i18nT("scan.s1193")}
           className="mb-2 h-7 text-xs"
         />
         <div className="max-h-52 space-y-0.5 overflow-y-auto">
@@ -300,7 +301,7 @@ function CaseLabelsPicker({
             </button>
           ))}
           {filtered.length === 0 && !search.trim() && (
-            <p className="px-2 py-1 text-xs text-muted-foreground">No labels yet.</p>
+            <p className="px-2 py-1 text-xs text-muted-foreground">{i18nT("scan.s0808")}</p>
           )}
         </div>
         {search.trim() && !all.some((l) => l.name.toLowerCase() === search.trim().toLowerCase()) && (
@@ -375,7 +376,7 @@ function CasePropertiesContent({
               </PropertyChip>
             ))
           ) : (
-            <span className="text-xs text-muted-foreground">None</span>
+            <span className="text-xs text-muted-foreground">{i18nT("common.none")}</span>
           )}
           {companyId ? (
             <CaseLabelsPicker
@@ -384,7 +385,7 @@ function CasePropertiesContent({
               onChange={onLabelIdsChange}
             />
           ) : null}
-          {labelsPending ? <span className="text-xs text-muted-foreground">Saving...</span> : null}
+          {labelsPending ? <span className="text-xs text-muted-foreground">{i18nT("pages.skills.studio.savingChanges")}</span> : null}
         </CasePropertyRow>
       </PropertySection>
 
@@ -408,7 +409,7 @@ function CasePropertiesContent({
       <PropertySection title="Linked tasks">
         {caseData.issueLinks.length === 0 ? (
           <CasePropertyRow label="Tasks" mode={mode}>
-            <span className="text-xs text-muted-foreground">None yet</span>
+            <span className="text-xs text-muted-foreground">{i18nT("scan.s0854")}</span>
           </CasePropertyRow>
         ) : (
           <CasePropertyRow label="Tasks" wrap mode={mode}>

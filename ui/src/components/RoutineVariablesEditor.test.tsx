@@ -63,14 +63,14 @@ describe("RoutineVariablesEditor", () => {
       root.render(<RoutineVariablesHint />);
     });
 
-    const helpButton = document.querySelector<HTMLButtonElement>('button[aria-label="Show variable help"]');
+    const helpButton = document.querySelector<HTMLButtonElement>('button[aria-label="変数のヘルプを表示"]');
     expect(helpButton).toBeTruthy();
 
     flushUi(() => {
       helpButton?.dispatchEvent(new MouseEvent("click", { bubbles: true }));
     });
 
-    expect(document.body.textContent).toContain("Variable names ending in capital Date");
+    expect(document.body.textContent).toContain("startDate のように大文字の Date で終わる名前は、既定で日付の変数になります。");
     expect(document.body.textContent).toContain("startDate");
 
     flushUi(() => root.unmount());

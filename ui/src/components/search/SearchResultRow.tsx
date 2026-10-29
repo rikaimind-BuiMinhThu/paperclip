@@ -8,6 +8,7 @@ import { cn } from "@/lib/utils";
 import { StatusIcon } from "../StatusIcon";
 import { Identity } from "../Identity";
 import { HighlightedText, type HighlightedTextProps } from "./HighlightedText";
+import { t as i18nT } from "@/i18n";
 
 type SnippetStyle = {
   Icon: ComponentType<SVGProps<SVGSVGElement>>;
@@ -15,10 +16,10 @@ type SnippetStyle = {
 };
 
 const SNIPPET_STYLES: Record<string, SnippetStyle> = {
-  comment: { Icon: MessageSquare, label: "Comment" },
-  document: { Icon: FileText, label: "Doc" },
-  artifact: { Icon: Paperclip, label: "Artifact" },
-  description: { Icon: Quote, label: "Description" },
+  comment: { Icon: MessageSquare, label: i18nT("common.comment") },
+  document: { Icon: FileText, label: i18nT("scan.s0423") },
+  artifact: { Icon: Paperclip, label: i18nT("scan.s0091") },
+  description: { Icon: Quote, label: i18nT("common.description") },
 };
 
 function snippetStyle(field: string, fallbackLabel: string): SnippetStyle {

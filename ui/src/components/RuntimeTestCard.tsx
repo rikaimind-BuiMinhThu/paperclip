@@ -8,31 +8,32 @@ import {
 import type { AdapterEnvironmentTestResult } from "@paperclipai/shared";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { t as i18nT } from "@/i18n";
 export type TestState = "idle" | "running" | "pass" | "fail";
 
 const copy = {
   idle: {
-    title: "Test your agent",
+    title: i18nT("scan.s1354"),
     description: "Check that your runtime and model can respond.",
     action: "Run test",
   },
   running: {
-    title: "Testing connection",
+    title: i18nT("scan.s1355"),
     description: "Checking the runtime and waiting for a model response…",
     action: "Testing…",
   },
   pass: {
-    title: "Connection successful",
+    title: i18nT("scan.s0278"),
     description: "Your runtime checks passed. Review the details below.",
     action: "Test again",
   },
   warn: {
-    title: "Connection needs attention",
+    title: i18nT("scan.s0276"),
     description: "Review the test details before running your agent.",
     action: "Test again",
   },
   fail: {
-    title: "Couldn't connect",
+    title: i18nT("scan.s0323"),
     description: "Check your model and provider connection, then try again.",
     action: "Retry test",
   },

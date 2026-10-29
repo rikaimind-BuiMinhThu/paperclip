@@ -14,6 +14,7 @@ import { Button } from "@/components/ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
 import { copyTextToClipboard } from "@/lib/clipboard";
+import { t as i18nT } from "@/i18n";
 
 export type WorkspaceServiceControlState =
   | "stopped"
@@ -67,21 +68,21 @@ function formatServiceUrl(url: string | null | undefined) {
 function statusMeta(entry: WorkspaceServiceControlEntry): { label: string; unhealthy: boolean } {
   switch (entry.state) {
     case "provisioning":
-      return { label: "Provisioning…", unhealthy: false };
+      return { label: i18nT("scan.s1012"), unhealthy: false };
     case "starting":
-      return { label: "Starting…", unhealthy: false };
+      return { label: i18nT("agents.detail.starting"), unhealthy: false };
     case "stopping":
-      return { label: "Stopping…", unhealthy: false };
+      return { label: i18nT("scan.s1309"), unhealthy: false };
     case "restarting":
-      return { label: "Restarting…", unhealthy: false };
+      return { label: i18nT("scan.s1120"), unhealthy: false };
     case "failed":
-      return { label: "Failed", unhealthy: false };
+      return { label: i18nT("status.failed"), unhealthy: false };
     case "running":
       return entry.healthStatus === "unhealthy"
-        ? { label: "Unhealthy", unhealthy: true }
-        : { label: "Running", unhealthy: false };
+        ? { label: i18nT("pages.artifacts.unhealthy"), unhealthy: true }
+        : { label: i18nT("status.running"), unhealthy: false };
     default:
-      return { label: "Stopped", unhealthy: false };
+      return { label: i18nT("scan.s1308"), unhealthy: false };
   }
 }
 
@@ -471,9 +472,9 @@ function MultiServiceBar({
                 ))}
               </div>
               <div className="flex items-center gap-1 border-t border-border px-4 py-2">
-                <Button variant="ghost" size="xs" onClick={() => onAction("start", null)}>Start all</Button>
-                <Button variant="ghost" size="xs" onClick={() => onAction("stop", null)}>Stop all</Button>
-                <Button variant="ghost" size="xs" onClick={() => onAction("restart", null)}>Restart all</Button>
+                <Button variant="ghost" size="xs" onClick={() => onAction("start", null)}>{i18nT("scan.s1296")}</Button>
+                <Button variant="ghost" size="xs" onClick={() => onAction("stop", null)}>{i18nT("scan.s1305")}</Button>
+                <Button variant="ghost" size="xs" onClick={() => onAction("restart", null)}>{i18nT("scan.s1119")}</Button>
                 {onManageServices ? (
                   <Button
                     variant="link"

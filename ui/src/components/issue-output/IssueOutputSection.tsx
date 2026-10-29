@@ -11,6 +11,7 @@ import {
 import { OutputPrimaryCard } from "./OutputPrimaryCard";
 import { OutputRow } from "./OutputRow";
 import { cn, relativeTime } from "@/lib/utils";
+import { t as i18nT } from "@/i18n";
 
 interface IssueOutputSectionProps {
   workProducts: IssueWorkProduct[] | null | undefined;
@@ -123,7 +124,7 @@ export function IssueOutputSection({ workProducts, resolveCreatorName, onMediaCl
     <section className="space-y-3" aria-label="Task outputs">
       <div className="flex items-center gap-2">
         <Play className="h-3.5 w-3.5 text-muted-foreground" aria-hidden="true" />
-        <h3 className="text-sm font-medium text-muted-foreground">Output</h3>
+        <h3 className="text-sm font-medium text-muted-foreground">{i18nT("agents.detail.output")}</h3>
         <span className="text-xs text-muted-foreground">{count}</span>
       </div>
 
@@ -135,7 +136,7 @@ export function IssueOutputSection({ workProducts, resolveCreatorName, onMediaCl
 
       {rest.length > 0 ? (
         <div className="space-y-2">
-          <p className="text-(length:--text-micro) font-medium uppercase tracking-wide text-muted-foreground">Also produced</p>
+          <p className="text-(length:--text-micro) font-medium uppercase tracking-wide text-muted-foreground">{i18nT("scan.s0066")}</p>
           {mediaRest.length > 0 ? (
             <div className="grid grid-cols-4 gap-2">
               {mediaRest.map((item) => (

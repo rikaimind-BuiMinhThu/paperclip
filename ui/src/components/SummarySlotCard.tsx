@@ -24,6 +24,7 @@ import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectSeparator, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { queryKeys } from "@/lib/queryKeys";
 import { cn, formatDateTime, relativeTime } from "@/lib/utils";
+import { t as i18nT } from "@/i18n";
 
 const SUMMARIZER_KEY = "summarizer";
 const TERMINAL_ISSUE_STATUSES = new Set(["done", "cancelled"]);
@@ -261,9 +262,9 @@ export function SummarySlotCard({
           <div className="flex flex-wrap items-center gap-2">
             <Sparkles className="h-4 w-4 text-muted-foreground" aria-hidden="true" />
             <h2 className="text-sm font-semibold">{title}</h2>
-            {isGenerating ? <Badge variant="secondary">Generating</Badge> : null}
-            {displayingHistoricalRevision ? <Badge variant="outline">Historical revision</Badge> : null}
-            {latestDocument && !displayingHistoricalRevision ? <Badge variant="outline">Latest revision</Badge> : null}
+            {isGenerating ? <Badge variant="secondary">{i18nT("scan.s0559")}</Badge> : null}
+            {displayingHistoricalRevision ? <Badge variant="outline">{i18nT("scan.s0588")}</Badge> : null}
+            {latestDocument && !displayingHistoricalRevision ? <Badge variant="outline">{i18nT("scan.s0680")}</Badge> : null}
           </div>
           {description ? <p className="text-sm text-muted-foreground">{description}</p> : null}
         </div>
@@ -394,7 +395,7 @@ export function SummarySlotCard({
         <div className="flex items-start gap-3 text-sm">
           <Loader2 className="mt-0.5 h-4 w-4 shrink-0 animate-spin text-muted-foreground" />
           <div className="min-w-0 space-y-1">
-            <p className="font-medium text-foreground">Generating summary</p>
+            <p className="font-medium text-foreground">{i18nT("scan.s0560")}</p>
             {generationStatusLine ? (
               <p
                 className="animate-pulse truncate text-muted-foreground"
@@ -437,8 +438,8 @@ export function SummarySlotCard({
       {!slotQuery.isError && !latestDocument && !isGenerating && !generationFailed && canGenerateFirstSummary ? (
         <div className="flex flex-col items-start gap-3 rounded-lg border border-border bg-muted/30 p-4 sm:flex-row sm:items-center sm:justify-between">
           <div className="space-y-1 text-sm">
-            <p className="font-medium text-foreground">No summary yet</p>
-            <p className="text-muted-foreground">Generate a concise status snapshot for this surface.</p>
+            <p className="font-medium text-foreground">{i18nT("scan.s0842")}</p>
+            <p className="text-muted-foreground">{i18nT("scan.s0557")}</p>
           </div>
           <Button
             type="button"

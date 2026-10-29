@@ -68,6 +68,7 @@ import {
 } from "../lib/import-job-watch";
 import { Badge } from "@/components/ui/badge";
 import { useTranslation } from "@/i18n";
+import { t as i18nT } from "@/i18n";
 
 // ── Import-specific helpers ───────────────────────────────────────────
 
@@ -1171,7 +1172,7 @@ export function CompanyImport() {
       if (generation !== previewGenerationRef.current) return;
       pushToast({
         tone: "error",
-        title: "Preview failed",
+        title: i18nT("scan.s0980"),
         body: err instanceof Error ? err.message : "Failed to preview import.",
       });
     },
@@ -1290,7 +1291,7 @@ export function CompanyImport() {
         });
         pushToast({
           tone: "success",
-          title: "Import completed",
+          title: i18nT("scan.s0602"),
           body: "Open the organization to view it.",
         });
         return;
@@ -1325,7 +1326,7 @@ export function CompanyImport() {
       setResumedWatchJobId(null);
       pushToast({
         tone: "error",
-        title: "Import failed",
+        title: i18nT("pages.secrets.importFromVault.toastImportFailed"),
         body: err instanceof Error ? err.message : "Failed to apply import.",
       });
     },
@@ -1379,7 +1380,7 @@ export function CompanyImport() {
     } catch (err) {
       pushToast({
         tone: "error",
-        title: "Package read failed",
+        title: i18nT("scan.s0929"),
         body: err instanceof Error ? err.message : "Failed to read folder.",
       });
     }
@@ -1580,7 +1581,7 @@ export function CompanyImport() {
     if (failureCount > 0) {
       pushToast({
         tone: "error",
-        title: "Some items were not activated",
+        title: i18nT("scan.s1277"),
         body: `${failureCount} item${failureCount === 1 ? "" : "s"} failed to activate; the rest were activated.`,
       });
     }
@@ -1673,7 +1674,7 @@ export function CompanyImport() {
           <h2 className="text-base font-semibold">{t("pages.import.importComplete")}</h2>
           <p className="text-xs text-muted-foreground mt-1">
             {importOutcome.companyName
-              ? <>The import finished and <span className="font-medium text-foreground">{importOutcome.companyName}</span> is ready. Its detailed summary is no longer available.</>
+              ? <>{i18nT("scan.s1360")}<span className="font-medium text-foreground">{importOutcome.companyName}</span> is ready. Its detailed summary is no longer available.</>
               : "The import finished and your organization is ready. Its detailed summary is no longer available, but the organization has been added — select it from the organization switcher to view it."}
           </p>
           {importOutcome.pausedAutomations ? (
@@ -1722,7 +1723,7 @@ export function CompanyImport() {
         {skillResults.length > 0 && (
           <div className="rounded-md border border-border">
             <div className="border-b border-border px-4 py-2.5">
-              <h3 className="text-sm font-medium">Skill import results</h3>
+              <h3 className="text-sm font-medium">{i18nT("scan.s1261")}</h3>
             </div>
             <div className="divide-y divide-border">
               {skillResults.map((skill) => (
@@ -1749,7 +1750,7 @@ export function CompanyImport() {
         {activationItems.length > 0 && (
           <div className="rounded-md border border-border">
             <div className="flex items-center gap-2 border-b border-border px-4 py-2.5">
-              <h3 className="text-sm font-medium">Activate imported agents and routines</h3>
+              <h3 className="text-sm font-medium">{i18nT("scan.s0019")}</h3>
               <span className="text-xs text-muted-foreground">imported paused</span>
             </div>
             <div className="divide-y divide-border">
@@ -1824,7 +1825,7 @@ export function CompanyImport() {
     return (
       <div className="max-w-6xl space-y-4 px-5 py-5">
         <div>
-          <h2 className="text-base font-semibold">Resume watching import</h2>
+          <h2 className="text-base font-semibold">{i18nT("scan.s1126")}</h2>
           <p className="text-xs text-muted-foreground mt-1">
             An import you started earlier is still running on the server.
           </p>
@@ -1858,7 +1859,7 @@ export function CompanyImport() {
           {(
             [
               { key: "github", icon: GithubIcon, label: t("pages.import.githubRepo") },
-              { key: "local", icon: Upload, label: "Local zip" },
+              { key: "local", icon: Upload, label: i18nT("scan.s0729") },
             ] as const
           ).map(({ key, icon: Icon, label }) => (
             <button
@@ -1947,7 +1948,7 @@ export function CompanyImport() {
               resetImportFlowState();
             }}
           >
-            <option value="new">Create new organization</option>
+            <option value="new">{i18nT("scan.s0361")}</option>
             <option value="existing">
               Existing company: {selectedCompany?.name}
             </option>
@@ -1967,7 +1968,7 @@ export function CompanyImport() {
                 setNewCompanyName(e.target.value);
                 resetMutationState();
               }}
-              placeholder="Imported Organization"
+              placeholder={i18nT("scan.s0603")}
             />
           </Field>
         )}
@@ -1985,9 +1986,9 @@ export function CompanyImport() {
               resetImportFlowState();
             }}
           >
-            <option value="rename">Rename on conflict</option>
-            <option value="skip">Skip on conflict</option>
-            <option value="replace">Replace existing</option>
+            <option value="rename">{i18nT("scan.s1090")}</option>
+            <option value="skip">{i18nT("scan.s1265")}</option>
+            <option value="replace">{i18nT("scan.s1093")}</option>
           </select>
         </Field>
 
@@ -2158,7 +2159,7 @@ export function CompanyImport() {
           <div className="grid gap-4 xl:h-(--sz-calc-31) xl:grid-cols-(--gtc-25) xl:gap-0">
             <aside className="flex max-h-(--sz-24rem) flex-col overflow-hidden border-b border-border xl:max-h-none xl:border-b-0 xl:border-r">
               <div className="border-b border-border px-4 py-3 shrink-0">
-                <h2 className="text-base font-semibold">Package files</h2>
+                <h2 className="text-base font-semibold">{i18nT("pages.export.packageFiles")}</h2>
               </div>
               <div className="flex-1 overflow-y-auto">
                 <FileTree

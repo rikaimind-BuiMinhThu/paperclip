@@ -14,6 +14,7 @@ import { instanceSettingsApi } from "@/api/instanceSettings";
 import { queryKeys } from "@/lib/queryKeys";
 import { agentUrl } from "@/lib/utils";
 import { relativeTime } from "@/lib/utils";
+import { t as i18nT } from "@/i18n";
 
 export interface BuiltInAgentGateProps {
   /** Registry key of the built-in agent that powers this feature (e.g. "briefs"). */
@@ -106,7 +107,7 @@ export function BuiltInAgentGate({ agentKey, companyId, featureLabel, children }
           actions={
             <>
               <Button variant="ghost" size="sm" asChild>
-                <Link to={agentUrl(state.agent)}>View agent</Link>
+                <Link to={agentUrl(state.agent)}>{i18nT("scan.s1446")}</Link>
               </Button>
               <Button
                 size="sm"

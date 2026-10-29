@@ -33,21 +33,22 @@ import { RoutineVariablesEditor, RoutineVariablesHint } from "../RoutineVariable
 import { EnvironmentVariablesEditor } from "../environment-variables-editor";
 import { useRoutineDetail } from "./context";
 import type { EnvBinding, RoutineDetail as RoutineDetailType } from "@paperclipai/shared";
+import { t as i18nT } from "@/i18n";
 
 const concurrencyPolicyOptions = [
   {
     value: "coalesce_if_active",
-    title: "Coalesce if active",
+    title: i18nT("pages.routines.concurrencyOption.coalesce_if_active"),
     description: "Keep one follow-up run queued while an active run is still working.",
   },
   {
     value: "always_enqueue",
-    title: "Always enqueue",
+    title: i18nT("pages.routines.concurrencyOption.always_enqueue"),
     description: "Queue every trigger occurrence, even if several runs stack up.",
   },
   {
     value: "skip_if_active",
-    title: "Skip if active",
+    title: i18nT("pages.routines.concurrencyOption.skip_if_active"),
     description: "Drop overlapping trigger occurrences while the routine is already active.",
   },
 ];
@@ -55,12 +56,12 @@ const concurrencyPolicyOptions = [
 const catchUpPolicyOptions = [
   {
     value: "skip_missed",
-    title: "Skip missed",
+    title: i18nT("pages.routines.catchUpOption.skip_missed"),
     description: "Ignore schedule windows that were missed while paused.",
   },
   {
     value: "enqueue_missed_with_cap",
-    title: "Enqueue missed with cap",
+    title: i18nT("pages.routines.catchUpOption.enqueue_missed_with_cap"),
     description: "Catch up missed schedule windows after recovery; sub-hourly schedules are combined into one catch-up run, slower schedules replay each missed window up to a cap.",
   },
 ];
@@ -68,12 +69,12 @@ const catchUpPolicyOptions = [
 const activityGatePolicyOptions = [
   {
     value: "always",
-    title: "Run on every scheduled tick",
+    title: i18nT("pages.routines.activityGate.always"),
     description: "Fire on the schedule no matter what — the default behavior.",
   },
   {
     value: "require_external_activity",
-    title: "Skip when there's been no activity since the last run",
+    title: i18nT("pages.routines.activityGate.require_external_activity"),
     description:
       "On a scheduled tick, only run if something happened since the last run that finished. Lets a watcher-style routine stay asleep while the system is settled instead of burning tokens.",
   },
@@ -82,12 +83,12 @@ const activityGatePolicyOptions = [
 const activityGateScopeOptions = [
   {
     value: "company",
-    title: "Organization-wide",
+    title: i18nT("pages.routines.activityGateScope.company"),
     description: "Any activity across the organization counts as a reason to run.",
   },
   {
     value: "project",
-    title: "This project",
+    title: i18nT("pages.routines.activityGateScope.project"),
     description: "Only activity in the routine's project counts as a reason to run.",
   },
 ];
@@ -310,29 +311,29 @@ export function OverviewSection({
       <div className="grid gap-3 sm:grid-cols-2">
         <SummaryCard
           icon={Clock3}
-          label="Triggers"
-          value={activeTriggers === 0 ? "None" : `${activeTriggers} active`}
-          hint={nextFire ? `Next fire ${nextFire}` : "No schedule"}
+          label={t("pages.routineDetail.overview.triggers")}
+          value={activeTriggers === 0 ? t("pages.routineDetail.overview.none") : t("pages.routineDetail.overview.activeCount", { count: activeTriggers })}
+          hint={nextFire ? t("pages.routineDetail.overview.nextFire", { time: nextFire }) : t("pages.routineDetail.overview.noSchedule")}
           to={() => navigateToSection("triggers")}
-          ariaLabel={`${activeTriggers} triggers. Open triggers.`}
+          ariaLabel={t("pages.routineDetail.overview.openTriggers", { count: activeTriggers })}
         />
         <SummaryCard
           icon={Play}
-          label="Last run"
-          value={lastRun ? lastRun.status.replaceAll("_", " ") : "No runs"}
-          hint={lastRun ? timeAgo(lastRun.triggeredAt) : "Trigger a run"}
+          label={t("pages.routineDetail.overview.lastRun")}
+          value={lastRun ? lastRun.status.replaceAll("_", " ") : t("pages.routineDetail.overview.noRuns")}
+          hint={lastRun ? timeAgo(lastRun.triggeredAt) : t("pages.routineDetail.overview.triggerARun")}
           to={() => navigateToSection("runs")}
-          ariaLabel={lastRun ? `Last run ${lastRun.status}. Open runs.` : "No runs. Open runs."}
+          ariaLabel={lastRun ? t("pages.routineDetail.overview.lastRunStatus", { status: lastRun.status }) : t("pages.routineDetail.overview.noRunsOpen")}
         />
       </div>
 
       {/* Recent activity */}
       <div className="space-y-2">
         <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
-          Recent activity
+          {t("pages.routineDetail.overview.recentActivity")}
         </p>
         {recentActivity.length === 0 ? (
-          <p className="text-xs text-muted-foreground">No activity yet.</p>
+          <p className="text-xs text-muted-foreground">{t("pages.routineDetail.activityEmpty")}</p>
         ) : (
           <div className="divide-y divide-border/60">
             {recentActivity.map((event) => (
@@ -353,7 +354,7 @@ export function OverviewSection({
               onClick={() => navigateToSection("activity")}
               className="flex items-center gap-1 pt-2 text-xs text-muted-foreground hover:text-foreground"
             >
-              View all activity <ArrowRight className="h-3 w-3" />
+              {t("pages.routineDetail.overview.viewAllActivity")} <ArrowRight className="h-3 w-3" />
             </button>
           </div>
         )}
@@ -397,6 +398,7 @@ function SummaryCard({
 export { RoutineTriggers as TriggersSection } from "../routine-triggers/RoutineTriggers";
 
 export function VariablesSection() {
+  const { t } = useTranslation();
   const ctx = useRoutineDetail();
   const { editDraft, setEditDraft, navigateToSection } = ctx;
   const hasVariables = editDraft.variables.length > 0;
@@ -405,13 +407,13 @@ export function VariablesSection() {
     <div className="space-y-4">
       <div className="flex items-center gap-3 rounded-md border border-border bg-muted/20 px-4 py-3 text-xs">
         <span className="flex-1 text-muted-foreground">
-          Variables are auto-detected from <code className="font-mono">{"{{placeholders}}"}</code> in
-          the title &amp; instructions. The variable name is read-only — rename by editing the
-          placeholder.
+          {t("pages.routineDetail.variablesHintBefore")}{" "}
+          <code className="font-mono">{"{{placeholders}}"}</code>{" "}
+          {t("pages.routineDetail.variablesHintAfter")}
         </span>
         <Button variant="secondary" size="sm" onClick={() => navigateToSection("overview")}>
           <Edit3 className="mr-1.5 h-3.5 w-3.5" />
-          Edit instructions
+          {t("pages.routineDetail.editInstructions")}
         </Button>
       </div>
 
@@ -425,8 +427,8 @@ export function VariablesSection() {
       ) : (
         <EmptyState
           icon={Braces}
-          message="No variables yet. Add a {{placeholder}} in the title or instructions to create one."
-          action="Edit instructions"
+          message={t("pages.routineDetail.variablesEmpty")}
+          action={t("pages.routineDetail.editInstructions")}
           onAction={() => navigateToSection("overview")}
         />
       )}
@@ -435,6 +437,7 @@ export function VariablesSection() {
 }
 
 export function SecretsSection() {
+  const { t } = useTranslation();
   const ctx = useRoutineDetail();
   const { editDraft, setEditDraft, availableSecrets, createSecret } = ctx;
 
@@ -456,8 +459,7 @@ export function SecretsSection() {
   return (
     <div className="space-y-4">
       <div className="rounded-md border border-border bg-muted/20 px-4 py-3 text-xs text-muted-foreground">
-        Routine secrets apply to every task this routine creates. They override matching keys in
-        project and agent env. <span className="font-mono">PAPERCLIP_*</span> names are reserved.
+        {t("pages.routineDetail.secretsHint")}
       </div>
 
 
@@ -473,8 +475,29 @@ export function SecretsSection() {
 }
 
 export function DeliverySection() {
+  const { t } = useTranslation();
   const ctx = useRoutineDetail();
   const { editDraft, setEditDraft, routine } = ctx;
+  const concurrencyOptions = concurrencyPolicyOptions.map((option) => ({
+    value: option.value,
+    title: t(`pages.routines.concurrencyOption.${option.value}`),
+    description: t(`pages.routines.concurrencyPolicy.${option.value}`),
+  }));
+  const catchUpOptions = catchUpPolicyOptions.map((option) => ({
+    value: option.value,
+    title: t(`pages.routines.catchUpOption.${option.value}`),
+    description: t(`pages.routines.catchUpPolicy.${option.value}`),
+  }));
+  const activityGateOptions = activityGatePolicyOptions.map((option) => ({
+    value: option.value,
+    title: t(`pages.routines.activityGate.${option.value}`),
+    description: t(`pages.routines.activityGate.${option.value}Hint`),
+  }));
+  const activityScopeOptions = activityGateScopeOptions.map((option) => ({
+    value: option.value,
+    title: t(`pages.routines.activityGateScope.${option.value}`),
+    description: t(`pages.routines.activityGateScope.${option.value}Hint`),
+  }));
 
   // The activity gate only affects schedule ticks (webhook/manual/API fires are
   // themselves activity and always run), so the control is only meaningful for
@@ -487,58 +510,57 @@ export function DeliverySection() {
     <div className="space-y-6">
       <div className="space-y-3">
         <p className="text-xs font-medium uppercase tracking-(--tracking-caps) text-muted-foreground">
-          Concurrency
+          {t("pages.routines.concurrency")}
         </p>
         <RadioCardGroup
-          ariaLabel="Concurrency policy"
+          ariaLabel={t("pages.routines.concurrency")}
           value={editDraft.concurrencyPolicy}
           onValueChange={(concurrencyPolicy) =>
             setEditDraft((current) => ({ ...current, concurrencyPolicy }))
           }
-          options={concurrencyPolicyOptions}
+          options={concurrencyOptions}
         />
       </div>
       <div className="space-y-3">
         <p className="text-xs font-medium uppercase tracking-(--tracking-caps) text-muted-foreground">
-          Catch-up
+          {t("pages.routines.catchUp")}
         </p>
         <RadioCardGroup
-          ariaLabel="Catch-up policy"
+          ariaLabel={t("pages.routines.catchUp")}
           value={editDraft.catchUpPolicy}
           onValueChange={(catchUpPolicy) =>
             setEditDraft((current) => ({ ...current, catchUpPolicy }))
           }
-          options={catchUpPolicyOptions}
+          options={catchUpOptions}
         />
       </div>
       <div className="space-y-3">
         <p className="text-xs font-medium uppercase tracking-(--tracking-caps) text-muted-foreground">
-          Advanced run policy
+          {t("pages.routines.advancedRunPolicy")}
         </p>
         <RadioCardGroup
-          ariaLabel="Advanced run policy"
+          ariaLabel={t("pages.routines.advancedRunPolicy")}
           value={editDraft.activityGatePolicy}
           onValueChange={(activityGatePolicy) =>
             setEditDraft((current) => ({ ...current, activityGatePolicy }))
           }
-          options={activityGatePolicyOptions}
+          options={activityGateOptions}
           disabled={!hasScheduleTrigger}
         />
         {!hasScheduleTrigger ? (
           <p className="text-xs text-muted-foreground">
-            Add a schedule trigger to gate runs on activity. Webhook, manual, and API fires always
-            run.
+            {t("pages.routines.activityGateNeedsSchedule")}
           </p>
         ) : gateEnabled ? (
           <div className="space-y-2 rounded-lg border border-border p-3">
-            <Label className="text-xs font-medium">Activity scope</Label>
+            <Label className="text-xs font-medium">{t("pages.routines.activityScope")}</Label>
             <RadioCardGroup
-              ariaLabel="Activity gate scope"
+              ariaLabel={t("pages.routines.activityScope")}
               value={editDraft.activityGateScope}
               onValueChange={(activityGateScope) =>
                 setEditDraft((current) => ({ ...current, activityGateScope }))
               }
-              options={activityGateScopeOptions}
+              options={activityScopeOptions}
             />
           </div>
         ) : null}
@@ -570,6 +592,7 @@ function NextFiresPreview({
   triggers: RoutineDetailType["triggers"];
   concurrencyPolicy: string;
 }) {
+  const { t } = useTranslation();
   const preview = useMemo(() => {
     const schedule = triggers
       .filter((trigger) => trigger.kind === "schedule" && trigger.enabled && trigger.cronExpression)
@@ -591,7 +614,7 @@ function NextFiresPreview({
   return (
     <div className="space-y-3">
       <p className="text-xs font-medium uppercase tracking-(--tracking-caps) text-muted-foreground">
-        Next 5 fires
+        {t("pages.routines.nextFires")}
       </p>
       {preview ? (
         <>
@@ -602,23 +625,21 @@ function NextFiresPreview({
                 <span className="tabular-nums">{formatFireTime(entry.at, preview.timeZone)}</span>
                 <ArrowRight className="h-3 w-3 shrink-0 text-muted-foreground/50" />
                 <span className={cn("font-medium", dispositionToneClass[entry.disposition])}>
-                  {entry.label}
+                  {t(`pages.routines.fireDisposition.${entry.disposition}`)}
                 </span>
                 {entry.note ? (
-                  <span className="truncate text-muted-foreground/60">({entry.note})</span>
+                  <span className="truncate text-muted-foreground/60">({t("pages.routines.fireDisposition.stillActive")})</span>
                 ) : null}
               </div>
             ))}
           </div>
           <p className="text-(length:--text-micro) text-muted-foreground/60">
-            Preview assumes the previous run is still in flight when the next fires. Times shown in{" "}
-            {preview.timeZone}.
+            {t("pages.routines.nextFiresNote", { timeZone: preview.timeZone })}
           </p>
         </>
       ) : (
         <p className="rounded-lg border border-dashed border-border p-3 text-xs text-muted-foreground">
-          No enabled schedule trigger to preview. Add a schedule in Triggers to see how this policy
-          treats upcoming fires.
+          {t("pages.routines.nextFiresEmpty")}
         </p>
       )}
     </div>

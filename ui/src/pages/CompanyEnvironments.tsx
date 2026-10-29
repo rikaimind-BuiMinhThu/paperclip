@@ -64,6 +64,7 @@ import {
   Field,
   ToggleField,
 } from "../components/agent-config-primitives";
+import { t as i18nT } from "@/i18n";
 
 type EnvironmentFormState = {
   name: string;
@@ -736,7 +737,7 @@ function EnvironmentCustomImageBrowserTerminal({
       <div className="flex flex-wrap items-center justify-between gap-2 border-b border-border/60 px-3 py-2">
         <div className="flex min-w-0 items-center gap-2 text-xs">
           <Terminal className="h-3.5 w-3.5 text-muted-foreground" />
-          <span className="font-medium">Browser terminal</span>
+          <span className="font-medium">{i18nT("scan.s0157")}</span>
           <span className="text-muted-foreground">{customImageTerminalStatusCopy(connectionState)}</span>
         </div>
         <div className="flex items-center gap-2">
@@ -782,7 +783,7 @@ function capabilityState(capability: EnvironmentProviderCapability | null | unde
   if (!capability || capability.status !== "supported" || !capability.supportsInteractiveSetup) {
     return {
       kind: "unsupported" as const,
-      label: "Unsupported provider",
+      label: i18nT("scan.s1417"),
       reason: "This provider does not advertise interactive template setup.",
     };
   }
@@ -790,14 +791,14 @@ function capabilityState(capability: EnvironmentProviderCapability | null | unde
   if (!capability.supportsTemplateCapture) {
     return {
       kind: "capture_unavailable" as const,
-      label: "Setup capture unavailable",
+      label: i18nT("scan.s1244"),
       reason: "This provider advertises setup, but image capture is unavailable.",
     };
   }
 
   return {
     kind: "supported" as const,
-    label: "Template setup",
+    label: i18nT("scan.s1351"),
     reason: null,
   };
 }
@@ -913,14 +914,14 @@ function EnvironmentImageTemplatePanel({
       }));
       setSessionResult(result);
       pushToast({
-        title: "Setup session started",
+        title: i18nT("scan.s1245"),
         body: "Connect details are available while the session is active.",
         tone: "success",
       });
     },
     onError: (error) => {
       pushToast({
-        title: "Failed to start setup",
+        title: i18nT("scan.s0510"),
         body: error instanceof Error ? error.message : "Setup session could not be started.",
         tone: "error",
       });
@@ -938,14 +939,14 @@ function EnvironmentImageTemplatePanel({
       setSessionResult({ session: result.session, connectionPayload: null });
       invalidateOverview();
       pushToast({
-        title: "Template captured",
+        title: i18nT("scan.s1347"),
         body: "Future runs can use the promoted template.",
         tone: "success",
       });
     },
     onError: (error) => {
       pushToast({
-        title: "Failed to capture template",
+        title: i18nT("scan.s0494"),
         body: error instanceof Error ? error.message : "Template capture failed.",
         tone: "error",
       });
@@ -964,14 +965,14 @@ function EnvironmentImageTemplatePanel({
       setSessionResult({ session, connectionPayload: null });
       invalidateOverview();
       pushToast({
-        title: "Setup cancelled",
+        title: i18nT("scan.s1243"),
         body: "The active template was not changed.",
         tone: "success",
       });
     },
     onError: (error) => {
       pushToast({
-        title: "Failed to cancel setup",
+        title: i18nT("scan.s0493"),
         body: error instanceof Error ? error.message : "Setup session could not be cancelled.",
         tone: "error",
       });
@@ -988,14 +989,14 @@ function EnvironmentImageTemplatePanel({
       }));
       invalidateOverview();
       pushToast({
-        title: "Template rolled back",
+        title: i18nT("scan.s1350"),
         body: "Future runs will use the previous template.",
         tone: "success",
       });
     },
     onError: (error) => {
       pushToast({
-        title: "Failed to roll back template",
+        title: i18nT("scan.s0504"),
         body: error instanceof Error ? error.message : "Rollback failed.",
         tone: "error",
       });
@@ -1031,7 +1032,7 @@ function EnvironmentImageTemplatePanel({
       }));
       invalidateOverview();
       pushToast({
-        title: "Template relinked",
+        title: i18nT("scan.s1349"),
         body: "Runs use the captured image again.",
         tone: "success",
       });
@@ -1039,7 +1040,7 @@ function EnvironmentImageTemplatePanel({
     onError: (error) => {
       if (error instanceof RelinkConfirmationDeclined) return;
       pushToast({
-        title: "Failed to relink template",
+        title: i18nT("scan.s0502"),
         body: error instanceof Error ? error.message : "Relink failed.",
         tone: "error",
       });
@@ -1056,14 +1057,14 @@ function EnvironmentImageTemplatePanel({
       }));
       invalidateOverview();
       pushToast({
-        title: "Template disabled",
+        title: i18nT("scan.s1348"),
         body: "Future runs will use the base provider configuration.",
         tone: "success",
       });
     },
     onError: (error) => {
       pushToast({
-        title: "Failed to disable template",
+        title: i18nT("scan.s0499"),
         body: error instanceof Error ? error.message : "Disable failed.",
         tone: "error",
       });
@@ -1194,7 +1195,7 @@ function EnvironmentImageTemplatePanel({
       <div className="mt-3 border-t border-border/60 pt-3" data-testid={`custom-image-template-state-${environment.id}`}>
         <div className="flex flex-wrap items-start justify-between gap-3">
           <div className="min-w-0 space-y-1">
-            <div className="text-xs font-medium">Active template</div>
+            <div className="text-xs font-medium">{i18nT("scan.s0020")}</div>
             <div className="text-xs text-muted-foreground">
               {providerDisplayName} · {activeTemplate.templateKind}
               {" · "}
@@ -1268,7 +1269,7 @@ function EnvironmentImageTemplatePanel({
     <div className="mt-3 border-t border-border/60 pt-3" data-testid={`custom-image-template-state-${environment.id}`}>
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div className="space-y-1">
-          <div className="text-xs font-medium">Not configured</div>
+          <div className="text-xs font-medium">{i18nT("scan.s0858")}</div>
           <div className="text-xs text-muted-foreground">
             {latestSession
               ? sessionStatusCopy(latestSession.status)
@@ -1441,14 +1442,14 @@ export function CompanyEnvironments({ mode = "list" }: CompanyEnvironmentsProps)
       setEnvironmentVariablesDirty(false);
       navigate(ENVIRONMENTS_PATH, { replace: true });
       pushToast({
-        title: "Environment variables updated",
+        title: i18nT("scan.s0467"),
         body: `${environment.name} will inject the updated variables into future runs.`,
         tone: "success",
       });
     },
     onError: (error) => {
       pushToast({
-        title: "Failed to save environment variables",
+        title: i18nT("scan.s0506"),
         body: error instanceof Error ? error.message : "Environment variables save failed.",
         tone: "error",
       });
@@ -1491,13 +1492,13 @@ export function CompanyEnvironments({ mode = "list" }: CompanyEnvironmentsProps)
       const reconciliation = (environment as EnvironmentUpdateResult).customImageReconciliation;
       if (reconciliation?.action === "relinked") {
         pushToast({
-          title: "Custom image kept active",
+          title: i18nT("scan.s0377"),
           body: "The captured image was re-linked to the updated configuration automatically.",
           tone: "info",
         });
       } else if (reconciliation?.action === "detached") {
         pushToast({
-          title: "Custom image no longer applies",
+          title: i18nT("scan.s0378"),
           body: "This change alters what the captured image was built from. Runs use the base configuration until you capture a new image.",
           tone: "warn",
         });
@@ -1505,7 +1506,7 @@ export function CompanyEnvironments({ mode = "list" }: CompanyEnvironmentsProps)
     },
     onError: (error) => {
       pushToast({
-        title: "Failed to save environment",
+        title: i18nT("scan.s0505"),
         body: error instanceof Error ? error.message : "Environment save failed.",
         tone: "error",
       });
@@ -1518,14 +1519,14 @@ export function CompanyEnvironments({ mode = "list" }: CompanyEnvironmentsProps)
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: queryKeys.instance.settings });
       pushToast({
-        title: "Default environment updated",
+        title: i18nT("scan.s0386"),
         body: "Agent inheritance now follows the updated instance default.",
         tone: "success",
       });
     },
     onError: (error) => {
       pushToast({
-        title: "Failed to update default environment",
+        title: i18nT("scan.s0511"),
         body: error instanceof Error ? error.message : "Default environment update failed.",
         tone: "error",
       });
@@ -1569,7 +1570,7 @@ export function CompanyEnvironments({ mode = "list" }: CompanyEnvironmentsProps)
       navigate(ENVIRONMENTS_PATH, { replace: true });
       const destroyedCount = environment.destroyedReusableSandboxLeaseCount ?? 0;
       pushToast({
-        title: "Environment deleted",
+        title: i18nT("scan.s0465"),
         body:
           destroyedCount > 0
             ? `${environment.name} was deleted. Destroyed ${destroyedCount === 1 ? "1 reusable sandbox" : `${destroyedCount} reusable sandboxes`}.`
@@ -1587,7 +1588,7 @@ export function CompanyEnvironments({ mode = "list" }: CompanyEnvironmentsProps)
         queryKey: ["environment-delete-blast-radius", input.environment.id],
       });
       pushToast({
-        title: "Failed to delete environment",
+        title: i18nT("scan.s0497"),
         body: error instanceof Error ? error.message : "Environment delete failed.",
         tone: "error",
       });
@@ -1625,7 +1626,7 @@ export function CompanyEnvironments({ mode = "list" }: CompanyEnvironmentsProps)
         },
       }));
       pushToast({
-        title: "Environment probe failed",
+        title: i18nT("scan.s0466"),
         body: error instanceof Error ? error.message : "Environment probe failed.",
         tone: "error",
       });
@@ -1647,7 +1648,7 @@ export function CompanyEnvironments({ mode = "list" }: CompanyEnvironmentsProps)
     },
     onError: (error) => {
       pushToast({
-        title: "Draft probe failed",
+        title: i18nT("scan.s0433"),
         body: error instanceof Error ? error.message : "Environment probe failed.",
         tone: "error",
       });
@@ -2051,7 +2052,7 @@ export function CompanyEnvironments({ mode = "list" }: CompanyEnvironmentsProps)
                         })()}
                       </div>
                     ) : (
-                      <div className="text-xs text-muted-foreground">Runs on this Kujira AI Workforce host.</div>
+                      <div className="text-xs text-muted-foreground">{i18nT("scan.s1166")}</div>
                     )}
                   </div>
                   <div className="flex flex-wrap items-center gap-2">
@@ -2258,11 +2259,11 @@ export function CompanyEnvironments({ mode = "list" }: CompanyEnvironmentsProps)
                     }))}
                 >
                   {sandboxCreationEnabled || environmentForm.driver === "sandbox" ? (
-                    <option value="sandbox">Sandbox</option>
+                    <option value="sandbox">{i18nT("scan.s1176")}</option>
                   ) : null}
-                  <option value="ssh">SSH</option>
+                  <option value="ssh">{i18nT("scan.s1174")}</option>
                   {environmentForm.driver === "local" ? (
-                    <option value="local">Local</option>
+                    <option value="local">{i18nT("pages.environments.localOption")}</option>
                   ) : null}
                 </select>
               </Field>
@@ -2324,7 +2325,7 @@ export function CompanyEnvironments({ mode = "list" }: CompanyEnvironmentsProps)
                             sshPrivateKey: e.target.value ? "" : current.sshPrivateKey,
                           }))}
                       >
-                        <option value="">No saved secret</option>
+                        <option value="">{i18nT("scan.s0832")}</option>
                         {(secrets ?? []).map((secret) => (
                           <option key={secret.id} value={secret.id}>{secret.name}</option>
                         ))}
@@ -2420,7 +2421,7 @@ export function CompanyEnvironments({ mode = "list" }: CompanyEnvironmentsProps)
               environmentForm.driver === "sandbox" &&
               selectedCompanyId ? (
                 <div className="space-y-2 py-3">
-                  <div className="text-sm font-medium">Custom image</div>
+                  <div className="text-sm font-medium">{i18nT("scan.s0376")}</div>
                   <div className="text-xs text-muted-foreground">
                     Start a setup sandbox, SSH in to customize the instance, then capture the
                     running machine as a reusable image for future runs.
@@ -2527,7 +2528,7 @@ export function CompanyEnvironments({ mode = "list" }: CompanyEnvironmentsProps)
                 </AlertDialogHeader>
                 {reusableLeaseHolderGroups.length > 0 ? (
                   <div className="space-y-1.5" data-testid="environment-delete-lease-holders">
-                    <div className="text-xs font-medium text-muted-foreground">Sandbox leases held by</div>
+                    <div className="text-xs font-medium text-muted-foreground">{i18nT("scan.s1177")}</div>
                     <ul className="space-y-1">
                       {reusableLeaseHolderGroups.map((group) => (
                         <li key={group.workspaceId ?? group.label} className="text-sm">

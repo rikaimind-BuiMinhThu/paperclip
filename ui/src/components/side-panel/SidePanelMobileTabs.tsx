@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
 import type { SidePanelTabItem } from "./types";
+import { t as i18nT } from "@/i18n";
 
 interface SidePanelMobileTabsProps {
   tabs: SidePanelTabItem[];
@@ -66,7 +67,7 @@ export function SidePanelMobileTabs({ tabs, activeTabId, onActiveTabChange, onCl
             if (addButton) { event.preventDefault(); addButton.focus(); }
           }}
         >
-          <p className="px-2 py-2 text-xs font-medium text-muted-foreground">Open tabs</p>
+          <p className="px-2 py-2 text-xs font-medium text-muted-foreground">{i18nT("scan.s0894")}</p>
           <ul ref={listRef} aria-label="Open tabs" className="max-h-(--side-panel-mobile-tabs-max-height) overflow-y-auto overscroll-contain">
             {tabs.map((tab) => (
               <li key={tab.id} className={cn("flex items-center rounded-md", tab.id === activeTabId && "bg-muted")}>
