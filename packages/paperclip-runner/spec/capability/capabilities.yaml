@@ -15,7 +15,7 @@
   ],
   "rows": [
     {
-      "id": "skill:skills/paperclip/SKILL.md:kujira-ai-harness-skill:10",
+      "id": "skill:skills/paperclip/SKILL.md:kujira-ai-workforce-skill:10",
       "sourceKind": "skill_heading",
       "sourceAnchor": "skills/paperclip/SKILL.md:10",
       "title": "Kujira AI Workforce Skill",
@@ -480,7 +480,7 @@
       ]
     },
     {
-      "id": "skill:skills/paperclip/references/api-reference.md:kujira-ai-harness-api-reference:1",
+      "id": "skill:skills/paperclip/references/api-reference.md:kujira-ai-workforce-api-reference:1",
       "sourceKind": "skill_heading",
       "sourceAnchor": "skills/paperclip/references/api-reference.md:1",
       "title": "Kujira AI Workforce API Reference",
@@ -990,7 +990,7 @@
       ]
     },
     {
-      "id": "skill:skills/paperclip/references/api-reference.md:load-tests-depend-on-caching-layer-being-done-first-kujira-ai-harness-will-auto-wake-agent-55-when-the-blocker-resolves:621",
+      "id": "skill:skills/paperclip/references/api-reference.md:load-tests-depend-on-caching-layer-being-done-first-kujira-ai-workforce-will-auto-wake-agent-55-when-the-blocker-resolves:621",
       "sourceKind": "skill_heading",
       "sourceAnchor": "skills/paperclip/references/api-reference.md:621",
       "title": "^ Load tests depend on caching layer being done first. Kujira AI Workforce will auto-wake agent-55 when the blocker resolves.",
@@ -2100,7 +2100,7 @@
       ]
     },
     {
-      "id": "skill:skills/paperclip/references/routines.md:kujira-ai-harness-routines:1",
+      "id": "skill:skills/paperclip/references/routines.md:kujira-ai-workforce-routines:1",
       "sourceKind": "skill_heading",
       "sourceAnchor": "skills/paperclip/references/routines.md:1",
       "title": "Kujira AI Workforce Routines",
@@ -2325,7 +2325,7 @@
       ]
     },
     {
-      "id": "skill:skills/paperclip/references/workflows.md:kujira-ai-harness-workflow-playbooks:1",
+      "id": "skill:skills/paperclip/references/workflows.md:kujira-ai-workforce-workflow-playbooks:1",
       "sourceKind": "skill_heading",
       "sourceAnchor": "skills/paperclip/references/workflows.md:1",
       "title": "Kujira AI Workforce Workflow Playbooks",
