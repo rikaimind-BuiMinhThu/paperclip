@@ -1860,6 +1860,7 @@
     },
     "allPausedTitle": "All agents in this organization are paused — nothing will run.",
     "allPausedBody": "Resume at least one agent to let assigned tasks start.",
+    "organization": "Organization",
     "reviewAgents": "Review agents",
     "noAgents": "You have no agents.",
     "createOneHere": "Create one here"

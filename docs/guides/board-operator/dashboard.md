@@ -10,6 +10,7 @@ The dashboard gives you a real-time overview of your autonomous company's health
 The dashboard displays:
 
 - **Agent status** — how many agents are active, idle, running, or in error state
+- **Organization** — the reporting chart, shown under Agents when the company has a hierarchy
 - **Task breakdown** — counts by status (todo, in progress, blocked, done)
 - **Stale tasks** — tasks that have been in progress for too long without updates
 - **Cost summary** — current month spend vs budget, burn rate

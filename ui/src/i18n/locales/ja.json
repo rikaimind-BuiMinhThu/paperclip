@@ -1860,6 +1860,7 @@
     },
     "allPausedTitle": "この組織のエージェントはすべて一時停止中です — 何も実行されません。",
     "allPausedBody": "アサインされたタスクが開始できるように、少なくとも1つのエージェントを再開してください。",
+    "organization": "組織",
     "reviewAgents": "エージェントを確認",
     "noAgents": "エージェントがありません。",
     "createOneHere": "ここで作成"

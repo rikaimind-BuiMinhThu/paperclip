@@ -38,6 +38,7 @@ import { InlineBanner } from "../components/InlineBanner";
 import type { Agent, Issue } from "@paperclipai/shared";
 import { PluginSlotOutlet } from "@/plugins/slots";
 import { SmokeLabDashboardCard } from "../components/SmokeLabDashboardCard";
+import { OrgChart } from "./OrgChart";
 
 const DASHBOARD_ACTIVITY_LIMIT = 10;
 
@@ -87,6 +88,12 @@ export function Dashboard() {
   const { data: agents, isFetching: agentsRefreshing } = useQuery({
     queryKey: queryKeys.agents.list(selectedCompanyId!),
     queryFn: () => agentsApi.list(selectedCompanyId!),
+    enabled: !!selectedCompanyId,
+  });
+
+  const { data: orgTree } = useQuery({
+    queryKey: queryKeys.org(selectedCompanyId!),
+    queryFn: () => agentsApi.org(selectedCompanyId!),
     enabled: !!selectedCompanyId,
   });
 
@@ -314,6 +321,7 @@ export function Dashboard() {
   // empty one cached before the first hire, and the banner's "Create one here"
   // opens the same agent step the offer does.
   const hasNoAgents = agents !== undefined && !agentsRefreshing && agents.length === 0;
+  const showOrgChart = (agents?.length ?? 0) > 0 && (orgTree?.length ?? 0) > 0;
   const pausedBanner = derivePausedAgentBanner(agents);
   const pausedImportedCount =
     pausedBanner?.kind === "imported" ? pausedBanner.pausedImportedAgentIds.length : 0;
@@ -373,6 +381,22 @@ export function Dashboard() {
       )}
 
       <ActiveAgentsPanel companyId={selectedCompanyId!} dedupeLinkedTasks />
+
+      {showOrgChart ? (
+        <section className="space-y-3">
+          <div className="flex items-center justify-between gap-3">
+            <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">
+              {t("dashboard.organization")}
+            </h3>
+            <Link to="/agents" className="text-sm underline underline-offset-2 text-muted-foreground">
+              {t("dashboard.reviewAgents")}
+            </Link>
+          </div>
+          <div className="flex h-(--sz-420px) min-h-0 flex-col">
+            <OrgChart embedded orgTree={orgTree} agents={agents ?? []} />
+          </div>
+        </section>
+      ) : null}
 
       {data && (
         <>
