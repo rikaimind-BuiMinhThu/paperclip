@@ -1803,7 +1803,16 @@
     "googleFailed": "Googleでサインインできませんでした。もう一度お試しください。",
     "googleNotLinked": "このメールアドレスのアカウントはすでにあります。メールアドレスとパスワードでサインインしてください。",
     "showPassword": "パスワードを表示",
-    "hidePassword": "パスワードを隠す"
+    "hidePassword": "パスワードを隠す",
+    "goToCompany": {
+      "title": "会社へ移動",
+      "description": "会社のサブドメインを入力してボードを開きます。",
+      "slugLabel": "会社スラッグ",
+      "slugPlaceholder": "acme",
+      "continue": "続ける",
+      "opening": "開いています…",
+      "notFound": "会社が見つかりません"
+    }
   },
   "dashboard": {
     "title": "ダッシュボード",

@@ -1803,7 +1803,16 @@
     "googleFailed": "Unable to sign in with Google. Please try again.",
     "googleNotLinked": "An account with this email already exists. Sign in with email and password.",
     "showPassword": "Show password",
-    "hidePassword": "Hide password"
+    "hidePassword": "Hide password",
+    "goToCompany": {
+      "title": "Go to my company",
+      "description": "Enter your company subdomain to open the board.",
+      "slugLabel": "Company slug",
+      "slugPlaceholder": "acme",
+      "continue": "Continue",
+      "opening": "Opening…",
+      "notFound": "Company not found"
+    }
   },
   "dashboard": {
     "title": "Dashboard",

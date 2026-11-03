@@ -6,7 +6,9 @@ import { useNavigate, useSearchParams } from "@/lib/router";
 import { authApi } from "../api/auth";
 import { healthApi } from "../api/health";
 import { GoogleMark } from "@/components/auth/GoogleMark";
+import { GoToCompany } from "@/components/auth/GoToCompany";
 import { CloudSignIn } from "@/components/CloudSignIn";
+import { useTenant } from "@/context/TenantContext";
 import { clearCloudSignInAttempt } from "@/lib/cloud-sign-in";
 import { resolveAuthCallbackUrl } from "@paperclipai/shared";
 import { authFormErrorKey, oauthReturnErrorKey, safeAuthErrorMessage } from "@/lib/auth-errors";
@@ -32,11 +34,13 @@ function authErrorMessage(
 
 export function AuthPage() {
   const { t } = useTranslation();
+  const tenant = useTenant();
   const queryClient = useQueryClient();
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
   const modeFromUrl: AuthMode = searchParams.get("mode") === "sign_up" ? "sign_up" : "sign_in";
   const [mode, setModeState] = useState<AuthMode>(modeFromUrl);
+  const showGoToCompany = tenant.hostTenancyEnabled && tenant.kind === "apex";
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -79,11 +83,15 @@ export function AuthPage() {
   }, [searchParams, t]);
 
   useEffect(() => {
-    if (session) {
-      clearCloudSignInAttempt();
-      navigate(nextPath, { replace: true });
+    if (!session) return;
+    // Apex + host tenancy: keep /auth mounted so “Go to my company” works even when
+    // local_trusted (or another apex cookie) already has a board session.
+    if (tenant.hostTenancyEnabled && tenant.kind === "apex") {
+      return;
     }
-  }, [session, navigate, nextPath]);
+    clearCloudSignInAttempt();
+    navigate(nextPath, { replace: true });
+  }, [session, navigate, nextPath, tenant.hostTenancyEnabled, tenant.kind]);
 
   function setMode(nextMode: AuthMode) {
     setError(null);
@@ -151,7 +159,8 @@ export function AuthPage() {
     }
   }
 
-  if (healthQuery.isLoading || isSessionLoading || session) {
+  const stayOnApexAuth = tenant.hostTenancyEnabled && tenant.kind === "apex";
+  if (healthQuery.isLoading || isSessionLoading || (session && !stayOnApexAuth)) {
     return (
       <div className="fixed inset-0 flex items-center justify-center">
         <PaperclipLoading className="min-h-0" />
@@ -180,9 +189,26 @@ export function AuthPage() {
               <KujiraLockup className="h-16 w-auto" />
             </div>
 
-            <h1 className="text-xl font-semibold">
-              {mode === "sign_in" ? t("auth.welcomeTitle") : t("auth.signUpTitle")}
-            </h1>
+            {showGoToCompany ? (
+              <>
+                <GoToCompany />
+                <div className="my-6 flex items-center gap-3 text-xs text-muted-foreground">
+                  <span className="h-px flex-1 bg-border" />
+                  <span>{t("auth.or")}</span>
+                  <span className="h-px flex-1 bg-border" />
+                </div>
+              </>
+            ) : null}
+
+            {showGoToCompany ? (
+              <h2 className="text-xl font-semibold">
+                {mode === "sign_in" ? t("auth.welcomeTitle") : t("auth.signUpTitle")}
+              </h2>
+            ) : (
+              <h1 className="text-xl font-semibold">
+                {mode === "sign_in" ? t("auth.welcomeTitle") : t("auth.signUpTitle")}
+              </h1>
+            )}
             <p className="mt-1 text-sm text-muted-foreground">
               {t("auth.welcomeDescription")}
             </p>
