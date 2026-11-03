@@ -3,7 +3,20 @@ import {
   COMPANY_STATUSES,
   ISSUE_THREAD_INTERACTION_RESOLVER_POLICIES,
 } from "../constants.js";
+import { COMPANY_SLUG_PATTERN, isReservedCompanySlug, normalizeCompanySlugCandidate } from "../company-slug.js";
 import { objectWithoutDefaults } from "./partial.js";
+
+const companySlugSchema = z
+  .string()
+  .min(1)
+  .max(63)
+  .transform((value) => normalizeCompanySlugCandidate(value))
+  .refine((value) => COMPANY_SLUG_PATTERN.test(value), {
+    message: "Slug must be a lowercase DNS label (letters, digits, hyphens)",
+  })
+  .refine((value) => !isReservedCompanySlug(value), {
+    message: "This slug is reserved",
+  });
 
 const logoAssetIdSchema = z.string().guid().nullable().optional();
 const feedbackDataSharingTermsVersionSchema = z.string().min(1).nullable().optional();
@@ -24,6 +37,7 @@ export const interactionResolverGovernanceSchema = z.object({
 export const createCompanySchema = z.object({
   name: z.string().min(1),
   description: z.string().optional().nullable(),
+  slug: companySlugSchema.optional(),
   budgetMonthlyCents: z.number().int().nonnegative().optional().default(0),
   defaultResponsibleUserId: z.string().min(1).nullable().optional(),
 });
@@ -45,6 +59,13 @@ export const updateCompanySchema = objectWithoutDefaults(
       logoAssetId: logoAssetIdSchema,
     }),
 );
+
+/** Explicit slug rename (warns callers: old host frees immediately, no redirect). */
+export const updateCompanySlugSchema = z.object({
+  slug: companySlugSchema,
+});
+
+export type UpdateCompanySlug = z.infer<typeof updateCompanySlugSchema>;
 
 export type UpdateCompany = z.infer<typeof updateCompanySchema>;
 

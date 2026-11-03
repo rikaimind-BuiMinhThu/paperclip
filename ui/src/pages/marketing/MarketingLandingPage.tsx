@@ -2,6 +2,7 @@ import { FeatureDeepDives } from "./sections/FeatureDeepDives";
 import { FeatureGrid } from "./sections/FeatureGrid";
 import { Faq } from "./sections/Faq";
 import { FinalCta } from "./sections/FinalCta";
+import { GoToCompany } from "./sections/GoToCompany";
 import { Hero } from "./sections/Hero";
 import { HowItWorks } from "./sections/HowItWorks";
 import { MarketingFooter } from "./sections/MarketingFooter";
@@ -14,6 +15,7 @@ export function MarketingLandingPage() {
       <MarketingNav />
       <main>
         <Hero />
+        <GoToCompany />
         <SocialProof />
         <HowItWorks />
         <FeatureGrid />

@@ -25,6 +25,9 @@ import { CloudAccessGate } from "./components/CloudAccessGate";
 import { PaperclipLoading } from "./components/AnimatedPaperclipIcon";
 import { MarketingLandingPage } from "./pages/marketing/MarketingLandingPage";
 import { PublicHome } from "./pages/marketing/PublicHome";
+import { useTenant } from "./context/TenantContext";
+import { AdminTenantPage } from "./pages/AdminTenantPage";
+import { CompanyNotFoundPage } from "./pages/CompanyNotFoundPage";
 import { Dashboard } from "./pages/Dashboard";
 import { DashboardLive } from "./pages/DashboardLive";
 import { Timeline } from "./pages/Timeline";
@@ -691,9 +694,23 @@ export function OnboardingRoutePage() {
 function CompanyRootRedirect() {
   const { companies, selectedCompany, loading } = useCompany();
   const location = useLocation();
+  const tenant = useTenant();
 
-  if (loading) {
+  if (!tenant.loaded || loading) {
     return <PaperclipLoading />;
+  }
+
+  // Apex with host tenancy never enters the board from `/`.
+  if (tenant.hostTenancyEnabled && tenant.kind === "apex") {
+    return <MarketingLandingPage />;
+  }
+
+  if (tenant.hostTenancyEnabled && tenant.kind === "admin") {
+    return <AdminTenantPage />;
+  }
+
+  if (tenant.hostTenancyEnabled && tenant.kind === "unknown") {
+    return <CompanyNotFoundPage />;
   }
 
   const targetCompany = selectedCompany ?? companies[0] ?? null;
@@ -707,6 +724,10 @@ function CompanyRootRedirect() {
       return <Navigate to="/onboarding" replace />;
     }
     return <NoCompaniesStartPage />;
+  }
+
+  if (tenant.hostTenancyEnabled && tenant.kind === "company") {
+    return <Navigate to="/dashboard" replace />;
   }
 
   return <Navigate to={`/${targetCompany.issuePrefix}/dashboard`} replace />;
@@ -733,12 +754,30 @@ function AuditCompatibilityRedirect({
   return <Navigate to={`${to}${search ? `?${search}` : ""}${location.hash}`} replace />;
 }
 
-function UnprefixedBoardRedirect() {
+/**
+ * Parent for unprefixed board routes.
+ * - Company host: render Layout + child board pages (no `/{issuePrefix}`).
+ * - Legacy: redirect into `/{issuePrefix}/...`.
+ */
+function UnprefixedBoardGate({
+  streamlinedUiEnabled,
+}: {
+  streamlinedUiEnabled: boolean;
+}) {
   const location = useLocation();
   const { companies, selectedCompany, loading } = useCompany();
+  const tenant = useTenant();
 
-  if (loading) {
+  if (!tenant.loaded || loading) {
     return <PaperclipLoading />;
+  }
+
+  if (tenant.hostTenancyEnabled && tenant.kind === "company") {
+    return streamlinedUiEnabled ? <Layout /> : <ProductionLayout />;
+  }
+
+  if (tenant.hostTenancyEnabled && (tenant.kind === "apex" || tenant.kind === "admin")) {
+    return <Navigate to="/" replace />;
   }
 
   const targetCompany = selectedCompany ?? companies[0] ?? null;
@@ -760,6 +799,34 @@ function UnprefixedBoardRedirect() {
       replace
     />
   );
+}
+
+
+/**
+ * Legacy `/:companyPrefix/...` shell. On a company host, strip the prefix and
+ * redirect so bookmarks like `/PAP/dashboard` become `/dashboard`.
+ */
+function PrefixedCompanyShell({
+  streamlinedUiEnabled,
+}: {
+  streamlinedUiEnabled: boolean;
+}) {
+  const tenant = useTenant();
+  const location = useLocation();
+  const { companyPrefix } = useParams<{ companyPrefix?: string }>();
+
+  if (!tenant.loaded) return <PaperclipLoading />;
+
+  if (tenant.hostTenancyEnabled && tenant.kind === "company") {
+    const segments = location.pathname.split("/").filter(Boolean);
+    if (segments.length >= 1 && companyPrefix) {
+      const rest = `/${segments.slice(1).join("/")}` || "/dashboard";
+      return <Navigate to={`${rest}${location.search}${location.hash}`} replace />;
+    }
+    return <Navigate to={`/dashboard${location.search}${location.hash}`} replace />;
+  }
+
+  return streamlinedUiEnabled ? <Layout /> : <ProductionLayout />;
 }
 
 function NoCompaniesStartPage() {
@@ -850,71 +917,23 @@ export function App() {
           <Route path="instance" element={<LegacySettingsRedirect />} />
           <Route path="instance/settings" element={<LegacySettingsRedirect />} />
           <Route path="instance/settings/*" element={<LegacySettingsRedirect />} />
-          <Route path="companies" element={<UnprefixedBoardRedirect />} />
-          <Route path="issues" element={<UnprefixedBoardRedirect />} />
-          <Route path="tasks" element={<UnprefixedBoardRedirect />} />
-          <Route path="issues/:issueId" element={<UnprefixedBoardRedirect />} />
-          <Route path="routines" element={<UnprefixedBoardRedirect />} />
-          <Route path="routines/:routineId" element={<UnprefixedBoardRedirect />} />
-          <Route path="review-queue" element={<UnprefixedBoardRedirect />} />
-          <Route path="learnings" element={<UnprefixedBoardRedirect />} />
-          <Route path="cases" element={<UnprefixedBoardRedirect />} />
-          <Route path="cases/:caseIdentifier" element={<UnprefixedBoardRedirect />} />
-          <Route path="status" element={<UnprefixedBoardRedirect />} />
-          <Route path="status/:cardId" element={<UnprefixedBoardRedirect />} />
-          <Route path="status-cards" element={<UnprefixedBoardRedirect />} />
-          <Route path="status-cards/:cardId" element={<UnprefixedBoardRedirect />} />
-          <Route path="pipelines" element={<UnprefixedBoardRedirect />} />
-          <Route path="pipelines/:pipelineId" element={<UnprefixedBoardRedirect />} />
-          <Route path="pipelines/:pipelineId/add" element={<UnprefixedBoardRedirect />} />
-          <Route path="pipelines/:pipelineId/settings" element={<UnprefixedBoardRedirect />} />
-          <Route path="pipelines/:pipelineId/items/:caseId" element={<UnprefixedBoardRedirect />} />
-          <Route path="pipelines/:pipelineId/cases/:caseId" element={<UnprefixedBoardRedirect />} />
-          <Route path="artifacts" element={<UnprefixedBoardRedirect />} />
-          <Route path="audit" element={<UnprefixedBoardRedirect />} />
-          {streamlinedUiEnabled ? (
-            <>
-              <Route path="audit/*" element={<UnprefixedBoardRedirect />} />
-              <Route path="activity" element={<UnprefixedBoardRedirect />} />
-              <Route path="activity/*" element={<UnprefixedBoardRedirect />} />
-              <Route path="runs" element={<UnprefixedBoardRedirect />} />
-              <Route path="costs" element={<UnprefixedBoardRedirect />} />
-              <Route path="budgets" element={<UnprefixedBoardRedirect />} />
-            </>
-          ) : null}
-          <Route path="decisions" element={<UnprefixedBoardRedirect />} />
-          <Route path="u/:userSlug" element={<UnprefixedBoardRedirect />} />
-          <Route path="skills/studio" element={<UnprefixedBoardRedirect />} />
-          <Route path="skills/studio/new" element={<UnprefixedBoardRedirect />} />
-          <Route path="skills/studio/:skillId" element={<UnprefixedBoardRedirect />} />
           <Route path="skills/:skillId/studio" element={<LegacySkillStudioRedirect />} />
-          <Route path="skills/*" element={<UnprefixedBoardRedirect />} />
           <Route path="settings" element={<LegacySettingsRedirect />} />
           <Route path="settings/*" element={<LegacySettingsRedirect />} />
-          <Route path="agents" element={<UnprefixedBoardRedirect />} />
-          {AGENT_FILTER_TABS.map((tab) => (
-            <Route key={tab} path={`agents/${tab}`} element={<UnprefixedBoardRedirect />} />
-          ))}
-          <Route path="agents/new" element={<UnprefixedBoardRedirect />} />
-          <Route path="agents/:agentId" element={<UnprefixedBoardRedirect />} />
-          <Route path="agents/:agentId/:tab" element={<UnprefixedBoardRedirect />} />
-          <Route path="agents/:agentId/runs/:runId" element={<UnprefixedBoardRedirect />} />
-          <Route path="projects" element={<UnprefixedBoardRedirect />} />
-          <Route path="projects/:projectId" element={<UnprefixedBoardRedirect />} />
-          <Route path="projects/:projectId/overview" element={<UnprefixedBoardRedirect />} />
-          <Route path="projects/:projectId/issues" element={<UnprefixedBoardRedirect />} />
-          <Route path="projects/:projectId/issues/:filter" element={<UnprefixedBoardRedirect />} />
-          <Route path="projects/:projectId/workspaces" element={<UnprefixedBoardRedirect />} />
-          <Route path="projects/:projectId/workspaces/:workspaceId" element={<UnprefixedBoardRedirect />} />
-          <Route path="projects/:projectId/configuration" element={<UnprefixedBoardRedirect />} />
-          <Route path="workspaces" element={<UnprefixedBoardRedirect />} />
           <Route path="execution-workspaces/:workspaceId" element={<UnprefixedExecutionWorkspaceRedirect />} />
           <Route path="execution-workspaces/:workspaceId/services" element={<UnprefixedExecutionWorkspaceRedirect />} />
           <Route path="execution-workspaces/:workspaceId/configuration" element={<UnprefixedExecutionWorkspaceRedirect />} />
           <Route path="execution-workspaces/:workspaceId/runtime-logs" element={<UnprefixedExecutionWorkspaceRedirect />} />
           <Route path="execution-workspaces/:workspaceId/issues" element={<UnprefixedExecutionWorkspaceRedirect />} />
           <Route path="execution-workspaces/:workspaceId/routines" element={<UnprefixedExecutionWorkspaceRedirect />} />
-          <Route path=":companyPrefix" element={streamlinedUiEnabled ? <Layout /> : <ProductionLayout />}>
+          {/* Unprefixed board: host-tenancy company serves pages here; legacy redirects into :companyPrefix. */}
+          <Route element={<UnprefixedBoardGate streamlinedUiEnabled={streamlinedUiEnabled} />}>
+            {boardRoutes(streamlinedUiEnabled, combinedInboxTasksEnabled)}
+          </Route>
+          <Route
+            path=":companyPrefix"
+            element={<PrefixedCompanyShell streamlinedUiEnabled={streamlinedUiEnabled} />}
+          >
             {boardRoutes(streamlinedUiEnabled, combinedInboxTasksEnabled)}
           </Route>
           <Route path="*" element={<NotFoundPage scope="global" />} />

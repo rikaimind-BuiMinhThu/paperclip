@@ -15,6 +15,22 @@ Current implementation status:
 
 Google sign-in is optional on `authenticated` instances. See [Google sign-in](auth/GOOGLE-SSO.md). `local_trusted` stays a zero-login dev mode.
 
+## Company subdomain tenancy (optional)
+
+Set `PAPERCLIP_ROOT_DOMAIN` (for example `kujira-ai-workforce.com`) to enable host-based company routing:
+
+- Apex / `www` → marketing landing + “Go to my company”
+- `{slug}.{rootDomain}` → that company’s board (paths without `/{issuePrefix}`)
+- `admin.{rootDomain}` (override with `PAPERCLIP_ADMIN_SUBDOMAIN`) → platform admin company picker
+- Unknown slug → 404 “Company not found”
+
+Local testing without DNS:
+
+- Use `acme.localhost:3100` (when root domain is set), or
+- Send `X-Paperclip-Company-Slug: acme` / `?__companySlug=acme` in non-production
+
+Production needs wildcard DNS and TLS for `*.{rootDomain}`. Auth sessions are per-host (not shared across company subdomains).
+
 ## Prerequisites
 
 - Node.js 24.11+

@@ -83,6 +83,16 @@ export function assertInstanceAdmin(req: Request) {
 
 export function assertCompanyAccess(req: Request, companyId: string) {
   assertAuthenticated(req);
+  // Host tenancy: company subdomain may only access its own companyId
+  // (platform admin host is the exception).
+  if (
+    req.tenant?.hostTenancyEnabled
+    && req.tenant.kind === "company"
+    && req.tenant.companyId
+    && req.tenant.companyId !== companyId
+  ) {
+    throw forbidden("Company mismatch for this host");
+  }
   if (req.actor.type === "api_customer" && req.actor.companyId !== companyId) {
     throw forbidden("API customer key cannot access another company");
   }

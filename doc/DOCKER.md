@@ -124,6 +124,8 @@ PAPERCLIP_PORT=3200 PAPERCLIP_DATA_DIR=../data/pc \
 
 If you change host port or use a non-local domain, set `PAPERCLIP_PUBLIC_URL` to the external URL you will use in browser/auth flows.
 
+For company subdomain tenancy, also set `PAPERCLIP_ROOT_DOMAIN` (for example `kujira-ai-workforce.com`) and terminate TLS for `*.{rootDomain}` in front of the container. Apex stays marketing-only; each company is `{slug}.{rootDomain}`. See `doc/DEVELOPING.md` (Company subdomain tenancy).
+
 Pass `OPENAI_API_KEY` and/or `ANTHROPIC_API_KEY` to enable local adapter runs.
 
 ### Full stack (with PostgreSQL)

@@ -775,7 +775,12 @@ export function accessService(db: Db) {
     companyIds: string[],
     options: { actorUserId?: string | null } = {},
   ) {
-    const target = new Set(companyIds);
+    const targetIds = Array.from(new Set(companyIds));
+    if (targetIds.length > 1 && !(await isInstanceAdmin(userId))) {
+      // 1:1 membership: non-admins keep only the last (newest) company id.
+      targetIds.splice(0, targetIds.length, targetIds[targetIds.length - 1]!);
+    }
+    const target = new Set(targetIds);
 
     await db.transaction(async (tx) => {
       // Serialize every company-access removal/reactivation with personal OAuth
@@ -868,6 +873,14 @@ export function accessService(db: Db) {
     return listUserCompanyAccess(userId);
   }
 
+  async function assertUserCanJoinCompany(userId: string, companyId: string | null = null) {
+    const { canUserJoinCompany } = await import("./company-membership-collapse.js");
+    const gate = await canUserJoinCompany(db, userId, companyId, {
+      isInstanceAdmin: await isInstanceAdmin(userId),
+    });
+    if (!gate.ok) throw conflict(gate.reason);
+  }
+
   async function ensureMembership(
     companyId: string,
     principalType: PrincipalType,
@@ -876,6 +889,15 @@ export function accessService(db: Db) {
     status: "pending" | "active" | "suspended" = "active",
   ) {
     const existing = await getMembership(companyId, principalType, principalId);
+
+    if (
+      principalType === "user"
+      && status === "active"
+      && (!existing || existing.status !== "active")
+    ) {
+      await assertUserCanJoinCompany(principalId, companyId);
+    }
+
     if (existing) {
       if (existing.status !== status || existing.membershipRole !== membershipRole) {
         const updated = await db
@@ -1134,6 +1156,7 @@ export function accessService(db: Db) {
     getMembership,
     getMemberById,
     ensureMembership,
+    assertUserCanJoinCompany,
     listMembers,
     listActiveUserMemberships,
     copyActiveUserMemberships,

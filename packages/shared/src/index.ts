@@ -1837,10 +1837,25 @@ export {
 } from "./validators/index.js";
 
 export {
+  RESERVED_COMPANY_SLUGS,
+  COMPANY_SLUG_MAX_LENGTH,
+  COMPANY_SLUG_PATTERN,
+  isReservedCompanySlug,
+  normalizeCompanySlugCandidate,
+  deriveCompanySlugBase,
+  preferIssuePrefixOrNameSlug,
+  companySlugSuffixForAttempt,
+  companySlugForAttempt,
+  validateCompanySlug,
+  type CompanySlugValidation,
+} from "./company-slug.js";
+
+export {
   createCompanySchema,
   interactionResolverGovernanceSchema,
   updateCompanySchema,
   updateCompanyBrandingSchema,
+  updateCompanySlugSchema,
   feedbackTargetTypeSchema,
   feedbackTraceStatusSchema,
   feedbackVoteValueSchema,
@@ -1857,6 +1872,7 @@ export {
   type CreateCompany,
   type UpdateCompany,
   type UpdateCompanyBranding,
+  type UpdateCompanySlug,
   type UpsertIssueFeedbackVote,
   type ExternalObjectCanonicalIdentityInput,
   type ExternalObjectMentionSourceInput,

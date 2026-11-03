@@ -1,8 +1,20 @@
 import type { Request, RequestHandler } from "express";
+import { resolveRootDomain } from "../services/tenant-host.js";
 
 function isLoopbackHostname(hostname: string): boolean {
   const normalized = hostname.trim().toLowerCase();
-  return normalized === "localhost" || normalized === "127.0.0.1" || normalized === "::1";
+  return (
+    normalized === "localhost"
+    || normalized === "127.0.0.1"
+    || normalized === "::1"
+    || normalized.endsWith(".localhost")
+  );
+}
+
+function isRootDomainHost(hostname: string, rootDomain: string | null): boolean {
+  if (!rootDomain) return false;
+  if (hostname === rootDomain || hostname === `www.${rootDomain}`) return true;
+  return hostname.endsWith(`.${rootDomain}`);
 }
 
 function extractHostname(req: Request): string | null {
@@ -81,7 +93,12 @@ export function privateHostnameGuard(opts: {
       return;
     }
 
-    if (isLoopbackHostname(hostname) || allowSet.has(hostname)) {
+    const rootDomain = resolveRootDomain();
+    if (
+      isLoopbackHostname(hostname)
+      || allowSet.has(hostname)
+      || isRootDomainHost(hostname, rootDomain)
+    ) {
       next();
       return;
     }

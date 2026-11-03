@@ -5,6 +5,7 @@ import { healthApi } from "@/api/health";
 import { isTemporaryApiError } from "@/api/response";
 import { PaperclipLoading } from "@/components/AnimatedPaperclipIcon";
 import { CloudAccessError } from "@/components/CloudAccessGate";
+import { useTenant } from "@/context/TenantContext";
 import { queryKeys } from "@/lib/queryKeys";
 import { MarketingLandingPage } from "./MarketingLandingPage";
 
@@ -13,8 +14,10 @@ const RECONNECT_INTERVAL_MS = 5_000;
 /**
  * Public `/` entry: guests see the marketing landing; signed-in and
  * local-trusted users continue into the board via CompanyRootRedirect.
+ * With host tenancy, apex always stays on marketing (board lives on company hosts).
  */
 export function PublicHome({ appEntry }: { appEntry: ReactNode }) {
+  const tenant = useTenant();
   const healthQuery = useQuery({
     queryKey: queryKeys.health,
     queryFn: () => healthApi.get(),
@@ -48,7 +51,9 @@ export function PublicHome({ appEntry }: { appEntry: ReactNode }) {
       : null);
 
   const isLoading =
-    healthQuery.isLoading || (isAuthenticatedMode && sessionQuery.isLoading);
+    !tenant.loaded
+    || healthQuery.isLoading
+    || (isAuthenticatedMode && sessionQuery.isLoading);
 
   if (blockingError || isServerStarting) {
     return (
@@ -65,6 +70,10 @@ export function PublicHome({ appEntry }: { appEntry: ReactNode }) {
 
   if (isLoading || !healthQuery.data) {
     return <PaperclipLoading />;
+  }
+
+  if (tenant.hostTenancyEnabled && tenant.kind === "apex") {
+    return <MarketingLandingPage />;
   }
 
   if (!isAuthenticatedMode) {

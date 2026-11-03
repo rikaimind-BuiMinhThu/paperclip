@@ -19,6 +19,7 @@ import {
 } from "../api/companies-query";
 import { queryKeys } from "../lib/queryKeys";
 import type { CompanySelectionSource } from "../lib/company-selection";
+import { useTenant } from "./TenantContext";
 type CompanySelectionOptions = { source?: CompanySelectionSource };
 
 interface CompanyContextValue {
@@ -41,6 +42,7 @@ interface CompanyContextValue {
   createCompany: (data: {
     name: string;
     description?: string | null;
+    slug?: string;
     budgetMonthlyCents?: number;
   }) => Promise<Company>;
 }
@@ -108,6 +110,7 @@ export function shouldClearStoredCompanySelection(input: {
 
 export function CompanyProvider({ children }: { children: ReactNode }) {
   const queryClient = useQueryClient();
+  const tenant = useTenant();
   const [selectionSource, setSelectionSource] = useState<CompanySelectionSource>("bootstrap");
   const [selectedCompanyId, setSelectedCompanyIdState] = useState<string | null>(null);
 
@@ -153,8 +156,18 @@ export function CompanyProvider({ children }: { children: ReactNode }) {
     setSelectionSource("bootstrap");
   }, [isSessionSettled, sessionUserId]);
 
+  // Host tenancy: lock selection to the company resolved from the subdomain.
+  useEffect(() => {
+    if (!tenant.hostTenancyEnabled || tenant.kind !== "company" || !tenant.company?.id) return;
+    if (selectedCompanyId === tenant.company.id) return;
+    setSelectedCompanyIdState(tenant.company.id);
+    setSelectionSource("route_sync");
+    localStorage.setItem(STORAGE_KEY, tenant.company.id);
+  }, [tenant.hostTenancyEnabled, tenant.kind, tenant.company?.id, selectedCompanyId]);
+
   // Auto-select first company when list loads
   useEffect(() => {
+    if (tenant.hostTenancyEnabled && tenant.kind === "company") return;
     // `isLoading` covers the account change too: the key moved, so this observer
     // is pending on a list for the new account rather than holding the old one.
     if (isLoading) return;
@@ -194,6 +207,8 @@ export function CompanyProvider({ children }: { children: ReactNode }) {
     isLoading,
     selectedCompanyId,
     sidebarCompanies,
+    tenant.hostTenancyEnabled,
+    tenant.kind,
   ]);
 
   const setSelectedCompanyId = useCallback((companyId: string, options?: CompanySelectionOptions) => {

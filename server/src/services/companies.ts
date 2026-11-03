@@ -34,7 +34,7 @@ import {
   routineRevisions,
   routines,
 } from "@paperclipai/db";
-import { notFound, unprocessable } from "../errors.js";
+import { conflict, notFound, unprocessable } from "../errors.js";
 import { isCloudManagedInstance } from "./cloud-instance.js";
 import { notifyCloudOfPrimaryCompanyLifecycleChange } from "./cloud-lifecycle-sync.js";
 import {
@@ -45,10 +45,16 @@ import {
   pickAvailableIssuePrefix,
   rekeyCompanyIssueIdentifiers,
 } from "./issue-prefix.js";
+import {
+  isCompanySlugConflict,
+  isCompanySlugTaken,
+  pickAvailableCompanySlug,
+} from "./company-slug.js";
 import { environmentService } from "./environments.js";
 import { heartbeatService } from "./heartbeat.js";
 import { logActivity } from "./activity-log.js";
 import { builtInAgentService } from "./built-in-agents.js";
+import { validateCompanySlug } from "@paperclipai/shared";
 
 
 const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
@@ -144,6 +150,7 @@ export function companyService(db: Db) {
     name: companies.name,
     description: companies.description,
     status: companies.status,
+    slug: companies.slug,
     issuePrefix: companies.issuePrefix,
     issueCounter: companies.issueCounter,
     budgetMonthlyCents: companies.budgetMonthlyCents,
@@ -278,18 +285,38 @@ export function companyService(db: Db) {
   async function createCompanyWithUniquePrefix(data: typeof companies.$inferInsert) {
     const base = deriveIssuePrefixBase(data.name);
     let suffix = 1;
+    const preferredSlug =
+      typeof data.slug === "string" && data.slug.trim().length > 0 ? data.slug.trim() : null;
+
     while (suffix <= MAX_ISSUE_PREFIX_ATTEMPTS) {
       const candidate = `${base}${issuePrefixSuffixForAttempt(suffix)}`;
       try {
+        const slug = await pickAvailableCompanySlug(db, {
+          name: data.name,
+          issuePrefix: candidate,
+          preferredSlug,
+        });
         const rows = await db
           .insert(companies)
-          .values({ ...data, issuePrefix: candidate })
+          .values({ ...data, issuePrefix: candidate, slug })
           .returning();
         return rows[0];
       } catch (error) {
-        if (!isIssuePrefixConflict(error)) throw error;
+        if (isIssuePrefixConflict(error)) {
+          suffix += 1;
+          continue;
+        }
+        if (isCompanySlugConflict(error) && preferredSlug) {
+          throw conflict("Company slug is already taken");
+        }
+        if (isCompanySlugConflict(error)) {
+          // Race on auto slug — retry with next issue-prefix attempt path which
+          // re-picks a free slug.
+          suffix += 1;
+          continue;
+        }
+        throw error;
       }
-      suffix += 1;
     }
     throw new Error("Unable to allocate unique issue prefix");
   }
@@ -307,6 +334,79 @@ export function companyService(db: Db) {
       // as HTTP 500 from GET /api/companies/:companyId. Treat them as
       // not-found so the route returns 404.
       if (!UUID_RE.test(id)) return null;
+      const row = await getCompanyQuery(db)
+        .where(eq(companies.id, id))
+        .then((rows) => rows[0] ?? null);
+      if (!row) return null;
+      const [hydrated] = await hydrateCompanySpend([row], db);
+      return enrichCompany(hydrated);
+    },
+
+    getBySlug: async (slug: string) => {
+      const normalized = slug.trim().toLowerCase();
+      if (!normalized) return null;
+      const row = await getCompanyQuery(db)
+        .where(eq(companies.slug, normalized))
+        .then((rows) => rows[0] ?? null);
+      if (!row) return null;
+      const [hydrated] = await hydrateCompanySpend([row], db);
+      return enrichCompany(hydrated);
+    },
+
+    /**
+     * Rename company host slug. Old slug is freed immediately (no redirect).
+     */
+    updateSlug: async (
+      id: string,
+      nextSlugRaw: string,
+      actor: CompanyActivityActor = SYSTEM_COMPANY_ACTOR,
+    ) => {
+      const validated = validateCompanySlug(nextSlugRaw);
+      if (!validated.ok) throw unprocessable(validated.error);
+
+      const existing = await getCompanyQuery(db)
+        .where(eq(companies.id, id))
+        .then((rows) => rows[0] ?? null);
+      if (!existing) return null;
+
+      if (existing.slug === validated.slug) {
+        const [hydrated] = await hydrateCompanySpend([existing], db);
+        return enrichCompany(hydrated);
+      }
+
+      if (await isCompanySlugTaken(db, validated.slug, id)) {
+        throw conflict("Company slug is already taken");
+      }
+
+      try {
+        const updated = await db
+          .update(companies)
+          .set({ slug: validated.slug, updatedAt: new Date() })
+          .where(eq(companies.id, id))
+          .returning({ id: companies.id });
+        if (!updated[0]) return null;
+      } catch (error) {
+        if (isCompanySlugConflict(error)) throw conflict("Company slug is already taken");
+        throw error;
+      }
+
+      await logActivity(db, {
+        companyId: id,
+        actorType: actor.actorType,
+        actorId: actor.actorId,
+        agentId: actor.agentId ?? null,
+        runId: actor.runId ?? null,
+        action: "company.updated",
+        entityType: "company",
+        entityId: id,
+        details: {
+          source: "slug_rename",
+          fromSlug: existing.slug,
+          toSlug: validated.slug,
+          redirect: false,
+        },
+      });
+
       const row = await getCompanyQuery(db)
         .where(eq(companies.id, id))
         .then((rows) => rows[0] ?? null);

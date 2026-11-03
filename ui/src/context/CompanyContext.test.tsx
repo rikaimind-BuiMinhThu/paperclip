@@ -50,6 +50,7 @@ function makeCompany(id: string): Company {
     status: "active",
     pauseReason: null,
     pausedAt: null,
+    slug: "pap",
     issuePrefix: "PAP",
     issueCounter: 1,
     budgetMonthlyCents: 0,

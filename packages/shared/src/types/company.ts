@@ -21,6 +21,8 @@ export interface Company {
   status: CompanyStatus;
   pauseReason: PauseReason | null;
   pausedAt: Date | null;
+  /** Host subdomain label (`{slug}.{rootDomain}`). Separate from issuePrefix. */
+  slug: string;
   issuePrefix: string;
   issueCounter: number;
   budgetMonthlyCents: number;

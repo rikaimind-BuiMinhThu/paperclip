@@ -3,6 +3,7 @@ import * as RouterDom from "react-router-dom";
 import type { NavigateOptions, To } from "react-router-dom";
 import type { Issue } from "@paperclipai/shared";
 import { useCompany } from "@/context/CompanyContext";
+import { useHostCompanyRouting } from "@/context/TenantContext";
 import { IssueLinkQuicklook } from "@/components/IssueLinkQuicklook";
 import {
   applyCompanyPrefix,
@@ -31,6 +32,10 @@ export function useActiveCompanyPrefix(): string | null {
   const { selectedCompany } = useCompany();
   const params = RouterDom.useParams<{ companyPrefix?: string }>();
   const location = RouterDom.useLocation();
+  const hostCompanyRouting = useHostCompanyRouting();
+
+  // Host tenancy: company is the subdomain — omit path prefixes from links.
+  if (hostCompanyRouting) return null;
 
   if (params.companyPrefix) {
     return normalizeCompanyPrefix(params.companyPrefix);
@@ -49,9 +54,11 @@ export function useActiveCompanyPrefix(): string | null {
  */
 export function useCaseHref(): (...segments: string[]) => string {
   const companyPrefix = useActiveCompanyPrefix();
+  const hostCompanyRouting = useHostCompanyRouting();
   return React.useCallback(
-    (...segments: string[]) => caseHref(companyPrefix, ...segments),
-    [companyPrefix],
+    (...segments: string[]) =>
+      hostCompanyRouting ? caseHref(null, ...segments) : caseHref(companyPrefix, ...segments),
+    [companyPrefix, hostCompanyRouting],
   );
 }
 

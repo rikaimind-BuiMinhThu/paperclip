@@ -211,6 +211,22 @@ export function deriveAuthTrustedOrigins(config: Config, opts?: { listenPort?: n
         trustedOrigins.add(`http://${trimmed}:${port}`);
       }
     }
+    // Better Auth supports wildcard trusted origins for subdomain tenancy.
+    // Cookies stay host-scoped (exact Domain); this only allows CSRF origin checks
+    // for `{slug}.{rootDomain}` company hosts.
+    const rootDomain = config.rootDomain?.trim().toLowerCase();
+    if (rootDomain) {
+      trustedOrigins.add(`https://*.${rootDomain}`);
+      trustedOrigins.add(`http://*.${rootDomain}`);
+      trustedOrigins.add(`https://${rootDomain}`);
+      trustedOrigins.add(`http://${rootDomain}`);
+      if (needsPortVariants) {
+        trustedOrigins.add(`https://*.${rootDomain}:${port}`);
+        trustedOrigins.add(`http://*.${rootDomain}:${port}`);
+        trustedOrigins.add(`https://${rootDomain}:${port}`);
+        trustedOrigins.add(`http://${rootDomain}:${port}`);
+      }
+    }
   }
 
   return Array.from(trustedOrigins);

@@ -33,6 +33,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { useCompany } from "@/context/CompanyContext";
 import { useDialogActions } from "@/context/DialogContext";
+import { useTenant } from "@/context/TenantContext";
 import { useCloudInstance } from "@/hooks/useCloudInstance";
 import { useHiddenSettings } from "@/hooks/useHiddenSettings";
 import { useCompanyOrder } from "@/hooks/useCompanyOrder";
@@ -161,6 +162,9 @@ function BuiltinCompanyMenu({ open: controlledOpen, onOpenChange }: SidebarCompa
   const [isEditingOrder, setIsEditingOrder] = useState(false);
   const { companies, selectedCompany, setSelectedCompanyId, companyListUnavailable, retryCompanies } =
     useCompany();
+  const tenant = useTenant();
+  // Host tenancy: one user ↔ one company on company hosts — no switcher.
+  const hostLocksCompany = tenant.hostTenancyEnabled && tenant.kind === "company";
   const { openOnboarding } = useDialogActions();
   const { isMobile, setSidebarOpen, collapsed, peeking } = useSidebar();
   const rail = collapsed && !peeking;
@@ -202,6 +206,23 @@ function BuiltinCompanyMenu({ open: controlledOpen, onOpenChange }: SidebarCompa
   const companyCreationManaged = Boolean(useCloudInstance());
 
   const signOutMutation = useSignOut({ onSignedOut: closeNavigationChrome });
+
+  if (hostLocksCompany) {
+    return (
+      <div className="flex h-9 min-w-0 flex-1 items-center gap-2 px-4">
+        {selectedCompany ? <WorkspaceIcon company={selectedCompany} /> : null}
+        <span
+          className={cn(
+            "min-w-0 truncate text-sm font-bold text-foreground",
+            rail && SIDEBAR_RAIL_HIDDEN_LABEL,
+          )}
+          title={currentName ?? undefined}
+        >
+          {currentName ?? t("a11y.selectOrg")}
+        </span>
+      </div>
+    );
+  }
 
   function handleOpenChange(nextOpen: boolean) {
     if (!nextOpen) setIsEditingOrder(false);

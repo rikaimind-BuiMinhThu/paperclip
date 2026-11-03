@@ -703,6 +703,37 @@ async function startServerWithDatabaseTeardown(
   if (accessBackfill.agentMembershipsInserted > 0 || accessBackfill.humanGrantsInserted > 0) {
     logger.info(accessBackfill, "Backfilled principal access compatibility records");
   }
+  try {
+    const { backfillCompanySlugs } = await import("./services/company-slug.js");
+    const slugBackfill = await backfillCompanySlugs(db as any);
+    if (slugBackfill.updated > 0) {
+      logger.info(slugBackfill, "Backfilled company host slugs");
+    }
+  } catch (error) {
+    logger.warn({ err: error }, "Company slug backfill skipped");
+  }
+  try {
+    const { collapseMultiCompanyMemberships } = await import(
+      "./services/company-membership-collapse.js"
+    );
+    const collapse = await collapseMultiCompanyMemberships(db as any);
+    if (collapse.usersProcessed > 0 || collapse.membershipsArchived > 0) {
+      logger.info(collapse, "Collapsed multi-company memberships (keep newest)");
+    }
+  } catch (error) {
+    logger.warn({ err: error }, "Company membership collapse skipped");
+  }
+  try {
+    const { rewriteLegacyPublicOrigins } = await import("./services/tenant-url-rewrite.js");
+    const rewrite = await rewriteLegacyPublicOrigins(db as any, {
+      legacyPublicUrl: config.authPublicBaseUrl,
+    });
+    if (rewrite.rewritten > 0) {
+      logger.info(rewrite, "Rewrote legacy public origins onto company hosts");
+    }
+  } catch (error) {
+    logger.warn({ err: error }, "Legacy public URL rewrite skipped");
+  }
   const toolOAuthBackfill = await backfillLegacyToolOAuthTokens(db as any);
   if (toolOAuthBackfill.sanitizedConnections > 0 || toolOAuthBackfill.migratedConnections > 0) {
     logger.info(toolOAuthBackfill, "Backfilled legacy tool OAuth credentials into company secrets");

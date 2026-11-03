@@ -31,6 +31,8 @@ import {
   privateHostnameGuard,
   resolvePrivateHostnameAllowSet,
 } from "./middleware/private-hostname-guard.js";
+import { tenantHostMiddleware } from "./middleware/tenant-host.js";
+import { tenantRoutes } from "./routes/tenant.js";
 import {
   applyTrustProxy,
   parseTrustProxyEnv,
@@ -563,6 +565,8 @@ export async function createApp(
       bindHost: opts.bindHost,
     }),
   );
+  // Host → company / apex / admin resolution (no-op when PAPERCLIP_ROOT_DOMAIN unset).
+  app.use(tenantHostMiddleware(db));
   app.use(cloudRuntimeIdentityMiddleware(db));
   // Connection-intent tools carry their own short-lived, run-bound bearer and
   // must be reachable by remote adapters that intentionally do not receive an
@@ -660,6 +664,7 @@ export async function createApp(
   );
   api.use(openApiRoutes());
   api.use("/cloud", cloudRoutes());
+  api.use(tenantRoutes(db));
   api.use("/companies", companyRoutes(db, opts.storageService));
   api.use(llmRoutes(db));
   api.use(folderRoutes(db));

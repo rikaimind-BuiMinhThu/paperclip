@@ -62,6 +62,9 @@ export interface Config {
   host: string;
   port: number;
   allowedHostnames: string[];
+  /** Apex domain for company subdomain tenancy (`{slug}.{rootDomain}`). */
+  rootDomain: string | undefined;
+  adminSubdomain: string;
   authBaseUrlMode: AuthBaseUrlMode;
   authPublicBaseUrl: string | undefined;
   chatWebhookPublicBaseUrl: string | undefined;
@@ -308,6 +311,15 @@ export function loadConfig(): Config {
     throw new Error(resolvedBind.errors[0]);
   }
 
+  const rootDomain =
+    process.env.PAPERCLIP_ROOT_DOMAIN?.trim().toLowerCase().replace(/^\.+|\.+$/g, "")
+    || undefined;
+  const adminSubdomain =
+    process.env.PAPERCLIP_ADMIN_SUBDOMAIN?.trim().toLowerCase() || "admin";
+  if (rootDomain) {
+    allowedHostnames.push(rootDomain, `www.${rootDomain}`, `${adminSubdomain}.${rootDomain}`);
+  }
+
   return {
     deploymentMode,
     deploymentExposure,
@@ -315,7 +327,9 @@ export function loadConfig(): Config {
     customBindHost: resolvedBind.customBindHost,
     host: resolvedBind.host,
     port: Number(process.env.PORT) || fileConfig?.server.port || 3100,
-    allowedHostnames,
+    allowedHostnames: Array.from(new Set(allowedHostnames)),
+    rootDomain,
+    adminSubdomain,
     authBaseUrlMode,
     authPublicBaseUrl,
     chatWebhookPublicBaseUrl: parseChatWebhookPublicBaseUrl(

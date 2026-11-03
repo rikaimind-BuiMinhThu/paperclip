@@ -94,9 +94,15 @@ export const companiesApi = {
   create: (data: {
     name: string;
     description?: string | null;
+    slug?: string;
     budgetMonthlyCents?: number;
   }) =>
     api.post<Company>("/companies", data),
+  updateSlug: (companyId: string, slug: string) =>
+    api.patch<Company & { origin?: string | null; warning?: string }>(
+      `/companies/${companyId}/slug`,
+      { slug },
+    ),
   update: (
     companyId: string,
     data: Partial<

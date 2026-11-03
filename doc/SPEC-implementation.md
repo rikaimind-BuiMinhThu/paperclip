@@ -33,8 +33,8 @@ These decisions close open questions from `SPEC.md` for V1.
 
 | Topic | V1 Decision |
 |---|---|
-| Tenancy | Single-tenant deployment, multi-company data model |
-| Company model | Company is first-order; all business entities are company-scoped |
+| Tenancy | Single-tenant deployment, multi-company data model. Optional host tenancy (`PAPERCLIP_ROOT_DOMAIN`): apex is marketing-only; each company is served at `{slug}.{rootDomain}`; platform admin at `admin.{rootDomain}`. When unset, legacy path-prefix tenancy (`/{issuePrefix}/...`) remains. |
+| Company model | Company is first-order; all business entities are company-scoped. Host tenancy stores a unique `companies.slug` (separate from `issuePrefix`). Normal board users belong to exactly one company; instance admins may access many. |
 | Board | Single human board operator per deployment |
 | Org graph | Strict tree (`reports_to` nullable root); no multi-manager reporting |
 | Visibility | Company-scoped visibility: board + all in-company agents can see all work objects by default; public/private deployment flags affect external exposure only and do **not** imply project/issue privacy |

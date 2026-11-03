@@ -50,6 +50,7 @@ export function CompanySettings() {
   // General settings local state
   const [companyName, setCompanyName] = useState("");
   const [description, setDescription] = useState("");
+  const [companySlug, setCompanySlug] = useState("");
   const [logoUrl, setLogoUrl] = useState("");
   const [logoUploadError, setLogoUploadError] = useState<string | null>(null);
   const [governance, setGovernance] = useState<InteractionResolverGovernance>({});
@@ -59,6 +60,7 @@ export function CompanySettings() {
     if (!selectedCompany) return;
     setCompanyName(selectedCompany.name);
     setDescription(selectedCompany.description ?? "");
+    setCompanySlug(selectedCompany.slug ?? "");
     setLogoUrl(selectedCompany.logoUrl ?? "");
     setGovernance(selectedCompany.interactionResolverGovernance ?? {});
   }, [selectedCompany]);
@@ -67,6 +69,8 @@ export function CompanySettings() {
     !!selectedCompany &&
     (companyName !== selectedCompany.name ||
       description !== (selectedCompany.description ?? ""));
+  const slugDirty =
+    !!selectedCompany && companySlug.trim() !== (selectedCompany.slug ?? "");
 
   const generalMutation = useMutation({
     mutationFn: (data: {
@@ -76,6 +80,25 @@ export function CompanySettings() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: queryKeys.companies.all });
     }
+  });
+
+  const slugMutation = useMutation({
+    mutationFn: (slug: string) => companiesApi.updateSlug(selectedCompanyId!, slug),
+    onSuccess: (result) => {
+      queryClient.invalidateQueries({ queryKey: queryKeys.companies.all });
+      toastActions?.pushToast({
+        tone: "success",
+        title: result.warning
+          ?? "Subdomain updated. The previous subdomain will not redirect.",
+      });
+      if (result.origin && typeof window !== "undefined") {
+        const next = new URL(window.location.href);
+        const target = new URL(result.origin);
+        if (next.host !== target.host) {
+          window.location.assign(`${result.origin}${next.pathname}${next.search}${next.hash}`);
+        }
+      }
+    },
   });
 
   const settingsMutation = useMutation({
@@ -252,6 +275,34 @@ export function CompanySettings() {
               placeholder={t("settings.descriptionPlaceholder")}
               onChange={(e) => setDescription(e.target.value)}
             />
+          </Field>
+          <Field
+            label="Company subdomain"
+            hint="Host label for this company. Renaming frees the old subdomain immediately with no redirect."
+          >
+            <input
+              className="w-full rounded-md border border-border bg-transparent px-2.5 py-1.5 text-sm outline-none"
+              type="text"
+              value={companySlug}
+              autoCapitalize="off"
+              autoCorrect="off"
+              spellCheck={false}
+              onChange={(e) => setCompanySlug(e.target.value.toLowerCase())}
+            />
+            {slugDirty ? (
+              <div className="mt-2 flex items-center gap-2">
+                <Button
+                  size="sm"
+                  onClick={() => slugMutation.mutate(companySlug.trim())}
+                  disabled={slugMutation.isPending || !companySlug.trim()}
+                >
+                  {slugMutation.isPending ? "Saving…" : "Save subdomain"}
+                </Button>
+                <span className="text-xs text-muted-foreground">
+                  Bookmarks and OAuth callbacks on the old host will break.
+                </span>
+              </div>
+            ) : null}
           </Field>
         </div>
       </div>

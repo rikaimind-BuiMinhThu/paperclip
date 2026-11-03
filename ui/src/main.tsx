@@ -7,6 +7,7 @@ import { App } from "./App";
 import { AppErrorBoundary } from "./components/AppErrorBoundary";
 import { SentryGate } from "./components/SentryGate";
 import { CompanyProvider, useCompany } from "./context/CompanyContext";
+import { TenantProvider } from "./context/TenantContext";
 import { LiveUpdatesProvider } from "./context/LiveUpdatesProvider";
 import { BreadcrumbProvider } from "./context/BreadcrumbContext";
 import { PanelProvider } from "./context/PanelContext";
@@ -69,6 +70,7 @@ getOrCreatePaperclipReactRoot(window, rootElement).render(
         <ThemeProvider>
           <LocaleProvider>
           <BrowserRouter>
+            <TenantProvider>
             <CompanyProvider>
               <EditorAutocompleteProvider>
                 <ToastProvider>
@@ -90,6 +92,7 @@ getOrCreatePaperclipReactRoot(window, rootElement).render(
                 </ToastProvider>
               </EditorAutocompleteProvider>
             </CompanyProvider>
+            </TenantProvider>
           </BrowserRouter>
           </LocaleProvider>
         </ThemeProvider>

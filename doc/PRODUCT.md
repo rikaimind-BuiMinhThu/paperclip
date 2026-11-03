@@ -79,7 +79,7 @@ An explicit restricted policy may deny selected operations or switch to a defaul
 
 1. **Unopinionated about how you run your agents.** Your agents could be OpenClaw bots, Python scripts, Node scripts, Claude Code sessions, Codex instances — we don't care. Paperclip defines the control plane for communication and provides utility infrastructure for heartbeats. It does not mandate an agent runtime.
 
-2. **Company is the unit of organization.** Everything lives under a company. One Paperclip instance, many companies.
+2. **Company is the unit of organization.** Everything lives under a company. One Paperclip instance, many companies. When host tenancy is enabled, each company also has its own subdomain (`{slug}.example.com`) while the apex domain stays a public landing page.
 
 3. **Adapter config defines the agent.** Every agent has an adapter type and configuration that controls its identity and behavior. The minimum contract is just "be callable."
 

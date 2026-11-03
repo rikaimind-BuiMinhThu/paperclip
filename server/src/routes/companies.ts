@@ -1214,6 +1214,9 @@ export function companyRoutes(db: Db, storage?: StorageService, options?: Compan
       throw forbidden("Instance admin required");
     }
     const ownerPrincipalId = req.actor.userId ?? "local-board";
+    if (req.actor.userId && !req.actor.isInstanceAdmin) {
+      await access.assertUserCanJoinCompany(req.actor.userId, null);
+    }
     const company = await svc.create({
       ...req.body,
       defaultResponsibleUserId: createsOwnCompany

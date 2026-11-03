@@ -1,5 +1,6 @@
 import type { InteractionResolverGovernance } from "@paperclipai/shared";
 import { pgTable, uuid, text, integer, timestamp, boolean, jsonb, uniqueIndex } from "drizzle-orm/pg-core";
+import { randomUUID } from "node:crypto";
 
 export const companies = pgTable(
   "companies",
@@ -10,6 +11,10 @@ export const companies = pgTable(
     status: text("status").notNull().default("active"),
     pauseReason: text("pause_reason"),
     pausedAt: timestamp("paused_at", { withTimezone: true }),
+    /** Host subdomain label for `{slug}.{rootDomain}` tenancy. */
+    slug: text("slug")
+      .notNull()
+      .$defaultFn(() => `c-${randomUUID().replace(/-/g, "").slice(0, 12)}`),
     issuePrefix: text("issue_prefix").notNull().default("PAP"),
     issueCounter: integer("issue_counter").notNull().default(0),
     budgetMonthlyCents: integer("budget_monthly_cents").notNull().default(0),
@@ -33,5 +38,6 @@ export const companies = pgTable(
   },
   (table) => ({
     issuePrefixUniqueIdx: uniqueIndex("companies_issue_prefix_idx").on(table.issuePrefix),
+    slugUniqueIdx: uniqueIndex("companies_slug_idx").on(table.slug),
   }),
 );

@@ -9,6 +9,7 @@ const mockCompanyService = vi.hoisted(() => ({
 const mockAccessService = vi.hoisted(() => ({
   ensureMembership: vi.fn(),
   ensureRoleDefaultGrants: vi.fn(),
+  assertUserCanJoinCompany: vi.fn(),
 }));
 
 const mockBudgetService = vi.hoisted(() => ({
@@ -57,6 +58,7 @@ describe("POST /api/companies Cloud floor", () => {
     delete process.env.PAPERCLIP_CLOUD_TENANT_SERVER_TOKEN;
     delete process.env.PAPERCLIP_MANAGED_CONFIG;
     mockCompanyService.create.mockResolvedValue(createdCompany);
+    mockAccessService.assertUserCanJoinCompany.mockResolvedValue(undefined);
   });
 
   afterEach(() => {
